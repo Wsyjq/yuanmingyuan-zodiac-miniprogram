@@ -1,0 +1,23 @@
+<view class="stage-shell" wx:if="{{stage}}">
+  <progress-header
+    eyebrow="第 {{stage.order}} 站"
+    title="{{stage.place}} · {{stage.title}}"
+    subtitle="获得：{{stage.mark.zodiac}}首 · {{stage.mark.label}}"
+    meta-left="总进度 {{progressText}}"
+    meta-right="{{progressPercent}}%"
+    progress-percent="{{progressPercent}}"
+    compact="{{true}}"
+  />
+
+  <view class="mark-card">
+    <mark-strip chips="{{markChips}}" label="印记收集" />
+  </view>
+
+  <view class="scene-card">
+    <view class="scene-place">{{stage.place}}</view>
+    <view class="scene-intro">{{stage.intro}}</view>
+    <view class="task-box">{{stage.task}}</view>
+  </view>
+
+  <slot></slot>
+</view>

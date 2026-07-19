@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200">
+  <defs>
+    <radialGradient id="bronze" cx="42%" cy="36%" r="68%">
+      <stop offset="0" stop-color="#ceb878"/>
+      <stop offset="0.34" stop-color="#9b814a"/>
+      <stop offset="0.7" stop-color="#4d5f55"/>
+      <stop offset="1" stop-color="#1a221e"/>
+    </radialGradient>
+    <pattern id="patina" width="70" height="70" patternUnits="userSpaceOnUse">
+      <circle cx="13" cy="18" r="7" fill="#426a63" fill-opacity="0.18"/>
+      <circle cx="51" cy="46" r="10" fill="#121815" fill-opacity="0.12"/>
+      <path d="M0 67 67 0" stroke="#eee5d3" stroke-opacity="0.04" stroke-width="3"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="1200" fill="#121815"/>
+  <circle cx="600" cy="600" r="510" fill="url(#bronze)" stroke="#d3b875" stroke-width="5"/>
+  <circle cx="600" cy="600" r="510" fill="url(#patina)"/>
+  <circle cx="600" cy="600" r="432" fill="#151c19" fill-opacity="0.5" stroke="#e0ca8c" stroke-opacity="0.62" stroke-width="3"/>
+  <circle cx="600" cy="600" r="258" fill="#121815" fill-opacity="0.82" stroke="#82a096" stroke-width="5"/>
+  <circle cx="600" cy="600" r="192" fill="none" stroke="#b08a4d" stroke-opacity="0.62" stroke-width="3" stroke-dasharray="12 16"/>
+  <g stroke="#e0ca8c" stroke-opacity="0.48" stroke-width="3">
+    <line x1="600" y1="90" x2="600" y2="342"/>
+    <line x1="600" y1="90" x2="600" y2="342" transform="rotate(30 600 600)"/>
+    <line x1="600" y1="90" x2="600" y2="342" transform="rotate(60 600 600)"/>
+    <line x1="600" y1="90" x2="600" y2="342" transform="rotate(90 600 600)"/>
+    <line x1="600" y1="90" x2="600" y2="342" transform="rotate(120 600 600)"/>
+    <line x1="600" y1="90" x2="600" y2="342" transform="rotate(150 600 600)"/>
+    <line x1="600" y1="90" x2="600" y2="342" transform="rotate(180 600 600)"/>
+    <line x1="600" y1="90" x2="600" y2="342" transform="rotate(210 600 600)"/>
+    <line x1="600" y1="90" x2="600" y2="342" transform="rotate(240 600 600)"/>
+    <line x1="600" y1="90" x2="600" y2="342" transform="rotate(270 600 600)"/>
+    <line x1="600" y1="90" x2="600" y2="342" transform="rotate(300 600 600)"/>
+    <line x1="600" y1="90" x2="600" y2="342" transform="rotate(330 600 600)"/>
+  </g>
+  <g fill="none" stroke="#b08a4d" stroke-width="8">
+    <path d="M600 455c44 0 79 35 79 79 0 30-16 56-40 69 24 14 40 40 40 70 0 43-35 78-79 78s-79-35-79-78c0-30 16-56 40-70-24-13-40-39-40-69 0-44 35-79 79-79Z"/>
+    <path d="M455 600c0-44 35-79 79-79 30 0 56 16 69 40 14-24 40-40 70-40 43 0 78 35 78 79s-35 79-78 79c-30 0-56-16-70-40-13 24-39 40-69 40-44 0-79-35-79-79Z"/>
+  </g>
+  <circle cx="600" cy="600" r="80" fill="#121815" stroke="#e0ca8c" stroke-width="3"/>
+  <g fill="#964536" fill-opacity="0.72">
+    <circle cx="600" cy="112" r="10"/><circle cx="844" cy="177" r="10"/><circle cx="1023" cy="356" r="10"/>
+    <circle cx="1088" cy="600" r="10"/><circle cx="1023" cy="844" r="10"/><circle cx="844" cy="1023" r="10"/>
+    <circle cx="600" cy="1088" r="10"/><circle cx="356" cy="1023" r="10"/><circle cx="177" cy="844" r="10"/>
+    <circle cx="112" cy="600" r="10"/><circle cx="177" cy="356" r="10"/><circle cx="356" cy="177" r="10"/>
+  </g>
+</svg>

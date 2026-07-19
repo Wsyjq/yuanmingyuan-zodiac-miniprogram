@@ -1,0 +1,76 @@
+.index-page {
+  padding-bottom: 90rpx;
+}
+
+.theme-text {
+  padding: 18rpx 20rpx;
+  border-left: 6rpx solid #a68d73;
+  border-radius: 0 18rpx 18rpx 0;
+  background: rgba(101, 135, 128, 0.1);
+  font-size: 26rpx;
+}
+
+.theme-card,
+.status-card,
+.resume-card,
+.start-card {
+  margin-top: 24rpx;
+  padding: 28rpx;
+}
+
+.status-row,
+.quick-actions,
+.action-grid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18rpx;
+}
+
+.status-label {
+  color: rgba(44, 61, 69, 0.55);
+  font-size: 22rpx;
+}
+
+.status-value {
+  margin-top: 4rpx;
+  font-size: 32rpx;
+  font-weight: 800;
+}
+
+.status-pill {
+  padding: 10rpx 18rpx;
+  border-radius: 999rpx;
+  color: #fff8ed;
+  background: #b36a5f;
+  font-size: 22rpx;
+}
+
+.resume-title {
+  font-size: 34rpx;
+  font-weight: 900;
+}
+
+.resume-text {
+  margin: 12rpx 0 22rpx;
+  color: rgba(44, 61, 69, 0.66);
+  font-size: 26rpx;
+  line-height: 1.7;
+}
+
+.action-grid button,
+.quick-actions button {
+  flex: 1;
+}
+
+.quick-actions {
+  margin-top: 20rpx;
+  flex-wrap: wrap;
+}
+
+.dev-clear {
+  margin-top: 34rpx;
+  color: rgba(44, 61, 69, 0.48);
+  background: transparent;
+  font-size: 23rpx;
+}

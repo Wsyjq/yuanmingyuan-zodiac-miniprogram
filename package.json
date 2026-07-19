@@ -1,0 +1,14 @@
+{
+  "name": "zodiac-miniprogram",
+  "version": "0.1.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "verify:static": "node scripts/check-static.js",
+    "verify:simulator": "node scripts/verify-simulator.js",
+    "inspect:layout": "node scripts/inspect-layout.js"
+  },
+  "devDependencies": {
+    "miniprogram-automator": "0.11.0"
+  }
+}

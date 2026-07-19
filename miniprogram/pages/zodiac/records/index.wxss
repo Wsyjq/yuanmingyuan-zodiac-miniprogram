@@ -1,0 +1,23 @@
+.empty,
+.record-card {
+  padding: 28rpx;
+  margin-bottom: 18rpx;
+}
+
+.record-title {
+  font-size: 32rpx;
+  font-weight: 900;
+}
+
+.record-meta {
+  margin-top: 10rpx;
+  color: #b36a5f;
+  font-size: 24rpx;
+  font-weight: 700;
+}
+
+.record-time {
+  margin-top: 8rpx;
+  color: rgba(44, 61, 69, 0.62);
+  font-size: 23rpx;
+}

@@ -1,0 +1,10 @@
+<view class="page records-page">
+  <view class="section-title">历史游玩记录</view>
+  <view wx:if="{{records.length === 0}}" class="empty card">暂无记录。完成或重新开始线路后会生成记录。</view>
+  <view wx:for="{{records}}" wx:key="recordId" class="record-card card" data-record-id="{{item.recordId}}" bindtap="openRecord">
+    <view class="record-title">{{item.routeTitle}}</view>
+    <view class="record-meta">{{item.statusText}} · {{item.completedStageCount}}/{{item.totalStageCount}} 站 · {{item.markCount}} 枚印记</view>
+    <view class="record-time">开始：{{item.startedText}}</view>
+    <view class="record-time">结束：{{item.endedText}}</view>
+  </view>
+</view>

@@ -1,0 +1,44 @@
+<view class="final-zodiac-board">
+  <view class="final-hero {{game.confirmedHorse ? 'confirmed' : ''}}">
+    <view>
+      <view class="final-kicker">现实锚点</view>
+      <view class="final-title">马首归位</view>
+      <view class="final-text">先确认马首，再依据十二地支与时辰，把七枚回归印记和一枚追索印记归位。</view>
+    </view>
+    <button class="horse-button" bindtap="onConfirmHorse">{{game.confirmedHorse ? '已确认' : '确认'}}</button>
+  </view>
+
+  <view class="final-progress">
+    <view>已归位 {{game.placedCount}}/{{game.requiredCount}}</view>
+    <view class="final-meter">
+      <view class="final-meter-fill" style="width: {{game.progressPercent}}%;"></view>
+    </view>
+  </view>
+  <view class="missing-tip" wx:if="{{game.missingRequiredCount}}">还有 {{game.missingRequiredCount}} 枚印记未收集，需先完成或跳过前面的站点。</view>
+
+  <view class="section-title">待归位印记</view>
+  <view class="mark-tray">
+    <button wx:for="{{game.availableMarks}}" wx:key="zodiac" class="mark-token {{item.status}} {{item.placed ? 'placed' : ''}} {{game.selectedMark === item.zodiac ? 'selected' : ''}}" data-zodiac="{{item.zodiac}}" bindtap="onSelectMark" disabled="{{item.placed}}">
+      <view class="mark-zodiac">{{item.zodiac}}</view>
+      <view class="mark-label">{{item.status === 'tracking' ? '追索' : '回归'}}</view>
+    </button>
+  </view>
+
+  <view class="selected-tip" wx:if="{{game.selectedMark}}">已选 {{game.selectedMark}}首，点击对应地支时辰格归位</view>
+  <view class="selected-tip" wx:else>选择一枚生肖印记，再判断它属于哪个地支时辰格</view>
+  <view class="final-message">{{game.message}} · 误放 {{game.attempts}}</view>
+  <view class="final-rule">棋盘不显示生肖答案。完整印记归入对应时辰；追索印记保留“追索中”；四个空缺格继续等待回归。</view>
+
+  <view class="section-title">十二地支时辰盘</view>
+  <view class="zodiac-grid">
+    <button wx:for="{{game.slots}}" wx:key="zodiac" class="zodiac-slot {{item.status}} {{item.placedMark ? 'filled' : ''}}" data-zodiac="{{item.zodiac}}" bindtap="onPlaceSlot">
+      <view class="slot-zodiac">{{item.branch}}时</view>
+      <view class="slot-time">{{item.time}}</view>
+      <view class="slot-mark" wx:if="{{item.placedMark}}">{{item.placedMark}}首 · {{item.markStatus === 'tracking' ? '追索中' : '已回归'}}</view>
+      <view class="slot-mark empty" wx:elif="{{item.status === 'missing'}}">待追索</view>
+      <view class="slot-mark empty" wx:else>待归位</view>
+    </button>
+  </view>
+
+  <button class="btn-primary {{game.solved ? 'ready' : ''}}" bindtap="onCompleteFinal">{{game.solved ? '十二格已归位，完成终局' : '完成终局'}}</button>
+</view>

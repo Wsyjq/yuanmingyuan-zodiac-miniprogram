@@ -1,0 +1,115 @@
+.dev-page {
+  padding-bottom: 90rpx;
+}
+
+.dev-hero,
+.game-card,
+.dev-actions,
+.result-card {
+  width: 100%;
+  max-width: 100%;
+  padding: 28rpx;
+  margin-top: 22rpx;
+  overflow: hidden;
+}
+
+.dev-hero {
+  margin-top: 0;
+  color: #fff8ed;
+  background:
+    radial-gradient(circle at 86% 16%, rgba(216, 170, 82, 0.32), transparent 30%),
+    linear-gradient(135deg, #2c3d45, #658780);
+}
+
+.dev-kicker {
+  color: rgba(255, 248, 237, 0.62);
+  font-size: 22rpx;
+  font-weight: 900;
+  letter-spacing: 4rpx;
+}
+
+.dev-title {
+  margin-top: 10rpx;
+  font-size: 38rpx;
+  font-weight: 900;
+}
+
+.dev-desc {
+  margin-top: 14rpx;
+  color: rgba(255, 248, 237, 0.82);
+  font-size: 26rpx;
+  line-height: 1.7;
+}
+
+.stage-tabs {
+  width: 100%;
+  margin-top: 20rpx;
+  white-space: nowrap;
+}
+
+.stage-tab {
+  display: inline-flex;
+  min-width: 176rpx;
+  min-height: 72rpx;
+  margin-right: 12rpx;
+  padding: 0 20rpx;
+  border-radius: 999rpx;
+  color: rgba(44, 61, 69, 0.7);
+  background: rgba(255, 255, 255, 0.72);
+  border: 1rpx solid rgba(101, 135, 128, 0.22);
+  font-size: 23rpx;
+  font-weight: 800;
+  line-height: 72rpx;
+}
+
+.stage-tab.active {
+  color: #fff8ed;
+  background: linear-gradient(135deg, #b36a5f, #658780);
+}
+
+.game-title {
+  margin-bottom: 20rpx;
+  color: #2c3d45;
+  font-size: 30rpx;
+  font-weight: 900;
+}
+
+.game-section {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.dev-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14rpx;
+}
+
+.dev-actions button {
+  width: 100%;
+  min-width: 0;
+  min-height: 82rpx;
+  line-height: 82rpx;
+  font-size: 24rpx;
+}
+
+.result-title {
+  margin-bottom: 16rpx;
+  color: #2c3d45;
+  font-size: 28rpx;
+  font-weight: 900;
+}
+
+.result-json {
+  display: block;
+  padding: 20rpx;
+  border-radius: 20rpx;
+  background: rgba(44, 61, 69, 0.08);
+  color: rgba(44, 61, 69, 0.78);
+  font-family: Menlo, Consolas, monospace;
+  font-size: 22rpx;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-all;
+}

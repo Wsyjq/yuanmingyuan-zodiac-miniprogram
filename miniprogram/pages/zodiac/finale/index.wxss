@@ -1,0 +1,25 @@
+.finale-card {
+  padding: 42rpx 32rpx;
+  text-align: center;
+}
+
+.finale-title {
+  font-size: 46rpx;
+  font-weight: 900;
+  letter-spacing: 6rpx;
+}
+
+.finale-text {
+  margin: 26rpx 0;
+  color: rgba(44, 61, 69, 0.72);
+  font-size: 28rpx;
+  line-height: 1.8;
+}
+
+.finale-phrase {
+  margin: 30rpx 0;
+  color: #b36a5f;
+  font-size: 36rpx;
+  font-weight: 900;
+  letter-spacing: 4rpx;
+}

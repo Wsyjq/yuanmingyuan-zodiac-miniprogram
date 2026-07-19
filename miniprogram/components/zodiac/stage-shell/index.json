@@ -1,0 +1,7 @@
+{
+  "component": true,
+  "usingComponents": {
+    "progress-header": "../progress-header/index",
+    "mark-strip": "../mark-strip/index"
+  }
+}

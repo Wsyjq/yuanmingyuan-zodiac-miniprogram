@@ -1,0 +1,67 @@
+<view class="page dev-page" wx:if="{{stage}}">
+  <view class="dev-hero card">
+    <view class="dev-kicker">DEV PLAYGROUND</view>
+    <view class="dev-title">八个玩法组件调试台</view>
+    <view class="dev-desc">独立选择任意站点，注入 mock 配置，查看组件事件和 StageResult，不写入本地游玩记录。</view>
+  </view>
+
+  <scroll-view class="stage-tabs" scroll-x="true" enable-flex="true">
+    <button wx:for="{{stages}}" wx:key="stageId" class="stage-tab {{selectedStageId === item.stageId ? 'active' : ''}}" data-stage-id="{{item.stageId}}" bindtap="selectStage">
+      {{item.order}} · {{item.gameType}}
+    </button>
+  </scroll-view>
+
+  <stage-shell stage="{{stage}}" progress-text="{{progressText}}" progress-percent="{{progressPercent}}" mark-chips="{{markChips}}">
+    <view class="game-card card">
+      <view class="game-title">{{stage.title}} · {{gameType}}</view>
+
+      <view wx:if="{{gameType === 'dashuifa'}}" class="game-section">
+        <dashuifa-puzzle game="{{game}}" bind:tiletap="selectDashuifaTile" bind:reset="resetGame" bind:check="checkDashuifa" />
+      </view>
+
+      <view wx:elif="{{gameType === 'rain'}}" class="game-section">
+        <rain-catch-game id="active-game" game="{{game}}" lanes="{{lanes}}" bind:movetray="moveTray" bind:roundresult="resolveRain" />
+      </view>
+
+      <view wx:elif="{{gameType === 'envelope'}}" class="game-section">
+        <envelope-word-game game="{{game}}" bind:pickpiece="pickEnvelopePiece" bind:removepiece="removeEnvelopePiece" bind:clear="clearEnvelope" bind:check="checkEnvelope" />
+      </view>
+
+      <view wx:elif="{{gameType === 'clock'}}" class="game-section">
+        <clock-match-game game="{{game}}" bind:selecthead="selectClockHead" bind:selectbranch="selectClockBranch" />
+      </view>
+
+      <view wx:elif="{{gameType === 'password'}}" class="game-section">
+        <password-clue-game id="active-game" game="{{game}}" bind:selectevidence="selectPasswordEvidence" bind:toggleevidence="togglePasswordEvidence" bind:rotateoverlay="rotatePasswordOverlay" bind:check="checkPassword" />
+      </view>
+
+      <view wx:elif="{{gameType === 'order'}}" class="game-section">
+        <sandtable-order-game game="{{game}}" picked-text="{{pickedText}}" bind:pickcard="pickOrderCard" bind:removecard="removeOrderCard" bind:clear="clearOrder" bind:check="checkOrder" />
+      </view>
+
+      <view wx:elif="{{gameType === 'maze'}}" class="game-section">
+        <maze-path-game id="active-game" game="{{game}}" bind:rotate="rotateMaze" bind:check="checkMaze" bind:picktimeline="pickMazeTimeline" bind:removetimeline="removeMazeTimeline" bind:cleartimeline="clearMazeTimeline" bind:checktimeline="checkMazeTimeline" />
+      </view>
+
+      <view wx:else class="game-section">
+        <final-zodiac-board game="{{game}}" bind:confirmhorse="confirmHorse" bind:selectmark="selectFinalMark" bind:placeslot="placeFinalSlot" bind:completefinal="completeFinalStage" />
+      </view>
+    </view>
+  </stage-shell>
+
+  <view class="dev-actions card">
+    <button class="btn-secondary" bindtap="resetGame">重置组件状态</button>
+    <button class="btn-primary" bindtap="simulateComplete">模拟 completed</button>
+    <button class="btn-danger" bindtap="simulateSkip">模拟 skipped</button>
+  </view>
+
+  <view class="result-card card">
+    <view class="result-title">StageResult</view>
+    <text class="result-json" selectable="true">{{resultText}}</text>
+  </view>
+
+  <view class="result-card card">
+    <view class="result-title">组件事件</view>
+    <text class="result-json" selectable="true">{{eventText}}</text>
+  </view>
+</view>

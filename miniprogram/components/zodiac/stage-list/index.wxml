@@ -1,0 +1,14 @@
+<view class="stage-list-wrap">
+  <view wx:if="{{title}}" class="section-title">{{title}}</view>
+  <view class="stage-list">
+    <view wx:for="{{stages}}" wx:key="stageId" class="stage-card {{item.progressStatus}}" data-stage-id="{{item.stageId}}" bindtap="onStageTap">
+      <view class="stage-order">{{item.order}}</view>
+      <view class="stage-main">
+        <view class="stage-title">{{item.place}} · {{item.title}}</view>
+        <view class="stage-desc">{{item.task}}</view>
+        <view class="stage-status">{{item.statusText}}</view>
+      </view>
+      <view class="stage-mark {{item.mark.status}}">{{item.mark.zodiac}}</view>
+    </view>
+  </view>
+</view>

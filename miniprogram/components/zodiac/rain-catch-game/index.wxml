@@ -1,0 +1,32 @@
+<view class="rain-catch-game">
+  <view class="rain-panel">
+    <view class="rain-status">福气 {{game.score}}/{{game.targetScore}} · 连击 {{game.combo}} · 已接 {{game.caught}}</view>
+    <view class="rain-meter">
+      <view class="rain-meter-fill" style="width: {{progressPercent}}%;"></view>
+    </view>
+    <view class="rain-readout">
+      <view>{{statusText}}</view>
+      <view>{{roundText}} · {{speedText}}</view>
+    </view>
+  </view>
+
+  <view class="rain-track {{dragging ? 'dragging' : ''}}" bindtap="onTrackTouch" bindtouchstart="onTrackStart" catchtouchmove="onTrackTouch" bindtouchend="onTrackEnd" bindtouchcancel="onTrackEnd">
+    <view class="cloud cloud-left"></view>
+    <view class="cloud cloud-center"></view>
+    <view class="cloud cloud-right"></view>
+    <view class="rain-skyline">观察落物，拖动下方承露盘</view>
+    <view wx:for="{{lanes}}" wx:key="index" class="track-lane {{localTrayLane === item ? 'active' : ''}}">
+      <view class="lane-guide"></view>
+      <text>·</text>
+    </view>
+    <view wx:if="{{activeDrop}}" class="falling-drop {{currentDrop.type === 'bad' ? 'bad' : 'good'}}" style="{{dropStyle}}">{{currentDrop.type === 'bad' ? '石' : '露'}}</view>
+    <view class="tray" style="{{trayStyle}}">
+      <view class="tray-bowl"></view>
+      <view class="tray-label">承露盘</view>
+    </view>
+  </view>
+
+  <view class="rain-hint">落点不会预告。雨露与碎石会随机出现并可能受风横移；在场地内左右拖动托盘，落底时自动判定。</view>
+  <view class="rain-result">{{game.lastOutcome}} · 失误 {{game.misses}} · 避石 {{game.escapedBad}}</view>
+  <button class="btn-primary {{running ? 'pause' : ''}}" bindtap="onStartToggle">{{running ? '暂停承露' : (game.round ? '继续承露' : '开始承露')}}</button>
+</view>

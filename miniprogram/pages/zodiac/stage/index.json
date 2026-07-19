@@ -1,0 +1,14 @@
+{
+  "navigationBarTitleText": "互动任务",
+  "usingComponents": {
+    "stage-shell": "../../../components/zodiac/stage-shell/index",
+    "dashuifa-puzzle": "../../../components/zodiac/dashuifa-puzzle/index",
+    "rain-catch-game": "../../../components/zodiac/rain-catch-game/index",
+    "envelope-word-game": "../../../components/zodiac/envelope-word-game/index",
+    "clock-match-game": "../../../components/zodiac/clock-match-game/index",
+    "password-clue-game": "../../../components/zodiac/password-clue-game/index",
+    "sandtable-order-game": "../../../components/zodiac/sandtable-order-game/index",
+    "maze-path-game": "../../../components/zodiac/maze-path-game/index",
+    "final-zodiac-board": "../../../components/zodiac/final-zodiac-board/index"
+  }
+}

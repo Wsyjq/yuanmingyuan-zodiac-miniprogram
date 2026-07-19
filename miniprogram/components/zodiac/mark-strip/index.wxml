@@ -1,0 +1,9 @@
+<view class="mark-strip-wrap">
+  <view wx:if="{{label}}" class="strip-label">{{label}}</view>
+  <scroll-view wx:if="{{chips.length}}" class="mark-strip" scroll-x>
+    <view wx:for="{{chips}}" wx:key="zodiac" class="mark-chip {{item.collected ? 'collected' : ''}} {{item.tracking ? 'tracking' : ''}} {{item.missing ? 'missing' : ''}}">
+      <text class="mark-zodiac">{{item.zodiac}}</text>{{item.label}}
+    </view>
+  </scroll-view>
+  <view wx:else class="empty-text">{{emptyText}}</view>
+</view>

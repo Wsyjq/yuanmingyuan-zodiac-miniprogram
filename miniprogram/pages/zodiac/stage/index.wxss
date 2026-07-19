@@ -1,0 +1,42 @@
+.stage-page {
+  padding-bottom: 160rpx;
+}
+
+.game-card {
+  width: 100%;
+  max-width: 100%;
+  padding: 28rpx;
+  margin-bottom: 22rpx;
+  overflow: hidden;
+}
+
+.game-title {
+  margin-bottom: 18rpx;
+  font-size: 34rpx;
+  font-weight: 900;
+}
+
+.game-section {
+  width: 100%;
+  min-width: 0;
+  font-size: 26rpx;
+}
+
+.bottom-actions {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16rpx;
+  padding: 18rpx 28rpx 28rpx;
+  background: rgba(247, 240, 229, 0.94);
+  box-shadow: 0 -12rpx 36rpx rgba(44, 61, 69, 0.12);
+}
+
+.bottom-actions button {
+  width: 100%;
+  min-width: 0;
+}

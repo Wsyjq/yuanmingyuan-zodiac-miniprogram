@@ -1,0 +1,51 @@
+.mark-strip-wrap {
+  width: 100%;
+  max-width: 100%;
+  margin-top: 18rpx;
+}
+
+.strip-label {
+  margin-bottom: 10rpx;
+  color: rgba(44, 61, 69, 0.58);
+  font-size: 22rpx;
+  font-weight: 700;
+}
+
+.mark-strip {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.mark-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  margin-right: 10rpx;
+  padding: 8rpx 14rpx;
+  border-radius: 999rpx;
+  color: rgba(44, 61, 69, 0.52);
+  background: rgba(44, 61, 69, 0.06);
+  font-size: 22rpx;
+}
+
+.mark-chip.collected {
+  color: #2c3d45;
+  background: rgba(101, 135, 128, 0.16);
+}
+
+.mark-chip.tracking {
+  border: 1rpx dashed #b36a5f;
+}
+
+.mark-chip.missing {
+  opacity: 0.65;
+}
+
+.mark-zodiac {
+  font-weight: 900;
+}
+
+.empty-text {
+  color: rgba(44, 61, 69, 0.54);
+  font-size: 24rpx;
+}

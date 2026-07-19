@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 900">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8e9b92"/>
+      <stop offset="0.58" stop-color="#666f69"/>
+      <stop offset="1" stop-color="#454c47"/>
+    </linearGradient>
+    <pattern id="stone" width="54" height="36" patternUnits="userSpaceOnUse">
+      <path d="M0 2h54M0 34h54M19 2v32" fill="none" stroke="#f1eadb" stroke-opacity="0.1" stroke-width="2"/>
+    </pattern>
+  </defs>
+  <rect width="700" height="900" fill="url(#sky)"/>
+  <circle cx="565" cy="142" r="86" fill="#eee5d3" fill-opacity="0.1"/>
+  <path d="M0 688c108-49 186-32 270-56 113-32 216-19 430 42v226H0Z" fill="#303733"/>
+  <g fill="#505953" stroke="#272d29" stroke-width="7">
+    <path d="M88 714V313l42-22 71 18 36-69 76 21 28 73 75-15 40 40v355Z"/>
+    <path d="M447 716V398l33-38 65 9 26-79 67 26v400Z"/>
+    <path d="M248 716V481c0-71 41-116 96-116 47 0 78 31 87 81l-38 8c-6-30-23-48-49-48-34 0-55 29-55 75v235Z"/>
+  </g>
+  <g fill="url(#stone)" opacity="0.72">
+    <path d="M88 714V313l42-22 71 18 36-69 76 21 28 73 75-15 40 40v355Z"/>
+    <path d="M447 716V398l33-38 65 9 26-79 67 26v400Z"/>
+  </g>
+  <g fill="#3d453f">
+    <path d="M26 742h170l-26 109H0Z"/>
+    <path d="M510 742h190v122H477Z"/>
+    <path d="M284 754h126l18 96H260Z"/>
+  </g>
+  <g fill="none" stroke="#eee5d3" stroke-opacity="0.26" stroke-width="4">
+    <path d="M117 383h91M468 438h89M121 487h104M470 543h120"/>
+    <path d="M60 778c171-36 309-8 409-24 75-12 131-8 194 8"/>
+  </g>
+  <path d="M46 842c138-44 242-17 355-28 108-11 184-5 258 17" fill="none" stroke="#426a63" stroke-width="7" stroke-opacity="0.58"/>
+</svg>

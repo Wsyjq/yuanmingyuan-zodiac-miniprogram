@@ -1,0 +1,90 @@
+.section-title {
+  margin: 28rpx 0 14rpx;
+  font-size: 34rpx;
+  font-weight: 800;
+  letter-spacing: 2rpx;
+}
+
+.stage-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+
+.stage-card {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 24rpx;
+  border: 1rpx solid rgba(44, 61, 69, 0.12);
+  border-radius: 28rpx;
+  background: rgba(255, 255, 255, 0.62);
+  box-shadow: 0 18rpx 54rpx rgba(44, 61, 69, 0.12);
+}
+
+.stage-card.in_progress {
+  border-color: rgba(179, 106, 95, 0.42);
+  background: rgba(179, 106, 95, 0.08);
+}
+
+.stage-card.completed,
+.stage-card.skipped {
+  border-color: rgba(101, 135, 128, 0.36);
+  background: rgba(101, 135, 128, 0.1);
+}
+
+.stage-order {
+  flex: 0 0 auto;
+  width: 58rpx;
+  height: 58rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff8ed;
+  background: #2c3d45;
+  font-weight: 900;
+}
+
+.stage-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.stage-title {
+  font-size: 29rpx;
+  font-weight: 900;
+}
+
+.stage-desc {
+  margin-top: 6rpx;
+  color: rgba(44, 61, 69, 0.62);
+  font-size: 23rpx;
+  line-height: 1.5;
+}
+
+.stage-status {
+  margin-top: 10rpx;
+  color: #b36a5f;
+  font-size: 22rpx;
+  font-weight: 700;
+}
+
+.stage-mark {
+  flex: 0 0 auto;
+  width: 58rpx;
+  height: 58rpx;
+  border-radius: 22rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1f2d33;
+  background: linear-gradient(145deg, #fff8ed, #a68d73);
+  font-size: 28rpx;
+  font-weight: 900;
+}
+
+.stage-mark.tracking {
+  opacity: 0.72;
+  border: 2rpx dashed #b36a5f;
+}

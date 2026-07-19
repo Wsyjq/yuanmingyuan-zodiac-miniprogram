@@ -1,0 +1,18 @@
+<view class="sandtable-order-game">
+  <view class="order-line">{{game.hint}}</view>
+  <view class="order-slots">
+    <view wx:for="{{game.branches}}" wx:key="index" class="order-slot {{game.picked[index] ? 'filled' : ''}}" data-index="{{index}}" bindtap="onRemoveCard">
+      <view class="slot-index">{{item}}</view>
+      <view class="slot-value">{{game.picked[index] || '待放'}}</view>
+    </view>
+  </view>
+  <view class="order-message">{{game.message}} · 尝试 {{game.attempts}}</view>
+  <view class="order-line current">{{game.picked.length ? pickedText : '选择兽首依次放入时辰位；点已放槽位可撤回。'}}</view>
+  <view class="piece-row">
+    <button wx:for="{{game.cards}}" wx:key="index" class="piece {{item.used ? 'used' : ''}}" data-index="{{index}}" bindtap="onPickCard">{{item.label}}</button>
+  </view>
+  <view class="button-row">
+    <button class="btn-secondary" bindtap="onClear">重排</button>
+    <button class="btn-primary" bindtap="onCheck">校验</button>
+  </view>
+</view>

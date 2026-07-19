@@ -1,0 +1,184 @@
+.dashuifa-puzzle {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.puzzle-guide {
+  margin-bottom: 16rpx;
+  padding: 16rpx 18rpx;
+  border-radius: 18rpx;
+  background: rgba(101, 135, 128, 0.1);
+}
+
+.guide-title {
+  color: #2c3d45;
+  font-size: 26rpx;
+  font-weight: 900;
+}
+
+.guide-text {
+  margin-top: 6rpx;
+  color: rgba(44, 61, 69, 0.66);
+  font-size: 22rpx;
+  line-height: 1.5;
+}
+
+.blueprint-rows {
+  margin-top: 12rpx;
+  border-top: 1rpx solid rgba(44, 61, 69, 0.1);
+}
+
+.blueprint-row {
+  display: flex;
+  align-items: flex-start;
+  padding-top: 9rpx;
+}
+
+.blueprint-label {
+  flex: 0 0 92rpx;
+  color: #b36a5f;
+  font-size: 18rpx;
+  font-weight: 900;
+}
+
+.blueprint-clue {
+  flex: 1;
+  min-width: 0;
+  color: rgba(44, 61, 69, 0.58);
+  font-size: 18rpx;
+  line-height: 1.35;
+}
+
+.guide-message {
+  margin-top: 12rpx;
+  padding-top: 10rpx;
+  border-top: 1rpx solid rgba(44, 61, 69, 0.1);
+  color: rgba(44, 61, 69, 0.72);
+  font-size: 20rpx;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.puzzle-grid {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.puzzle-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 31.6%;
+  min-width: 0;
+  height: 138rpx;
+  padding: 10rpx 6rpx;
+  margin-bottom: 12rpx;
+  border-radius: 20rpx;
+  color: #2c3d45;
+  background: rgba(255, 255, 255, 0.78);
+  line-height: 1.1;
+  border: 2rpx solid transparent;
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.puzzle-tile.movable {
+  border-color: rgba(216, 170, 82, 0.7);
+  background: rgba(216, 170, 82, 0.12);
+}
+
+.puzzle-tile.movable:active {
+  transform: scale(0.96);
+}
+
+.puzzle-tile.blank {
+  border: 2rpx dashed rgba(44, 61, 69, 0.26);
+  background: rgba(44, 61, 69, 0.05);
+  box-shadow: inset 0 0 24rpx rgba(44, 61, 69, 0.04);
+}
+
+.blank-mark {
+  color: rgba(44, 61, 69, 0.42);
+  font-size: 24rpx;
+  font-weight: 900;
+}
+
+.blank-tip {
+  margin-top: 8rpx;
+  color: rgba(44, 61, 69, 0.38);
+  font-size: 16rpx;
+  line-height: 1.2;
+}
+
+.tile-motif {
+  color: #b36a5f;
+  font-size: 30rpx;
+  font-weight: 900;
+}
+
+.tile-title {
+  margin-top: 6rpx;
+  font-size: 21rpx;
+  font-weight: 900;
+}
+
+.tile-detail {
+  margin-top: 4rpx;
+  color: rgba(44, 61, 69, 0.56);
+  font-size: 17rpx;
+  line-height: 1.2;
+}
+
+.puzzle-tile:nth-child(n + 7) {
+  margin-bottom: 0;
+}
+
+.button-row {
+  display: flex;
+  width: 100%;
+  margin-top: 20rpx;
+}
+
+.button-row button {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.button-row button + button {
+  margin-left: 12rpx;
+}
+
+.btn-primary,
+.btn-secondary {
+  display: block;
+  min-height: 88rpx;
+  border-radius: 28rpx;
+  line-height: 88rpx;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+  text-align: center;
+  overflow: hidden;
+}
+
+.btn-primary::after,
+.btn-secondary::after {
+  border: 0;
+}
+
+.btn-primary {
+  color: #fff8ed;
+  background: linear-gradient(135deg, #658780, #2c3d45);
+}
+
+.btn-secondary {
+  color: #2c3d45;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1rpx solid rgba(101, 135, 128, 0.28);
+}

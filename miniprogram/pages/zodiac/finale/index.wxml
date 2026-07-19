@@ -1,0 +1,8 @@
+<view class="page finale-page">
+  <view class="finale-card card">
+    <view class="finale-title">归途未竟</view>
+    <view class="finale-text">七尊回来了。一尊还在路上。四尊，我们仍不知道它们在世界的哪个角落。</view>
+    <view class="finale-phrase">残垣无声，勿忘国耻</view>
+    <button class="btn-primary" bindtap="goHome">回到线路首页</button>
+  </view>
+</view>

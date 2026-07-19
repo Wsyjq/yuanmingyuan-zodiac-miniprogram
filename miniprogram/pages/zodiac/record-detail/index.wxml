@@ -1,0 +1,19 @@
+<view class="page detail-page" wx:if="{{record}}">
+  <view class="detail-head card">
+    <view class="detail-title">{{record.routeTitle}}</view>
+    <view class="detail-meta">{{record.statusText}} · {{record.completedStageCount}}/{{record.totalStageCount}} 站 · {{record.markCount}} 枚印记</view>
+    <view class="detail-time">开始：{{record.startedText}}</view>
+    <view class="detail-time">结束：{{record.endedText}}</view>
+  </view>
+
+  <view class="section-title">站点详情</view>
+  <view wx:for="{{stages}}" wx:key="stageId" class="stage-row card">
+    <view class="stage-title">{{item.order}}. {{item.place}}</view>
+    <view class="stage-meta">{{item.statusText}} · {{item.markText}}</view>
+    <view class="stage-time">完成时间：{{item.completedText}}</view>
+  </view>
+</view>
+
+<view class="page" wx:else>
+  <view class="empty card">未找到该记录。</view>
+</view>

@@ -1,0 +1,44 @@
+<view class="page stage-page" wx:if="{{stage}}">
+  <stage-shell stage="{{stage}}" progress-text="{{progressText}}" progress-percent="{{progressPercent}}" mark-chips="{{markChips}}">
+  <view class="game-card card">
+    <view class="game-title">互动任务</view>
+
+    <view wx:if="{{gameType === 'dashuifa'}}" class="game-section">
+      <dashuifa-puzzle id="active-game" game="{{game}}" bind:tiletap="selectDashuifaTile" bind:reset="resetGame" bind:check="checkDashuifa" />
+    </view>
+
+    <view wx:elif="{{gameType === 'rain'}}" class="game-section">
+      <rain-catch-game id="active-game" game="{{game}}" lanes="{{lanes}}" bind:movetray="moveTray" bind:roundresult="resolveRain" />
+    </view>
+
+    <view wx:elif="{{gameType === 'envelope'}}" class="game-section">
+      <envelope-word-game id="active-game" game="{{game}}" bind:pickpiece="pickEnvelopePiece" bind:removepiece="removeEnvelopePiece" bind:clear="clearEnvelope" bind:check="checkEnvelope" />
+    </view>
+
+    <view wx:elif="{{gameType === 'clock'}}" class="game-section">
+      <clock-match-game id="active-game" game="{{game}}" bind:selecthead="selectClockHead" bind:selectbranch="selectClockBranch" />
+    </view>
+
+    <view wx:elif="{{gameType === 'password'}}" class="game-section">
+      <password-clue-game id="active-game" game="{{game}}" bind:selectevidence="selectPasswordEvidence" bind:toggleevidence="togglePasswordEvidence" bind:rotateoverlay="rotatePasswordOverlay" bind:check="checkPassword" />
+    </view>
+
+    <view wx:elif="{{gameType === 'order'}}" class="game-section">
+      <sandtable-order-game id="active-game" game="{{game}}" picked-text="{{pickedText}}" bind:pickcard="pickOrderCard" bind:removecard="removeOrderCard" bind:clear="clearOrder" bind:check="checkOrder" />
+    </view>
+
+    <view wx:elif="{{gameType === 'maze'}}" class="game-section">
+      <maze-path-game id="active-game" game="{{game}}" bind:rotate="rotateMaze" bind:check="checkMaze" bind:picktimeline="pickMazeTimeline" bind:removetimeline="removeMazeTimeline" bind:cleartimeline="clearMazeTimeline" bind:checktimeline="checkMazeTimeline" />
+    </view>
+
+    <view wx:else class="game-section">
+      <final-zodiac-board id="active-game" game="{{game}}" bind:confirmhorse="confirmHorse" bind:selectmark="selectFinalMark" bind:placeslot="placeFinalSlot" bind:completefinal="completeFinalStage" />
+    </view>
+  </view>
+  </stage-shell>
+
+  <view class="bottom-actions safe-bottom">
+    <button class="btn-secondary" bindtap="resetGame">重置本环节</button>
+    <button class="btn-danger" bindtap="skipCurrentStage">跳过此环节</button>
+  </view>
+</view>
