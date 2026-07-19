@@ -1,0 +1,3 @@
+# GitHub Linguist does not classify WeChat Mini Program files by default.
+*.wxml linguist-language=HTML
+*.wxss linguist-language=CSS
