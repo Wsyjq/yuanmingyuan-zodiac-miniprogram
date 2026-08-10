@@ -6,14 +6,14 @@
 //
 // TODO（下轮迭代）：终版应为真实墙体高清图 + 多花纹识别；当前为 4 选 1 简化版。
 const session = require('../../store/session')
+const sessionDate = require('../../utils/session-date')
 
-// 4 种候选花纹（correct = 万字纹）
-// 素材：万字纹用 AI 生成中式回纹（IMG-P-WANZI，待生），其余复用铜版画纹样母题 S4B 系列
+// 四种候选纹样使用项目方确认可商用的 AI 图片衍生文件。
 const PATTERNS = [
-  { key: 'wanzi', name: '万字回纹', img: '/plate21/module/assets/img/IMG-P-WANZI.jpg', desc: '回转连绵，万字不断', correct: true },
-  { key: 'lianhua', name: '莲花纹', img: '/plate21/module/assets/img/IMG-S4B4.jpg', desc: '对称花瓣图案', correct: false },
-  { key: 'juanco', name: '卷草饰', img: '/plate21/module/assets/img/IMG-S4B1.jpg', desc: '卷曲枝条与花朵', correct: false },
-  { key: 'haishui', name: '海水江岸纹', img: '/plate21/module/assets/img/IMG-S4B3.jpg', desc: '波浪状水纹', correct: false }
+  { key: 'wanzi', name: '万字回纹', src: '/plate21/module/assets/img/IMG-RUNTIME-PATTERN-WANZI.jpg', desc: '回转连绵，万字不断', correct: true },
+  { key: 'beike', name: '贝壳饰', src: '/plate21/module/assets/img/IMG-RUNTIME-PATTERN-SHELL.jpg', desc: '扇形放射，卷叶环绕', correct: false },
+  { key: 'juanco', name: '卷草饰', src: '/plate21/module/assets/img/IMG-RUNTIME-PATTERN-SCROLL.jpg', desc: '卷曲枝条彼此对称', correct: false },
+  { key: 'hualan', name: '花篮饰', src: '/plate21/module/assets/img/IMG-RUNTIME-PATTERN-BASKET.jpg', desc: '花束盛于西式饰篮', correct: false }
 ]
 
 // 史料卡：仅剧情原文（"通水意"是开发脑补，已移除）
@@ -44,13 +44,12 @@ Page({
   onLoad() {
     session.viewPuzzle('s2-pattern')
     const snap = session.getSnapshot() || {}
-    const key = /^\d{8}$/.test(snap.sessionDate || '') ? snap.sessionDate : ''
-    const d = key
-      ? new Date(Number(key.slice(0, 4)), Number(key.slice(4, 6)) - 1, Number(key.slice(6, 8)))
-      : new Date()
+    const key = sessionDate.isValidDateKey(snap.sessionDate)
+      ? snap.sessionDate
+      : sessionDate.dateKeyFromTimestamp(Date.now())
     const puzzle = session.getPuzzle('s2-pattern')
     this.setData({
-      today: (d.getMonth() + 1) + '月' + d.getDate() + '日',
+      today: sessionDate.formatShortDate(key),
       cardNumber: Number(session.getCardDigit('s2-pattern')),
       picked: puzzle ? 'wanzi' : null,
       solved: !!puzzle,

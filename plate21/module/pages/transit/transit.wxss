@@ -46,11 +46,15 @@
   margin-bottom: 32rpx;
 }
 
-/* ---------- 路线推进图（IMG-M01 占位块，670×480，铜版画双框） ---------- */
+/* ---------- 已授权 AI 路线推进图 ---------- */
 .map {
   position: relative;
-  width: 670rpx;
-  height: 480rpx;
+  width: 100%;
+  max-width: 670rpx;
+  aspect-ratio: 67 / 48;
+  height: auto;
+  min-height: 420rpx;
+  box-sizing: border-box;
   margin: 0 auto;
   background: var(--paper2);
   border: 2rpx solid rgba(70, 56, 42, 0.5);
@@ -78,7 +82,7 @@
   pointer-events: none;
   filter: drop-shadow(0 3rpx 6rpx rgba(70, 56, 42, 0.22));
 }
-/* IMG-M01 半透明装饰底图（铺满 map 容器，点位/连线叠在其上） */
+/* AI 地图线描铺满容器，点位/连线叠在其上。 */
 .map-bg {
   position: absolute;
   left: 0;
@@ -193,7 +197,9 @@
 
 /* 考察者手记批注：贴主图右下页边 */
 .map-note {
-  width: 670rpx;
+  width: 100%;
+  max-width: 670rpx;
+  box-sizing: border-box;
   margin: 20rpx auto 0;
   text-align: right;
   padding-right: 12rpx;
@@ -218,5 +224,6 @@
 /* ---------- 继续前往 ---------- */
 .next-btn {
   margin: auto auto 0;
-  width: 400rpx;
+  width: 100%;
+  max-width: 400rpx;
 }

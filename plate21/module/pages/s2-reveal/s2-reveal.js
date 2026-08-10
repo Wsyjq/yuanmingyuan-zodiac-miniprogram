@@ -6,19 +6,7 @@
 //
 // TODO（下轮迭代）：接入语音输入 + API 语义校验；当前为文字输入 + 本地关键词匹配。
 const session = require('../../store/session')
-
-// 核心物关键词：必须直接点出谜底核心（莲花类灯 / 黄色彩绸），任一命中即正确。
-// 严格模式：模糊表达（"黄花""拿灯""宫女"）不算对，避免乱输过关。
-const KEYWORDS = [
-  '莲花灯', '莲花', '花灯',        // 核心物：莲花类灯
-  '荷花', '荷花灯',                 // 莲花的同义
-  '黄色彩绸', '彩绸',              // 核心材质
-  '绸花', '丝花'                    // 丝绸扎的花
-]
-
-function isAcceptable(ans) {
-  return KEYWORDS.some(k => ans.indexOf(k) >= 0)
-}
+const answers = require('../../utils/puzzle-answers')
 
 const HISTORY_LINES = [
   '黄花阵名字由来：',
@@ -51,14 +39,17 @@ Page({
       this.setData({ hint: '请输入你的猜测' })
       return
     }
-    session.attemptPuzzle('s2-name', attempts, isAcceptable(ans), 'text')
-    if (isAcceptable(ans)) {
+    const result = answers.classifyHuanghuaName(ans)
+    session.attemptPuzzle('s2-name', attempts, result === 'correct', 'text')
+    if (result === 'correct') {
       this.setData({ showHistory: true, showCardNumber: true, solved: true, attempts: attempts })
       session.completePuzzle('s2-name', { answer: ans, attempts: attempts }, { collectCard: true })
         .catch(function () { wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' }) })
     } else {
-      let hint = '再想想，这个迷宫和「黄花」有什么关系？'
-      if (attempts === 2) {
+      let hint = result === 'partial'
+        ? '方向对了，再说清楚：那是什么灯，或是用什么材料扎成的？'
+        : '再想想，这个迷宫和「黄花」有什么关系？'
+      if (attempts === 2 && result !== 'partial') {
         hint = '看看参考图——宫女们手里举着什么东西？'
         session.viewHint('s2-name', 1)
       } else if (attempts >= 3) {

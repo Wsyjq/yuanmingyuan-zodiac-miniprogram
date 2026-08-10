@@ -1,3 +1,5 @@
+@import "../../styles/report-artwork.wxss";
+
 /* P15 考察报告 */
 
 .page {
@@ -38,6 +40,9 @@
 /* 万字纹画框：邮票齿孔框 + 双线边框 + 角花 */
 .frame {
   position: relative;
+  width: 100%;
+  max-width: var(--content-max);
+  box-sizing: border-box;
   margin-top: 40rpx;
   padding: 18rpx;
   border: 2rpx solid rgba(46, 31, 13, 0.62);
@@ -76,6 +81,8 @@
   filter: drop-shadow(0 3rpx 6rpx rgba(70, 56, 42, 0.22));
 }
 .frame-inner {
+  width: 100%;
+  box-sizing: border-box;
   padding: 5rpx;
   border: 0;
 }
@@ -83,13 +90,15 @@
 /* ---------- 铜版画预览（与 finale 同构图，静态全显） ---------- */
 .canvas {
   position: relative;
-  width: 660rpx;
-  height: 896rpx;
+  width: 100%;
+  max-width: 660rpx;
+  aspect-ratio: 165 / 224;
+  height: auto;
   background: var(--paper);
   border: 1rpx solid rgba(70, 56, 42, 0.35);
   overflow: hidden;
 }
-/* IMG-F06 完整铜版画作 canvas 底图（L1 题跋 / L5 落款叠在其上） */
+/* 已授权 AI 第二十一图底图，L1 题跋与 L5 落款叠在其上。 */
 .canvas-bg {
   position: absolute;
   left: 0;
@@ -247,7 +256,7 @@
 }
 
 /* 玩家现场四图：参考图绝不回填到这些槽位。 */
-.field-record { width: 660rpx; margin-top: 40rpx; padding: 30rpx; box-sizing: border-box; }
+.field-record { width: 100%; max-width: 660rpx; margin-top: 40rpx; padding: 30rpx; box-sizing: border-box; }
 .field-head { display: flex; align-items: flex-end; justify-content: space-between; }
 .field-kicker { font-family: "Courier New", monospace; font-size: 18rpx; letter-spacing: 3rpx; color: var(--coffee); }
 .field-title { margin-top: 10rpx; font-size: 32rpx; color: var(--ink-deep); }
@@ -275,6 +284,7 @@
   align-items: center;
   justify-content: center;
 }
+.finish-btn { margin-bottom: 36rpx; }
 
 .act-icon {
   width: 32rpx;
@@ -287,7 +297,8 @@
 
 /* 拓印提示 */
 .rubbing {
-  width: 660rpx;
+  width: 100%;
+  max-width: 660rpx;
   margin-top: 20rpx;
 }
 .rubbing-tip {

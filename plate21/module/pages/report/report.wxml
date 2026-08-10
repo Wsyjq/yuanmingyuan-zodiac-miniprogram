@@ -1,6 +1,6 @@
 <!-- v1.3.1 手账：左侧活页装订孔列（移到 .page 外，避免 flex 影响 fixed） -->
 <view class="binder"></view>
-<view class="page paper-grain paper-real">
+<view class="page page-shell paper-grain paper-real">
   <view class="tag-no page-no">No.015</view>
   <view class="title serif">西洋楼铜版图 · 第二十一图</view>
   <view class="subtitle">考察报告 · {{editionLabel}}</view>
@@ -21,9 +21,11 @@
       <text>{{today}}</text>
     </view>
     <view class="frame-inner">
-      <view class="canvas">
-        <!-- IMG-F06 第21幅铜版画完整底版（终版主图，含背景/主体/万字纹边框） -->
-        <image class="canvas-bg" src="/plate21/module/assets/img/IMG-F06.jpg" mode="aspectFill" />
+      <view class="canvas report-artwork">
+        <image class="canvas-bg" src="/plate21/module/assets/img/IMG-RUNTIME-PLATE.jpg" mode="aspectFill" />
+        <view class="layer layer-l2">
+          <view class="l2-frame"><view class="l2-inner"></view></view>
+        </view>
         <view class="layer layer-l1">
           <view class="l1-bar">
             <text class="tag">L1 题跋</text>
@@ -33,7 +35,7 @@
         <view class="layer layer-l5">
           <view class="l5-box">
             <text class="l5-tag">L5 落款</text>
-            <text class="l5-line kaiti">1747 —— 今日</text>
+            <text class="l5-line kaiti">1747 —— 本次考察</text>
             <text class="l5-name kaiti">{{name}}</text>
           </view>
         </view>
@@ -52,7 +54,7 @@
     <view class="archive-rule"></view>
     <view class="field-grid">
       <view wx:for="{{fieldPhotos}}" wx:key="key" class="field-photo" data-key="{{item.key}}" bindtap="onPreviewPhoto" role="button" aria-label="预览{{item.title}}现场照片">
-        <image wx:if="{{item.photoPath}}" class="field-image" src="{{item.photoPath}}" mode="aspectFill" />
+        <image wx:if="{{item.photoPath}}" class="field-image" src="{{item.photoPath}}" mode="aspectFill" lazy-load="{{true}}" />
         <view wx:else class="field-missing">待补录</view>
         <view class="field-caption"><text>{{item.no}}</text>{{item.title}}</view>
       </view>
@@ -65,11 +67,13 @@
   <view class="note-hand olive frame-note" style="transform: rotate(-1.5deg);">刻痕已校，与阵中亭基座相合，可归档。</view>
 
   <view class="actions">
-    <button class="btn-seal act-btn" bindtap="onSave" disabled="{{saving}}">
+    <button class="btn-seal act-btn finish-btn" bindtap="onFinish" disabled="{{completing}}">{{completing ? '正在完成考察……' : (completed ? '返回考察模块首页' : '完成考察并返回首页')}}</button>
+    <button class="btn-line act-btn" bindtap="onSave" disabled="{{saving}}">
       <image wx:if="{{!saving}}" class="act-icon" src="/plate21/module/assets/img/icons/ic-download-ink.png" mode="aspectFit" />
       <text>{{saving ? '保存中……' : '保存到相册'}}</text>
     </button>
     <button class="btn-line act-btn" bindtap="onCollect" disabled="{{collected}}">{{collected ? '已收入考察手册' : '收入考察手册'}}</button>
+    <button class="btn-line act-btn" bindtap="onOpenHandbook">回看考察手册</button>
     <button class="btn-line act-btn" bindtap="onRubbingHint">拓印提示</button>
   </view>
   <view wx:if="{{saveError}}" class="save-recovery record-field">
@@ -82,7 +86,6 @@
     <view class="rubbing-tip">提示 · 手册最后的折页留着一方空白</view>
     <view class="rubbing-panel card-ticket">
       <view class="rubbing-text">翻开考察手册最后的折页，那里留着一方空白，边缘印着细弱的万字纹……数字版归数字记录，纸上的痕迹，归这一路真实做过的动作。</view>
-      <button class="btn-seal rubbing-btn" bindtap="onContinue">继 续</button>
     </view>
     <view class="ticket-edge"></view>
   </view>

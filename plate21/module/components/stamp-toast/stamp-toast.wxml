@@ -1,7 +1,7 @@
 <view
   wx:if="{{visible}}"
   class="stamp-toast {{fading ? 'fading' : ''}}"
-  style="--rot: {{rotate}}deg; transform: translateY({{ty}}rpx) scale({{scale}}); opacity: {{opacity}}"
+  style="--rot: {{rotate}}deg"
 >
   <view class="seal serif">{{text}}</view>
 </view>

@@ -1,7 +1,7 @@
 <nav-back />
 <!-- v1.3.1 手账：左侧活页装订孔列（移到 .page 外，避免 flex 影响 fixed） -->
 <view class="binder"></view>
-<view class="page paper-grain paper-real">
+<view class="page page-shell paper-grain paper-real">
 
   <!-- v1.3.1 手账：票根贴纸压在标题右上角，像手册的装订凭证 -->
   <image class="hb-ticket" src="/plate21/module/assets/img/stickers/st-ticket-02.png" mode="aspectFit" />
@@ -42,7 +42,7 @@
     <view class="archive-rule"></view>
     <view class="photo-record-grid">
       <view wx:for="{{fieldPhotos}}" wx:key="key" class="photo-record-item" data-key="{{item.key}}" bindtap="onPreviewPhoto" role="button" aria-label="预览{{item.title}}现场照片">
-        <image wx:if="{{item.photoPath}}" class="photo-record-image" src="{{item.photoPath}}" mode="aspectFill" />
+        <image wx:if="{{item.photoPath}}" class="photo-record-image" src="{{item.photoPath}}" mode="aspectFill" lazy-load="{{true}}" />
         <view wx:else class="photo-record-missing">待补录</view>
         <view class="photo-record-caption"><text>{{item.no}}</text>{{item.title}}</view>
       </view>
@@ -81,20 +81,19 @@
   <view wx:if="{{finaleDone}}" class="report-thumb">
     <view class="tape" style="top:-20rpx; left:50%; margin-left:-90rpx;"></view>
     <view class="mini-wrap">
-      <view class="canvas">
-        <!-- IMG-F06 完整铜版画缩略 -->
-        <image class="canvas-bg" src="/plate21/module/assets/img/IMG-F06.jpg" mode="aspectFill" />
-        <view class="layer layer-l2"><view class="l2-frame"></view></view>
-        <view class="layer layer-l1"><view class="l1-bar"></view></view>
+      <view class="canvas report-artwork">
+        <image class="canvas-bg" src="/plate21/module/assets/img/IMG-RUNTIME-PLATE.jpg" mode="aspectFill" />
+        <view class="layer layer-l2"><view class="l2-frame"><view class="l2-inner"></view></view></view>
+        <view class="layer layer-l1"><view class="l1-bar"><text class="l1-text kaiti">前二十幅记录建成，此幅记录毁灭之后</text></view></view>
         <view class="layer layer-l5">
           <view class="l5-box">
-            <text class="l5-line kaiti">1747 —— 今日</text>
+            <text class="l5-line kaiti">1747 —— 本次考察</text>
             <text class="l5-name kaiti">{{name}}</text>
           </view>
         </view>
       </view>
     </view>
-    <view class="thumb-caption">西洋楼铜版图 · 第二十一图{{name ? ' · ' + name : ''}}</view>
+    <view class="thumb-caption">西洋楼铜版图 · 第二十一图{{name ? ' · ' + name : ''}}{{sessionDateLabel ? ' · ' + sessionDateLabel : ''}}</view>
   </view>
   <view wx:else class="report-empty">
     <text class="report-empty-text">考察报告 · 尚未生成</text>

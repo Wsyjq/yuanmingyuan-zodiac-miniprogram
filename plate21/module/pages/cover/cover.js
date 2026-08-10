@@ -2,22 +2,30 @@
 // 进入时 init 会话恢复进度；按快照决定「开始考察」或「继续考察 + 重新考察」。
 const session = require('../../store/session')
 const progressFlow = require('../../store/progress-flow')
+const sessionDate = require('../../utils/session-date')
 const PROLOGUE_URL = '/plate21/module/pages/prologue/prologue'
 
 Page({
   data: {
     hasRecord: false,
+    completed: false,
     showHelp: false,
     helpClosing: false,   // INT-301：玩法浮层离场动画中间态
     showRestartConfirm: false,
     restarting: false,
     loading: true,
-    navigating: false
+    navigating: false,
+    archiveDate: ''
   },
 
   onLoad() {
     session.init({}).then((snap) => {
-      this.setData({ hasRecord: this.hasProgress(snap), loading: false })
+      this.setData({
+        hasRecord: this.hasProgress(snap),
+        completed: this.isCompleted(snap),
+        archiveDate: sessionDate.formatArchiveDate(snap.sessionDate),
+        loading: false
+      })
     }).catch(() => {
       this.setData({ loading: false })
       wx.showToast({ title: '档案恢复失败，可重新进入', icon: 'none' })
@@ -32,6 +40,10 @@ Page({
     const flags = snap.flags || {}
     return !!(snap.records && snap.records.length) || !!snap.finale ||
       !!flags.s2PhotoDraft || !!flags.s2PhotoRecord
+  },
+
+  isCompleted(snap) {
+    return !!(snap && snap.flags && snap.flags.experienceCompletedAt)
   },
 
   // 「继续考察」精确恢复到谜题或交接状态。
@@ -64,8 +76,14 @@ Page({
   onConfirmRestart() {
     if (this.data.restarting) return
     this.setData({ restarting: true })
-    return session.reset().then(() => {
-      this.setData({ restarting: false, showRestartConfirm: false, hasRecord: false })
+    return session.reset().then((snap) => {
+      this.setData({
+        restarting: false,
+        showRestartConfirm: false,
+        hasRecord: false,
+        completed: false,
+        archiveDate: sessionDate.formatArchiveDate(snap.sessionDate)
+      })
       wx.navigateTo({ url: PROLOGUE_URL })
     }).catch(() => {
       this.setData({ restarting: false })

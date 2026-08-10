@@ -1,13 +1,17 @@
 <nav-back />
 
 <!-- 站名叙事 + 引文卡 -->
-<view class="page paper-grain paper-real" wx:if="{{phase === 'novel'}}">
+<view class="page page-shell paper-grain paper-real" wx:if="{{phase === 'novel'}}">
   <!-- v1.3.1 手账：左侧活页装订孔列（全站统一） -->
   <view class="binder"></view>
   <view class="tag-no page-tag">No.013</view>
   <view class="navi-title serif">第四站 · 雨果雕像</view>
   <view class="hatch-divider navi-line"></view>
   <scroll-view class="navi-body" scroll-y>
+    <view class="navi-figure double-frame">
+      <image class="navi-image" src="/plate21/module/assets/img/IMG-RUNTIME-HUGO.jpg" mode="aspectFill" />
+      <view class="navi-caption">雨果雕像 · 项目 AI 叙事图</view>
+    </view>
     <view class="para" wx:for="{{paragraphs}}" wx:key="index">{{item}}</view>
     <view class="quote-card">
       <view class="hatch-divider quote-line"></view>
@@ -22,7 +26,7 @@
 </view>
 
 <!-- 谜题区 -->
-<view class="page paper-grain paper-real" style="transform: translate({{sx}}rpx, {{sy}}rpx)" wx:if="{{phase === 'puzzle'}}">
+<view class="page page-shell paper-grain paper-real {{timelineComplete ? 'timeline-complete' : ''}}" wx:if="{{phase === 'puzzle'}}">
   <!-- v1.3.1 手账：左侧活页装订孔列（全站统一） -->
   <view class="binder"></view>
   <view class="tag-no page-tag">No.013</view>
@@ -35,7 +39,7 @@
   <!-- 横向时间轴：1747 —— 2010（采风修订版 5 节点） -->
   <scroll-view class="tl" scroll-x scroll-with-animation scroll-left="{{scrollLeft}}" enhanced show-scrollbar="{{false}}">
     <view class="tl-inner">
-      <view class="gold-line" style="width: {{goldW}}rpx"></view>
+      <view class="gold-line"></view>
       <view class="tl-slots">
         <view wx:for="{{slots}}" wx:key="index" class="tl-cell">
           <view class="tl-label">
@@ -49,24 +53,27 @@
     </view>
   </scroll-view>
 
-  <!-- 事件卡 -->
-  <view
-    wx:for="{{cards}}"
-    wx:key="id"
-    wx:if="{{!item.placed}}"
-    class="card {{item.dragging ? 'dragging' : ''}} {{selectedCard === index ? 'selected' : ''}}"
-    style="left:{{item.x}}rpx;top:{{item.y}}rpx;width:{{item.w}}rpx;height:{{item.h}}rpx;"
-    data-idx="{{index}}"
-    bindtouchstart="onCardStart"
-    bindtouchmove="onCardMove"
-    bindtouchend="onCardEnd"
-    bindtouchcancel="onCardEnd"
-    bindtap="onCardSelect"
-    role="button"
-    aria-label="选择事件卡{{item.title}}"
-  >
-    <view class="card-title serif">{{item.title}}</view>
-    <view class="card-sub">{{item.sub}}</view>
+  <view class="tray-label">事件卡 · 先选一张，再点上方年份</view>
+  <view class="card-tray" role="list" aria-label="待归位事件卡">
+    <view
+      wx:for="{{cards}}"
+      wx:key="id"
+      wx:if="{{!item.placed}}"
+      class="card {{item.dragging ? 'dragging' : ''}} {{selectedCard === index ? 'selected' : ''}}"
+      style="{{item.dragStyle}}"
+      data-idx="{{index}}"
+      bindtouchstart="onCardStart"
+      bindtouchmove="onCardMove"
+      bindtouchend="onCardEnd"
+      bindtouchcancel="onCardEnd"
+      bindtap="onCardSelect"
+      role="button"
+      aria-pressed="{{selectedCard === index}}"
+      aria-label="选择事件卡{{item.title}}"
+    >
+      <view class="card-title serif">{{item.title}}</view>
+      <view class="card-sub">{{item.sub}}</view>
+    </view>
   </view>
 
   <view wx:if="{{pointTip && !monologue}}" class="point-tip">{{pointTip}}</view>

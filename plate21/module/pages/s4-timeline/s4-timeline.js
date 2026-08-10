@@ -8,7 +8,7 @@
  */
 const session = require('../../store/session')
 const drag = require('../../utils/drag')
-const anime = require('../../utils/anime')
+const motion = require('../../utils/motion')
 
 // INT-403：触觉反馈辅助——wx.vibrateShort 带 type 参数，旧基础库降级为无参
 function haptic(type) {
@@ -50,21 +50,28 @@ const CARDS = [
   { id: 'c1760', title: '早期核心景观基本形成', sub: '远瀛观等景观仍有增建', target: 1 }
 ]
 
-const CARD_W = 340
-const CARD_H = 130
-const AREA_TOP = 588 // 卡片区起点（rpx）：标题 190 + 时间轴区 + 间距
-
 function buildCards(solved) {
-  return CARDS.map((c, i) => {
-    const col = i % 2
-    const row = Math.floor(i / 2)
-    const x = 25 + col * 360
-    const y = AREA_TOP + row * 150
-    return {
-      ...c,
-      x, y, ox: x, oy: y, w: CARD_W, h: CARD_H,
-      placed: !!solved, dragging: false
-    }
+  return CARDS.map((card) => {
+    return Object.assign({}, card, {
+      placed: !!solved,
+      dragging: false,
+      dragStyle: ''
+    })
+  })
+}
+
+function eventPoint(event, ending) {
+  const list = ending ? event.changedTouches : event.touches
+  const touch = list && list[0]
+  return touch ? { x: Number(touch.clientX) || 0, y: Number(touch.clientY) || 0 } : null
+}
+
+function pointHit(point, rects, tolerance) {
+  if (!point || !Array.isArray(rects)) return -1
+  const extra = Number(tolerance) || 0
+  return rects.findIndex(function (rect) {
+    return rect && point.x >= rect.left - extra && point.x <= rect.left + rect.width + extra &&
+      point.y >= rect.top - extra && point.y <= rect.top + rect.height + extra
   })
 }
 
@@ -85,9 +92,7 @@ Page({
     slots: SLOTS.map(s => ({ ...s, filled: '', flash: false })),
     cards: [],
     scrollLeft: 0,
-    goldW: 0,       // 金线宽度（rpx），归位后由引擎驱动 0→1660
-    sx: 0,          // 屏幕轻震位移（rpx），引擎驱动
-    sy: 0,
+    timelineComplete: false,
     monologue: false, // 独白 + 生成报告按钮
     cardNumber: 0,    // 时间轴卡片角落数字（日期第二位）
     saveError: '',
@@ -99,17 +104,15 @@ Page({
 
   onLoad() {
     this._timers = []
+    this._reducedMotion = motion.prefersReducedMotion()
     session.viewPuzzle('s4-timeline')
-    const info = wx.getWindowInfo()
-    this.pxRatio = info.windowWidth / 750
-    this.dragger = drag.create({ width: CARD_W, height: CARD_H })
     const solved = session.isPuzzleComplete('s4-timeline')
     this.setData({
       phase: solved ? 'puzzle' : 'novel',
       cardNumber: Number(session.getCardDigit('s4-timeline')),
       slots: buildSlots(solved),
       cards: buildCards(solved),
-      goldW: solved ? 1660 : 0,
+      timelineComplete: solved,
       monologue: solved,
       showHistory: solved
     })
@@ -127,13 +130,16 @@ Page({
     const idx = e.currentTarget.dataset.idx
     const c = this.data.cards[idx]
     if (!c || c.placed || this.data.monologue) return
-    this.dragger.start(e, { id: idx, x: c.x, y: c.y })
-    // INT-402：拖拽开始时预量取槽位（含滚动偏移），供 onMove 磁吸预提示
+    const point = eventPoint(e, false)
+    if (!point) return
+    this._dragState = { id: Number(idx), start: point, last: point, moved: false }
+    this._lastDragUpdate = 0
     drag.measure('.tl-slot').then(rects => { this._slotRects = rects })
     this.setData({ [`cards[${idx}].dragging`]: true })
   },
 
   onCardSelect(e) {
+    if (this._ignoreCardTapUntil && Date.now() < this._ignoreCardTapUntil) return
     const index = Number(e.currentTarget.dataset.idx)
     const card = this.data.cards[index]
     if (!card || card.placed || this.data.monologue) return
@@ -162,24 +168,33 @@ Page({
       [`slots[${slotIndex}].filled`]: card.title,
       selectedCard: -1,
       pointTip: '归位正确，继续选择下一张事件卡。',
-      scrollLeft: Math.max(0, slotIndex * 170 * this.pxRatio - 120)
+      scrollLeft: Math.max(0, slotIndex * 170 * drag.ratio() - 120)
     })
     haptic('light')
     if (this.data.cards.every(function (item) { return item.placed })) this.finish()
   },
 
   onCardMove(e) {
-    const r = this.dragger.move(e)
-    if (!r) return
-    this.setData({ [`cards[${r.id}].x`]: r.x, [`cards[${r.id}].y`]: r.y })
-    // INT-402：磁吸预提示——用拖拽开始时缓存的槽位判定（onMove 不重复 measure）
-    this.updateNear(r.x, r.y, this.data.cards[r.id])
+    const state = this._dragState
+    const point = eventPoint(e, false)
+    if (!state || !point) return
+    state.last = point
+    const dx = point.x - state.start.x
+    const dy = point.y - state.start.y
+    state.moved = state.moved || Math.abs(dx) + Math.abs(dy) > 8
+    const now = Date.now()
+    if (now - this._lastDragUpdate < 32) return
+    this._lastDragUpdate = now
+    this.setData({
+      [`cards[${state.id}].dragStyle`]: 'transform:translate3d(' + Math.round(dx) + 'px,' + Math.round(dy) + 'px,0);'
+    })
+    this.updateNear(point)
   },
 
   // INT-402：拖到槽位上方时槽位高亮（松手前可见吸附预提示）
-  updateNear(x, y, card) {
-    if (!this._slotRects || !card) return
-    const hit = drag.hitTest(x, y, card.w, card.h, this._slotRects, 0)
+  updateNear(point) {
+    if (!this._slotRects) return
+    const hit = pointHit(point, this._slotRects, 8)
     if (hit === this._nearSlot) return
     const updates = {}
     if (this._nearSlot >= 0) updates[`slots[${this._nearSlot}].near`] = false
@@ -189,20 +204,29 @@ Page({
   },
 
   onCardEnd(e) {
-    const r = this.dragger.end(e)
-    if (!r) return
-    this.clearNear()   // INT-402：抬手清除磁吸预提示
-    const idx = r.id
+    const state = this._dragState
+    if (!state) return
+    const point = eventPoint(e, true) || state.last
+    const idx = state.id
+    this._dragState = null
+    this.clearNear()
+    if (!state.moved) {
+      this.setData({ [`cards[${idx}].dragging`]: false, [`cards[${idx}].dragStyle`]: '' })
+      return
+    }
+    this._ignoreCardTapUntil = Date.now() + 250
     const c = this.data.cards[idx]
-    // 槽位在横向滚动区内，每次投放实时量取（含滚动偏移）
     drag.measure('.tl-slot').then(rects => {
-      const hit = drag.hitTest(r.x, r.y, c.w, c.h, rects, 40)
-      const updates = { [`cards[${idx}].dragging`]: false }
+      const hit = pointHit(point, rects, 20)
+      const updates = {
+        [`cards[${idx}].dragging`]: false,
+        [`cards[${idx}].dragStyle`]: ''
+      }
       if (hit === c.target) {
         updates[`cards[${idx}].placed`] = true
         updates[`slots[${hit}].filled`] = c.title
         // 滚动时间轴，让刚填入的槽位进入视野
-        updates.scrollLeft = Math.max(0, hit * 170 * this.pxRatio - 120)
+        updates.scrollLeft = Math.max(0, hit * 170 * drag.ratio() - 120)
         updates.selectedCard = -1
         updates.pointTip = '归位正确，继续选择下一张事件卡。'
         this.setData(updates)
@@ -212,29 +236,9 @@ Page({
         const attempts = this.data.attempts + 1
         this.setData({ attempts: attempts })
         session.attemptPuzzle('s4-timeline', attempts, false, 'drag')
-        // INT-401：弹回走 200ms tween（替代 setData 跳变）
-        updates[`cards[${idx}].dragging`] = false
         this.setData(updates)
-        this.snapBack(idx, c.ox, c.oy, r.x, r.y)
         if (hit >= 0) this.flashSlot(hit)
       }
-    })
-  },
-
-  // INT-401：拖错弹回过渡——从落点 (fx,fy) 平滑回到原位 (ox,oy)，200ms outQuad
-  snapBack(idx, ox, oy, fx, fy) {
-    if (this._snapAnim) this._snapAnim.cancel()
-    const self = this
-    const p = { x: fx, y: fy }
-    this._snapAnim = anime.animate(p, {
-      x: ox,
-      y: oy,
-      duration: 200,
-      ease: 'outQuad',
-      onUpdate: () => self.setData({
-        [`cards[${idx}].x`]: Math.round(p.x * 10) / 10,
-        [`cards[${idx}].y`]: Math.round(p.y * 10) / 10
-      })
     })
   },
 
@@ -252,31 +256,13 @@ Page({
   },
 
   finish() {
+    if (this.data.timelineComplete) return
     const attempts = this.data.attempts + 1
     this.setData({ attempts: attempts })
     session.attemptPuzzle('s4-timeline', attempts, true, 'drag_or_tap')
-    // 金线流动 + 屏幕轻震（Anime.js 驱动数值）→ 独白 → 盖章落库
-    haptic('medium')   // INT-403：完成时刻短震（与屏震动画同步）
+    haptic('medium')
+    this.setData({ timelineComplete: true })
     const self = this
-    const gold = { w: 0 }
-    this._goldAnim = anime.animate(gold, {
-      w: 1660,
-      duration: 1400,
-      ease: 'linear',
-      onUpdate: () => self.setData({ goldW: Math.round(gold.w) })
-    })
-    const shake = { x: 0, y: 0 }
-    this._shakeAnim = anime.animate(shake, {
-      x: [-8, 8, -5, 5, 0],
-      y: [2, -2, 1, -1, 0],
-      duration: 600,
-      ease: 'linear',
-      onUpdate: () => self.setData({
-        sx: Math.round(shake.x * 10) / 10,
-        sy: Math.round(shake.y * 10) / 10
-      }),
-      onComplete: () => self.setData({ sx: 0, sy: 0 })
-    })
     this._timers.push(setTimeout(() => {
       this.setData({ monologue: true, showHistory: true })
       // 收集时间轴卡片角落数字（日期第二位）——主线：卡片数字 → 日期密码
@@ -286,7 +272,7 @@ Page({
       }, { collectCard: true }).catch(() => {
         this.setData({ saveError: '时间轴进度暂未保存，下一步会自动重试。' })
       })
-    }, 1400))
+    }, this._reducedMotion ? 0 : 900))
   },
 
   // 前往密码输入页（第四站在密码校验通过后才 completeStation）
@@ -307,11 +293,8 @@ Page({
     })
   },
 
-  // INT-101/102/401：清理 anime 动画与定时器，防止卸载后 setData 报错
   onUnload() {
-    if (this._goldAnim) this._goldAnim.cancel()
-    if (this._shakeAnim) this._shakeAnim.cancel()
-    if (this._snapAnim) this._snapAnim.cancel()
+    this._dragState = null
     ;(this._timers || []).forEach(clearTimeout)
   }
 })

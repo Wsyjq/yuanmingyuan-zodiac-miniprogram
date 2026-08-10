@@ -1,5 +1,5 @@
 /* P01 序章 */
-/* 插图占位块样式已内置在 novel-view 组件（段落项传 {image, caption} 即可） */
+/* 叙事图片样式由 novel-view 提供，archive-illustration 保留降级能力。 */
 
 /* v1.3.1 手账根容器：旧纸纹底 + 真纸纹叠加 + 活页装订孔让位 */
 .page {

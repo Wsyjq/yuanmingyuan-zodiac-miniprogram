@@ -121,6 +121,7 @@
 
 /**
  * @typedef {Object} RecognitionResult
+ * @property {boolean} [available] false 表示宿主未提供服务，调用方必须直接使用照片且不得阻断
  * @property {boolean} pass
  * @property {number} [confidence] 0–1，可选，用于宿主调阈值
  * @property {'not_target'|'too_dark'|'blurry'|'unknown'} [failReason]
@@ -153,13 +154,15 @@
 /**
  * 埋点事件（模块保证枚举只增不改）
  * @typedef {Object} ModuleEvent
- * @property {'module_enter'|'module_exit'|'puzzle_viewed'|'puzzle_attempted'|'hint_viewed'|'card_collected'|'station_completed'|'puzzle_completed'|'capability_fallback'|'photo_check'|'finale_viewed'|'report_saved'} name
+ * @property {'module_enter'|'module_exit'|'module_completed'|'puzzle_viewed'|'puzzle_attempted'|'hint_viewed'|'card_collected'|'station_completed'|'puzzle_completed'|'capability_fallback'|'photo_check'|'finale_viewed'|'report_saved'} name
  * @property {number} ts
  * @property {string} [station]   station_completed 时携带
- * @property {string} [puzzle]    puzzle_completed / puzzle_failed 时携带
- * @property {number} [attempts]  puzzle_completed / puzzle_failed 时携带
+ * @property {string} [puzzle]    puzzle_viewed / puzzle_attempted / hint_viewed / puzzle_completed 时携带
+ * @property {number} [attempts]  puzzle_completed 时携带
+ * @property {number} [attempt]   puzzle_attempted / photo_check 时携带
+ * @property {'correct'|'incorrect'} [result] puzzle_attempted 时携带
  * @property {string} [scene]     photo_check 时携带
- * @property {number} [attempt]   photo_check 时携带
+ * @property {boolean} [available] photo_check 时携带
  * @property {boolean} [pass]     photo_check 时携带
  */
 
@@ -181,11 +184,11 @@
  *
  * updateSession(input: SessionMutationInput): Promise<SessionMutationResult>
  *   进度落库。每个谜题完成节点调用（幂等 + 乐观锁）。
- *   失败处理：模块本地暂存，下个节点补发；绝不阻塞玩家。
+ *   失败处理：模块写入持久化 outbox 并 reject，当前交接停留供玩家重试；后续写入前补发。
  *
  * recognizeScene(input: RecognitionInput): Promise<RecognitionResult>
- *   实景照片校验。P09 拍照验证调用，最多 2 次/场景。
- *   超时/失败：模块按"校验失败 1 次"处理；2 次未过照样放行进入互动页（不卡关）。
+ *   兼容性的可选照片建议能力。当前主线不调用；available=false、超时或失败都必须直接使用照片。
+ *   识别结果只能提示重拍，不能作为谜题通过条件，也不能累计次数后伪造通过。
  *
  * saveMedia(input: SaveMediaInput): Promise<MediaReference|null>
  *   留存媒体（可选能力）。四图现场考察与保存考察报告图时调用。
@@ -224,6 +227,7 @@ const CARD_ORDER = [
 const EVENT_NAMES = [
   'module_enter',
   'module_exit',
+  'module_completed',
   'puzzle_viewed',
   'puzzle_attempted',
   'hint_viewed',

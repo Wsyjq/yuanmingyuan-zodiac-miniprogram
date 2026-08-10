@@ -1,6 +1,6 @@
 <!-- P04 第二站 · 黄花阵选择题 -->
 <nav-back />
-<view class="page paper-grain paper-real">
+<view class="page page-shell paper-grain paper-real">
   <!-- v1.3.1 手账：左侧活页装订孔列（全站统一） -->
   <view class="binder"></view>
   <view class="tag-no">No.004</view>
@@ -11,10 +11,9 @@
 
   <view class="img-ph img-s2a double-frame">
     <view class="tape" style="top:-20rpx; left:50%; margin-left:-90rpx;"></view>
-    <!-- v1.3.1 手账：邮票贴纸压在占位图右上角 -->
+    <!-- v1.3.1 手账：邮票贴纸压在黄花阵图右上角 -->
     <image class="s2a-stamp" src="/plate21/module/assets/img/stickers/st-stamp-02.png" mode="aspectFit" />
-    <!-- IMG-S2A 黄花阵俯瞰铜版画 -->
-    <image class="s2a-img" src="/plate21/module/assets/img/IMG-S2A.jpg" mode="aspectFill" />
+    <image class="s2a-img" src="/plate21/module/assets/img/IMG-RUNTIME-MAZE.jpg" mode="aspectFill" />
   </view>
   <view class="note-hand olive" style="transform: rotate(-1.5deg); margin-top: 16rpx;">砖墙仅及肩，入阵便迷向，奇哉。</view>
 
@@ -23,16 +22,20 @@
   <view class="quiz">
     <view class="q-title serif">这迷宫的修建目的是</view>
     <view class="note-hand" style="transform: rotate(1deg); margin-bottom: 16rpx;">须想透「戏」字，方得正解。</view>
-    <view class="opts">
+    <view class="opts" role="radiogroup" aria-label="黄花阵修建目的选项">
       <view
         wx:for="{{options}}"
         wx:key="key"
         class="opt {{selected === item.key ? 'opt-sel' : ''}} {{item.wrong ? 'opt-wrong' : ''}} {{shakeKey === item.key ? 'shake' : ''}}"
         data-key="{{item.key}}"
         bindtap="onSelect"
+        role="radio"
+        aria-checked="{{selected === item.key}}"
+        aria-label="{{item.key}}，{{item.text}}{{item.wrong ? '，不对应' : (selected === item.key ? '，已选择' : '')}}"
       >
         <view class="opt-key serif">{{item.key}}</view>
         <view class="opt-text">{{item.text}}</view>
+        <view wx:if="{{item.wrong || selected === item.key}}" class="opt-state">{{item.wrong ? '不对应' : (solved ? '正确' : '已选择')}}</view>
         <view class="pin {{solved && item.key === 'C' ? 'pin-lit' : ''}}"></view>
       </view>
     </view>

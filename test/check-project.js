@@ -6,8 +6,13 @@ const { spawnSync } = require('child_process')
 
 const ROOT = path.resolve(__dirname, '..')
 const THIRD_PARTY_LOCK = path.join(ROOT, 'plate21', 'module', 'assets', 'third-party-lock.json')
+const REQUIRED_PACKAGE_IGNORES = [
+  'project.private.config.json',
+  'plate21/module/assets/third-party-lock.json'
+]
 const EXCLUDED = new Set([
   path.join(ROOT, '.zcode'),
+  path.join(ROOT, '.playwright-cli'),
   path.join(ROOT, 'test', 'node_modules'),
   path.join(ROOT, 'plate21', 'module', 'vendor')
 ])
@@ -59,6 +64,13 @@ for (const file of files.filter((item) => item.endsWith('.json'))) {
 }
 
 const app = JSON.parse(fs.readFileSync(path.join(ROOT, 'app.json'), 'utf8'))
+const projectConfig = JSON.parse(fs.readFileSync(path.join(ROOT, 'project.config.json'), 'utf8'))
+const ignoredPackageFiles = new Set(((projectConfig.packOptions && projectConfig.packOptions.ignore) || [])
+  .filter((rule) => rule.type === 'file')
+  .map((rule) => String(rule.value || '').replace(/\\/g, '/').replace(/^\.\//, '')))
+for (const file of REQUIRED_PACKAGE_IGNORES) {
+  if (!ignoredPackageFiles.has(file)) fail(file + ': 仅开发/审计使用，必须从生产包排除')
+}
 const routes = (app.pages || []).slice()
 for (const subpackage of app.subpackages || []) {
   for (const page of subpackage.pages || []) routes.push(subpackage.root + '/' + page)

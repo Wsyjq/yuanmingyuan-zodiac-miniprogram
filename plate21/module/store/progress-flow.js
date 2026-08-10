@@ -75,6 +75,7 @@ function inferredCheckpoint(snapshot) {
   const flags = snap.flags || {}
   const stations = snap.stations || {}
 
+  if (flags.experienceCompletedAt) return 'report'
   if (snap.finale) return 'report'
   if (stations.s4) return 'finale'
   if (puzzles['s4-password']) return 's4-password'

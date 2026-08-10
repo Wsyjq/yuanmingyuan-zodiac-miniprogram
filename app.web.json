@@ -1,0 +1,49 @@
+{
+  "pages": [
+    "pages/index/index"
+  ],
+  "usingComponents": {
+    "archive-illustration": "/components/archive-illustration/archive-illustration"
+  },
+  "subpackages": [
+    {
+      "root": "plate21/module",
+      "pages": [
+        "pages/cover/cover",
+        "pages/prologue/prologue",
+        "pages/s1-decode/s1-decode",
+        "pages/transit/transit",
+        "pages/s2-quiz/s2-quiz",
+        "pages/s2-reveal/s2-reveal",
+        "pages/s2-blend/s2-blend",
+        "pages/s2-pattern/s2-pattern",
+        "pages/s3-comic/s3-comic",
+        "pages/s3-zodiac/s3-zodiac",
+        "pages/s3-water/s3-water",
+        "pages/s4-timeline/s4-timeline",
+        "pages/s4-password/s4-password",
+        "pages/finale/finale",
+        "pages/report/report",
+        "pages/handbook/handbook"
+      ]
+    }
+  ],
+  "router": {
+    "mode": "hash"
+  },
+  "window": {
+    "backgroundColor": "#F4EFE3",
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#F4EFE3",
+    "navigationBarTextStyle": "black"
+  },
+  "permission": {
+    "scope.camera": {
+      "desc": "拍摄黄花阵建筑细节并生成现场考察记录"
+    },
+    "scope.writePhotosAlbum": {
+      "desc": "保存你的考察报告（第21图）到相册"
+    }
+  },
+  "sitemapLocation": "sitemap.json"
+}

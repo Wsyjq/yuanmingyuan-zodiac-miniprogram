@@ -2,6 +2,9 @@
   "pages": [
     "pages/index/index"
   ],
+  "usingComponents": {
+    "archive-illustration": "/components/archive-illustration/archive-illustration"
+  },
   "subpackages": [
     {
       "root": "plate21/module",
@@ -21,7 +24,6 @@
         "pages/s4-password/s4-password",
         "pages/finale/finale",
         "pages/report/report",
-        "pages/ending/ending",
         "pages/handbook/handbook"
       ]
     }

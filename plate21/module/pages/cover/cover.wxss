@@ -35,7 +35,7 @@
   color: var(--coffee);
 }
 
-/* ---------- 图片占位块（工程无素材，统一铜版画双框占位） ---------- */
+/* ---------- 已授权 AI 档案主图 ---------- */
 .img-ph {
   background: var(--paper2);
   display: flex;

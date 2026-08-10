@@ -1,14 +1,7 @@
 // P15 考察报告（成果页）：第 21 图成品展示 + 保存相册 + 拓印提示
 const session = require('../../store/session')
 const fieldRecord = require('../../store/field-record')
-
-function sessionDateText(key) {
-  const valid = /^\d{8}$/.test(key || '')
-  const d = valid
-    ? new Date(Number(key.slice(0, 4)), Number(key.slice(4, 6)) - 1, Number(key.slice(6, 8)))
-    : new Date()
-  return d.getFullYear() + ' 年 ' + (d.getMonth() + 1) + ' 月 ' + d.getDate() + ' 日'
-}
+const sessionDate = require('../../utils/session-date')
 
 function editionText(no) {
   return no ? '第 ' + no + ' 版' : '第 — 版'
@@ -17,6 +10,7 @@ function editionText(no) {
 // 离屏画布逻辑尺寸（导出分辨率基准，与屏幕 rpx 无关）
 const CW = 700
 const CH = 1120
+const REPORT_PLATE_SRC = '/plate21/module/assets/img/IMG-RUNTIME-PLATE.jpg'
 
 Page({
   data: {
@@ -29,6 +23,8 @@ Page({
     saveError: '',
     canOpenAlbumSettings: false,
     collected: false,
+    completed: false,
+    completing: false,
     fieldPhotos: fieldRecord.photosFromSnapshot(),
     photoCount: 0
   },
@@ -50,8 +46,9 @@ Page({
       name: snap.name || '无名氏',
       editionNo: no,
       editionLabel: editionText(no),
-      today: sessionDateText(snap.sessionDate),
+      today: sessionDate.formatDateKey(snap.sessionDate),
       collected: !!(snap.flags && snap.flags.collectedReport),
+      completed: !!(snap.flags && snap.flags.experienceCompletedAt),
       fieldPhotos: fieldPhotos,
       photoCount: fieldPhotos.filter(function (photo) { return !!photo.photoPath }).length
     })
@@ -87,16 +84,16 @@ Page({
         let dpr = 2
         try {
           const info = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync()
-          dpr = info.pixelRatio || 2
+          dpr = Math.min(2, Math.max(1, Number(info.pixelRatio) || 1))
         } catch (e) { /* 用默认 dpr */ }
         canvas.width = CW * dpr
         canvas.height = CH * dpr
         ctx.scale(dpr, dpr)
-        // INT-201：异步绘制（含 IMG-F06 真图加载），完成后再导出
+        // INT-201：异步载入玩家现场照片，完成后再导出。
         try {
           await this.drawReport(ctx, canvas)
         } catch (e) {
-          // 图片加载失败时 drawReport 内部已 fallback 色块，不阻断
+          // 照片加载失败时 drawReport 内部使用待补录色块，不阻断。
           console.warn('[report] drawReport warning', e && e.message)
         }
         wx.canvasToTempFilePath({
@@ -144,7 +141,7 @@ Page({
   },
 
   // 离屏绘制：第二十一图、玩家四张现场照片、题跋和著录信息。
-  drawReport(ctx, canvas) {
+  async drawReport(ctx, canvas) {
     const name = this.data.name
     // 旧纸底
     ctx.fillStyle = '#F4EDDC'
@@ -174,8 +171,16 @@ Page({
     const loadImage = (src) => new Promise((resolve) => {
       if (!src || !canvas || typeof canvas.createImage !== 'function') return resolve(null)
       const img = canvas.createImage()
-      img.onload = function () { resolve(img) }
-      img.onerror = function () { resolve(null) }
+      img.onload = function () {
+        img.onload = null
+        img.onerror = null
+        resolve(img)
+      }
+      img.onerror = function () {
+        img.onload = null
+        img.onerror = null
+        resolve(null)
+      }
       img.src = src
     })
 
@@ -193,61 +198,149 @@ Page({
       c.fillText(label, x + w / 2, y + h / 2 + 5)
     }
 
-    const sources = ['/plate21/module/assets/img/IMG-F06.jpg'].concat(
-      this.data.fieldPhotos.map(function (photo) { return photo.photoPath })
-    )
-    return Promise.all(sources.map(loadImage)).then((images) => {
-      const main = images[0]
-      if (main) ctx.drawImage(main, 70, 190, 560, 400)
-      else drawPlaceholder(ctx, 70, 190, 560, 400, '第二十一图')
+    function drawArchivePlate(c, x, y, w, h) {
+      c.save()
+      c.translate(x, y)
+      c.scale(w / 560, h / 400)
+      c.fillStyle = '#E8DABD'
+      c.fillRect(0, 0, 560, 400)
 
-      // L2 边框（虚线矩形）
-      ctx.strokeStyle = '#A98F5F'
-      ctx.lineWidth = 2
-      ctx.strokeRect(60, 180, CW - 120, 420)
-      ctx.lineWidth = 1
-      ctx.strokeRect(70, 190, CW - 140, 400)
+      c.strokeStyle = 'rgba(70,56,42,0.18)'
+      c.lineWidth = 1
+      for (let line = -300; line < 700; line += 22) {
+        c.beginPath()
+        c.moveTo(line, 0)
+        c.lineTo(line + 300, 400)
+        c.stroke()
+      }
 
-      // L5 落款 + 署名
-      ctx.textAlign = 'right'
-      ctx.fillStyle = '#46382A'
-      ctx.font = '18px STKaiti, KaiTi, serif'
-      ctx.fillText('1747 —— 今日', CW - 82, 540)
-      ctx.fillStyle = '#A63A2E'
-      ctx.font = '22px STKaiti, KaiTi, serif'
-      ctx.fillText(name, CW - 82, 572)
+      c.strokeStyle = '#46382A'
+      c.lineWidth = 3
+      c.beginPath()
+      c.moveTo(90, 170)
+      c.bezierCurveTo(145, 65, 415, 65, 470, 170)
+      c.stroke()
+      c.strokeRect(70, 168, 420, 150)
 
-      ctx.textAlign = 'left'
-      ctx.fillStyle = '#46382A'
-      ctx.font = '700 20px STSong, SimSun, serif'
-      ctx.fillText('现场四图考察记录', 60, 642)
-      ctx.fillStyle = '#8A7A60'
-      ctx.font = '12px sans-serif'
-      ctx.fillText('以下均为考察者现场拍摄', 60, 664)
-
-      const photoW = 278
-      const photoH = 145
-      this.data.fieldPhotos.forEach(function (photo, index) {
-        const x = 60 + (index % 2) * 302
-        const y = 684 + Math.floor(index / 2) * 184
-        const image = images[index + 1]
-        if (image) ctx.drawImage(image, x, y, photoW, photoH)
-        else drawPlaceholder(ctx, x, y, photoW, photoH, '待补录')
-        ctx.strokeStyle = '#A98F5F'
-        ctx.lineWidth = 1
-        ctx.strokeRect(x, y, photoW, photoH)
-        ctx.fillStyle = '#46382A'
-        ctx.textAlign = 'left'
-        ctx.font = '13px sans-serif'
-        ctx.fillText(photo.no + '  ' + photo.title, x, y + photoH + 20)
+      ;[145, 280, 415].forEach(function (center) {
+        c.beginPath()
+        c.arc(center, 245, 48, Math.PI, 0)
+        c.lineTo(center + 48, 306)
+        c.lineTo(center - 48, 306)
+        c.closePath()
+        c.stroke()
       })
 
-      // 底部著录行：日期 + 版本号
-      ctx.textAlign = 'center'
-      ctx.fillStyle = '#8A7A60'
-      ctx.font = '14px sans-serif'
-      ctx.fillText('绘制时间：' + this.data.today + '    ' + this.data.editionLabel, CW / 2, 1078)
-    })
+      c.strokeStyle = '#4A6B64'
+      c.lineWidth = 2
+      ;[-1, 0, 1].forEach(function (offset) {
+        c.beginPath()
+        c.moveTo(280, 292)
+        c.lineTo(280 + offset * 52, 350)
+        c.stroke()
+      })
+      c.strokeStyle = '#46382A'
+      c.strokeRect(155, 344, 250, 30)
+
+      c.strokeStyle = 'rgba(166,58,46,0.5)'
+      c.lineWidth = 2
+      c.beginPath()
+      c.arc(475, 65, 31, 0, Math.PI * 2)
+      c.stroke()
+      c.fillStyle = 'rgba(70,56,42,0.62)'
+      c.font = '28px Times New Roman, serif'
+      c.textAlign = 'left'
+      c.fillText('XXI', 36, 58)
+      c.restore()
+    }
+
+    function drawCover(c, image, x, y, width, height) {
+      const imageWidth = Number(image && (image.naturalWidth || image.width)) || 0
+      const imageHeight = Number(image && (image.naturalHeight || image.height)) || 0
+      if (!imageWidth || !imageHeight) {
+        c.drawImage(image, x, y, width, height)
+        return
+      }
+      const targetRatio = width / height
+      const sourceRatio = imageWidth / imageHeight
+      let sourceX = 0
+      let sourceY = 0
+      let sourceWidth = imageWidth
+      let sourceHeight = imageHeight
+      if (sourceRatio > targetRatio) {
+        sourceWidth = imageHeight * targetRatio
+        sourceX = (imageWidth - sourceWidth) / 2
+      } else {
+        sourceHeight = imageWidth / targetRatio
+        sourceY = (imageHeight - sourceHeight) / 2
+      }
+      c.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, x, y, width, height)
+    }
+
+    function drawContain(c, image, x, y, width, height) {
+      const imageWidth = Number(image && (image.naturalWidth || image.width)) || 0
+      const imageHeight = Number(image && (image.naturalHeight || image.height)) || 0
+      if (!imageWidth || !imageHeight) {
+        c.drawImage(image, x, y, width, height)
+        return
+      }
+      const scale = Math.min(width / imageWidth, height / imageHeight)
+      const drawWidth = imageWidth * scale
+      const drawHeight = imageHeight * scale
+      c.drawImage(image, x + (width - drawWidth) / 2, y + (height - drawHeight) / 2, drawWidth, drawHeight)
+    }
+
+    let plateImage = await loadImage(REPORT_PLATE_SRC)
+    if (plateImage) drawContain(ctx, plateImage, 70, 190, 560, 400)
+    else drawArchivePlate(ctx, 70, 190, 560, 400)
+    plateImage = null
+    // L2 边框（虚线矩形）
+    ctx.strokeStyle = '#A98F5F'
+    ctx.lineWidth = 2
+    ctx.strokeRect(60, 180, CW - 120, 420)
+    ctx.lineWidth = 1
+    ctx.strokeRect(70, 190, CW - 140, 400)
+
+    ctx.textAlign = 'left'
+    ctx.fillStyle = '#46382A'
+    ctx.font = '700 20px STSong, SimSun, serif'
+    ctx.fillText('现场四图考察记录', 60, 642)
+    ctx.fillStyle = '#8A7A60'
+    ctx.font = '12px sans-serif'
+    ctx.fillText('以下均为考察者现场拍摄', 60, 664)
+
+    const photoW = 278
+    const photoH = 145
+    for (let index = 0; index < this.data.fieldPhotos.length; index += 1) {
+      const photo = this.data.fieldPhotos[index]
+      const x = 60 + (index % 2) * 302
+      const y = 684 + Math.floor(index / 2) * 184
+      let image = await loadImage(photo.photoPath)
+      if (image) drawCover(ctx, image, x, y, photoW, photoH)
+      else drawPlaceholder(ctx, x, y, photoW, photoH, '待补录')
+      image = null
+      ctx.strokeStyle = '#A98F5F'
+      ctx.lineWidth = 1
+      ctx.strokeRect(x, y, photoW, photoH)
+      ctx.fillStyle = '#46382A'
+      ctx.textAlign = 'left'
+      ctx.font = '13px sans-serif'
+      ctx.fillText(photo.no + '  ' + photo.title, x, y + photoH + 20)
+    }
+
+    // L5 落款 + 署名在照片解码结束后绘制，避免异步图像覆盖著录信息。
+    ctx.textAlign = 'right'
+    ctx.fillStyle = '#46382A'
+    ctx.font = '18px STKaiti, KaiTi, serif'
+    ctx.fillText('1747 —— 本次考察', CW - 82, 540)
+    ctx.fillStyle = '#A63A2E'
+    ctx.font = '22px STKaiti, KaiTi, serif'
+    ctx.fillText(name, CW - 82, 572)
+
+    ctx.textAlign = 'center'
+    ctx.fillStyle = '#8A7A60'
+    ctx.font = '14px sans-serif'
+    ctx.fillText('绘制时间：' + this.data.today + '    ' + this.data.editionLabel, CW / 2, 1078)
   },
 
   // 「收入考察手册」INT-202：真正写入 session，handbook 据此显示缩略
@@ -264,7 +357,22 @@ Page({
     this.setData({ showRubbing: true })
   },
 
-  onContinue() {
-    wx.redirectTo({ url: '/plate21/module/pages/ending/ending' })
+  onOpenHandbook() {
+    wx.navigateTo({ url: '/plate21/module/pages/handbook/handbook' })
+  },
+
+  onFinish() {
+    if (this.data.completing) return
+    this.setData({ completing: true })
+    session.completeExperience().then(() => {
+      session.emit({ name: 'module_exit' })
+      wx.reLaunch({
+        url: '/pages/index/index',
+        fail: () => this.setData({ completing: false })
+      })
+    }).catch(() => {
+      this.setData({ completing: false })
+      wx.showToast({ title: '完成状态保存失败，请重试', icon: 'none' })
+    })
   }
 })

@@ -10,7 +10,7 @@ const IMAGE_DIR = path.join(ROOT, 'plate21', 'module', 'assets', 'img')
 const RAW_DIR = path.join(__dirname, 'gen-raw')
 const GENERATION_LOG = path.join(__dirname, 'gen-all.log')
 const PROJECT_CONFIG = path.join(ROOT, 'project.config.json')
-const HISTORIC_SCAN_IDS = new Set(['IMG-F06', 'IMG-S2A', 'IMG-S3C', 'IMG-S4A', 'img-c01'])
+const RUNTIME_MANIFEST = path.join(ROOT, 'docs', 'compliance', 'ai-runtime-manifest.json')
 
 function normalize(filePath) {
   return filePath.split(path.sep).join('/')
@@ -37,38 +37,50 @@ function findRawPath(fileName) {
   return null
 }
 
-function classifyEvidence(filePath, loggedIds) {
+function classifyEvidence(filePath, loggedIds, derivatives) {
   const fileName = path.basename(filePath)
   const stem = path.basename(fileName, path.extname(fileName))
   const rawPath = findRawPath(fileName)
+  const relativePath = normalize(path.relative(ROOT, filePath))
+  const derivative = derivatives.get(relativePath)
 
-  if (HISTORIC_SCAN_IDS.has(stem)) {
-    const supersededPath = stem === 'img-c01'
-      ? path.join(__dirname, 'gen-img-c01.png')
-      : rawPath
+  if (derivative) {
     return {
-      sourceCategory: 'historic-scan',
-      sourceEvidence: null,
-      supersededAiEvidence: inspectSupportingFile(supersededPath)
+      sourceCategory: 'approved-ai-runtime-derivative',
+      sourceEvidence: inspectSupportingFile(path.join(ROOT, derivative.source)),
+      derivative: {
+        manifest: normalize(path.relative(ROOT, RUNTIME_MANIFEST)),
+        processing: derivative.processing
+      }
     }
   }
 
-  if (rawPath) {
+  if (relativePath === 'assets/host/IMG-F06.jpg') {
+    return {
+      sourceCategory: 'ai-project-copy',
+      sourceEvidence: inspectSupportingFile(path.join(IMAGE_DIR, 'IMG-F06.jpg')),
+      derivative: null
+    }
+  }
+
+  const fallbackRaw = stem === 'img-c01' ? path.join(__dirname, 'gen-img-c01.png') : rawPath
+
+  if (fallbackRaw && fs.existsSync(fallbackRaw)) {
     return {
       sourceCategory: loggedIds.has(stem) ? 'ai-generation-log-and-raw' : 'ai-raw-only',
-      sourceEvidence: inspectSupportingFile(rawPath),
-      supersededAiEvidence: null
+      sourceEvidence: inspectSupportingFile(fallbackRaw),
+      derivative: null
     }
   }
 
   return {
     sourceCategory: 'ai-source-file-only',
     sourceEvidence: inspectSupportingFile(path.join(IMAGE_DIR, `${stem}.png`)),
-    supersededAiEvidence: null
+    derivative: null
   }
 }
 
-async function inspect(filePath, ignoredFiles, loggedIds) {
+async function inspect(filePath, ignoredFiles, loggedIds, derivatives) {
   const buffer = fs.readFileSync(filePath)
   const image = await Jimp.read(buffer)
   const relativePath = normalize(path.relative(ROOT, filePath))
@@ -78,7 +90,7 @@ async function inspect(filePath, ignoredFiles, loggedIds) {
     dimensions: `${image.bitmap.width}x${image.bitmap.height}`,
     sha256: sha256(buffer),
     packageStatus: ignoredFiles.has(relativePath) ? 'ignored' : 'bundled',
-    ...classifyEvidence(filePath, loggedIds)
+    ...classifyEvidence(filePath, loggedIds, derivatives)
   }
 }
 
@@ -89,6 +101,8 @@ async function main() {
     .map((entry) => normalize(entry.value)))
   const generationLog = fs.existsSync(GENERATION_LOG) ? fs.readFileSync(GENERATION_LOG, 'utf8') : ''
   const loggedIds = new Set(generationLog.match(/IMG-[A-Z0-9-]+/g) || [])
+  const manifest = fs.existsSync(RUNTIME_MANIFEST) ? JSON.parse(fs.readFileSync(RUNTIME_MANIFEST, 'utf8')) : { derivatives: [] }
+  const derivatives = new Map((manifest.derivatives || []).map((item) => [normalize(item.target), item]))
 
   const controlledName = (name) => /^IMG-.*\.jpe?g$/i.test(name) || /^img-c01\.jpe?g$/i.test(name)
   const files = fs.readdirSync(IMAGE_DIR)
@@ -103,7 +117,7 @@ async function main() {
   }
 
   const rows = []
-  for (const filePath of files.sort()) rows.push(await inspect(filePath, ignoredFiles, loggedIds))
+  for (const filePath of files.sort()) rows.push(await inspect(filePath, ignoredFiles, loggedIds, derivatives))
 
   console.log(JSON.stringify({
     generatedAt: new Date().toISOString(),

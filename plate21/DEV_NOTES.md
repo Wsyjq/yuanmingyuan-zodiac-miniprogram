@@ -1,12 +1,9 @@
 # 第二十一图 · 页面开发者手册（DEV_NOTES）
 
-> 面向并行开发页面模块的开发者。本手册只描述**已落地的代码事实**，可直接照抄。
-> 设计依据：`docs/UI-UX设计文档.md`（风格/页面/组件规范）、`docs/宿主接入方案.md`（Adapter 契约）。
+> 面向页面模块开发者。本手册只描述**已落地的代码事实**。
+> 当前维护基线：`README.md`、`docs/小程序维护优化技术方案-v2.0.md`；视觉语言参考 `docs/UI-UX设计文档.md`，但其中旧五站路由仅作历史记录。
 >
-> **采风修订版重构（2026-08）**：已按 `docs/剧情叙事_最新版.md` 整体重构为四站结构。
-> 旧拆字线（氵+亡+口+月+女+凡=瀛→远瀛观）整条删除；新主线为「每张史料卡角落的数字
-> 连起来 = 会话锁定日期 `YYYYMMDD` = 终局密码」。已删页：s2-rubbing/s3-restore/s3-char/s4-pattern/photo-check；
-> 新增页：s2-blend/s2-pattern/s3-zodiac/s4-password；雨果站 s5→s4。详见路由表。
+> 当前是四站结构。生产路由共 17 条：宿主首页 1 条、业务分包 16 条。旧拆字线已删除；八张史料卡按顺序组成会话锁定日期 `SessionSnapshot.sessionDate`（`YYYYMMDD`）。`ending` 源码保留，但不注册生产路由并从包中排除。
 
 ---
 
@@ -14,19 +11,20 @@
 
 ```
 D:/kc/ymy
-├─ app.json                  # 主包只有演示主页；分包 root = plate21/module，18 页已注册
+├─ app.json                  # 主包 1 页；分包 root = plate21/module，16 页已注册
 ├─ app.wxss                  # 全局设计 token + 通用类（见 §2）
 ├─ pages/index/              # 演示宿主主页（不要动）
+├─ components/archive-illustration/ # 全局项目自制档案图形降级组件
 └─ plate21/
    └─ module/
       ├─ contracts/adapter-api.js   # Host Adapter 契约（JSDoc 类型 + 常量）
       ├─ adapters/local-adapter.js  # 开发期 Adapter（wx.Storage 实现）
       ├─ store/session.js           # 模块侧唯一数据入口（见 §4）
-      ├─ components/                # 6 个通用组件（见 §3）
-       └─ pages/<页面名>/            # 18 个已实现页面
+      ├─ components/                # 5 个分包通用组件（见 §3）
+      └─ pages/<页面名>/            # 16 个生产页；ending 为仓库保留页
 ```
 
-18 个页面路由（采风修订版四站结构，分包内相对路径，跳转时前缀 `/plate21/module/`）：
+16 个业务分包生产路由（跳转时前缀 `/plate21/module/`）：
 
 ```
 pages/cover/cover              封面
@@ -44,9 +42,10 @@ pages/s4-timeline/s4-timeline  第四站 雨果雕像 · 时间轴排序（5 事
 pages/s4-password/s4-password  第四站 · 密码输入（收口 s4，答案=会话日期 YYYYMMDD）
 pages/finale/finale            反转揭示
 pages/report/report            考察报告
-pages/ending/ending            结尾视频/完结
-pages/handbook/handbook      P17 考察手册
+pages/handbook/handbook        考察手册
 ```
+
+`pages/ending/ending` 仅为未来视频能力保留源码；当前主线在报告页完成并返回宿主。
 
 ---
 
@@ -92,7 +91,7 @@ pages/handbook/handbook      P17 考察手册
 - `.perfo-frame` —— 邮票齿孔框（主图外圈齿孔白边，包裹主图，padding 18rpx 即齿孔带宽），每屏至多 1 个主图使用
 - `.note-hand` / `.note-hand.olive` —— 手写批注小字（页边/图旁，可配轻微 rotate 内联样式）
 
-> 六个通用组件的 json 都已声明 `"styleIsolation": "apply-shared"`，所以以上全局类与 CSS 变量在组件 wxml 内同样生效。你自己写新组件时照做。
+> 五个分包通用组件的 json 都已声明 `"styleIsolation": "apply-shared"`，所以以上全局类与 CSS 变量在组件 wxml 内同样生效。新组件照做。
 
 ---
 
@@ -152,14 +151,14 @@ pages/handbook/handbook      P17 考察手册
 paragraphs: [
   { text: '叙事段落正文……' },
   { text: '闻有第二十一图，未见。', quote: true },          // quote=true → 楷体引文卡
-  { image: 'IMG-P02', caption: '民国著录卡片特写' }         // 插图段 → 占位图块（--paper2 底 + 虚线框 + 编号/说明两行小字）
+  { image: 'IMG-P02', src: '/plate21/module/assets/img/IMG-RUNTIME-PROLOGUE-CARD.jpg', caption: '民国著录卡片特写' }
 ]
 ```
 
-- props: `title: String`、`paragraphs: Array<{text?, quote?, image?, caption?}>`、`finishText: String='继续'`。
-- 段落项三选一：普通段（text）、引文卡（quote）、插图占位块（image + caption）。
-- 段落逐段淡入（按序 delay）；滚动到底前底部显示下滑提示（chevron-down 图标 + 「下滑」），到底后显示按钮。
-- 事件: `bind:finish`。组件整页高 100vh，页面里放它就别再叠加其他整页布局。
+- props: `title: String`、`paragraphs: Array<{text?, quote?, image?, src?, illustrationType?, caption?}>`、`finishText: String='继续'`。
+- 段落项三选一：普通段（text）、引文卡（quote）、图片段（image + src + caption）；`illustrationType` 仅用于项目自制降级图形。
+- 字符从首帧预占最终宽度，只做透明度显现；系统减弱动画时立即完整显示，翻页直接切换。
+- 事件: `bind:finish`。组件使用正常流与最小视口高度；宿主页不要再叠加第二套整页滚动容器。
 
 ### 3.4 history-card —— 史料卡弹层
 
@@ -190,7 +189,7 @@ this.selectComponent('#stamp').show('考察记录已保存')
 ```
 
 - 无 props。对外方法 `show(text)`：方印 1.3→1.0 落下 + 随机 ±3° 旋转，600ms 后淡出。
-- 落下动画由 Anime.js 驱动（`utils/anime.js`，见 §6.2），onUpdate 里 setData 更新 transform；淡出仍走 CSS transition。
+- 落下与淡出均由 CSS keyframes/transition 驱动，不做逐帧 `setData`。
 - 连续调用自动合并为最新一枚（内部清定时器重播）。
 
 ### 3.6 ~~prop-drawer —— 道具包抽屉~~（v1.5.0 已移除）
@@ -217,10 +216,11 @@ const session = require('../../store/session')
 | `getPuzzle()` / `isPuzzleComplete()` | `(puzzleId) → state / Boolean` | 页面恢复答题完成态，不要求重答 |
 | `completeStation(station, record?, options?)` | `('s2', {payload}, {checkpoint}) → Promise<snapshot>` | 无对应谜题的站点收口；`recordType`/`completedAt` 自动补齐 |
 | `completeFinale()` | `→ Promise<snapshot>` | 完结时标记 `finale: true` |
+| `completeExperience()` | `→ Promise<snapshot>` | 幂等写入 `flags.experienceCompletedAt` 并发送一次 `module_completed` |
 | `setFlag(key, value)` | `('s2PhotoRecord', record) → Promise<snapshot>` | 写入自定义状态；当前用于四图草稿/成品与 `collectedReport` |
 | `sign(name)` | `→ Promise<snapshot>` | P14 署名落库 |
 | `claimEdition()` | `→ Promise<number \| null>` | P14 领版本号；失败返回 null，页面显示「第 — 版」 |
-| `recognizeScene(scene, attempt, image)` | `('dashuifa', 1, {filePath}) → Promise<{pass, confidence?, failReason?}>` | P09 拍照校验；内部自动埋 `photo_check`，接口失败按 `{pass:false}` 返回 |
+| `recognizeScene(scene, attempt, image)` | `('dashuifa', 1, {filePath}) → Promise<{available, pass, confidence?, failReason?}>` | 兼容性可选能力；当前主线不调用，本地实现明确返回 `available:false`，不得阻断照片使用 |
 | `saveMedia(input)` | `({type:'report', image, meta}) → Promise<MediaReference \| null>` | P15 可选能力，null 时跳过宿主侧留存 |
 | `viewPuzzle/attemptPuzzle/viewHint` | `→ void` | 统一谜题浏览、尝试与提示埋点；不记录答案原文 |
 | `emit(event)` | `emit({name:'module_exit'})` | 自动补 `ts/sessionId/checkpoint/completed` |
@@ -243,7 +243,7 @@ session.completePuzzle('s3-water', { answer: '马首', attempts: 1 }, {
 ```
 
 `updateSession` 失败会写入 `plate21_pending_mutations`，下次写入前按 operationId 幂等补发；页面会收到 reject 并保持在当前交接按钮。
-`local-adapter.js` 顶部 `MOCK_FAIL = true` 可让 `recognizeScene` 恒失败，用于演示拍照兜底路径。
+`local-adapter.js` 不提供识别模型，`recognizeScene` 固定显式声明不可用，不能改成恒高置信通过的 Mock。
 
 ---
 
@@ -264,7 +264,7 @@ session.completePuzzle('s3-water', { answer: '马首', attempts: 1 }, {
 
 ```xml
 <nav-back />
-<view class="page">
+<view class="page page-shell">
   <!-- 页面内容；顶部预留状态栏 + 返回钮空间（约 200rpx） -->
 </view>
 <stamp-toast id="stamp" />
@@ -281,9 +281,11 @@ session.completePuzzle('s3-water', { answer: '马首', attempts: 1 }, {
 
 ## 6. 素材引用约定
 
-- 占位图已由他人生成，路径：`/plate21/module/assets/img/IMG-xxx.png`（编号见 `docs/素材需求清单.md`，如 `IMG-S1A.png`、`ICON-P1.png`）。**直接引用即可，不要问素材是否存在。**
-- 素材未就位需要兜底时，用灰色/排线占位 view（排线 `repeating-linear-gradient` 写法，如各谜题页的空位占位），不要引外链图。
-- 大图（铜版画五层、复原立面、地图）与视频最终走 CDN；原型期一律放 assets 占位路径，路径写成分包内绝对路径 `/plate21/module/assets/...`。
+- 当前生产画面使用 `IMG-AI-RUNTIME` 下的 18 个 `IMG-RUNTIME-*` 压缩衍生图；根级 `archive-illustration` 保留为无图片场景和降级图形组件。
+- 41 个 `IMG-AI-SOURCES` 源 JPEG 继续从包中排除，禁止页面直接引用；使用 `npm run build:runtime-images` 重建生产衍生图。
+- 源到目标的尺寸、quality 和 SHA-256 记录在 `docs/compliance/ai-runtime-manifest.json`，项目方商业使用确认见 `assets/licenses/PROJECT-AI-ASSET-AUTHORIZATION-2026-08-11.txt`。
+- 素材未就位时使用项目自制排线/几何占位，不引外链图，也不以未授权生成图临时顶替。
+- 未来大图或视频只有在 URL、许可、隐私和失败路径全部审批后才可走 CDN；当前生产代码不依赖 CDN。
 
 ### 6.1 图标库（Lucide，ISC License）
 
@@ -300,7 +302,7 @@ session.completePuzzle('s3-water', { answer: '马首', attempts: 1 }, {
 | `ic-download-ink.png` | 保存相册（report） |
 | `ic-camera-ink.png` | 拍照/快门 |
 | `ic-x-ink60.png` | 关闭（弹层预览） |
-| `ic-pencil-ink.png` | 拓印跟随图标（s2-rubbing） |
+| `ic-pencil-ink.png` | 历史拓印页留档图标（当前生产未引用） |
 | `ic-hand-brass.png` | 任务条·取出/动手（task-banner `icon="hand"`） |
 | `ic-eye-brass.png` | 任务条·观察（`icon="eye"`） |
 | `ic-camera-brass.png` | 任务条·拍照（`icon="camera"`） |
@@ -309,36 +311,21 @@ session.completePuzzle('s3-water', { answer: '马首', attempts: 1 }, {
 | `ic-map-pin-brass.png` | 站点定位（transit） |
 | `ic-check-patina.png` | 完成勾选 |
 | `ic-stamp-cinnabar.png` | 印章（辅助） |
-| `ic-play-ink.png` | 播放（ending） |
-| `ic-skip-forward-ink60.png` | 跳过（ending） |
+| `ic-play-ink.png` | 仓库保留 ending 页播放图标（当前不打包） |
+| `ic-skip-forward-ink60.png` | 仓库保留 ending 页跳过图标（当前不打包） |
 | `ic-chevron-down-ink60.png` | 下拉提示（novel-view） |
-| `ic-clock-brass.png` | 时辰/时间（s5-timeline 今日槽） |
+| `ic-clock-brass.png` | 历史时间轴留档图标（当前生产未引用） |
 
 > v1.5.0 已删除的图标（prop-drawer 专用，组件移除后无引用）：`ic-backpack-ink` / `ic-lock-ink60` / `ic-scroll-ink` / `ic-id-card-ink` / `ic-brick-wall-ink` / `ic-file-ink` / `ic-notebook-ink`。
 
 色名对应（v1.3）：`ink #46382A` / `paper #F4EDDC` / `brass #A98F5F` / `patina #4A6B64` / `cinnabar #A63A2E` / `ink60 #8A7A60`。注：图标 PNG 按 v1.2 色值（ink #453526 等）渲染，与 v1.3 色差肉眼不可辨，不重渲染。
 
-### 6.2 动画引擎（Anime.js，MIT License）
+### 6.2 动画策略
 
-数值动画统一用开源引擎 [Anime.js](https://animejs.com) v4.5.0（MIT License，版权说明见 `plate21/module/assets/NOTICE.md`）。vendor 包（官方 UMD 构建，未改动）在 `plate21/module/vendor/anime.umd.min.js`，**一律通过封装入口引用**：
-
-```js
-const anime = require('../../utils/anime')   // 组件内则为 '../../utils/anime' 同路径规则
-
-// 对普通对象做补间，onUpdate 里读数值再 setData（引擎不碰 DOM）
-const state = { s: 1.3 }
-this._anim = anime.animate(state, {
-  s: { to: 1, ease: 'outBack' },   // 支持逐属性 ease
-  duration: 450,
-  ease: 'outQuad',
-  onUpdate: () => this.setData({ scale: state.s })
-})
-// 取消：this._anim.cancel()（重播 / onUnload 前先取消）
-```
-
-- `utils/anime.js` 在 require vendor 前补了 `setImmediate/clearImmediate` 垫片（小程序无 window 时引擎主循环回退到这两个 API），所以**不要直接 require vendor 文件**。
-- 只用对象补间能力（`animate` / `easings` / `stagger`）；`$`、`svg`、`text`、`waapi` 等 DOM 模块在小程序里不可用。
-- 当前使用点：stamp-toast 盖章落下（§3.5）、finale 幕3 五层擦除、s5-timeline 金线流动 + 轻震。
+- 视觉动画优先使用 CSS `transform`、`opacity`、transition 和 keyframes；JS 只切换有限状态。
+- 手势更新最多约 30fps，并只发送当前拖影等最小 payload。
+- `utils/motion.js` 统一读取系统减弱动画偏好；阅读器、时间轴和终章必须提供立即完成路径。
+- Anime.js 的 vendor 与 `utils/anime.js` 仅作历史源码留档，已由 `project.config.json` 排除，生产代码不得重新引用。
 
 ---
 
@@ -365,4 +352,4 @@ wx.navigateTo({ url: '/plate21/module/pages/transit/transit?leg=s1-s2' })
 
 ## 8. 页面变更约定
 
-当前 18 个页面均已实现。新增或调整玩法时同步更新 `progress-flow.js`、页面恢复逻辑、`test/page-flow.test.js`、H5 关键状态和剧情验收矩阵；不要只改页面跳转而遗漏 checkpoint。
+当前 17 条生产路由均已实现。新增或调整玩法时同步更新 `app.json`、`progress-flow.js`、页面恢复逻辑、`test/page-flow.test.js`、H5 关键状态和剧情验收矩阵；不要只改页面跳转而遗漏 checkpoint。

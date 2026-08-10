@@ -8,15 +8,8 @@ const ROOT = path.resolve(__dirname, '..')
 const LOCK_FILE = path.join(ROOT, 'plate21', 'module', 'assets', 'third-party-lock.json')
 const PROJECT_CONFIG_FILE = path.join(ROOT, 'project.config.json')
 const IMAGE_DIR = path.join(ROOT, 'plate21', 'module', 'assets', 'img')
-const IMAGE_RESOURCE_IDS = new Set(['IMG-HOLD-AI', 'IMG-HOLD-SHUGE'])
-const HISTORIC_SCAN_FILES = new Set([
-  'assets/host/IMG-F06.jpg',
-  'plate21/module/assets/img/IMG-F06.jpg',
-  'plate21/module/assets/img/IMG-S2A.jpg',
-  'plate21/module/assets/img/IMG-S3C.jpg',
-  'plate21/module/assets/img/IMG-S4A.jpg',
-  'plate21/module/assets/img/img-c01.jpg'
-])
+const IMAGE_RESOURCE_IDS = new Set(['IMG-AI-SOURCES', 'IMG-AI-RUNTIME'])
+const RUNTIME_MANIFEST = 'docs/compliance/ai-runtime-manifest.json'
 const GENERATION_LOG = 'test/gen-all.log'
 const strictCommercial = process.argv.includes('--commercial')
 
@@ -188,7 +181,7 @@ for (const id of IMAGE_RESOURCE_IDS) {
     fail(errors, `${id}: bundled flag does not match bundledFiles`)
   }
 
-  if (id === 'IMG-HOLD-AI') {
+  if (id === 'IMG-AI-SOURCES') {
     if (!/^[a-f0-9]{64}$/.test(String(resource.generationLogSha256))) {
       fail(errors, `${id}: invalid generationLogSha256`)
     } else if (!exists(GENERATION_LOG) || sha256(GENERATION_LOG) !== resource.generationLogSha256) {
@@ -199,9 +192,35 @@ for (const id of IMAGE_RESOURCE_IDS) {
 
 for (const file of imageFiles) {
   const owner = fileOwners.get(file)
-  const expectedOwner = HISTORIC_SCAN_FILES.has(file) ? 'IMG-HOLD-SHUGE' : 'IMG-HOLD-AI'
+  const expectedOwner = path.basename(file).startsWith('IMG-RUNTIME-') ? 'IMG-AI-RUNTIME' : 'IMG-AI-SOURCES'
   if (!owner) fail(errors, `untracked controlled image: ${file}`)
   else if (owner !== expectedOwner) fail(errors, `${file}: expected ${expectedOwner}, found ${owner}`)
+}
+
+if (!exists(RUNTIME_MANIFEST)) {
+  fail(errors, `missing runtime image manifest ${RUNTIME_MANIFEST}`)
+} else {
+  const manifest = readJson(path.join(ROOT, RUNTIME_MANIFEST))
+  const sources = (lock.resources || []).find((item) => item.id === 'IMG-AI-SOURCES')
+  const runtime = (lock.resources || []).find((item) => item.id === 'IMG-AI-RUNTIME')
+  const sourceFiles = new Set(((sources && sources.files) || []).map(normalize))
+  const runtimeFiles = new Set(((runtime && runtime.files) || []).map(normalize))
+  const manifestFiles = new Set()
+  if (manifest.schemaVersion !== 1 || !Array.isArray(manifest.derivatives)) {
+    fail(errors, `${RUNTIME_MANIFEST}: unsupported manifest`)
+  } else {
+    for (const item of manifest.derivatives) {
+      const source = normalize(item.source || '')
+      const target = normalize(item.target || '')
+      manifestFiles.add(target)
+      if (!sourceFiles.has(source)) fail(errors, `${RUNTIME_MANIFEST}: untracked source ${source}`)
+      if (!runtimeFiles.has(target)) fail(errors, `${RUNTIME_MANIFEST}: untracked target ${target}`)
+      if (exists(source) && sha256(source) !== item.sourceSha256) fail(errors, `${RUNTIME_MANIFEST}: source SHA-256 mismatch ${source}`)
+      if (exists(target) && sha256(target) !== item.sha256) fail(errors, `${RUNTIME_MANIFEST}: target SHA-256 mismatch ${target}`)
+      if (!runtime || !runtime.hashes || runtime.hashes[target] !== item.sha256) fail(errors, `${RUNTIME_MANIFEST}: lock SHA-256 mismatch ${target}`)
+    }
+  }
+  if (!sameMembers(runtimeFiles, manifestFiles)) fail(errors, `${RUNTIME_MANIFEST}: files do not match IMG-AI-RUNTIME`)
 }
 
 const vendorDir = path.join(ROOT, 'plate21', 'module', 'vendor')

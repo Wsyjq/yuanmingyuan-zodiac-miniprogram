@@ -1,4 +1,5 @@
 const session = require('../../store/session')
+const answers = require('../../utils/puzzle-answers')
 
 const HISTORY_LINES = [
   '马首铜像曾流失海外，后由澳门爱国企业家何鸿燊先生出资购回。',
@@ -51,12 +52,12 @@ Page({
 
   onSubmit() {
     if (this.data.showHistory) return
-    const value = String(this.data.answerInput || '').replace(/\s+/g, '')
+    const value = String(this.data.answerInput || '').trim()
     if (!value) {
       wx.showToast({ title: '请先填写纸上答案', icon: 'none' })
       return
     }
-    if (value.includes('马首')) {
+    if (answers.classifyWaterAnswer(value) === 'correct') {
       const attempts = this.data.attempts + 1
       session.attemptPuzzle('s3-water', attempts, true, 'physical')
       this.setData({ solved: true, showHistory: true, attempts, wrongTip: '' })

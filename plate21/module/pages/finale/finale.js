@@ -1,13 +1,9 @@
 // P14 反转揭示（演出页）：分幕自动演出，点按屏幕轻推（不强制等待）
 // 幕1 黑屏 → 幕2 生成中打字机 → 幕3 五层拼合 → 幕4 长文叙事（不可跳过）→ 幕5 署名
-// 幕3 五层遮片擦除（width 100%→0）由 Anime.js 统一编排：单层 1500ms，层间 stagger 600ms。
+// 幕3 五层遮片由 CSS transition 揭示，JS 只在五个固定时点切换层级。
 const session = require('../../store/session')
-const anime = require('../../utils/anime')
-
-// 幕3 遮片初始状态（% 宽度）
-function freshVeils(w) {
-  return { l1: w, l2: w, l3: w, l4: w, l5: w }
-}
+const sessionDate = require('../../utils/session-date')
+const motion = require('../../utils/motion')
 
 const TYPE_LINES = [
   '考察报告生成中……',
@@ -15,7 +11,7 @@ const TYPE_LINES = [
   '铭文 · 黄花阵 ✓',
   '兽首 · 海晏堂 ✓',
   '时间 · 雨果 ✓',
-  '日期 · 今日 ✓',
+  '日期 · 考察日 ✓',
   '报告格式识别中……'
 ]
 
@@ -42,14 +38,6 @@ const NOVEL_PARAGRAPHS = [
   { text: '记录失去，也记录被重新看见。' }
 ]
 
-function sessionDateText(key) {
-  const valid = /^\d{8}$/.test(key || '')
-  const d = valid
-    ? new Date(Number(key.slice(0, 4)), Number(key.slice(4, 6)) - 1, Number(key.slice(6, 8)))
-    : new Date()
-  return d.getFullYear() + ' 年 ' + (d.getMonth() + 1) + ' 月 ' + d.getDate() + ' 日'
-}
-
 Page({
   data: {
     act: 1,               // 当前幕 1~5
@@ -57,7 +45,6 @@ Page({
     typeLines: TYPE_LINES,
     typedCount: 0,        // 幕2 已打出的行数
     layerCount: 0,        // 幕3 已落下的层数（1~5）
-    veils: freshVeils(100), // 幕3 各层遮片宽度（%），由引擎驱动 100→0
     caption: '',          // 幕3 点题短文案
     novel: NOVEL_PARAGRAPHS,
     today: '',
@@ -82,10 +69,11 @@ Page({
   },
 
   onLoad() {
+    this._reducedMotion = motion.prefersReducedMotion()
     const snap = session.getSnapshot() || {}
     const signed = !!snap.finale
     this.setData({
-      today: sessionDateText(snap.sessionDate),
+      today: sessionDate.formatDateKey(snap.sessionDate),
       act: signed ? 5 : 1,
       name: snap.name || '',
       editionNo: snap.editionNo || null,
@@ -101,25 +89,16 @@ Page({
 
   onUnload() {
     this.clearTimers()
-    this._cancelWipe()
-  },
-
-  _cancelWipe() {
-    if (this._wipe) {
-      this._wipe.cancel()
-      this._wipe = null
-    }
   },
 
   startAct(n) {
     this.clearTimers()
-    this._cancelWipe()
     if (n === 2) {
       // 幕2：墨色底变浅回宣纸，打字机逐行
       this.setData({ act: 2, night: false })
       this.later(() => this.typeNext(), 700)
     } else if (n === 3) {
-      this.setData({ act: 3, layerCount: 0, caption: '', veils: freshVeils(100) })
+      this.setData({ act: 3, layerCount: 0, caption: '' })
       this.later(() => this.startWipe(), 500)
     } else if (n === 4) {
       this.setData({ act: 4 })
@@ -139,36 +118,20 @@ Page({
     }
   },
 
-  // 幕3：五层遮片依次擦除（单层 1500ms，层间 stagger 600ms，引擎统一编排）
+  // 幕3：每 600ms 打开一层 CSS 遮片，不在动画帧中 setData。
   startWipe() {
-    const order = ['l1', 'l2', 'l3', 'l4', 'l5'] // 落下顺序：题跋→边框→主体→背景→落款
-    const targets = order.map(() => ({ w: 100 }))
-    const self = this
-    this._wipe = anime.animate(targets, {
-      w: 0,
-      duration: 1500,
-      ease: 'linear',
-      delay: anime.stagger(600),
-      onUpdate() {
-        const veils = {}
-        let n = 0
-        targets.forEach((t, i) => {
-          veils[order[i]] = Math.max(0, Math.round(t.w * 10) / 10)
-          if (t.w < 100) n = i + 1 // 已开始擦除的层数
-        })
-        const update = { veils: veils }
-        if (n !== self.data.layerCount) {
-          update.layerCount = n
-          update.caption = n > 0 ? LAYER_CAPTIONS[n - 1] : ''
-        }
-        self.setData(update)
-      },
-      onComplete() {
-        self._wipe = null
-        self.setData({ caption: FINAL_CAPTION })
-        self.later(() => self.startAct(4), 2200)
-      }
+    if (this._reducedMotion) {
+      this.setData({ layerCount: 5, caption: FINAL_CAPTION })
+      this.later(() => this.startAct(4), 250)
+      return
+    }
+    LAYER_CAPTIONS.forEach((caption, index) => {
+      this.later(() => this.setData({ layerCount: index + 1, caption: caption }), index * 600)
     })
+    this.later(() => {
+      this.setData({ caption: FINAL_CAPTION })
+      this.later(() => this.startAct(4), 1800)
+    }, 3000)
   },
 
   // 点按屏幕轻推：当前幕剩余步骤立即完成，再点进入下一幕
@@ -186,10 +149,9 @@ Page({
       }
     } else if (act === 3) {
       this.clearTimers()
-      this._cancelWipe()
       if (this.data.layerCount < 5) {
-        this.setData({ layerCount: 5, caption: FINAL_CAPTION, veils: freshVeils(0) })
-        this.later(() => this.startAct(4), 1400)
+        this.setData({ layerCount: 5, caption: FINAL_CAPTION })
+        this.later(() => this.startAct(4), this._reducedMotion ? 100 : 800)
       } else {
         this.startAct(4)
       }

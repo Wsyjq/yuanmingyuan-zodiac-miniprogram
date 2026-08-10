@@ -53,7 +53,7 @@ function componentInstance(config, properties) {
   return { instance, events, detach: () => detached && detached.call(instance) }
 }
 
-test('report draws the main image before the signature and metadata', async () => {
+test('report draws the approved AI plate before the signature and metadata', async () => {
   const config = loadPage('plate21/module/pages/report/report.js')
   const instance = pageInstance(config, {
     name: '测试者',
@@ -66,7 +66,7 @@ test('report draws the main image before the signature and metadata', async () =
       if (prop === 'fillText') return (text) => calls.push('text:' + text)
       if (prop === 'drawImage') return () => calls.push('image')
       if (prop === 'setLineDash') return () => {}
-      if (prop === 'save' || prop === 'restore') return () => {}
+      if (['save', 'restore', 'translate', 'scale', 'beginPath', 'moveTo', 'lineTo', 'bezierCurveTo', 'stroke', 'arc', 'closePath'].includes(prop)) return () => {}
       if (prop === 'fillRect' || prop === 'strokeRect') return () => {}
       return target[prop]
     },
@@ -88,11 +88,55 @@ test('report draws the main image before the signature and metadata', async () =
   }
 
   await instance.drawReport(ctx, canvas)
-  const imageIndex = calls.indexOf('image')
+  const plateIndex = calls.indexOf('image')
   const signatureIndex = calls.indexOf('text:测试者')
-  assert.notEqual(imageIndex, -1)
+  assert.notEqual(plateIndex, -1)
   assert.notEqual(signatureIndex, -1)
-  assert.ok(imageIndex < signatureIndex)
+  assert.ok(plateIndex < signatureIndex)
+})
+
+test('report decodes field photos one at a time', async () => {
+  const config = loadPage('plate21/module/pages/report/report.js')
+  const instance = pageInstance(config, {
+    fieldPhotos: ['dome', 'beast', 'lotus', 'swan'].map((key, index) => ({
+      key,
+      no: String(index + 1).padStart(2, '0'),
+      title: key,
+      photoPath: '/saved/' + key + '.jpg'
+    }))
+  })
+  let activeDecodes = 0
+  let peakDecodes = 0
+  let drawnPhotos = 0
+  const noops = new Set(['save', 'restore', 'translate', 'scale', 'beginPath', 'moveTo', 'lineTo', 'bezierCurveTo', 'stroke', 'arc', 'closePath', 'fillRect', 'strokeRect', 'fillText', 'setLineDash'])
+  const ctx = new Proxy({}, {
+    get(target, prop) {
+      if (prop === 'drawImage') return () => { drawnPhotos += 1 }
+      if (noops.has(prop)) return () => {}
+      return target[prop]
+    },
+    set(target, prop, value) { target[prop] = value; return true }
+  })
+  const canvas = {
+    createImage() {
+      const image = { width: 1600, height: 1200 }
+      Object.defineProperty(image, 'src', {
+        set() {
+          activeDecodes += 1
+          peakDecodes = Math.max(peakDecodes, activeDecodes)
+          Promise.resolve().then(() => {
+            activeDecodes -= 1
+            image.onload()
+          })
+        }
+      })
+      return image
+    }
+  }
+
+  await instance.drawReport(ctx, canvas)
+  assert.equal(peakDecodes, 1)
+  assert.equal(drawnPhotos, 5)
 })
 
 test('ending returns directly to the host page', () => {
@@ -112,7 +156,7 @@ test('ending returns directly to the host page', () => {
   assert.deepEqual(calls, ['/pages/index/index'])
 })
 
-test('novel view types each leaf and turns it like a paper page', () => {
+test('novel view reveals each leaf and turns it like a paper page', () => {
   const config = loadComponent('plate21/module/components/novel-view/novel-view.js')
   const { instance, events, detach } = componentInstance(config, {
     title: '序章',
@@ -120,7 +164,7 @@ test('novel view types each leaf and turns it like a paper page', () => {
     finishText: '继续'
   })
 
-  assert.deepEqual(instance.data.currentChars, ['第', '一', '张', '纸'])
+  assert.equal(instance.data.currentItem.text, '第一张纸')
   assert.equal(instance.data.typing, true)
   assert.equal(instance.data.pageIndex, 0)
   assert.equal(instance.data.pageCount, 2)
@@ -133,12 +177,13 @@ test('novel view types each leaf and turns it like a paper page', () => {
   assert.equal(instance.data.turning, true)
   assert.equal(instance.data.turnDirection, 'next')
   assert.equal(instance.data.pageIndex, 1)
-  assert.deepEqual(instance.data.currentChars, [])
+  assert.equal(instance.data.currentItem.text, '第二张纸')
 
   instance._finishTurn()
-  assert.deepEqual(instance.data.currentChars, ['第', '二', '张', '纸'])
+  assert.equal(instance.data.currentItem.text, '第二张纸')
   assert.equal(instance.data.typing, true)
 
+  instance.onPaperTap()
   instance.onPaperTap()
   instance.onPaperTap()
   assert.deepEqual(events, ['finish'])
@@ -147,9 +192,29 @@ test('novel view types each leaf and turns it like a paper page', () => {
   const componentRoot = path.resolve(__dirname, '..', 'plate21', 'module', 'components', 'novel-view', 'novel-view')
   const template = fs.readFileSync(componentRoot + '.wxml', 'utf8')
   const styles = fs.readFileSync(componentRoot + '.wxss', 'utf8')
-  assert.match(template, /type-char/)
+  assert.match(template, /reveal-copy/)
+  assert.doesNotMatch(template, /wx:for="\{\{currentChars\}\}"/)
+  assert.match(styles, /@keyframes copy-reveal/)
   assert.match(styles, /perspective/)
   assert.match(styles, /rotateY/)
+})
+
+test('novel view immediately exposes text and turns directly with reduced motion', () => {
+  global.wx = { getSystemSetting: () => ({ reduceMotionEnabled: true }) }
+  const config = loadComponent('plate21/module/components/novel-view/novel-view.js')
+  const { instance, detach } = componentInstance(config, {
+    paragraphs: [{ text: '第一页' }, { text: '第二页' }],
+    hapticFeedback: false
+  })
+
+  assert.equal(instance.data.typing, false)
+  assert.equal(instance.data.showAll, true)
+  instance.onNext()
+  assert.equal(instance.data.pageIndex, 1)
+  assert.equal(instance.data.turning, false)
+  assert.equal(instance.data.showAll, true)
+  detach()
+  delete global.wx
 })
 
 test('novel view locks horizontal intent and gives two-stage page haptics', () => {

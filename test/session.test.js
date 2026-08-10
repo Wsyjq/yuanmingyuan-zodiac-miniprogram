@@ -241,6 +241,22 @@ test('a complete session can reach report with every puzzle and card preserved',
   assert.equal(snapshot.checkpoint, 'report')
 })
 
+test('experience completion is persisted once and remains idempotent', async () => {
+  const storage = {}
+  const session = loadSession(storage)
+  const before = await session.init({})
+
+  const completed = await session.completeExperience()
+  const completedAt = completed.flags.experienceCompletedAt
+  assert.equal(typeof completedAt, 'number')
+  assert.equal(completed.revision, before.revision + 1)
+
+  const repeated = await session.completeExperience()
+  assert.equal(repeated.flags.experienceCompletedAt, completedAt)
+  assert.equal(repeated.revision, completed.revision)
+  assert.equal(storage.plate21_session.snapshot.flags.experienceCompletedAt, completedAt)
+})
+
 test('puzzle, card, station and checkpoint complete in one atomic revision', async () => {
   const storage = {}
   const session = loadSession(storage)

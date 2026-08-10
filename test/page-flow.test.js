@@ -258,16 +258,49 @@ test('s2-blend keeps a usable temporary photo when local persistence fails', asy
   assert.match(result.data.persistenceWarning, /本地持久化失败/)
 })
 
-test('password accepts the eight-digit session date', async () => {
-  const now = new Date()
-  const answer = String(now.getFullYear()) +
-    String(now.getMonth() + 1).padStart(2, '0') +
-    String(now.getDate()).padStart(2, '0')
+test('password uses the locked archive date and explains its provenance', async () => {
+  const answer = '20260808'
+  const cardIds = [
+    's2-purpose',
+    's2-name',
+    's2-blend',
+    's2-pattern',
+    's3-hour',
+    's3-zodiac',
+    's3-water',
+    's4-timeline'
+  ]
+  const cards = {}
+  cardIds.forEach((cardId, position) => {
+    cards[cardId] = { cardId, position, digit: answer.charAt(position), collectedAt: 1 }
+  })
+  const storage = {
+    plate21_session: {
+      snapshot: {
+        schemaVersion: 2,
+        sessionId: 'locked-date-session',
+        revision: 8,
+        sessionDate: answer,
+        checkpoint: 's4-password',
+        stations: { s1: true, s2: true, s3: true, s4: false },
+        puzzles: {},
+        cards,
+        records: [],
+        flags: {},
+        finale: false,
+        createdAt: 1,
+        updatedAt: 1
+      },
+      ops: {}
+    }
+  }
 
   const result = await renderPage({
     route: 'plate21/module/pages/s4-password/s4-password',
     settleMs: 10,
+    wxOverrides: storageOverrides(storage),
     drive: async (instance, sleep) => {
+      instance.onShowHint()
       instance.setData({ pwd: answer })
       instance.onSubmit()
       await sleep(10)
@@ -276,6 +309,10 @@ test('password accepts the eight-digit session date', async () => {
 
   assert.deepEqual(result.errors, [])
   assert.equal(result.data.correct, true)
+  assert.equal(result.data.archiveDate, '2026 年 8 月 8 日')
+  assert.deepEqual(Array.from(result.data.collectedNums), answer.split(''))
+  assert.match(result.data.hint, /设备本地日历/)
+  assert.match(result.html, /建档日/)
 })
 
 test('host page describes the current four-station story', async () => {
@@ -304,6 +341,23 @@ test('finale uses the latest Feishu narrative', async () => {
   assert.match(text, /等待被后来者完成/)
   assert.match(text, /记录毁灭，也记录重生/)
   assert.doesNotMatch(text, /百分之二/)
+})
+
+test('finale skip completes the CSS reveal without a per-frame veil object', async () => {
+  const result = await renderPage({
+    route: 'plate21/module/pages/finale/finale',
+    settleMs: 10,
+    drive(instance) {
+      instance.setData({ act: 3, layerCount: 0, caption: '' })
+      instance.onTapScreen()
+      assert.equal(instance.data.layerCount, 5)
+      instance.onTapScreen()
+    }
+  })
+
+  assert.deepEqual(result.errors, [])
+  assert.equal(result.data.act, 4)
+  assert.equal(Object.prototype.hasOwnProperty.call(result.data, 'veils'), false)
 })
 
 test('prologue guides the physical envelope without rendering a virtual one', async () => {
@@ -604,6 +658,28 @@ test('timeline supports selecting a card and then tapping its year', async () =>
   assert.equal(result.data.cards[0].placed, true)
   assert.equal(result.data.slots[4].filled, '雨果雕像落成')
   assert.match(result.data.pointTip, /归位正确/)
+})
+
+test('timeline can be completed entirely through the click path', async () => {
+  const result = await renderPage({
+    route: 'plate21/module/pages/s4-timeline/s4-timeline',
+    settleMs: 10,
+    async drive(instance, sleep) {
+      instance.onNovelFinish()
+      for (let index = 0; index < instance.data.cards.length; index += 1) {
+        const card = instance.data.cards[index]
+        instance.onCardSelect({ currentTarget: { dataset: { idx: index } } })
+        instance.onSlotTap({ currentTarget: { dataset: { index: card.target } } })
+      }
+      await sleep(950)
+    }
+  })
+
+  assert.deepEqual(result.errors, [])
+  assert.equal(result.data.timelineComplete, true)
+  assert.equal(result.data.cards.every((card) => card.placed), true)
+  assert.equal(result.data.cards.some((card) => Object.prototype.hasOwnProperty.call(card, 'x')), false)
+  assert.equal(result.data.showHistory, true)
 })
 
 test('report distinguishes album permission denial and exposes settings recovery', async () => {

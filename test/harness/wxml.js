@@ -144,9 +144,12 @@ function escapeHtml(s) {
     .replace(/"/g, '&quot;')
 }
 
-/** inline style 里的 rpx → px（750rpx = 375px） */
+/** inline style 里的 rpx → vw（750rpx = 100vw），用于多视口布局审计。 */
 function rpx2px(s) {
-  return String(s).replace(/(-?\d*\.?\d+)rpx\b/g, (m, num) => (parseFloat(num) / 2) + 'px')
+  return String(s).replace(/(-?\d*\.?\d+)rpx\b/g, (m, num) => {
+    const value = Math.round((parseFloat(num) / 7.5) * 1000000) / 1000000
+    return value + 'vw'
+  })
 }
 
 // ---------------- 渲染 ----------------

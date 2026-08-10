@@ -5,6 +5,7 @@
 const adapter = require('../adapters/local-adapter')
 const contract = require('../contracts/adapter-api')
 const progressFlow = require('./progress-flow')
+const sessionDate = require('../utils/session-date')
 
 const OUTBOX_KEY = 'plate21_pending_mutations'
 const MAX_CONFLICT_RETRIES = 3
@@ -40,13 +41,6 @@ function clone(value) {
   return JSON.parse(JSON.stringify(value))
 }
 
-function dateKey(timestamp) {
-  const d = new Date(timestamp)
-  return String(d.getFullYear()) +
-    String(d.getMonth() + 1).padStart(2, '0') +
-    String(d.getDate()).padStart(2, '0')
-}
-
 function migrateSnapshot(input) {
   const original = input || {}
   const next = clone(original)
@@ -55,7 +49,9 @@ function migrateSnapshot(input) {
   const baseTime = next.createdAt || next.updatedAt || Date.now()
 
   next.schemaVersion = contract.SESSION_SCHEMA_VERSION
-  next.sessionDate = /^\d{8}$/.test(next.sessionDate || '') ? next.sessionDate : dateKey(baseTime)
+  next.sessionDate = sessionDate.isValidDateKey(next.sessionDate)
+    ? next.sessionDate
+    : sessionDate.dateKeyFromTimestamp(baseTime)
   next.createdAt = next.createdAt || baseTime
   next.updatedAt = next.updatedAt || baseTime
   next.stations = Object.assign({ s1: false, s2: false, s3: false, s4: false }, next.stations)
@@ -303,11 +299,13 @@ function completePuzzle(puzzleId, payload, options) {
   if (options && options.collectCard) {
     const position = contract.CARD_ORDER.indexOf(puzzleId)
     if (position >= 0) {
-    const sessionDate = /^\d{8}$/.test(before.sessionDate || '') ? before.sessionDate : dateKey(Date.now())
-    command.card = {
+      const lockedDate = sessionDate.isValidDateKey(before.sessionDate)
+        ? before.sessionDate
+        : sessionDate.dateKeyFromTimestamp(Date.now())
+      command.card = {
         cardId: puzzleId,
         position: position,
-        digit: sessionDate.charAt(position),
+        digit: lockedDate.charAt(position),
         collectedAt: Date.now()
       }
     }
@@ -376,10 +374,10 @@ function getCardDigit(cardId, snap) {
   const current = snap || snapshot || {}
   const cards = current.cards || {}
   if (cards[cardId]) return String(cards[cardId].digit)
-  const sessionDate = /^\d{8}$/.test(current.sessionDate || '')
+  const lockedDate = sessionDate.isValidDateKey(current.sessionDate)
     ? current.sessionDate
-    : dateKey(Date.now())
-  return sessionDate.charAt(position)
+    : sessionDate.dateKeyFromTimestamp(Date.now())
+  return lockedDate.charAt(position)
 }
 
 function sign(name) {
@@ -395,6 +393,17 @@ function completeFinale() {
   return mutateStatus({ type: 'complete_finale' }).then(function (status) {
     if (!status.snapshot || !status.snapshot.finale) throw new Error('终章进度尚未落库')
     return status.snapshot
+  })
+}
+
+function completeExperience() {
+  if (!snapshot) return init({}).then(completeExperience)
+  const flags = snapshot.flags || {}
+  if (flags.experienceCompletedAt) return Promise.resolve(snapshot)
+  const completedAt = Date.now()
+  return setFlag('experienceCompletedAt', completedAt).then(function (next) {
+    emit({ name: 'module_completed', completedAt: completedAt })
+    return next
   })
 }
 
@@ -424,12 +433,13 @@ function claimEdition() {
 
 function recognizeScene(scene, attempt, image) {
   return adapter.recognizeScene({ scene: scene, attempt: attempt, image: image }).then(function (res) {
-    emit({ name: 'photo_check', scene: scene, attempt: attempt, pass: !!res.pass })
-    return res
+    const result = res || { available: false, pass: false, failReason: 'unknown' }
+    emit({ name: 'photo_check', scene: scene, attempt: attempt, available: result.available !== false, pass: result.available !== false && !!result.pass })
+    return result
   }).catch(function (err) {
-    console.warn('[plate21] recognizeScene 失败，按校验失败 1 次处理', err)
-    emit({ name: 'photo_check', scene: scene, attempt: attempt, pass: false })
-    return { pass: false, failReason: 'unknown' }
+    console.warn('[plate21] recognizeScene 不可用，继续使用玩家照片', err)
+    emit({ name: 'photo_check', scene: scene, attempt: attempt, available: false, pass: false })
+    return { available: false, pass: false, failReason: 'unknown' }
   })
 }
 
@@ -469,7 +479,9 @@ function emit(event) {
   if (snapshot) {
     if (!e.sessionId) e.sessionId = snapshot.sessionId
     if (!e.checkpoint) e.checkpoint = progressFlow.deriveCheckpoint(snapshot)
-    if (e.completed === undefined) e.completed = !!snapshot.finale
+    if (e.completed === undefined) {
+      e.completed = !!(snapshot.flags && snapshot.flags.experienceCompletedAt)
+    }
   }
   try {
     adapter.emitEvent(e)
@@ -483,9 +495,11 @@ function cleanupSavedPhotos(snap) {
   const flags = snap.flags || {}
   const paths = new Set()
   ;[flags.s2PhotoDraft, flags.s2PhotoRecord].forEach(function (record) {
-    for (const filePath of Object.values(record && record.photos || {})) {
-      if (filePath && !/^https?:\/\//i.test(filePath)) paths.add(filePath)
-    }
+    ;[record && record.photos, record && record.localPhotos].forEach(function (photos) {
+      for (const filePath of Object.values(photos || {})) {
+        if (filePath && !/^https?:\/\//i.test(filePath)) paths.add(filePath)
+      }
+    })
   })
   return Promise.all([...paths].map(function (filePath) {
     return new Promise(function (resolve) {
@@ -517,6 +531,7 @@ module.exports = {
   getPuzzle: getPuzzle,
   isPuzzleComplete: isPuzzleComplete,
   completeFinale: completeFinale,
+  completeExperience: completeExperience,
   collectCard: collectCard,
   getCardDigit: getCardDigit,
   getCardDigits: getCardDigits,

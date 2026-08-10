@@ -56,7 +56,9 @@
 /* ---------- 入口卡（第二十一图） ---------- */
 .module-card {
   position: relative;
-  width: 620rpx;
+  width: 100%;
+  max-width: 620rpx;
+  box-sizing: border-box;
   padding: 28rpx 28rpx 28rpx 28rpx;
   display: flex;
   align-items: center;
@@ -142,7 +144,9 @@
 
 /* ---------- 预留卡（未来模块） ---------- */
 .reserved-card {
-  width: 620rpx;
+  width: 100%;
+  max-width: 620rpx;
+  box-sizing: border-box;
   margin-top: 36rpx;
   padding: 40rpx 28rpx;
   border: 2rpx dashed var(--dash);
@@ -160,7 +164,8 @@
 
 /* ---------- 撕纸分隔 + 底部链接 ---------- */
 .host-torn {
-  width: 620rpx;
+  width: 100%;
+  max-width: 620rpx;
   margin: 48rpx 0 32rpx;
 }
 .host-foot {

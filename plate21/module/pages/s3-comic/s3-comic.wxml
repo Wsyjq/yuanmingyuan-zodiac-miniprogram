@@ -1,6 +1,6 @@
 <!-- P07 第三站 · 时辰漫画推理 -->
 <nav-back />
-<view class="page paper-grain paper-real">
+<view class="page page-shell paper-grain paper-real">
   <!-- v1.3.1 手账：左侧活页装订孔列（全站统一） -->
   <view class="binder"></view>
   <!-- v1.3.1 手账：干花标本贴纸压在页右上角（页边，不扰漫画推理） -->
@@ -15,13 +15,15 @@
     <view class="novel-p">阶前十二座石座残存，其上兽首不知所终——这里曾是一座以水报时的钟。</view>
   </view>
 
-  <!-- 四格漫画（竖排，IMG-S3A 铜版画作每格装饰底） -->
-  <view class="comic">
-    <view class="cell double-frame {{clue && index < 2 ? 'cell-clue' : ''}}" wx:for="{{cells}}" wx:key="id" wx:for-index="index">
-      <view class="tape" wx:if="{{index === 2}}" style="top:-20rpx; left:50%; margin-left:-90rpx;"></view>
-      <!-- IMG-S3A 对应格的局部作半透明装饰底（background-position 按格序偏移） -->
-      <view class="cell-bg" style="background-position: 0 {{index * 33}}%;"></view>
-      <view class="cell-desc">{{item}}</view>
+  <!-- 已授权 AI 四格漫画；下方文字编号保留非颜色线索。 -->
+  <view class="comic-plate double-frame" role="img" aria-label="十二兽首按时辰喷水的四格推理漫画">
+    <view class="tape" style="top:-20rpx; left:50%; margin-left:-90rpx;"></view>
+    <image class="comic-image" src="/plate21/module/assets/img/IMG-RUNTIME-COMIC.jpg" mode="widthFix" />
+  </view>
+  <view class="comic-captions">
+    <view class="comic-caption {{clue && index < 2 ? 'cell-clue' : ''}}" wx:for="{{cells}}" wx:key="id" wx:for-index="index">
+      <view class="panel-no serif">第 {{index + 1}} 格 · {{item.time}}</view>
+      <view class="cell-desc">{{item.desc}}</view>
     </view>
   </view>
   <view class="note-hand olive note-comic" style="transform: rotate(-1.5deg);">日晷影短，午正将至——记于池畔。</view>
@@ -36,6 +38,9 @@
         class="head {{q1Selected === item ? 'head-sel' : ''}} {{q1Correct && q1Selected === item ? 'head-correct' : ''}} {{shakeKey === item ? 'shake' : ''}}"
         data-v="{{item}}"
         bindtap="onQ1"
+        role="button"
+        aria-pressed="{{q1Selected === item}}"
+        aria-label="选择{{item}}首"
       >{{item}}</view>
     </view>
     <view class="note-hand note-q" style="transform: rotate(1deg);">兽首各按时辰当值，如更鼓然。</view>
@@ -53,6 +58,9 @@
         class="hour {{q2Selected === item ? 'hour-sel' : ''}} {{shakeKey === item ? 'shake' : ''}}"
         data-v="{{item}}"
         bindtap="onQ2"
+        role="button"
+        aria-pressed="{{q2Selected === item}}"
+        aria-label="选择{{item}}"
       >{{item}}</view>
     </view>
     <view class="hint" wx:if="{{q2Attempts >= 2}}">提示：正午十二兽首齐喷——正午对应的，正是马首当值的时辰。</view>

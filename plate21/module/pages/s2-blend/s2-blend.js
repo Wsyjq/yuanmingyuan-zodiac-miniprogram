@@ -3,6 +3,8 @@
 // 第二站 · 谜题3：现场拍摄四处中西结合细节，生成一张考察卡。
 // 最低交付只记录玩家实际拍摄结果，不调用或伪造场景识别。
 const session = require('../../store/session')
+const sessionDate = require('../../utils/session-date')
+const photoPipeline = require('../../utils/photo-pipeline')
 
 const POINTS = [
   {
@@ -10,28 +12,28 @@ const POINTS = [
     no: '01',
     title: '穹顶与飞檐',
     desc: '同时纳入西式穹顶与中式八角飞檐。',
-    guide: '/plate21/module/assets/img/IMG-S2C1.jpg'
+    guideSrc: '/plate21/module/assets/img/IMG-RUNTIME-DETAIL-DOME.jpg'
   },
   {
     key: 'beast',
     no: '02',
     title: '檐角立兽',
     desc: '拍清飞檐角部的小型立式装饰。',
-    guide: '/plate21/module/assets/img/IMG-S2C2.jpg'
+    guideSrc: '/plate21/module/assets/img/IMG-RUNTIME-DETAIL-BEAST.jpg'
   },
   {
     key: 'lotus',
     no: '03',
     title: '莲座宝瓶',
     desc: '记录中式莲座与西洋宝瓶花苞的组合。',
-    guide: '/plate21/module/assets/img/IMG-S2C3.jpg'
+    guideSrc: '/plate21/module/assets/img/IMG-RUNTIME-DETAIL-LOTUS.jpg'
   },
   {
     key: 'swan',
     no: '04',
     title: '双天鹅蝙蝠纹',
     desc: '对准弧形基座，记录双天鹅与蝙蝠纹细节。',
-    guide: '/plate21/module/assets/img/IMG-S2C4.jpg'
+    guideSrc: '/plate21/module/assets/img/IMG-RUNTIME-DETAIL-SWAN.jpg'
   }
 ]
 
@@ -43,16 +45,7 @@ const HISTORY_LINES = [
 ]
 
 function formatDate(timestamp) {
-  const date = new Date(timestamp || Date.now())
-  return String(date.getFullYear()) + '.' +
-    String(date.getMonth() + 1).padStart(2, '0') + '.' +
-    String(date.getDate()).padStart(2, '0')
-}
-
-function formatSessionDate(key) {
-  return /^\d{8}$/.test(key || '')
-    ? key.slice(0, 4) + '.' + key.slice(4, 6) + '.' + key.slice(6, 8)
-    : formatDate()
+  return sessionDate.formatArchiveDate(sessionDate.dateKeyFromTimestamp(timestamp || Date.now()))
 }
 
 function buildPoints(photos, capturedAtBySlot) {
@@ -133,7 +126,7 @@ Page({
       points: points,
       photoCount: photoCount,
       done: !!completed && !hasNewerDraft && photoCount === POINTS.length,
-      dateLabel: draft.dateLabel || formatSessionDate(snap && snap.sessionDate),
+      dateLabel: draft.dateLabel || sessionDate.formatArchiveDate(snap && snap.sessionDate) || formatDate(),
       cardNumber: Number(session.getCardDigit('s2-blend'))
     })
   },
@@ -157,6 +150,7 @@ Page({
     const previousPoints = this.data.points.map(function (point) { return Object.assign({}, point) })
     let savedFile = null
     let oldPath = ''
+    let oldLocalPath = ''
     this.setData({ busyKey: key, captureError: '', persistenceWarning: '' })
 
     const selection = new Promise(function (resolve, reject) {
@@ -173,13 +167,28 @@ Page({
     return selection.then((res) => {
       const file = res && res.tempFiles && res.tempFiles[0]
       if (!file || !file.tempFilePath) throw new Error('empty_media')
-      return keepPhoto(file.tempFilePath)
+      return photoPipeline.normalizePhoto(file.tempFilePath, {
+        fileSize: file.size,
+        onFallback: function (reason) {
+          session.capabilityFallback('photo_normalize', reason)
+        }
+      }).then(function (normalized) {
+        return keepPhoto(normalized.path).then(function (saved) {
+          saved.normalization = normalized
+          return saved
+        })
+      })
     }).then((saved) => {
       savedFile = saved
       if (!this._active) throw new Error('page_unloaded')
       const capturedAt = Date.now()
       const oldPoint = this.data.points.find(function (point) { return point.key === key })
       oldPath = oldPoint && oldPoint.photoPath || ''
+      const currentSnapshot = session.getSnapshot()
+      const currentFlags = currentSnapshot && currentSnapshot.flags || {}
+      const currentRecord = currentFlags.s2PhotoDraft || currentFlags.s2PhotoRecord || {}
+      oldLocalPath = currentRecord.localPhotos && currentRecord.localPhotos[key] ||
+        (!/^https?:\/\//i.test(oldPath) ? oldPath : '')
       const points = this.data.points.map(function (point) {
         return point.key === key
           ? Object.assign({}, point, { photoPath: saved.path, capturedAt: capturedAt })
@@ -198,15 +207,24 @@ Page({
       return session.saveMedia({
         type: 'photo',
         image: { filePath: saved.path },
-        meta: { puzzle: 's2-blend', slot: key }
+        meta: {
+          puzzle: 's2-blend',
+          slot: key,
+          width: saved.normalization.width,
+          height: saved.normalization.height,
+          bytes: saved.normalization.bytes,
+          normalization: saved.normalization.strategy
+        }
       }).then((media) => {
         const snap = session.getSnapshot()
         const flags = (snap && snap.flags) || {}
         const previous = flags.s2PhotoDraft || flags.s2PhotoRecord || {}
         const persistedPhotos = Object.assign({}, previous.photos || {})
+        const localPhotos = Object.assign({}, previous.localPhotos || {})
         const mediaIds = Object.assign({}, previous.mediaIds || {})
         const capturedAtBySlot = Object.assign({}, previous.capturedAt || {})
         persistedPhotos[key] = media && media.url ? media.url : saved.path
+        localPhotos[key] = saved.path
         delete mediaIds[key]
         if (media && media.mediaId) mediaIds[key] = media.mediaId
         capturedAtBySlot[key] = capturedAt
@@ -214,14 +232,15 @@ Page({
           version: 1,
           revision: Math.max(Number(previous.revision) || 0, Number(previous.draftRevision) || 0) + 1,
           photos: persistedPhotos,
+          localPhotos: localPhotos,
           mediaIds: mediaIds,
           capturedAt: capturedAtBySlot,
           dateLabel: this.data.dateLabel,
           updatedAt: Date.now()
         })
       }).then(function () {
-        if (oldPath && oldPath !== saved.path && !/^https?:\/\//i.test(oldPath) && wx.removeSavedFile) {
-          wx.removeSavedFile({ filePath: oldPath, fail: function () {} })
+        if (oldLocalPath && oldLocalPath !== saved.path && !/^https?:\/\//i.test(oldLocalPath) && wx.removeSavedFile) {
+          wx.removeSavedFile({ filePath: oldLocalPath, fail: function () {} })
         }
         return true
       })
@@ -280,6 +299,7 @@ Page({
     const record = {
       version: 1,
       photos: draft && draft.photos ? draft.photos : photoMap(this.data.points),
+      localPhotos: draft && draft.localPhotos ? draft.localPhotos : photoMap(this.data.points),
       mediaIds: draft && draft.mediaIds ? draft.mediaIds : {},
       capturedAt: draft && draft.capturedAt
         ? draft.capturedAt

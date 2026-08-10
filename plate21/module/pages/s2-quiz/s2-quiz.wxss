@@ -21,7 +21,7 @@
   margin-bottom: 24rpx;
 }
 
-/* 图片占位块：--paper2 底 + 铜版画双框 + 两行小字（wxml 上加 .double-frame） */
+/* 已授权 AI 黄花阵平面图。 */
 .img-ph {
   background: var(--paper2);
   display: flex;
@@ -34,7 +34,7 @@
   margin-top: 40rpx;
   overflow: hidden;
 }
-/* IMG-S2A 铺满占位框（单色铜版画 multiply 融入纸底） */
+/* 线描示意铺满档案框。 */
 .s2a-img {
   position: absolute;
   left: 0;
@@ -79,9 +79,13 @@
   border: 1rpx solid var(--dash);
   padding: 28rpx 88rpx 28rpx 32rpx;
   overflow: hidden;
+  min-height: 96rpx;
+  box-sizing: border-box;
 }
 .opt-sel {
-  border: 2rpx solid var(--brass);
+  border: 3rpx solid var(--patina);
+  background: rgba(74, 107, 100, 0.12);
+  box-shadow: inset 8rpx 0 0 rgba(74, 107, 100, 0.22);
 }
 .opt-key {
   font-size: 32rpx;
@@ -90,9 +94,19 @@
   margin-right: 24rpx;
 }
 .opt-text {
+  flex: 1;
   font-size: 30rpx;
   color: var(--ink);
 }
+.opt-state {
+  flex-shrink: 0;
+  margin-left: 14rpx;
+  color: var(--patina);
+  font-size: 21rpx;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+}
+.opt-wrong .opt-state { color: var(--cinnabar); }
 
 /* 错误卡：碎裂斜线纹 + 变灰 */
 .opt-wrong {
@@ -158,7 +172,7 @@
   margin-top: 24rpx;
 }
 
-/* v1.3.1：邮票贴纸压在 IMG-S2A 占位图右上角 */
+/* v1.3.1：邮票贴纸压在黄花阵示意右上角。 */
 .s2a-stamp {
   position: absolute;
   top: -28rpx;

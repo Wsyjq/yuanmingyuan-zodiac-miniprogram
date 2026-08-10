@@ -1,7 +1,11 @@
 /**
- * 复古档案手账阅读器：一段内容对应一张纸，文字逐字显现，支持点按与滑动翻页。
+ * 复古档案手账阅读器：一段内容对应一张纸，文字整段落墨，支持点按与滑动翻页。
  */
-const CHAR_MS = 34
+const motion = require('../../utils/motion')
+
+const REVEAL_MIN_MS = 520
+const REVEAL_MAX_MS = 1200
+const REVEAL_MS_PER_CHAR = 12
 const INTENT_SLOP = 10
 const FLICK_MIN_DISTANCE = 16
 
@@ -9,8 +13,8 @@ function pageLabel(index) {
   return String(index + 1).padStart(2, '0')
 }
 
-function itemChars(item) {
-  return String((item && item.text) || '').split('')
+function itemText(item) {
+  return String((item && item.text) || '')
 }
 
 Component({
@@ -24,7 +28,7 @@ Component({
       }
     },
     finishText: { type: String, value: '继续' },
-    turnDuration: { type: Number, value: 680 },
+    turnDuration: { type: Number, value: 460 },
     swipeDistance: { type: Number, value: 42 },
     flickVelocity: { type: Number, value: 0.38 },
     dragMaxAngle: { type: Number, value: 5 },
@@ -38,13 +42,12 @@ Component({
     pageLabel: '01',
     countLabel: '01',
     currentItem: {},
-    currentChars: [],
+    revealDuration: REVEAL_MIN_MS,
     typing: false,
     showAll: false,
     turning: false,
     turnDirection: '',
     turnItem: {},
-    turnChars: [],
     turnPageLabel: '01',
     dragging: false,
     gestureArmed: false,
@@ -57,6 +60,7 @@ Component({
   lifetimes: {
     attached() {
       this._attached = true
+      this._reducedMotion = motion.prefersReducedMotion()
       this._lastHapticAt = 0
       this._resetPages(this.properties.paragraphs)
     },
@@ -69,6 +73,7 @@ Component({
   methods: {
     _resetPages(value) {
       this._clearTimers()
+      this._finished = false
       this._pages = Array.isArray(value) && value.length ? value.slice() : [{ text: '' }]
       this.setData({
         pageIndex: 0,
@@ -77,7 +82,6 @@ Component({
         turning: false,
         turnDirection: '',
         turnItem: {},
-        turnChars: [],
         dragging: false,
         gestureArmed: false,
         gestureDirection: '',
@@ -90,24 +94,24 @@ Component({
 
     _activatePage(index) {
       const item = this._pages[index] || { text: '' }
-      const chars = itemChars(item)
-      const typing = chars.length > 0
+      const text = itemText(item)
+      const charCount = Array.from(text).length
+      const typing = charCount > 0 && !this._reducedMotion
+      const revealDuration = Math.min(REVEAL_MAX_MS, Math.max(REVEAL_MIN_MS, charCount * REVEAL_MS_PER_CHAR))
       this._clearTypeTimer()
       this.setData({
         pageIndex: index,
         pageLabel: pageLabel(index),
         currentItem: item,
-        currentChars: chars,
+        revealDuration,
         typing,
         showAll: !typing,
         turning: false,
         turnDirection: '',
-        turnItem: {},
-        turnChars: []
+        turnItem: {}
       })
       if (typing) {
-        const duration = Math.min(6500, Math.max(700, chars.length * CHAR_MS + 240))
-        this._typeTimer = setTimeout(() => this._finishTyping(), duration)
+        this._typeTimer = setTimeout(() => this._finishTyping(), revealDuration)
       }
     },
 
@@ -120,19 +124,21 @@ Component({
 
     _startTurn(targetIndex, direction, startHapticDone) {
       if (this.data.turning || targetIndex < 0 || targetIndex >= this._pages.length) return
+      if (this._reducedMotion) {
+        this._activatePage(targetIndex)
+        return
+      }
       this._clearTypeTimer()
       const targetItem = this._pages[targetIndex] || { text: '' }
       this.setData({
         pageIndex: targetIndex,
         pageLabel: pageLabel(targetIndex),
         currentItem: targetItem,
-        currentChars: [],
         typing: false,
         showAll: false,
         turning: true,
         turnDirection: direction,
         turnItem: this.data.currentItem,
-        turnChars: itemChars(this.data.currentItem),
         turnPageLabel: pageLabel(this.data.pageIndex)
       })
       if (!startHapticDone) this._pulseHaptic('light')
@@ -186,6 +192,8 @@ Component({
         return
       }
       if (this.data.pageIndex >= this.data.pageCount - 1) {
+        if (this._finished) return
+        this._finished = true
         this._pulseHaptic('medium')
         this.triggerEvent('finish')
         return
@@ -246,7 +254,7 @@ Component({
       }
 
       const now = Date.now()
-      if (this._lastDragUpdate && now - this._lastDragUpdate < 16 && armed === this.data.gestureArmed) return
+      if (this._lastDragUpdate && now - this._lastDragUpdate < 32 && armed === this.data.gestureArmed) return
       this._lastDragUpdate = now
       const maxAngle = Math.max(0, Number(this.properties.dragMaxAngle) || 5)
       const angle = (direction === 'next' ? -1 : 1) * maxAngle * visualProgress

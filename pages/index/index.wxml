@@ -1,7 +1,7 @@
 <!-- v1.3.1 手账：左侧活页装订孔列（移到容器外，避免 flex 影响 fixed） -->
 <view class="binder"></view>
 
-<view class="host-home paper-grain paper-real">
+<view class="host-home page-shell paper-grain paper-real">
   <!-- 右上角：编号签 + 邮戳贴纸 -->
   <view class="tag-no tag-corner">No.HOST</view>
   <image class="host-postmark" src="/assets/host/st-postmark-02.png" mode="aspectFit" />
@@ -24,9 +24,9 @@
     <view class="tape" style="top:-20rpx; left:50%; margin-left:-90rpx;"></view>
     <!-- 回形针贴右上 -->
     <image class="card-paperclip" src="/assets/host/st-paperclip-02.png" mode="aspectFit" />
-    <!-- 缩略铜版画 -->
+    <!-- 已授权 AI 铜版画缩略 -->
     <view class="module-thumb double-frame">
-      <image class="thumb-img" src="/assets/host/IMG-F06.jpg" mode="aspectFill" />
+      <image class="thumb-img" src="/assets/host/IMG-RUNTIME-HOST.jpg" mode="aspectFill" />
     </view>
     <!-- 模块信息 -->
     <view class="module-info">

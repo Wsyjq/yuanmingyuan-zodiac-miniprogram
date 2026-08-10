@@ -1,29 +1,18 @@
 // 第四站 · 末题 密码输入（采风修订版玩法核心主线收口）
-// 剧情：之前每张卡片角落都有一个数字，连起来竟然是今日的日期。
+// 剧情：之前每张卡片角落都有一个数字，连起来是本次考察的锁定日期。
 // 校验口径：会话锁定日期 YYYYMMDD，对应一路收集的八张卡片。
 // 输入正确 → 谜题与第四站原子落库 → 玩家确认后进入反转揭示 finale。
 const session = require('../../store/session')
-
-function currentDateKey() {
-  const d = new Date()
-  const yyyy = String(d.getFullYear())
-  const mm = String(d.getMonth() + 1).padStart(2, '0')
-  const dd = String(d.getDate()).padStart(2, '0')
-  return yyyy + mm + dd
-}
-
-function dateText(key) {
-  return key.slice(0, 4) + ' 年 ' + Number(key.slice(4, 6)) + ' 月 ' + Number(key.slice(6, 8)) + ' 日'
-}
+const sessionDate = require('../../utils/session-date')
 
 Page({
   data: {
     pwd: '',
     attempts: 0,
     showHint: false,
-    hint: '密码从何而来？我突然想起来之前收集到的每张卡片角落都有一个数字，连起来试试看——那串数字，对应的是本次考察锁定的日期。',
+    hint: '回看封面的考察凭证：系统建立本次档案时，已按设备本地日历锁定建档日。八张卡按考察顺序依次记录 YYYYMMDD 的一位；即使跨过午夜，仍以同一建档日为准。',
     wrongTip: '',
-    today: '',
+    archiveDate: '',
     correct: false,
     advancing: false,
     progressError: '',
@@ -32,13 +21,27 @@ Page({
 
   onLoad() {
     session.viewPuzzle('s4-password')
-    // 读取一路上收集的卡片数字，展示给玩家作为密码提示（剧情："连起来试试看"）
-    const snap = session.getSnapshot() || {}
-    const key = /^\d{8}$/.test(snap.sessionDate || '') ? snap.sessionDate : currentDateKey()
+    const snap = session.getSnapshot()
+    if (snap) {
+      this._applySnapshot(snap)
+      return
+    }
+    // 深链或开发者工具直接打开本页时，先恢复存档，不能用当前时钟覆盖建档日。
+    session.init({}).then((restored) => {
+      this._applySnapshot(restored || {})
+    }).catch(() => {
+      this.setData({ progressError: '考察档案日期读取失败，请返回封面后重试。' })
+    })
+  },
+
+  _applySnapshot(snap) {
+    const key = sessionDate.isValidDateKey(snap.sessionDate)
+      ? snap.sessionDate
+      : sessionDate.dateKeyFromTimestamp(Date.now())
     this._dateKey = key
     const correct = session.isPuzzleComplete('s4-password')
     this.setData({
-      today: dateText(key),
+      archiveDate: sessionDate.formatDateKey(key),
       collectedNums: session.getCardDigits(snap),
       correct: correct,
       pwd: correct ? key : ''
@@ -64,7 +67,7 @@ Page({
       return
     }
     const attempts = this.data.attempts + 1
-    const expected = this._dateKey || currentDateKey()
+    const expected = this._dateKey || sessionDate.dateKeyFromTimestamp(Date.now())
     if (input === expected) {
       session.attemptPuzzle('s4-password', attempts, true, 'numeric')
       this.setData({ correct: true, attempts: attempts, wrongTip: '' })

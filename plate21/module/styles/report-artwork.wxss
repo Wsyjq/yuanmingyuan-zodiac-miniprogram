@@ -1,0 +1,85 @@
+/* 第二十一图屏幕构图：已授权 AI 主图由终章、报告、手册缩略共享。 */
+.report-artwork {
+  position: relative;
+  box-sizing: border-box;
+  aspect-ratio: 14 / 19;
+  background: var(--paper);
+  border: 1rpx solid rgba(70, 56, 42, 0.35);
+  overflow: hidden;
+}
+.report-artwork .canvas-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  mix-blend-mode: multiply;
+  filter: sepia(0.28) saturate(0.72) contrast(1.02);
+}
+.report-artwork .layer { position: absolute; opacity: 1; }
+.report-artwork .layer-l2 {
+  top: 17.9%;
+  right: 6.3%;
+  bottom: 6.7%;
+  left: 6.3%;
+  z-index: 4;
+}
+.report-artwork .l2-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border: 4rpx dashed var(--brass);
+}
+.report-artwork .l2-inner {
+  position: absolute;
+  inset: 12rpx;
+  border: 1rpx dashed var(--brass);
+}
+.report-artwork .layer-l1 {
+  top: 2.9%;
+  right: 5.7%;
+  left: 5.7%;
+  height: 12.2%;
+  z-index: 5;
+}
+.report-artwork .l1-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 12rpx 22rpx;
+  box-sizing: border-box;
+  border: 1rpx solid rgba(70, 56, 42, 0.4);
+  background: rgba(244, 237, 220, 0.94);
+}
+.report-artwork .l1-text {
+  color: var(--ink);
+  font-size: 21rpx;
+  line-height: 1.6;
+  text-align: center;
+}
+.report-artwork .layer-l5 {
+  right: 8%;
+  bottom: 8.8%;
+  width: 46%;
+  z-index: 6;
+}
+.report-artwork .l5-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 100%;
+}
+.report-artwork .l5-tag {
+  color: var(--ink60);
+  font-size: 18rpx;
+  letter-spacing: 2rpx;
+}
+.report-artwork .l5-line { margin-top: 4rpx; color: var(--ink); font-size: 26rpx; }
+.report-artwork .l5-name { min-height: 36rpx; margin-top: 4rpx; color: var(--cinnabar); font-size: 28rpx; }
+.report-artwork .tag { position: absolute; left: 0; color: var(--ink60); font-size: 18rpx; letter-spacing: 2rpx; }
+.report-artwork .layer-l1 > .tag { top: -26rpx; }
+.report-artwork .layer-l2 > .tag { bottom: -28rpx; }

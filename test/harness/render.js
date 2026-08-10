@@ -28,7 +28,7 @@ function fieldPhotoFixture(points) {
   ]).map((point, index) => Object.assign({}, point, { photoPath: PLAYER_PHOTO_FIXTURES[index] }))
 }
 
-// 18 条路由及 11 个关键交互完成态，共 29 张 H5 截图。
+// 17 条生产路由 + 1 个仓库保留页及关键交互完成态，共 30 张 H5 截图。
 const PAGES = [
   { name: '00-host-index', route: 'pages/index/index' },
   { name: '01-cover', route: 'plate21/module/pages/cover/cover' },
@@ -97,6 +97,11 @@ const PAGES = [
     drive: async (inst) => inst.setData({ operated: true, solved: true, showHistory: false, showHandoff: true })
   },
   { name: '12-s4-timeline', route: 'plate21/module/pages/s4-timeline/s4-timeline' },
+  {
+    name: '12b-s4-timeline-puzzle',
+    route: 'plate21/module/pages/s4-timeline/s4-timeline',
+    drive: async (inst) => inst.onNovelFinish()
+  },
   { name: '13-s4-password', route: 'plate21/module/pages/s4-password/s4-password' },
   {
     name: '13b-s4-password-open',
@@ -116,6 +121,11 @@ const PAGES = [
       await sleep(150)
     }
   },
+  {
+    name: '14b-finale-novel',
+    route: 'plate21/module/pages/finale/finale',
+    drive: async (inst) => inst.startAct(4)
+  },
   { name: '15-report', route: 'plate21/module/pages/report/report' },
   {
     name: '15b-report-player-photos',
@@ -133,11 +143,11 @@ const PAGES = [
 
 const RESET_CSS = `
 @font-face{font-family:"Plate21WenKai";src:url("/plate21/module/assets/fonts/Plate21WenKai-Subset.ttf") format("truetype");font-display:swap}
-html,body{margin:0;padding:0;width:375px;height:812px;overflow:hidden}
-div,span,button,input{box-sizing:border-box}
+html,body{margin:0;padding:0;width:100%;min-height:100%;overflow-x:visible}
 button{background:none;border:none;padding:0;font:inherit;color:inherit;line-height:normal}
 button::after{content:none;border:none}
 img{display:inline-block}
+.__scroll{width:100%}
 .__canvas-ph{border:1px dashed #9a9484;background:rgba(43,41,38,.05);color:#9a9484;display:flex;align-items:center;justify-content:center;font-size:12px;min-height:80px}
 .__camera-ph{background:#23282E;color:#7d838b;display:flex;align-items:center;justify-content:center;font-size:12px}
 .__unknown-ph{border:1px dashed #c0392b;color:#c0392b;font-size:10px;padding:2px}
@@ -149,6 +159,17 @@ function buildDoc(bodyHtml, cssList) {
     .map((c) => `<style>\n${c}\n</style>`)
     .join('\n')
   return `<!DOCTYPE html>\n<html>\n<head>\n<meta charset="utf-8">\n${styles}\n</head>\n<body>\n${bodyHtml}\n</body>\n</html>\n`
+}
+
+function readWxssWithImports(filePath, seen) {
+  const visited = seen || new Set()
+  const resolved = path.resolve(filePath)
+  if (visited.has(resolved) || !fs.existsSync(resolved)) return ''
+  visited.add(resolved)
+  const source = fs.readFileSync(resolved, 'utf8')
+  return source.replace(/@import\s+["']([^"']+)["'];?/g, function (_, relativePath) {
+    return readWxssWithImports(path.resolve(path.dirname(resolved), relativePath), visited)
+  })
 }
 
 // ---------------- 静态服务 ----------------
@@ -203,12 +224,13 @@ function loadPlaywright() {
   process.on('unhandledRejection', onRejection)
 
   // 1. 逐页渲染 HTML
-  const appCss = fs.readFileSync(path.join(ROOT, 'app.wxss'), 'utf8')
+  const appCss = readWxssWithImports(path.join(ROOT, 'app.wxss'))
   const renderResults = []
   for (const spec of PAGES) {
     try {
       const r = await renderPage(spec)
-      const doc = buildDoc(r.html, [appCss].concat(r.compCssList, [r.pageCss]))
+      const pageCss = readWxssWithImports(path.join(ROOT, spec.route + '.wxss'))
+      const doc = buildDoc(r.html, [appCss].concat(r.compCssList, [pageCss]))
       fs.writeFileSync(path.join(OUT_HTML, spec.name + '.html'), doc)
       renderResults.push({ spec, errors: r.errors, warns: r.warns, renderOk: true })
     } catch (e) {
@@ -245,6 +267,29 @@ function loadPlaywright() {
       } catch (e) { /* 字体等待失败不阻塞 */ }
       await page.waitForTimeout(1500)
       await page.screenshot({ path: path.join(OUT_SHOTS, spec.name + '.png') })
+      for (const viewport of [{ width: 320, height: 568 }, { width: 375, height: 812 }, { width: 430, height: 932 }]) {
+        await page.setViewportSize(viewport)
+        const layout = await page.evaluate(() => {
+          const viewportWidth = window.innerWidth
+          const offenders = Array.from(document.body.querySelectorAll('*')).map((element) => {
+            const rect = element.getBoundingClientRect()
+            return {
+              node: element.tagName.toLowerCase() + (element.className ? '.' + String(element.className).trim().replace(/\s+/g, '.') : ''),
+              left: Math.round(rect.left),
+              right: Math.round(rect.right),
+              width: Math.round(rect.width)
+            }
+          }).filter((item) => item.left < -2 || item.right > viewportWidth + 2).slice(0, 6)
+          return {
+            viewportWidth,
+            documentWidth: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth),
+            offenders
+          }
+        })
+        if (layout.documentWidth > layout.viewportWidth + 2) {
+          r.browserErrors.push('[layout ' + viewport.width + 'x' + viewport.height + '] horizontal overflow ' + (layout.documentWidth - layout.viewportWidth) + 'px ' + JSON.stringify(layout.offenders))
+        }
+      }
       console.log(spec.name.padEnd(18) + 'OK')
     } catch (e) {
       r.browserErrors.push('[shot] ' + String(e).slice(0, 200))

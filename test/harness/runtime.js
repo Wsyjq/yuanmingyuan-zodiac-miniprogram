@@ -207,6 +207,12 @@ function readText(file) {
   try { return fs.readFileSync(file, 'utf8') } catch (e) { return '' }
 }
 
+function resolveComponentPath(baseDir, configuredPath) {
+  return configuredPath.startsWith('/')
+    ? path.join(ROOT, configuredPath.slice(1))
+    : path.resolve(baseDir, configuredPath)
+}
+
 /** 加载组件四件套 + 求值组件 js，返回 compDef（可递归其 usingComponents） */
 function loadComponent(compPathNoExt, env, errors, cssCollector) {
   const jsFile = compPathNoExt + '.js'
@@ -234,7 +240,7 @@ function loadComponent(compPathNoExt, env, errors, cssCollector) {
   }
   const using = json.usingComponents || {}
   for (const [tag, rel] of Object.entries(using)) {
-    const sub = path.resolve(path.dirname(compPathNoExt), rel)
+    const sub = resolveComponentPath(path.dirname(compPathNoExt), rel)
     compDef.components.set(tag, loadComponent(sub, env, errors, cssCollector))
   }
   return compDef
@@ -357,9 +363,10 @@ async function renderPage(spec) {
 
   // 4. 组件表
   const components = new Map()
-  const using = pageJson.usingComponents || {}
+  const appJson = readJson(path.join(ROOT, 'app.json'))
+  const using = Object.assign({}, appJson.usingComponents || {}, pageJson.usingComponents || {})
   for (const [tag, rel] of Object.entries(using)) {
-    const compPath = path.resolve(pageDir, rel)
+    const compPath = resolveComponentPath(pageDir, rel)
     components.set(tag, loadComponent(compPath, env, errors, cssCollector))
   }
 

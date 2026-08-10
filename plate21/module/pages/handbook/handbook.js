@@ -1,6 +1,7 @@
 // P17 考察手册（全局）：进度总览 + 史料卡回看 + 考察报告缩略位
 const session = require('../../store/session')
 const fieldRecord = require('../../store/field-record')
+const sessionDate = require('../../utils/session-date')
 
 // 四份考察记录位（采风修订版四站结构）
 const RECORD_SLOTS = [
@@ -52,6 +53,7 @@ Page({
     history: [],
     finaleDone: false,
     name: '',
+    sessionDateLabel: '',
     fieldPhotos: fieldRecord.photosFromSnapshot(),
     photoCount: 0,
     showHistory: false,
@@ -89,6 +91,7 @@ Page({
       })),
       finaleDone: !!(snap && (snap.finale || (snap.flags && snap.flags.collectedReport))),
       name: (snap && snap.name) || '',
+      sessionDateLabel: sessionDate.formatDateKey(snap && snap.sessionDate),
       fieldPhotos: fieldPhotos,
       photoCount: fieldPhotos.filter(function (photo) { return !!photo.photoPath }).length
     })

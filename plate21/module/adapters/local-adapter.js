@@ -5,9 +5,7 @@
 
 const contract = require('../contracts/adapter-api')
 const progressFlow = require('../store/progress-flow')
-
-/** Mock 开关：置 true 则 recognizeScene 恒返回失败 */
-const MOCK_FAIL = false
+const sessionDate = require('../utils/session-date')
 
 const STORAGE_KEY = 'plate21_session'
 const EDITION_KEY = 'plate21_edition_counter'
@@ -24,20 +22,13 @@ function clone(value) {
   return JSON.parse(JSON.stringify(value))
 }
 
-function dateKey(timestamp) {
-  const d = new Date(timestamp)
-  return String(d.getFullYear()) +
-    String(d.getMonth() + 1).padStart(2, '0') +
-    String(d.getDate()).padStart(2, '0')
-}
-
 function createInitialSnapshot() {
   const createdAt = now()
   return {
     schemaVersion: contract.SESSION_SCHEMA_VERSION,
     sessionId: uuid(),
     revision: 0,
-    sessionDate: dateKey(createdAt),
+    sessionDate: sessionDate.dateKeyFromTimestamp(createdAt),
     checkpoint: 'prologue',
     stations: { s1: false, s2: false, s3: false, s4: false },
     puzzles: {},
@@ -199,10 +190,8 @@ const localAdapter = {
   },
 
   recognizeScene() {
-    if (MOCK_FAIL) {
-      return Promise.resolve({ pass: false, confidence: 0.2, failReason: 'not_target' })
-    }
-    return Promise.resolve({ pass: true, confidence: 0.95 })
+    // 本地适配器没有识别模型；显式声明不可用，不能以高置信 Mock 冒充服务。
+    return Promise.resolve({ available: false, pass: false, confidence: 0, failReason: 'unknown' })
   },
 
   saveMedia() {

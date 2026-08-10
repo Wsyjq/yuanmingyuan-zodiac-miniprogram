@@ -6,9 +6,11 @@
     "check:licenses": "npm --prefix test run check:licenses",
     "check:commercial": "npm --prefix test run check:commercial",
     "audit:images": "npm --prefix test run --silent audit:images",
+    "build:runtime-images": "npm --prefix test run build:runtime-images",
     "package:report": "npm --prefix test run report:package",
     "start:h5": "python -m http.server 8876 --bind 127.0.0.1",
     "test": "npm --prefix test run test:all",
+    "test:visual": "node test/harness/render.js",
     "test:h5": "python test/h5-e2e.py",
     "test:unit": "npm --prefix test test"
   }

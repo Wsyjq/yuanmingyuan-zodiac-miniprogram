@@ -1,17 +1,12 @@
 const session = require('../../store/session')
+const answers = require('../../utils/puzzle-answers')
 
-const ALL_ZODIAC = ['鼠', '牛', '虎', '兔', '龙', '蛇', '马', '羊', '猴', '鸡', '狗', '猪']
-const RETURNED = ['鼠', '牛', '虎', '兔', '马', '猴', '猪']
+const RETURNED = answers.RETURNED_ZODIAC
 const HISTORY_LINES = [
   '截至目前，十二生肖兽首中共有 7 尊已回归祖国，',
   '分别是：牛、虎、猴、猪、鼠、兔、马。',
   '其余龙、蛇、羊、鸡、狗 5 尊至今下落不明。'
 ]
-
-function parseZodiac(value) {
-  const text = String(value || '')
-  return ALL_ZODIAC.filter((name) => text.includes(name))
-}
 
 Page({
   data: {
@@ -58,23 +53,25 @@ Page({
 
   onConfirm() {
     if (this.data.showHistory) return
-    const chosen = parseZodiac(this.data.answerInput)
-    if (!chosen.length) {
+    const parsed = answers.parseReturnedZodiac(this.data.answerInput)
+    if (!parsed.selected.length && !parsed.extra.length) {
       wx.showToast({ title: '请先填写转盘结果', icon: 'none' })
       return
     }
-    const correct = chosen.length === RETURNED.length && RETURNED.every((name) => chosen.includes(name))
+    const correct = parsed.correct
     session.attemptPuzzle('s3-zodiac', this.data.attempts + 1, correct, 'physical')
     if (correct) {
       this.setData({ solved: true, showHistory: true, showCardNumber: true, wrongTip: '' })
-      session.completePuzzle('s3-zodiac', { answer: chosen, attempts: this.data.attempts + 1 }, { collectCard: true })
+      session.completePuzzle('s3-zodiac', { answer: parsed.selected, attempts: this.data.attempts + 1 }, { collectCard: true })
         .catch(function () { wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' }) })
       return
     }
     const attempts = this.data.attempts + 1
     this.setData({
       attempts,
-      wrongTip: `目前识别到 ${chosen.length} 个生肖，结果还没有完全对应。请回到实体转盘重新核对。`
+      wrongTip: parsed.extra.length
+        ? '结果中包含尚未回归的生肖：' + parsed.extra.join('、') + '。请回到实体转盘重新核对。'
+        : '还缺少 ' + parsed.missing.length + ' 个生肖，请回到实体转盘重新核对。'
     })
   },
 

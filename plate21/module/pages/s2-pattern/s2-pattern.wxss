@@ -12,15 +12,9 @@
   filter: drop-shadow(0 3rpx 6rpx rgba(70, 56, 42, 0.22));
 }
 .sticker-stamp {
-  position: absolute; top: 96rpx; left: 92rpx;
+  position: absolute; top: 18rpx; left: 176rpx;
   width: 96rpx; height: 110rpx; opacity: .85; z-index: 9;
   transform: rotate(-8deg); pointer-events: none;
-  filter: drop-shadow(0 2rpx 4rpx rgba(70, 56, 42, 0.2));
-}
-.sticker-ticket {
-  position: absolute; bottom: 220rpx; right: 18rpx;
-  width: 140rpx; height: 78rpx; opacity: .85; z-index: 9;
-  transform: rotate(4deg); pointer-events: none;
   filter: drop-shadow(0 2rpx 4rpx rgba(70, 56, 42, 0.2));
 }
 
@@ -30,15 +24,16 @@
 .lead { margin-top: 18rpx; font-size: 28rpx; line-height: 1.85; color: var(--ink); }
 
 /* 主图区 */
-.grid { margin-top: 40rpx; display: flex; flex-wrap: wrap; justify-content: space-between; }
+.grid { position: relative; z-index: 2; margin-top: 40rpx; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24rpx; }
 .cell {
   position: relative;
-  width: 332rpx; margin-bottom: 24rpx; padding: 14rpx;
+  min-width: 0; padding: 14rpx; box-sizing: border-box;
   background: var(--paper2); border-radius: 10rpx;
   transition: all .2s;
 }
 .cell.on { background: #EFE4C8; transform: translateY(-2rpx); }
-.cell-img { width: 100%; height: 200rpx; border-radius: 6rpx; background: var(--paper3); }
+.cell-img { width: 100%; height: 180rpx; overflow: hidden; border-radius: 6rpx; background: var(--paper3); }
+.pattern-photo { display: block; width: 100%; height: 100%; filter: sepia(.18) saturate(.8) contrast(1.02); }
 .cell-name { margin-top: 10rpx; font-size: 28rpx; font-weight: 600; color: var(--ink); text-align: center; letter-spacing: 2rpx; }
 .cell-desc { margin-top: 4rpx; font-size: 22rpx; color: var(--ink60); text-align: center; }
 .cell-pin {
@@ -68,35 +63,5 @@
 .route-title { margin-top: 18rpx; font-size: 34rpx; color: var(--ink-deep); }
 .route-copy, .route-check { margin: 24rpx 0; font-size: 27rpx; line-height: 1.85; color: var(--ink); }
 .route-check { padding: 18rpx 20rpx; border-left: 5rpx solid var(--patina); background: rgba(72, 112, 103, 0.08); }
-
-.btn-disabled { opacity: .45; }
-
-.title { padding-top: 130rpx; font-size: 42rpx; font-weight: 700; color: var(--patina); letter-spacing: 4rpx; }
-.title-div { width: 40%; margin: 18rpx auto 0; }
-.lead { margin-top: 18rpx; font-size: 28rpx; line-height: 1.85; color: var(--ink); }
-
-/* 4 花纹格子：双线框 + 真图 + 选中朱砂 */
-.grid { margin-top: 36rpx; display: flex; flex-wrap: wrap; justify-content: space-between; }
-.cell {
-  position: relative;
-  width: 332rpx; margin-bottom: 24rpx; padding: 14rpx;
-  background: var(--paper2); border-radius: 10rpx;
-  transition: border-color .2s, background .2s, transform .15s;
-}
-.cell.on { background: #EFE4C8; transform: translateY(-2rpx); }
-.cell-img { width: 100%; height: 200rpx; border-radius: 6rpx; background: var(--paper3); }
-.cell-name { margin-top: 10rpx; font-size: 28rpx; font-weight: 600; color: var(--ink); text-align: center; letter-spacing: 2rpx; }
-.cell-desc { margin-top: 4rpx; font-size: 22rpx; color: var(--ink60); text-align: center; }
-.cell-pin {
-  position: absolute; top: 10rpx; right: 10rpx;
-  width: 40rpx; height: 40rpx; line-height: 40rpx; text-align: center;
-  background: var(--cinnabar); color: var(--paper); border-radius: 50%;
-  font-size: 24rpx; font-weight: 700;
-}
-
-.hint { margin-top: 16rpx; font-size: 26rpx; color: var(--cinnabar); text-align: center; }
-
-/* 解谜后独白（剧情原文） */
-.reveal { margin-top: 28rpx; font-size: 32rpx; line-height: 1.85; color: var(--ink); text-align: center; letter-spacing: 2rpx; }
 
 .btn-disabled { opacity: .45; }

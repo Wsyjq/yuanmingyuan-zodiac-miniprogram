@@ -1,0 +1,95 @@
+<view class="archive-art art-{{type}} {{compact ? 'compact' : ''}}" role="img" aria-label="{{label}}">
+  <view class="art-grain"></view>
+
+  <block wx:if="{{type === 'plate'}}">
+    <view class="plate-sun"></view>
+    <view class="plate-palace">
+      <view class="plate-roof"></view>
+      <view class="plate-facade">
+        <view class="plate-arch arch-a"></view>
+        <view class="plate-arch arch-b"></view>
+        <view class="plate-arch arch-c"></view>
+      </view>
+    </view>
+    <view class="plate-fountain"><view></view><view></view><view></view></view>
+    <view class="plate-basin"></view>
+    <view class="plate-mark">XXI</view>
+  </block>
+
+  <block wx:elif="{{type === 'archive-card'}}">
+    <view class="card-index">CAT. 20 + ?</view>
+    <view class="card-rule rule-a"></view>
+    <view class="card-rule rule-b"></view>
+    <view class="card-rule rule-c"></view>
+    <view class="card-pencil kaiti">闻有第二十一图，未见。</view>
+    <view class="card-seal">录</view>
+  </block>
+
+  <block wx:elif="{{type === 'map'}}">
+    <view class="map-contour contour-a"></view>
+    <view class="map-contour contour-b"></view>
+    <view class="map-water"></view>
+    <view class="map-compass"><text>北</text></view>
+    <view class="map-path path-a"></view>
+    <view class="map-path path-b"></view>
+  </block>
+
+  <block wx:elif="{{type === 'maze'}}">
+    <view class="maze-ring ring-a"></view>
+    <view class="maze-ring ring-b"></view>
+    <view class="maze-ring ring-c"></view>
+    <view class="maze-gap"></view>
+    <view class="maze-pavilion"><view class="pavilion-roof"></view><view class="pavilion-base"></view></view>
+  </block>
+
+  <block wx:elif="{{type === 'lantern'}}">
+    <view class="lantern-figure"><view class="figure-head"></view><view class="figure-body"></view><view class="figure-arm"></view></view>
+    <view class="lantern-pole"></view>
+    <view class="lotus-lamp"><view class="petal p1"></view><view class="petal p2"></view><view class="petal p3"></view><view class="lamp-core"></view></view>
+    <view class="lantern-rays"></view>
+  </block>
+
+  <block wx:elif="{{type === 'detail-dome'}}">
+    <view class="detail-target"></view>
+    <view class="detail-dome"><view class="dome-cap"></view><view class="dome-eave"></view><view class="dome-columns"></view></view>
+    <view class="detail-code">01 · DOME / EAVE</view>
+  </block>
+
+  <block wx:elif="{{type === 'detail-beast'}}">
+    <view class="detail-target"></view>
+    <view class="detail-eave"></view><view class="detail-beast"><view class="beast-head"></view><view class="beast-body"></view></view>
+    <view class="detail-code">02 · RIDGE BEAST</view>
+  </block>
+
+  <block wx:elif="{{type === 'detail-lotus'}}">
+    <view class="detail-target"></view>
+    <view class="detail-vase"><view class="vase-neck"></view><view class="vase-body"></view></view>
+    <view class="detail-lotus"><view></view><view></view><view></view></view>
+    <view class="detail-code">03 · LOTUS / VASE</view>
+  </block>
+
+  <block wx:elif="{{type === 'detail-swan'}}">
+    <view class="detail-target"></view>
+    <view class="detail-swan swan-a"><view></view></view><view class="detail-swan swan-b"><view></view></view>
+    <view class="detail-bat">福</view>
+    <view class="detail-code">04 · SWAN / BAT</view>
+  </block>
+
+  <block wx:elif="{{type === 'pattern-wanzi'}}">
+    <view class="pattern-grid"><text>卍</text><text>卍</text><text>卍</text><text>卍</text></view>
+  </block>
+
+  <block wx:elif="{{type === 'pattern-lotus'}}">
+    <view class="pattern-lotus"><view class="lp lp1"></view><view class="lp lp2"></view><view class="lp lp3"></view><view class="lp lp4"></view><view class="lp-core"></view></view>
+  </block>
+
+  <block wx:elif="{{type === 'pattern-scroll'}}">
+    <view class="pattern-scroll"><view class="scroll-line"></view><view class="scroll-curl curl-a"></view><view class="scroll-curl curl-b"></view><view class="scroll-leaf leaf-a"></view><view class="scroll-leaf leaf-b"></view></view>
+  </block>
+
+  <block wx:elif="{{type === 'pattern-water'}}">
+    <view class="pattern-water"><view class="wave wave-a"></view><view class="wave wave-b"></view><view class="wave wave-c"></view><view class="shore"></view></view>
+  </block>
+
+  <view wx:if="{{label && !compact}}" class="art-label">{{label}}</view>
+</view>

@@ -44,7 +44,8 @@
       <scroll-view class="page-body" scroll-y enhanced show-scrollbar="{{false}}">
         <view wx:if="{{currentItem.image}}" class="photo-sheet">
           <view class="photo-tape"></view>
-          <image wx:if="{{currentItem.src}}" class="page-photo" src="{{currentItem.src}}" mode="aspectFill" />
+          <archive-illustration wx:if="{{currentItem.illustrationType}}" class="page-photo" type="{{currentItem.illustrationType}}" label="{{currentItem.caption}}" compact="{{true}}" style="display:block;" />
+          <image wx:elif="{{currentItem.src}}" class="page-photo" src="{{currentItem.src}}" mode="aspectFill" />
           <view wx:else class="photo-code">{{currentItem.image}}</view>
           <view class="photo-caption">{{currentItem.caption}}</view>
         </view>
@@ -52,23 +53,13 @@
         <view wx:elif="{{currentItem.quote}}" class="quote-sheet">
           <view class="quote-mark">“</view>
           <view class="quote-copy kaiti">
-            <text
-              wx:for="{{currentChars}}"
-              wx:key="index"
-              class="type-char {{showAll ? 'show-all' : ''}}"
-              style="animation-delay: {{index * 0.034}}s"
-            >{{item}}</text>
+            <text class="reveal-copy {{showAll ? 'show-all' : ''}}" style="animation-duration: {{revealDuration}}ms">{{currentItem.text}}</text>
           </view>
           <view class="quote-mark quote-end">”</view>
         </view>
 
         <view wx:else class="narrative-copy">
-          <text
-            wx:for="{{currentChars}}"
-            wx:key="index"
-            class="type-char {{index === 0 ? 'drop-cap' : ''}} {{showAll ? 'show-all' : ''}}"
-            style="animation-delay: {{index * 0.034}}s"
-          >{{item}}</text>
+          <text class="reveal-copy {{showAll ? 'show-all' : ''}}" style="animation-duration: {{revealDuration}}ms">{{currentItem.text}}</text>
         </view>
       </scroll-view>
 
@@ -111,7 +102,8 @@
       <view class="page-body turn-body">
         <view wx:if="{{turnItem.image}}" class="photo-sheet">
           <view class="photo-tape"></view>
-          <image wx:if="{{turnItem.src}}" class="page-photo" src="{{turnItem.src}}" mode="aspectFill" />
+          <archive-illustration wx:if="{{turnItem.illustrationType}}" class="page-photo" type="{{turnItem.illustrationType}}" label="{{turnItem.caption}}" compact="{{true}}" style="display:block;" />
+          <image wx:elif="{{turnItem.src}}" class="page-photo" src="{{turnItem.src}}" mode="aspectFill" />
           <view wx:else class="photo-code">{{turnItem.image}}</view>
           <view class="photo-caption">{{turnItem.caption}}</view>
         </view>

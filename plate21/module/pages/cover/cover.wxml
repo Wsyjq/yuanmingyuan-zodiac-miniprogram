@@ -1,14 +1,14 @@
 <nav-back />
 <!-- v1.3.1 手账：左侧活页装订孔列（移到 .page 外，避免 flex 容器影响 fixed 定位） -->
 <view class="binder"></view>
-<view class="page paper-grain paper-real">
+<view class="page page-shell paper-grain paper-real">
   <!-- v1.3.1 手账：真实吊牌素材 + 叠字编号（右上角，避让返回按钮与胶囊） -->
   <view class="page-tag">
     <image class="page-tag-img" src="/plate21/module/assets/img/stickers/st-hang-tag-01.png" mode="aspectFit" />
     <view class="page-tag-no serif">No.000</view>
   </view>
 
-  <!-- 上 1/3：主视觉占位（邮票齿孔框 + 双框 + 角花 + 胶带贴角 + 微倾斜）+ 排线 divider -->
+  <!-- 上 1/3：已授权 AI 主视觉（邮票齿孔框 + 双框 + 角花 + 胶带贴角 + 微倾斜） -->
   <view class="hero">
     <view class="perfo-frame hero-perfo tilt-l">
       <view class="tape" style="left:40rpx;top:4rpx;transform:rotate(-4deg);"></view>
@@ -19,8 +19,7 @@
         <view class="corner tr"></view>
         <view class="corner bl"></view>
         <view class="corner br"></view>
-        <!-- IMG-C01 已就位：AI 生成铜版画（Seedream 5.0），见素材清单状态列 -->
-        <image class="hero-photo" src="/plate21/module/assets/img/img-c01.jpg" mode="aspectFill" />
+        <image class="hero-photo" src="/plate21/module/assets/img/IMG-RUNTIME-COVER.jpg" mode="aspectFill" />
       </view>
     </view>
     <view class="hatch-divider hero-hatch"></view>
@@ -50,7 +49,7 @@
     <!-- v1.3.1 手账：干花标本贴纸（压在票根卡左侧下方） -->
     <image class="sticker-botanical" src="/plate21/module/assets/img/stickers/st-botanical-02.png" mode="aspectFit" />
     <view class="card-ticket stitched entry-card">
-      <view class="entry-meta kaiti">考察凭证 · 第貳拾壹號</view>
+      <view class="entry-meta kaiti">考察凭证 · 第貳拾壹號 · 建档 {{archiveDate}}</view>
       <view class="actions">
         <button wx:if="{{loading}}" class="btn-line record-action" disabled>正在调取档案……</button>
         <block wx:else>
@@ -58,7 +57,7 @@
           <button class="btn-seal record-action" bindtap="onStart" disabled="{{navigating}}">{{navigating ? '正在开启……' : '开 始 考 察'}}</button>
         </block>
         <block wx:else>
-          <button class="btn-seal record-action" bindtap="onContinue" disabled="{{navigating}}">{{navigating ? '正在恢复……' : '继 续 考 察'}}</button>
+          <button class="btn-seal record-action" bindtap="onContinue" disabled="{{navigating}}">{{navigating ? '正在调取……' : (completed ? '查 看 考 察 报 告' : '继 续 考 察')}}</button>
           <button class="btn-line restart" bindtap="onRestart">重新考察</button>
         </block>
         </block>
@@ -96,7 +95,7 @@
 <view wx:if="{{showHelp}}" class="mask {{helpClosing ? 'overlay-out' : ''}}" bindtap="onCloseHelp">
   <view class="help-card card-archive {{helpClosing ? 'overlay-out' : ''}}" catchtap="noop">
     <view class="help-title serif">玩法说明</view>
-    <view class="help-body">这是一趟纸上考察：按序走访西洋楼四处遗址，拆信封破线索、考黄花阵、寻兽首与水显、读时间轴密码，完成四份考察记录。每一张史料卡角落的数字，都藏着最后的答案。</view>
+    <view class="help-body">这是一趟纸上考察：按序走访西洋楼四处遗址，拆信封破线索、考黄花阵、寻兽首与水显、读时间轴密码，完成四份考察记录。考察凭证会锁定本次建档日，每一张史料卡角落的数字都藏着最后的答案。</view>
     <view class="help-body">谜题答错不锁死，提示会逐次变明显；带上附件夹里的考察资料（信、路线图、记录页），按图索骥。</view>
     <button class="btn-line help-close" bindtap="onCloseHelp">知道了</button>
   </view>

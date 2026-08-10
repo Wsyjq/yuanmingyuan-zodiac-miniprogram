@@ -22,8 +22,8 @@
 ## Anime.js 动画引擎
 
 `plate21/module/vendor/anime.umd.min.js` 为 **Anime.js v4.5.0** 官方 UMD 构建（未改动），
-由 `plate21/module/utils/anime.js` 封装引用（补 `setImmediate` 环境垫片）。
-仅使用其对普通 JS 对象的数值补间能力，不涉及其 DOM 相关模块。
+`plate21/module/utils/anime.js` 是其历史封装。当前运行时代码已改用 CSS/有限状态动画，
+vendor 目录与封装文件均由 `project.config.json` 排除，不进入小程序发布包。
 
 - 项目主页：https://animejs.com
 - 源码仓库：https://github.com/juliangarnier/anime
@@ -85,12 +85,14 @@ SVG 源文件经 `test/stickers-src/build.js` 渲染/缩放为 PNG。
 - 子集字符表：`assets/licenses/OFL-LXGW-WenKai-v1.522-characters.txt`
 - 子集生成脚本：`test/subset-wenkai.js`
 
-## 待核验图片
+## 项目 AI 图片
 
-以下图片已逐文件固定 SHA-256，但尚未达到闭源商业发布证据标准，状态以
-`assets/third-party-lock.json` 为准：
+项目方于 2026-08-11 确认：41 个源 JPEG 均由项目使用允许商业用途的平台与账号生成，并授权这些图片及其衍生文件用于本项目商业生产版本。此前 6 个文件的“历史扫描”内部分类已撤销。
 
-- `IMG-HOLD-AI`：35 个 AI 来源 JPEG，其中 13 个当前进入小程序包。缺账号主体、订单/套餐、原始请求响应、生成日条款和底层模型授权链。逐文件记录见 `docs/compliance/IMG-HOLD-AI-evidence.md`。
-- `IMG-HOLD-SHUGE`：5 个历史扫描 JPEG 及 1 个宿主副本，其中 4 个路径当前进入小程序包。古画原作年代与数字扫描使用权分开判断；当前缺 Manchester item-level 商业许可、原始下载包和页码映射。逐文件记录见 `docs/compliance/IMG-HOLD-SHUGE-evidence.md`。
+- `IMG-AI-SOURCES`：41 个哈希锁定源文件，全部由 `project.config.json` 排除，不直接进入包。
+- `IMG-AI-RUNTIME`：18 个通过 `test/build-runtime-images.js` 生成的生产衍生文件，全部进入当前小程序包。
+- 商业使用确认：`assets/licenses/PROJECT-AI-ASSET-AUTHORIZATION-2026-08-11.txt`。
+- 源到衍生映射：`docs/compliance/ai-runtime-manifest.json`。
+- 综合证据与变更控制：`docs/compliance/IMG-AI-PROJECT-evidence.md`。
 
-这两项均为 `hold`，不得因文件存在于仓库、原作年代久远或生成日志存在而标记为可商用。整改提交书见 `docs/compliance/commercial-image-remediation.md`。
+所有 59 个受控路径均在 `assets/third-party-lock.json` 固定 SHA-256。新增、覆盖或重新生成图片后必须同步 manifest 与 lock，并重新运行图片、商业和包体门禁。

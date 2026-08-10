@@ -3,7 +3,7 @@
 > 版本：v1.0 · 核验日期：2026-08-09  
 > 适用工程：`D:/kc/ymy` 原生微信小程序  
 > 目标：在不公开业务源码、允许收费与商业盈利的前提下，继续迭代「中国古风 × 旧纸档案 × 考察手账」页面 UI。
-> 执行状态：P0、P1、P2 已于 2026-08-09 落地；P3、P4 经视觉与技术评估暂不触发。AI 图片和书格扫描已完成逐文件哈希登记，但商业闸门仍被两项 `hold` 阻断。
+> 执行状态：P0、P1、P2 已落地；P3、P4 暂不触发。项目方已确认 41 个 AI 源文件可商用，18 个压缩衍生图已重新接入生产，2026-08-11 严格商业检查通过。
 
 ## 0. 商用放行口径
 
@@ -33,7 +33,7 @@
 | UI-02 | [PaperCSS](https://github.com/papercss/papercss) `v1.9.2` | ISC，Copyright 2017–2018 Rhyne Vlaservich | 允许 | 纸张卡片、轻微不规则边、表单层级、按钮按压反馈 | 不安装运行时框架；只转写经筛选的卡片/表单规则 | ISC 全文、版本、来源文件、改写说明 |
 | FNT-01 | [LXGW WenKai](https://github.com/lxgw/LxgwWenKai) `v1.522` | OFL-1.1，含上游 Additional Permission | 允许 | 手写批注、史料旁注、短提示 | 从官方 `LXGWWenKai-Regular.ttf` 生成项目字符子集并以内联字体加载 | `OFL.txt`、版权行、版本、原文件 SHA-256、子集字符表 |
 | ICO-01 | [Lucide](https://github.com/lucide-icons/lucide) 当前工程 `lucide-static@1.28.0` | ISC；部分 Feather 派生图标为 MIT | 允许 | 返回、相机、提示、时间、确认等功能图标 | 继续使用已生成 PNG；不额外引入运行时库 | Lucide ISC 与 Feather MIT 两部分声明 |
-| ANI-01 | [Anime.js](https://github.com/juliangarnier/anime) 当前工程 `v4.5.0` | MIT | 允许 | 数值补间、弹回、落印和演出动画 | 继续使用已有 UMD 封装；不调用 DOM 模块 | MIT 全文、vendor 文件头、版本 |
+| ANI-01 | [Anime.js](https://github.com/juliangarnier/anime) 当前工程 `v4.5.0` | MIT | 允许 | 历史动画实现留档 | 运行时已改为 CSS；UMD 与封装均排除出包 | MIT 全文、vendor 文件头、版本 |
 | AST-01 | [OpenClipart](https://openclipart.org/) 已登记贴纸 | CC0 1.0 | 允许 | 吊牌、票根、回形针、植物标本、邮戳 | 继续使用本地 PNG；逐文件保留来源页 | CC0 链接、作者、来源页、文件映射 |
 | AST-02 | Wikimedia Commons 已登记素材 | Public Domain | 允许 | 旧邮票、旧纸纹理 | 继续使用本地图片；仅使用来源页明确标记 Public Domain 的文件 | 来源页、作者/扫描者、PD 依据、下载日期 |
 
@@ -71,11 +71,11 @@
 
 | 资源 | 当前结论 | 处理动作 |
 |---|---|---|
-| MasaFont / 衡山毛笔行书 | 仓库 README 声称 OFL/可商用，但 2026-08-09 通过 GitHub License API 未发现独立许可证文件；证据链不满足本项目严格口径 | 现有版本仅限原型；P0 替换为 LXGW WenKai 子集，替换完成前不得作为商用版本放行 |
+| MasaFont / 衡山毛笔行书 | 仓库 README 声称 OFL/可商用，但 2026-08-09 通过 GitHub License API 未发现独立许可证文件；证据链不满足本项目严格口径 | 已由 LXGW WenKai 子集替换；不得恢复 MasaFont 二进制或运行时引用 |
 | Chinese-Traditional-Culture/CTC-MiniProgram | 仓库未声明许可证 | 不复制代码、样式、图片或文案，只能观察通用设计思想 |
 | zerosoul/chinese-colors 的整套数据与页面 | 代码仓库为 MIT，但传统色数据来源和演示素材边界不够清晰 | 只人工参考颜色名称；不复制整套数据、页面或图片 |
-| 书格铜版画扫描 | 已固定 6 个路径及哈希；原作年代足以进入公共领域，但书格指向的曼彻斯特数字馆默认条款限制商业使用和修改，且缺 item-level 许可、原始下载包及页码映射 | 保持 `IMG-HOLD-SHUGE`；取得具体数字文件的书面商用/改编许可，或替换为明确 CC0/PD Mark 的扫描；详见 `docs/compliance/IMG-HOLD-SHUGE-evidence.md` |
-| 当前 AI 生成大图 | 已固定 35 个路径及哈希；本地生成日志不是许可证，仍缺账号主体、订单/套餐、请求/响应、生成日条款和底层模型授权链 | 保持 `IMG-HOLD-AI`；证据闭环后单独审批，不能用 MIT 标签替代平台授权；详见 `docs/compliance/IMG-HOLD-AI-evidence.md` |
+| 项目 AI 源图片 | 项目方确认 41 个路径均为项目 AI 生成，不存在第三方扫描来源；源文件全部 ignored | 保持 `IMG-AI-SOURCES` 哈希锁和项目方商业使用确认，不允许页面直接引用源图 |
+| 项目 AI 生产衍生图 | 18 个缩放压缩文件，源到目标的哈希与处理参数完整 | `IMG-AI-RUNTIME` 为 approved；变更后必须重建 manifest 并重跑商业与包体门禁 |
 | 小红书、Pinterest、设计站截图 | 仅可作为风格观察，不是可复用素材 | 禁止复制图片、贴纸、字体文件或高度独创的成套版式 |
 | 任意无 LICENSE 仓库 | 默认保留全部权利 | 不接入，不接受“网上能下载”作为授权依据 |
 
@@ -83,7 +83,7 @@
 
 为了保持原生小程序、低包体和古风档案感，资源按三层接入：
 
-1. **运行层**：保留原生 WXML/WXSS、自研 `novel-view` 和现有 Anime.js，不新增 Web DOM 框架。
+1. **运行层**：保留原生 WXML/WXSS、自研 `novel-view` 和 CSS/有限状态动画，不新增 Web DOM 框架。
 2. **样式层**：从 Paper/PaperCSS 转写少量规则到项目自有古风档案组件，不复制整套框架。
 3. **离线生产层**：roughjs 或 textures 只在 `test/` 生成透明 PNG/WebP；运行时只加载压缩后的静态图。
 
@@ -215,6 +215,8 @@ npm test
 node test/check-font.js
 node test/harness/render.js
 npm run package:report
+npm run audit:images
+npm run check:commercial
 ```
 
 - [ ] 检查 `test/shots-h5/` 的全量截图和四张实体操作重点截图。
