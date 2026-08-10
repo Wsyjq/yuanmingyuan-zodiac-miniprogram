@@ -1,0 +1,112 @@
+<nav-back />
+<!-- v1.3.1 手账：左侧活页装订孔列（移到 .page 外，避免 flex 影响 fixed） -->
+<view class="binder"></view>
+<view class="page paper-grain paper-real">
+
+  <!-- v1.3.1 手账：票根贴纸压在标题右上角，像手册的装订凭证 -->
+  <image class="hb-ticket" src="/plate21/module/assets/img/stickers/st-ticket-02.png" mode="aspectFit" />
+
+  <view class="hb-title serif">考察手册</view>
+  <view class="hb-sub">西洋楼铜版图 · 第二十一图</view>
+  <view class="tag-no hb-tag">No.017</view>
+
+  <!-- 第壹折：五份考察记录位 -->
+  <view class="hatch-divider sec-div"></view>
+  <view class="sec-head serif">第壹折 · 四份考察记录</view>
+  <!-- v1.3.1 手账：邮票贴纸压在「第壹折」标题旁，归档感 -->
+  <image class="hb-stamp" src="/plate21/module/assets/img/stickers/st-stamp-01.png" mode="aspectFit" />
+  <view class="slots">
+    <view wx:for="{{slots}}" wx:key="key" class="slot-item">
+      <view class="slot card-ticket">
+        <view class="slot-index">REC.{{item.no}}</view>
+        <view class="slot-name serif">{{item.name}}</view>
+        <view wx:if="{{item.done}}" class="seal kaiti">已录</view>
+        <view wx:else class="seal-empty kaiti">待录</view>
+      </view>
+      <view class="ticket-edge"></view>
+    </view>
+  </view>
+  <view class="note-hand olive hb-note">已录 {{doneCount}} 则，共四则。</view>
+
+  <!-- 第贰折：玩家实际拍摄的四图考察卡 -->
+  <view class="hatch-divider sec-div"></view>
+  <view class="sec-head serif">第贰折 · 四图考察卡</view>
+  <view class="photo-record archive-sheet">
+    <view class="photo-record-head">
+      <view>
+        <view class="photo-record-kicker">FIELD RECORD · S2-3</view>
+        <view class="photo-record-title serif">中西结合的现场观察</view>
+      </view>
+      <view class="photo-record-count">{{photoCount}} / 4</view>
+    </view>
+    <view class="archive-rule"></view>
+    <view class="photo-record-grid">
+      <view wx:for="{{fieldPhotos}}" wx:key="key" class="photo-record-item" data-key="{{item.key}}" bindtap="onPreviewPhoto" role="button" aria-label="预览{{item.title}}现场照片">
+        <image wx:if="{{item.photoPath}}" class="photo-record-image" src="{{item.photoPath}}" mode="aspectFill" />
+        <view wx:else class="photo-record-missing">待补录</view>
+        <view class="photo-record-caption"><text>{{item.no}}</text>{{item.title}}</view>
+      </view>
+    </view>
+    <view class="photo-record-note">点击已记录照片可全屏查看。这里不会用参考图替代现场记录。</view>
+    <button wx:if="{{photoCount < 4}}" class="btn-line photo-repair" bindtap="onRepairPhotos">前往现场照片页补录</button>
+  </view>
+
+  <!-- 第叁折：已收集史料卡 -->
+  <view class="hatch-divider sec-div"></view>
+  <view class="sec-head serif">第叁折 · 已收集史料</view>
+  <!-- v1.3.1 手账：回形针贴纸压在「第贰折」标题旁，夹史料感 -->
+  <image class="hb-paperclip" src="/plate21/module/assets/img/stickers/st-paperclip-01.png" mode="aspectFit" />
+  <view class="hlist">
+    <view wx:for="{{history}}" wx:key="id" class="hitem">
+      <view
+        class="hcard card-ticket {{item.available ? '' : 'locked'}}"
+        data-index="{{index}}"
+        bindtap="onReadHistory"
+      >
+        <view class="hcard-no">{{item.no}}</view>
+        <view class="hcard-main">
+          <view class="hcard-title">{{item.title}}</view>
+          <view class="hcard-src">〔{{item.source}}〕</view>
+        </view>
+        <view wx:if="{{item.available}}" class="hcard-badge kaiti">已录</view>
+        <view wx:else class="hcard-badge lock kaiti">未录</view>
+      </view>
+      <view class="ticket-edge"></view>
+    </view>
+  </view>
+
+  <!-- 第肆折：考察报告缩略位 -->
+  <view class="hatch-divider sec-div"></view>
+  <view class="sec-head serif">第肆折 · 考察报告</view>
+  <view wx:if="{{finaleDone}}" class="report-thumb">
+    <view class="tape" style="top:-20rpx; left:50%; margin-left:-90rpx;"></view>
+    <view class="mini-wrap">
+      <view class="canvas">
+        <!-- IMG-F06 完整铜版画缩略 -->
+        <image class="canvas-bg" src="/plate21/module/assets/img/IMG-F06.jpg" mode="aspectFill" />
+        <view class="layer layer-l2"><view class="l2-frame"></view></view>
+        <view class="layer layer-l1"><view class="l1-bar"></view></view>
+        <view class="layer layer-l5">
+          <view class="l5-box">
+            <text class="l5-line kaiti">1747 —— 今日</text>
+            <text class="l5-name kaiti">{{name}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="thumb-caption">西洋楼铜版图 · 第二十一图{{name ? ' · ' + name : ''}}</view>
+  </view>
+  <view wx:else class="report-empty">
+    <text class="report-empty-text">考察报告 · 尚未生成</text>
+  </view>
+
+</view>
+
+<history-card
+  visible="{{showHistory}}"
+  title="{{card.title}}"
+  source="{{card.source}}"
+  lines="{{card.lines}}"
+  bind:collect="onCollectHistory"
+  bind:close="onCloseHistory"
+/>

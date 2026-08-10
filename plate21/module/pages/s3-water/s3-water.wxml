@@ -1,0 +1,57 @@
+<nav-back />
+<view class="page paper-grain paper-real">
+  <view class="binder"></view>
+  <view class="tag-no tag-no-fixed">No.S3-3</view>
+
+  <view class="title serif">让水显出答案</view>
+  <view class="hatch-divider title-div"></view>
+  <view class="lead kaiti">取出资料袋里的实体水显纸。真正的线索会在纸面遇水后出现，手机只负责核对结果。</view>
+
+  <view class="prop-card archive-sheet">
+    <view class="prop-label archive-tab">线下道具 · 实体水显纸</view>
+    <view class="prop-title serif">用少量清水显影</view>
+    <view class="archive-rule"></view>
+    <view class="care-note">注意：只需湿润纸面，不要浸泡；远离手机和其他纸质资料。</view>
+    <view class="archive-steps">
+      <view class="step-row"><view class="step-no">1</view><view class="step-copy">将水显纸平放在干燥、平整的表面。</view></view>
+      <view class="step-row"><view class="step-no">2</view><view class="step-copy">用微湿的工具缓慢涂过纸面，让隐藏内容逐渐显现。</view></view>
+      <view class="step-row"><view class="step-no">3</view><view class="step-copy">看清兽首名称后，把结果填入下方。</view></view>
+    </view>
+    <button wx:if="{{!operated}}" class="btn-seal confirm-btn record-action" bindtap="onOperationComplete">图案已经完整显现</button>
+  </view>
+
+  <view class="answer-area record-field" wx:if="{{operated && !solved}}">
+    <view class="answer-label">水显纸上的答案</view>
+    <input class="answer-input" value="{{answerInput}}" bindinput="onInput" placeholder="请输入兽首名称" maxlength="8" />
+    <button class="hint-btn" bindtap="onHint">显影提示</button>
+    <view class="hint-copy note-hand" wx:if="{{hintText}}">{{hintText}}</view>
+    <view class="wrong-tip" wx:if="{{wrongTip}}">{{wrongTip}}</view>
+    <button class="btn-seal confirm-btn record-action" bindtap="onSubmit">核 对 纸 上 答 案</button>
+  </view>
+
+  <view class="prop-card archive-sheet" wx:if="{{showHandoff}}">
+    <view class="prop-label archive-tab">道具收尾 · 下一条线索</view>
+    <view class="prop-title serif">晾干水显纸，再收回资料袋</view>
+    <view class="archive-rule"></view>
+    <view class="care-note">将纸张平放自然晾干，不要擦拭或折叠湿润区域；完全干燥后再收好。</view>
+    <view class="archive-steps">
+      <view class="step-row"><view class="step-no">1</view><view class="step-copy">马首曾流失海外，后来终于回到圆明园。</view></view>
+      <view class="step-row"><view class="step-no">2</view><view class="step-copy">这场流失始于 1860 年的劫掠；次年，雨果写下公开谴责的信。</view></view>
+      <view class="step-row"><view class="step-no">3</view><view class="step-copy">下一站去寻找雨果雕像，继续核对这封信留下的时间线。</view></view>
+    </view>
+    <button class="btn-seal confirm-btn record-action" bindtap="onNext" disabled="{{advancing}}">水显纸已收好，寻找雨果</button>
+  </view>
+</view>
+
+<history-card
+  wx:if="{{showHistory}}"
+  visible="{{showHistory}}"
+  title="马首铜像 · 回归纪实"
+  source="圆明园管理处"
+  lines="{{historyLines}}"
+  corner-number="{{cardNumber}}"
+  show-corner="{{showHistory}}"
+  btn-text="继 续"
+  bind:next="onHistoryNext"
+  bind:close="onCloseHistory"
+/>

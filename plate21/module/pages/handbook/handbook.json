@@ -1,0 +1,7 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "nav-back": "../../components/nav-back/nav-back",
+    "history-card": "../../components/history-card/history-card"
+  }
+}

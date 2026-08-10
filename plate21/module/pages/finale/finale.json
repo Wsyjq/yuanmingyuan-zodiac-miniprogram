@@ -1,0 +1,6 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "novel-view": "../../components/novel-view/novel-view"
+  }
+}

@@ -1,0 +1,46 @@
+<!-- 第二站 · 谜题2 黄花阵名字由来（采风修订版：文字输入） -->
+<nav-back />
+<view class="page paper-grain paper-real">
+  <view class="binder"></view>
+  <view class="tag-no tag-no-fixed">No.S2-2</view>
+
+  <view class="title serif">黄花阵名字由来</view>
+  <view class="lead kaiti">这又不是游乐场，修什么迷宫啊？好嘛，这下不出门就有游乐场了。可是这又和「黄花」有什么关系呢？</view>
+
+  <!-- 参考图：宫女手持黄色彩绸莲花灯 -->
+  <view class="ref-img">
+    <image class="ref-pic" src="/plate21/module/assets/img/IMG-S2B.jpg" mode="aspectFit" />
+    <view class="ref-note note-hand">参考图：手持莲花灯的宫女</view>
+  </view>
+
+  <view class="answer" wx:if="{{!solved}}">
+    <input
+      class="ans-input"
+      placeholder="你觉得「黄花」二字从何而来？"
+      placeholder-class="ans-ph"
+      value="{{answer}}"
+      bindinput="onInput"
+      bindconfirm="onSubmit"
+    />
+    <button class="btn-seal ans-btn" bindtap="onSubmit">提 交</button>
+  </view>
+  <view wx:if="{{hint}}" class="hint">{{hint}}</view>
+
+  <view wx:if="{{solved && !showHistory}}" class="followup double-frame">
+    <view class="kaiti">答案已经收入考察记录：黄色彩绸扎成的莲花灯。</view>
+    <button class="btn-seal" bindtap="onNext">继续现场观察</button>
+  </view>
+
+  <history-card
+    wx:if="{{showHistory}}"
+    visible="{{showHistory}}"
+    title="黄花阵 · 名字由来"
+    source="圆明园西洋楼景区史料"
+    lines="{{historyLines}}"
+    corner-number="{{cardNumber}}"
+    show-corner="{{showCardNumber}}"
+    btn-text="继续"
+    bind:next="onNext"
+    bind:close="onCloseHistory"
+  />
+</view>

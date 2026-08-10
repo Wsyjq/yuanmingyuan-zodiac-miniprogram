@@ -1,0 +1,320 @@
+/* P15 考察报告 */
+
+.page {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120rpx 0 80rpx 52rpx; /* 左侧 52rpx 让位 .binder */
+  box-sizing: border-box;
+}
+
+/* 编号标签：右上，位于标题上方空隙，避开顶部胶囊 */
+.page-no {
+  position: absolute;
+  top: 56rpx;
+  right: 40rpx;
+}
+
+.title {
+  font-size: 40rpx;
+  font-weight: 700;
+  letter-spacing: 4rpx;
+  color: var(--ink-deep);
+}
+.report-rule {
+  width: 560rpx;
+  margin-top: 22rpx;
+  opacity: 0.72;
+}
+.subtitle {
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  letter-spacing: 4rpx;
+  color: var(--ink60);
+}
+
+/* 万字纹画框：邮票齿孔框 + 双线边框 + 角花 */
+.frame {
+  position: relative;
+  margin-top: 40rpx;
+  padding: 18rpx;
+  border: 2rpx solid rgba(46, 31, 13, 0.62);
+}
+/* 朱砂日期章：盖在报告卡右上角，不压正文、不出屏 */
+.frame-stamp {
+  position: absolute;
+  top: -36rpx;
+  right: 12rpx;
+  z-index: 9;
+}
+/* v1.3.1：长尾夹贴纸压在画框左上角，像夹住档案 */
+.frame-clip {
+  position: absolute;
+  top: -34rpx;
+  left: 40rpx;
+  width: 110rpx;
+  height: 90rpx;
+  transform: rotate(-6deg);
+  opacity: 0.92;
+  z-index: 9;
+  pointer-events: none;
+  filter: drop-shadow(0 3rpx 6rpx rgba(70, 56, 42, 0.22));
+}
+/* v1.3.1：票根贴纸压在画框右下角，凭证感 */
+.frame-ticket {
+  position: absolute;
+  bottom: -28rpx;
+  right: 20rpx;
+  width: 180rpx;
+  height: 100rpx;
+  transform: rotate(4deg);
+  opacity: 0.9;
+  z-index: 9;
+  pointer-events: none;
+  filter: drop-shadow(0 3rpx 6rpx rgba(70, 56, 42, 0.22));
+}
+.frame-inner {
+  padding: 5rpx;
+  border: 0;
+}
+
+/* ---------- 铜版画预览（与 finale 同构图，静态全显） ---------- */
+.canvas {
+  position: relative;
+  width: 660rpx;
+  height: 896rpx;
+  background: var(--paper);
+  border: 1rpx solid rgba(70, 56, 42, 0.35);
+  overflow: hidden;
+}
+/* IMG-F06 完整铜版画作 canvas 底图（L1 题跋 / L5 落款叠在其上） */
+.canvas-bg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  mix-blend-mode: multiply;
+  filter: sepia(0.58) saturate(0.58) contrast(1.03);
+}
+.layer {
+  position: absolute;
+}
+.ph {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background: var(--paper2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20rpx;
+}
+.ph-code {
+  font-size: 22rpx;
+  letter-spacing: 4rpx;
+  color: var(--ink60);
+}
+.ph-desc {
+  margin-top: 8rpx;
+  font-size: 20rpx;
+  color: var(--ink60);
+  text-align: center;
+}
+.tag {
+  position: absolute;
+  top: 6rpx;
+  left: 12rpx;
+  font-size: 18rpx;
+  letter-spacing: 2rpx;
+  color: var(--ink60);
+}
+/* L1 标签移到题跋横条上方，不压铭文 */
+.layer-l1 .tag {
+  top: -24rpx;
+  left: 0;
+}
+/* L2 标签移到边框线外下缘，不压边框 */
+.layer-l2 .tag {
+  top: auto;
+  bottom: -26rpx;
+  left: 0;
+}
+
+.layer-l4 {
+  top: 190rpx;
+  left: 76rpx;
+  right: 76rpx;
+  height: 600rpx;
+  z-index: 2;
+}
+.layer-l3 {
+  top: 300rpx;
+  left: 122rpx;
+  width: 416rpx;
+  height: 434rpx;
+  z-index: 3;
+}
+.layer-l2 {
+  top: 160rpx;
+  left: 42rpx;
+  right: 42rpx;
+  bottom: 60rpx;
+  z-index: 4;
+}
+.l2-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border: 4rpx dashed var(--brass);
+}
+.l2-inner {
+  position: absolute;
+  top: 12rpx;
+  left: 12rpx;
+  right: 12rpx;
+  bottom: 12rpx;
+  border: 1rpx dashed var(--brass);
+}
+.layer-l1 {
+  top: 26rpx;
+  left: 38rpx;
+  right: 38rpx;
+  height: 110rpx;
+  z-index: 5;
+}
+.l1-bar {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background: var(--paper);
+  border: 1rpx solid rgba(70, 56, 42, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12rpx 22rpx;
+}
+.l1-text {
+  font-size: 21rpx;
+  line-height: 1.6;
+  text-align: center;
+  color: var(--ink);
+}
+.layer-l5 {
+  right: 116rpx;
+  bottom: 78rpx;
+  width: 320rpx;
+  z-index: 6;
+}
+.l5-box {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.l5-tag {
+  font-size: 18rpx;
+  letter-spacing: 2rpx;
+  color: var(--ink60);
+}
+.l5-line {
+  margin-top: 4rpx;
+  font-size: 26rpx;
+  color: var(--ink);
+}
+.l5-name {
+  margin-top: 4rpx;
+  min-height: 36rpx;
+  font-size: 28rpx;
+  color: var(--cinnabar);
+}
+
+.meta {
+  margin-top: 28rpx;
+  font-size: 24rpx;
+  color: var(--ink60);
+  letter-spacing: 2rpx;
+}
+/* 手写批注：图下页边一行 */
+.frame-note {
+  margin-top: 16rpx;
+}
+
+/* 玩家现场四图：参考图绝不回填到这些槽位。 */
+.field-record { width: 660rpx; margin-top: 40rpx; padding: 30rpx; box-sizing: border-box; }
+.field-head { display: flex; align-items: flex-end; justify-content: space-between; }
+.field-kicker { font-family: "Courier New", monospace; font-size: 18rpx; letter-spacing: 3rpx; color: var(--coffee); }
+.field-title { margin-top: 10rpx; font-size: 32rpx; color: var(--ink-deep); }
+.field-count { font-family: "Courier New", monospace; font-size: 24rpx; color: var(--patina); }
+.field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18rpx; margin-top: 24rpx; }
+.field-photo { overflow: hidden; border: 1rpx solid rgba(70, 56, 42, 0.34); background: var(--paper2); }
+.field-image, .field-missing { width: 100%; height: 190rpx; }
+.field-missing { display: flex; align-items: center; justify-content: center; color: var(--dash); font-size: 24rpx; border-bottom: 1rpx dashed var(--dash); }
+.field-caption { padding: 12rpx; font-size: 21rpx; color: var(--ink); }
+.field-caption text { margin-right: 10rpx; font-family: "Courier New", monospace; color: var(--coffee); }
+.field-note { margin-top: 20rpx; font-size: 21rpx; line-height: 1.7; color: var(--ink60); }
+.repair-btn { width: 100%; margin-top: 22rpx; box-sizing: border-box; }
+
+.actions {
+  margin-top: 48rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.act-btn {
+  width: 420rpx;
+  margin-bottom: 28rpx;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.act-icon {
+  width: 32rpx;
+  height: 32rpx;
+  margin-right: 12rpx;
+}
+.save-recovery { width: 560rpx; padding: 24rpx; box-sizing: border-box; }
+.save-error { font-size: 23rpx; line-height: 1.7; color: var(--cinnabar); text-align: center; }
+.settings-btn { width: 100%; margin-top: 18rpx; box-sizing: border-box; }
+
+/* 拓印提示 */
+.rubbing {
+  width: 660rpx;
+  margin-top: 20rpx;
+}
+.rubbing-tip {
+  padding: 16rpx 24rpx;
+  border: 1rpx solid var(--brass);
+  border-radius: 4rpx;
+  font-size: 24rpx;
+  color: var(--brass);
+  letter-spacing: 2rpx;
+  text-align: center;
+}
+.rubbing-panel {
+  margin-top: 24rpx;
+  padding: 32rpx;
+}
+.rubbing-text {
+  font-size: 26rpx;
+  line-height: 1.9;
+  color: var(--ink);
+}
+.rubbing-btn {
+  margin-top: 32rpx;
+}
+
+/* 离屏导出画布：移出视口，不占布局 */
+.offscreen {
+  position: fixed;
+  left: -1600rpx;
+  top: 0;
+}

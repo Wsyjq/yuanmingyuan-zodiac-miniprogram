@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="300" height="300">
+<defs>
+  <path id="c" d="m 274.8,118.84 q -28.78,-7.79 -57.55,0 -28.78,7.79 -57.56,0 -28.78,-7.79 -57.55,0"/>
+</defs>
+<g stroke-width="5" fill="none" stroke="#000" stroke-linecap="round">
+<use xlink:href="#c"/>
+<use xlink:href="#c" y="15.58"/>
+<use xlink:href="#c" y="31.16"/>
+<use xlink:href="#c" y="46.74"/>
+<use xlink:href="#c" y="62.32"/>
+<circle cx="58.33333" cy="150" r="33.33333"/>
+</g>
+</svg>

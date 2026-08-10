@@ -1,0 +1,40 @@
+<nav-back />
+<view class="page paper-grain paper-real">
+  <view class="binder"></view>
+  <view class="tag-no tag-no-fixed">No.S1-1</view>
+
+  <view class="title serif">信封上的半字</view>
+  <view class="hatch-divider title-div"></view>
+  <view class="lead kaiti">信封和信纸没有失去作用。请拿出刚才拆开的实体信封与其中的信，从它们上面找到第一站。</view>
+
+  <view class="prop-card archive-sheet">
+    <view class="prop-label archive-tab">线下道具 · 实体信封与信件</view>
+    <view class="prop-title serif">观察封口与信纸背面的半字</view>
+    <view class="archive-rule"></view>
+    <view class="archive-steps">
+      <view class="step-row"><view class="step-no">1</view><view class="step-copy">找到实体信封封口处和信纸背面的残缺字形。</view></view>
+      <view class="step-row"><view class="step-no">2</view><view class="step-copy">按位置将对应的两半组合，依次还原三个完整汉字。</view></view>
+      <view class="step-row"><view class="step-no">3</view><view class="step-copy">把得到的地点填在下面，小程序只核对结果。</view></view>
+    </view>
+  </view>
+
+  <view class="hint-area" wx:if="{{!solved}}">
+    <button class="hint-btn" bindtap="onShowSurfaceHint">提示一：观察哪里</button>
+    <button class="hint-btn" wx:if="{{hintLevel == 1}}" bindtap="onShowJoinHint">提示二：怎样组合</button>
+    <view class="hint-copy note-hand" wx:if="{{hintText}}">{{hintText}}</view>
+  </view>
+
+  <view class="answer-area record-field" wx:if="{{!solved}}">
+    <view class="answer-label">第一站地点</view>
+    <input class="answer-input" value="{{answerInput}}" bindinput="onInput" placeholder="请输入三个汉字" maxlength="8" />
+    <view class="wrong-tip" wx:if="{{wrongTip}}">{{wrongTip}}</view>
+    <button class="btn-seal confirm-btn record-action" bindtap="onSubmit">核 对 地 点</button>
+  </view>
+
+  <view class="result double-frame" wx:if="{{solved}}">
+    <view class="result-mark">线索成立</view>
+    <view class="result-title serif">第一站的去处很明确了：黄花阵</view>
+    <view class="result-copy">把实体信封收好，前往黄花阵继续调查。</view>
+    <button class="btn-seal next-btn" bindtap="onGoNext">前往黄花阵</button>
+  </view>
+</view>

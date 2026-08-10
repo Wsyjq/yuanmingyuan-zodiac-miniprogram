@@ -1,0 +1,317 @@
+/* P14 反转揭示 */
+
+.stage {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-left: 52rpx; /* 让位 .binder */
+  justify-content: center;
+  transition: background-color 0.8s ease;
+  box-sizing: border-box;
+}
+.stage.night {
+  background: var(--night);
+}
+
+/* v1.3 手账：右上档案编号标签（避让胶囊） */
+.fin-no {
+  position: absolute;
+  top: 32rpx;
+  right: 32rpx;
+  z-index: 9;
+}
+/* v1.3 手账：幕5 手写批注 */
+.fin-note {
+  margin-top: 28rpx;
+}
+
+.act1 {
+  width: 100%;
+  height: 100vh;
+}
+
+/* ---------- 幕2 打字机 ---------- */
+.term {
+  width: 620rpx;
+  padding: 40rpx;
+}
+.tline {
+  font-family: "Courier New", monospace;
+  font-size: 28rpx;
+  line-height: 2;
+  letter-spacing: 2rpx;
+  color: var(--ink);
+}
+.cursor {
+  margin-left: 4rpx;
+  animation: blink 0.8s step-end infinite;
+}
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* ---------- 铜版画中央画布（幕3 / 幕5 共用） ---------- */
+.canvas {
+  position: relative;
+  width: 700rpx;
+  height: 950rpx;
+  background: var(--paper);
+  border: 1rpx solid rgba(70, 56, 42, 0.35);
+  overflow: hidden;
+}
+/* IMG-F06 完整铜版画作 canvas 底图（五层逐层擦除显现 / 幕5 全显） */
+.canvas-bg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  mix-blend-mode: multiply;
+}
+.layer {
+  position: absolute;
+  opacity: 0;
+}
+.layer.on {
+  opacity: 1;
+}
+/* 从左到右擦除显现：与画布同底色遮片宽度由 Anime.js 驱动 100% → 0（inline style） */
+.veil {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  background: var(--paper);
+}
+
+/* 占位块：--paper2 底 + 双框线（double-frame） + 居中两行小字 */
+.ph {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background: var(--paper2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20rpx;
+}
+.ph-code {
+  font-size: 22rpx;
+  letter-spacing: 4rpx;
+  color: var(--ink60);
+}
+.ph-desc {
+  margin-top: 8rpx;
+  font-size: 20rpx;
+  color: var(--ink60);
+  text-align: center;
+}
+.tag {
+  position: absolute;
+  top: 6rpx;
+  left: 12rpx;
+  font-size: 18rpx;
+  letter-spacing: 2rpx;
+  color: var(--ink60);
+}
+/* L1 标签移到题跋横条上方，不压铭文 */
+.layer-l1 .tag {
+  top: -26rpx;
+  left: 0;
+}
+/* L2 标签移到边框线外下缘，不压边框 */
+.layer-l2 .tag {
+  top: auto;
+  bottom: -28rpx;
+  left: 0;
+}
+
+/* L4 背景 */
+.layer-l4 {
+  top: 200rpx;
+  left: 80rpx;
+  right: 80rpx;
+  height: 640rpx;
+  z-index: 2;
+}
+/* L3 主体 */
+.layer-l3 {
+  top: 320rpx;
+  left: 130rpx;
+  width: 440rpx;
+  height: 460rpx;
+  z-index: 3;
+}
+/* L2 边框（万字纹虚线矩形框） */
+.layer-l2 {
+  top: 170rpx;
+  left: 44rpx;
+  right: 44rpx;
+  bottom: 64rpx;
+  z-index: 4;
+}
+.l2-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border: 4rpx dashed var(--brass);
+}
+.l2-inner {
+  position: absolute;
+  top: 12rpx;
+  left: 12rpx;
+  right: 12rpx;
+  bottom: 12rpx;
+  border: 1rpx dashed var(--brass);
+}
+/* L1 题跋（顶部铭文横条） */
+.layer-l1 {
+  top: 28rpx;
+  left: 40rpx;
+  right: 40rpx;
+  height: 116rpx;
+  z-index: 5;
+}
+.l1-bar {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background: var(--paper);
+  border: 1rpx solid rgba(70, 56, 42, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14rpx 24rpx;
+}
+.l1-text {
+  font-size: 22rpx;
+  line-height: 1.6;
+  text-align: center;
+  color: var(--ink);
+}
+/* L5 落款（右下角） */
+.layer-l5 {
+  right: 120rpx;
+  bottom: 84rpx;
+  width: 320rpx;
+  z-index: 6;
+}
+.l5-box {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.l5-tag {
+  font-size: 18rpx;
+  letter-spacing: 2rpx;
+  color: var(--ink60);
+}
+.l5-line {
+  margin-top: 4rpx;
+  font-size: 26rpx;
+  color: var(--ink);
+}
+.l5-name {
+  margin-top: 4rpx;
+  min-height: 36rpx;
+  font-size: 28rpx;
+  color: var(--cinnabar);
+}
+
+/* ---------- 幕3 点题短文案 ---------- */
+.caption {
+  margin-top: 44rpx;
+  min-height: 56rpx;
+  font-size: 30rpx;
+  text-align: center;
+  color: var(--ink);
+}
+
+/* ---------- 幕5 署名 ---------- */
+.act5 {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 100rpx 0 80rpx;
+  box-sizing: border-box;
+}
+.sign-panel {
+  width: 620rpx;
+  margin-top: 48rpx;
+}
+.sign-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+.sign-label {
+  width: 180rpx;
+  font-size: 26rpx;
+  letter-spacing: 4rpx;
+  color: var(--ink60);
+}
+.sign-input {
+  flex: 1;
+  height: 64rpx;
+  font-size: 30rpx;
+  color: var(--cinnabar);
+  border-bottom: 1rpx solid var(--ink);
+}
+.sign-ph {
+  color: var(--dash);
+  font-size: 26rpx;
+}
+.sign-name {
+  flex: 1;
+  font-size: 32rpx;
+  color: var(--cinnabar);
+  border-bottom: 1rpx solid var(--ink);
+}
+.sign-value {
+  font-size: 28rpx;
+  color: var(--ink);
+}
+.sign-value.dim {
+  color: var(--dash);
+  font-size: 24rpx;
+}
+.sign-btn {
+  margin-top: 40rpx;
+}
+
+/* v1.3.1：幕3 画框贴纸（吊牌 + 干花），仅 act3 显示时可见，不扰演出 */
+.act3 .perfo-frame { position: relative; }
+.fin-tag {
+  position: absolute;
+  top: -36rpx;
+  right: -22rpx;
+  width: 150rpx;
+  height: 120rpx;
+  transform: rotate(7deg);
+  opacity: 0.9;
+  z-index: 9;
+  pointer-events: none;
+  filter: drop-shadow(0 3rpx 6rpx rgba(70, 56, 42, 0.22));
+}
+.fin-botanical {
+  position: absolute;
+  bottom: -26rpx;
+  left: -22rpx;
+  width: 170rpx;
+  height: 150rpx;
+  transform: rotate(-5deg);
+  opacity: 0.9;
+  z-index: 9;
+  pointer-events: none;
+  filter: drop-shadow(0 3rpx 6rpx rgba(70, 56, 42, 0.22));
+}

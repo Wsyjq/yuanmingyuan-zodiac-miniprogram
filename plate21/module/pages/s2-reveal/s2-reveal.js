@@ -1,0 +1,108 @@
+// 第二站 · 谜题2 黄花阵名字由来（采风修订版玩法）
+// 剧情：到了黄花阵入口，惊讶皇家宫苑竟有迷宫，又好奇"黄花"之名何来。
+// 玩法：小程序弹图（宫女手持黄色彩绸莲花灯），用户语音或文字回答名字由来，
+//      本地关键词匹配（莲花灯 / 黄色彩绸 / 宫女），命中即过。
+// 史料：宫女手持黄色彩绸扎成的莲花灯，迷宫因此得名黄花阵。卡片角落数字 0。
+//
+// TODO（下轮迭代）：接入语音输入 + API 语义校验；当前为文字输入 + 本地关键词匹配。
+const session = require('../../store/session')
+
+// 核心物关键词：必须直接点出谜底核心（莲花类灯 / 黄色彩绸），任一命中即正确。
+// 严格模式：模糊表达（"黄花""拿灯""宫女"）不算对，避免乱输过关。
+const KEYWORDS = [
+  '莲花灯', '莲花', '花灯',        // 核心物：莲花类灯
+  '荷花', '荷花灯',                 // 莲花的同义
+  '黄色彩绸', '彩绸',              // 核心材质
+  '绸花', '丝花'                    // 丝绸扎的花
+]
+
+function isAcceptable(ans) {
+  return KEYWORDS.some(k => ans.indexOf(k) >= 0)
+}
+
+const HISTORY_LINES = [
+  '黄花阵名字由来：',
+  '由于宫女们手持黄色彩绸扎成的莲花灯，',
+  '所以这个迷宫也得名「黄花阵」。'
+]
+
+Page({
+  data: {
+    answer: '',
+    attempts: 0,
+    showHistory: false,
+    historyLines: HISTORY_LINES,
+    cardNumber: 0,
+    showCardNumber: false,
+    hint: '',
+    solved: false,
+    advancing: false
+  },
+
+  onInput(e) {
+    this.setData({ answer: e.detail.value, hint: '' })
+  },
+
+  onSubmit() {
+    if (this.data.showHistory) return
+    const ans = (this.data.answer || '').trim()
+    const attempts = this.data.attempts + 1
+    if (ans.length === 0) {
+      this.setData({ hint: '请输入你的猜测' })
+      return
+    }
+    session.attemptPuzzle('s2-name', attempts, isAcceptable(ans), 'text')
+    if (isAcceptable(ans)) {
+      this.setData({ showHistory: true, showCardNumber: true, solved: true, attempts: attempts })
+      session.completePuzzle('s2-name', { answer: ans, attempts: attempts }, { collectCard: true })
+        .catch(function () { wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' }) })
+    } else {
+      let hint = '再想想，这个迷宫和「黄花」有什么关系？'
+      if (attempts === 2) {
+        hint = '看看参考图——宫女们手里举着什么东西？'
+        session.viewHint('s2-name', 1)
+      } else if (attempts >= 3) {
+        hint = '提示：是「莲花灯」——用黄色彩绸扎成的莲花灯。试试输入「莲花灯」。'
+        if (attempts === 3) session.viewHint('s2-name', 2)
+      }
+      this.setData({ attempts: attempts, hint: hint })
+    }
+  },
+
+  onLoad() {
+    session.viewPuzzle('s2-name')
+    const puzzle = session.getPuzzle('s2-name')
+    this.setData({
+      cardNumber: Number(session.getCardDigit('s2-name')),
+      solved: !!puzzle,
+      showHistory: !!puzzle,
+      showCardNumber: !!puzzle,
+      answer: puzzle && puzzle.payload && puzzle.payload.answer || '',
+      attempts: Number(puzzle && puzzle.payload && puzzle.payload.attempts) || 0
+    })
+  },
+
+  onCloseHistory() {
+    this.setData({ showHistory: false })
+  },
+
+  onNext() {
+    if (this.data.advancing) return
+    this.setData({ advancing: true, showHistory: false })
+    session.completePuzzle('s2-name', {
+      answer: this.data.answer,
+      attempts: this.data.attempts || 1
+    }, { collectCard: true, checkpoint: 's2-blend' }).then(() => {
+      wx.redirectTo({
+        url: '/plate21/module/pages/s2-blend/s2-blend',
+        fail: () => {
+          this.setData({ advancing: false })
+          wx.showToast({ title: '页面跳转失败，请重试', icon: 'none' })
+        }
+      })
+    }).catch(() => {
+      this.setData({ advancing: false })
+      wx.showToast({ title: '进度保存失败，请重试', icon: 'none' })
+    })
+  }
+})

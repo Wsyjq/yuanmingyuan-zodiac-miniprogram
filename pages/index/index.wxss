@@ -1,0 +1,201 @@
+/* P00' 宿主首页 · 考察模块入口（方案B' 卡片式） */
+
+.host-home {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120rpx 52rpx 60rpx; /* 左 52rpx 让位 .binder */
+  box-sizing: border-box;
+}
+
+/* ---------- 右上角编号签 + 邮戳 ---------- */
+.tag-corner {
+  position: absolute;
+  top: 32rpx;
+  right: 32rpx;
+  z-index: 5;
+}
+.host-postmark {
+  position: absolute;
+  top: 88rpx;
+  right: 28rpx;
+  width: 170rpx;
+  height: 120rpx;
+  transform: rotate(-7deg);
+  opacity: 0.85;
+  z-index: 5;
+  pointer-events: none;
+  filter: drop-shadow(0 3rpx 6rpx rgba(70, 56, 42, 0.22));
+}
+
+/* ---------- 拱券顶饰 ---------- */
+.host-arch {
+  margin-bottom: 24rpx;
+}
+
+/* ---------- 目录标题区 ---------- */
+.host-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  letter-spacing: 8rpx;
+  color: var(--ink);
+}
+.host-sub {
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  letter-spacing: 4rpx;
+  color: var(--ink60);
+}
+.host-divider {
+  width: 320rpx;
+  margin: 32rpx 0 48rpx;
+}
+
+/* ---------- 入口卡（第二十一图） ---------- */
+.module-card {
+  position: relative;
+  width: 620rpx;
+  padding: 28rpx 28rpx 28rpx 28rpx;
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  z-index: 2;
+}
+/* 缩略铜版画 */
+.module-thumb {
+  position: relative;
+  flex-shrink: 0;
+  width: 200rpx;
+  height: 200rpx;
+  overflow: hidden;
+}
+.thumb-img {
+  width: 100%;
+  height: 100%;
+  mix-blend-mode: multiply;
+}
+/* 回形针贴纸 */
+.card-paperclip {
+  position: absolute;
+  top: -22rpx;
+  right: 30rpx;
+  width: 80rpx;
+  height: 100rpx;
+  transform: rotate(8deg);
+  opacity: 0.9;
+  z-index: 9;
+  pointer-events: none;
+  filter: drop-shadow(0 3rpx 6rpx rgba(70, 56, 42, 0.22));
+}
+/* 模块信息 */
+.module-info {
+  flex: 1;
+  min-width: 0;
+}
+.module-name {
+  font-size: 34rpx;
+  font-weight: 700;
+  letter-spacing: 4rpx;
+  color: var(--ink);
+}
+.module-desc {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: var(--patina);
+  letter-spacing: 2rpx;
+}
+.module-meta {
+  margin-top: 10rpx;
+  font-size: 20rpx;
+  color: var(--ink60);
+  line-height: 1.5;
+}
+/* 进入箭头 */
+.module-enter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 80rpx;
+  height: 80rpx;
+  border: 2rpx solid var(--cinnabar);
+  border-radius: 50%;
+  color: var(--cinnabar);
+  background: rgba(166, 58, 46, 0.06);
+}
+.module-enter:active {
+  transform: scale(0.94);
+  background: rgba(166, 58, 46, 0.14);
+}
+.enter-text {
+  font-size: 20rpx;
+  letter-spacing: 2rpx;
+}
+.enter-arrow {
+  font-size: 28rpx;
+  line-height: 1;
+  margin-top: 2rpx;
+}
+
+/* ---------- 预留卡（未来模块） ---------- */
+.reserved-card {
+  width: 620rpx;
+  margin-top: 36rpx;
+  padding: 40rpx 28rpx;
+  border: 2rpx dashed var(--dash);
+  border-radius: 6rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(244, 237, 220, 0.4);
+}
+.reserved-text {
+  font-size: 24rpx;
+  color: var(--ink60);
+  letter-spacing: 4rpx;
+}
+
+/* ---------- 撕纸分隔 + 底部链接 ---------- */
+.host-torn {
+  width: 620rpx;
+  margin: 48rpx 0 32rpx;
+}
+.host-foot {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+}
+.foot-link {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  font-size: 24rpx;
+  color: var(--ink60);
+  letter-spacing: 2rpx;
+}
+.foot-link:active {
+  color: var(--ink);
+}
+.foot-icon {
+  width: 28rpx;
+  height: 28rpx;
+}
+.foot-dot {
+  width: 6rpx;
+  height: 6rpx;
+  border-radius: 50%;
+  background: var(--ink60);
+  opacity: 0.5;
+}
+
+/* ---------- 页边手写批注 ---------- */
+.host-note {
+  position: absolute;
+  bottom: 100rpx;
+  left: 80rpx;
+  font-size: 24rpx;
+  color: var(--ink60);
+}

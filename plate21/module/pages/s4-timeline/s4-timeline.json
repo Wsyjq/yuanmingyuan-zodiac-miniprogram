@@ -1,0 +1,9 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "nav-back": "../../components/nav-back/nav-back",
+    "task-banner": "../../components/task-banner/task-banner",
+    "history-card": "../../components/history-card/history-card",
+    "stamp-toast": "../../components/stamp-toast/stamp-toast"
+  }
+}

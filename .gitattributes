@@ -1,3 +1,7 @@
 # GitHub Linguist does not classify WeChat Mini Program files by default.
 *.wxml linguist-language=HTML
 *.wxss linguist-language=CSS
+
+# Compliance hashes cover exact bytes, so Windows checkouts must retain LF.
+fonts/Plate21WenKai-Subset.b64.js text eol=lf
+test/gen-all.log text eol=lf

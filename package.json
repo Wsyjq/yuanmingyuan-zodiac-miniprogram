@@ -1,14 +1,15 @@
 {
-  "name": "zodiac-miniprogram",
-  "version": "0.1.0",
+  "name": "plate21-miniprogram",
   "private": true,
-  "type": "commonjs",
   "scripts": {
-    "verify:static": "node scripts/check-static.js",
-    "verify:simulator": "node scripts/verify-simulator.js",
-    "inspect:layout": "node scripts/inspect-layout.js"
-  },
-  "devDependencies": {
-    "miniprogram-automator": "0.11.0"
+    "check": "npm --prefix test run check",
+    "check:licenses": "npm --prefix test run check:licenses",
+    "check:commercial": "npm --prefix test run check:commercial",
+    "audit:images": "npm --prefix test run --silent audit:images",
+    "package:report": "npm --prefix test run report:package",
+    "start:h5": "python -m http.server 8876 --bind 127.0.0.1",
+    "test": "npm --prefix test run test:all",
+    "test:h5": "python test/h5-e2e.py",
+    "test:unit": "npm --prefix test test"
   }
 }

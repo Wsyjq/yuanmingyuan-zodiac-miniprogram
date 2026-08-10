@@ -1,0 +1,24 @@
+page{background:var(--paper)}
+.page{min-height:100vh;box-sizing:border-box;padding:calc(72px + env(safe-area-inset-top)) 22px 42px 30px;position:relative}
+.title{color:var(--ink-deep);font-size:28px;font-weight:700;letter-spacing:.08em}
+.title-div{margin:10px 0 14px}
+.lead{font-size:16px;line-height:1.8;color:var(--ink);margin-bottom:18px}
+.prop-card{margin-top:28px;padding:28px 17px 13px}
+.prop-label{white-space:nowrap}
+.prop-title{color:var(--ink-deep);font-size:20px;font-weight:700;line-height:1.5}
+.step-row{display:flex;align-items:flex-start;padding:8px 0}
+.step-no{width:23px;height:23px;line-height:23px;text-align:center;border:1px solid var(--ink-deep);border-radius:50%;font-family:"Courier New",monospace;font-size:11px;flex:none;margin-right:10px;color:var(--ink-deep)}
+.step-copy{font-size:14px;line-height:1.65;padding-top:1px;color:var(--ink)}
+.hint-area{margin-top:17px}
+.hint-btn{display:inline-block;width:auto;min-height:0;line-height:1.4;margin:0 9px 9px 0;padding:7px 11px;border:1px dashed var(--olive);border-radius:0;background:rgba(111,114,72,.04);color:var(--olive);font-size:13px}
+.hint-btn:after{border:0}
+.hint-copy{font-size:14px;line-height:1.65;color:var(--olive);padding:8px 2px}
+.answer-area{margin-top:17px}
+.answer-label{font-size:13px;color:var(--ink60);letter-spacing:.12em;margin-bottom:8px}
+.answer-input{display:block;width:100%;height:45px;box-sizing:border-box;padding:0 4px;border:0;border-bottom:2px solid var(--ink-deep);border-radius:0;background:transparent;color:var(--ink-deep);font-family:"STSong","SimSun",serif;font-size:19px;letter-spacing:.15em;outline:none}
+.wrong-tip{font-size:13px;line-height:1.6;color:var(--cinnabar);margin-top:9px}
+.confirm-btn,.next-btn{width:100%;margin-top:17px}
+.result{margin-top:20px;padding:22px 17px;text-align:center;background:var(--paper2)}
+.result-mark{display:inline-block;color:var(--olive);border-bottom:1px solid var(--olive);font-size:12px;letter-spacing:.18em;padding-bottom:3px}
+.result-title{color:var(--ink-deep);font-size:20px;font-weight:700;line-height:1.6;margin:14px 0 8px}
+.result-copy{font-size:14px;line-height:1.7;color:var(--ink60)}

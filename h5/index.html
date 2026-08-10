@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#2e1f0d">
+  <title>西洋楼铜版图·第二十一图</title>
+  <link rel="stylesheet" href="./app.css">
+</head>
+<body>
+  <div class="desk-grain" aria-hidden="true"></div>
+  <div class="web-app">
+    <aside class="archive-nav" aria-label="流程导航">
+      <div class="archive-brand">
+        <span class="archive-brand__eyebrow">FIELD ARCHIVE · XXI</span>
+        <strong>第二十一图</strong>
+        <span>完整 H5 复刻版</span>
+      </div>
+      <div class="route-progress" aria-label="考察进度">
+        <div class="route-progress__line"><i id="railProgress"></i></div>
+        <div id="railStops" class="route-progress__stops"></div>
+      </div>
+      <div class="archive-tools">
+        <button type="button" class="tool-button" data-action="open-directory">流程目录</button>
+        <button type="button" class="tool-button" data-action="open-handbook">考察手册</button>
+        <button type="button" class="tool-button tool-button--danger" data-action="ask-reset">重新考察</button>
+      </div>
+      <p class="archive-note">浏览器本地保存进度。实体信封、转盘和水显纸在网页版中保留操作确认，不以虚拟动画替代。</p>
+    </aside>
+
+    <main class="device-frame">
+      <header class="device-bar">
+        <button id="backButton" type="button" class="round-button" data-action="back" aria-label="返回上一页">←</button>
+        <div class="device-bar__title">
+          <span id="routeKicker">PLATE XXI</span>
+          <strong id="routeTitle">西洋楼铜版图</strong>
+        </div>
+        <button type="button" class="round-button" data-action="open-directory" aria-label="打开流程目录">☷</button>
+      </header>
+      <div class="binder-holes" aria-hidden="true"></div>
+      <section id="screen" class="screen paper" aria-live="polite"></section>
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </main>
+  </div>
+
+  <div id="modalRoot"></div>
+  <input id="photoInput" type="file" accept="image/*" hidden>
+  <canvas id="exportCanvas" width="1400" height="2240" hidden></canvas>
+  <script src="./app.js"></script>
+</body>
+</html>

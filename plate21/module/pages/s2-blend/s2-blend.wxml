@@ -1,0 +1,92 @@
+<!-- 第二站 · 谜题3：现场四图考察记录 -->
+<nav-back />
+<view class="page paper-grain paper-real">
+  <view class="binder"></view>
+  <view class="tag-no tag-no-fixed">No.S2-3</view>
+  <image class="page-tag-sticker" src="/plate21/module/assets/img/stickers/st-postmark-01.png" mode="aspectFit" />
+
+  <view class="title serif">中西结合的观察</view>
+  <view class="hatch-divider title-div"></view>
+  <view class="lead kaiti">在中心亭找到下面四处细节，并用手机留下现场记录。参考图只帮助定位，考察卡必须使用你拍摄的照片。</view>
+
+  <view class="capture-grid">
+    <view wx:for="{{points}}" wx:key="key" class="capture-card archive-sheet {{item.photoPath ? 'captured' : ''}}">
+      <view class="slot-head">
+        <view class="slot-no">{{item.no}}</view>
+        <view class="slot-title serif">{{item.title}}</view>
+        <view class="slot-state">{{item.photoPath ? '已记录' : '待拍摄'}}</view>
+      </view>
+
+      <view class="photo-stage" data-key="{{item.key}}" bindtap="onStageTap">
+        <image wx:if="{{item.photoPath}}" class="photo-result" src="{{item.photoPath}}" mode="aspectFill" />
+        <block wx:else>
+          <image class="photo-guide" src="{{item.guide}}" mode="aspectFill" />
+          <view class="guide-mask">
+            <view class="guide-mark">＋</view>
+            <view class="guide-copy">按参考位置拍摄</view>
+          </view>
+        </block>
+        <view wx:if="{{busyKey === item.key}}" class="photo-busy">正在保存照片…</view>
+      </view>
+
+      <view class="slot-desc">{{item.desc}}</view>
+      <view class="slot-actions">
+        <button class="capture-btn primary" data-key="{{item.key}}" bindtap="onCapture">{{item.photoPath ? '重新拍摄' : '现场拍摄'}}</button>
+        <button class="capture-btn" data-key="{{item.key}}" bindtap="onChooseAlbum">相册补录</button>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{captureError || persistenceWarning}}" class="capture-message record-field">
+    <view wx:if="{{captureError}}" class="capture-error">{{captureError}}</view>
+    <view wx:if="{{persistenceWarning}}" class="capture-warning">{{persistenceWarning}}</view>
+    <button wx:if="{{captureError}}" class="settings-btn" bindtap="onOpenSettings">打开权限设置</button>
+  </view>
+
+  <view class="progress-slip record-field">
+    <view class="progress-meta">
+      <view class="progress-label">现场记录进度</view>
+      <view class="progress-count">{{photoCount}} / {{points.length}}</view>
+    </view>
+    <view class="progress-track"><view class="progress-fill" style="width: {{photoCount / points.length * 100}}%"></view></view>
+    <view class="note-hand olive progress-note">四处都拍清后，装订成一张考察卡。</view>
+    <button class="btn-seal complete-btn record-action {{photoCount < points.length ? 'btn-disabled' : ''}}" bindtap="onComplete" disabled="{{photoCount < points.length}}">{{done ? '查看四图考察卡' : '生成四图考察卡'}}</button>
+  </view>
+  <view wx:if="{{readyNext}}" class="progress-slip record-field">
+    <view class="note-hand olive progress-note">四图考察结论已经收入手册，可继续辨认墙体纹样。</view>
+    <button class="btn-seal complete-btn record-action" bindtap="onNext">继续观察墙体纹样</button>
+  </view>
+</view>
+
+<!-- 四张现场照片合成的考察卡，不进行虚假场景识别。 -->
+<view wx:if="{{showRecordCard}}" class="record-mask" bindtap="onCloseRecord">
+  <view class="record-card archive-sheet" catchtap="noop">
+    <view class="record-kicker">FIELD RECORD · S2-3</view>
+    <view class="record-title serif">西学东渐后的皇家审美转译</view>
+    <view class="archive-rule"></view>
+    <view class="record-grid">
+      <view wx:for="{{points}}" wx:key="key" class="record-photo">
+        <image class="record-photo-image" src="{{item.photoPath}}" mode="aspectFill" />
+        <view class="record-caption"><text class="record-caption-no">{{item.no}}</text>{{item.title}}</view>
+      </view>
+    </view>
+    <view class="record-foot">
+      <view class="record-date">考察日期 · {{dateLabel}}</view>
+      <view class="record-number">{{cardNumber}}</view>
+    </view>
+    <button class="btn-seal record-confirm" bindtap="onAcceptRecord">查看考察结论</button>
+  </view>
+</view>
+
+<history-card
+  wx:if="{{showHistory}}"
+  visible="{{showHistory}}"
+  title="西学东渐后的皇家审美转译"
+  source="黄花阵中心亭四图考察记录"
+  lines="{{historyLines}}"
+  corner-number="{{cardNumber}}"
+  show-corner="{{showCardNumber}}"
+  btn-text="继续"
+  bind:next="onNext"
+  bind:close="onCloseHistory"
+/>

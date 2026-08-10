@@ -1,0 +1,43 @@
+<view class="page paper-grain paper-real">
+  <!-- v1.3.1 手账：左侧活页装订孔列（叙事页） -->
+  <view class="binder"></view>
+  <nav-back />
+  <novel-view
+    title="序章"
+    paragraphs="{{paragraphs}}"
+    finish-text="取出实体信封"
+    bind:finish="onNovelFinish"
+  />
+
+  <!-- 叙事结束：引导玩家拆开手中的实体信封。 -->
+  <view wx:if="{{showEnvelope}}" class="pack">
+    <view class="pack-sheet archive-sheet">
+      <view class="physical-label archive-tab">线下道具 · 实体信封</view>
+      <view class="pack-title serif">取出资料袋里的信封</view>
+      <view class="archive-rule"></view>
+      <view class="pack-note">这一段需要操作手中的实物，手机只负责记录进度。</view>
+      <view class="step-list archive-steps">
+        <view class="step-row"><view class="step-no">1</view><view class="step-copy">找到封口未启的实体信封。</view></view>
+        <view class="step-row"><view class="step-no">2</view><view class="step-copy">拆开信封，取出并读完里面的信。</view></view>
+        <view class="step-row"><view class="step-no">3</view><view class="step-copy">信和信封都要保留，后面的调查还会用到。</view></view>
+      </view>
+      <button class="btn-seal pack-btn record-action" bindtap="onOpenEnvelope">我已拆开并读完</button>
+    </view>
+  </view>
+
+  <!-- 信件读完后：在小程序中重述关键信息，不复刻实体道具。 -->
+  <view wx:if="{{showPack}}" class="pack pack-open">
+    <view class="pack-sheet archive-sheet">
+      <view class="physical-label archive-tab">信中内容</view>
+      <view class="letter-copy kaiti">“如果你想知道第二十一幅铜版画的秘密，就去圆明园西洋楼遗址吧，里面也许会有你想要的答案。”</view>
+      <view class="decision-copy">我不知道这份资料是谁留下的，也不知道它是否与那幅传闻中的铜版画有关。但既然线索已经指向圆明园西洋楼遗址，我决定带着这份资料前往现场，去一探究竟。</view>
+      <view class="pack-title props-title serif">收好考察资料</view>
+      <view class="pack-items">
+        <view wx:for="{{props}}" wx:key="*this" class="pack-item">{{item}}</view>
+      </view>
+      <button class="btn-seal pack-btn record-action" bindtap="onGoS1" disabled="{{advancing}}">{{advancing ? '正在保存档案……' : '前 往 西 洋 楼'}}</button>
+    </view>
+  </view>
+
+  <stamp-toast id="stamp" />
+</view>

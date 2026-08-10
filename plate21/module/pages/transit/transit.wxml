@@ -1,0 +1,51 @@
+<!-- 墨晕转场：深色墨滴从中心扩散后收拢（约 900ms） -->
+<view class="ink-mask"></view>
+
+<nav-back />
+<view class="page paper-grain paper-real" wx:if="{{leg}}">
+  <!-- v1.3.1 手账：左侧活页装订孔列（叙事过渡页） -->
+  <view class="binder"></view>
+  <!-- 归档编号标签（右上角，避让返回按钮） -->
+  <view class="tag-no page-no">No.003</view>
+
+  <!-- 路线标题（拱券顶饰呼应大水法拱门） -->
+  <view class="arch route-arch"></view>
+  <view class="route serif">{{leg.from}} → {{leg.to}}</view>
+
+  <!-- 路线推进图：IMG-M01 占位块 + 黄铜点位 + 连线 -->
+  <view class="map">
+    <view class="tape" style="top: -20rpx; left: 50%; margin-left: -90rpx;"></view>
+    <!-- v1.3.1 手账：邮戳贴纸压在地图右上角，像盖在地图上的行程章 -->
+    <image class="map-postmark" src="/plate21/module/assets/img/stickers/st-postmark-02.png" mode="aspectFit" />
+    <!-- IMG-M01 西洋楼景区线稿地图作半透明装饰底图（点位/连线叠加在上） -->
+    <image class="map-bg" src="/plate21/module/assets/img/IMG-M01.jpg" mode="aspectFill" />
+    <view
+      wx:for="{{lines}}"
+      wx:key="index"
+      class="line {{item.current ? 'line-now' : ''}}"
+      style="left: {{item.left}}rpx; top: {{item.top}}rpx; width: {{item.width}}rpx; transform: rotate({{item.angle}}deg);"
+    ></view>
+    <view
+      wx:for="{{points}}"
+      wx:key="name"
+      class="dot-wrap {{item.done ? 'done' : ''}} {{item.current ? 'cur' : ''}}"
+      style="left: {{item.x}}rpx; top: {{item.y}}rpx;"
+    >
+      <view class="dot"></view>
+      <!-- INT-405：已过点叠加铜绿打勾图标 -->
+      <image wx:if="{{item.done}}" class="dot-check" src="/plate21/module/assets/img/icons/ic-check-patina.png" mode="aspectFit" />
+      <image class="dot-pin" src="/plate21/module/assets/img/icons/ic-map-pin-brass.png" mode="aspectFit" />
+      <view class="dot-name">{{item.name}}</view>
+    </view>
+  </view>
+
+  <!-- 考察者手记批注（图旁页边，不压正文） -->
+  <view class="note-hand olive map-note" style="transform: rotate(-1.5deg);">缓步徐行，约八分可达</view>
+
+  <!-- 该段环境叙事 -->
+  <view class="narr">
+    <view class="narr-text">{{leg.text}}</view>
+  </view>
+
+  <button class="btn-seal next-btn" bindtap="onNext" disabled="{{advancing}}">{{advancing ? '正在前往……' : '继 续 前 往'}}</button>
+</view>

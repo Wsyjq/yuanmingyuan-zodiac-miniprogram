@@ -1,8 +1,0 @@
-{
-  "navigationBarTitleText": "归途 · 十二兽首寻迹",
-  "usingComponents": {
-    "progress-header": "../../../components/zodiac/progress-header/index",
-    "mark-strip": "../../../components/zodiac/mark-strip/index",
-    "stage-list": "../../../components/zodiac/stage-list/index"
-  }
-}

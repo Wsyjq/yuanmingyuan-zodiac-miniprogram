@@ -1,0 +1,27 @@
+/* 第二站 · 谜题2 名字由来（采风修订版：文字输入） */
+.page {
+  position: relative;
+  min-height: 100vh;
+  padding: 130rpx 48rpx 80rpx 100rpx;
+  box-sizing: border-box;
+}
+.tag-no-fixed { position: absolute; top: 32rpx; right: 32rpx; }
+
+.title { font-size: 40rpx; font-weight: 700; color: var(--patina, #46382A); letter-spacing: 4rpx; }
+.lead { margin-top: 18rpx; font-size: 28rpx; line-height: 1.85; color: var(--ink, #46382A); }
+
+.ref-img { margin-top: 36rpx; display: flex; flex-direction: column; align-items: center; }
+.ref-pic { width: 480rpx; height: 360rpx; border: 1rpx solid #A98F5F; border-radius: 10rpx; background: #EFE4C8; }
+.ref-note { margin-top: 12rpx; font-size: 24rpx; color: var(--ink60, #8A7A60); transform: rotate(-1deg); }
+
+.answer { display: flex; align-items: center; margin-top: 40rpx; }
+.ans-input {
+  flex: 1; height: 88rpx; box-sizing: border-box;
+  border: 1rpx solid var(--ink, #46382A); border-radius: 4rpx;
+  background: var(--paper2, #EFE4C8); padding: 0 24rpx;
+  font-size: 28rpx; color: var(--ink, #46382A);
+}
+.ans-ph { color: var(--ink60, #8A7A60); font-size: 26rpx; }
+.ans-btn { margin-left: 24rpx; padding: 0 32rpx; height: 88rpx; letter-spacing: 4rpx; font-size: 28rpx; }
+
+.hint { margin-top: 16rpx; font-size: 24rpx; color: var(--ink60, #8A7A60); letter-spacing: 2rpx; text-align: center; }

@@ -1,0 +1,28 @@
+.stamp-toast {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 42%;
+  z-index: 200;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+/* 落下由 Anime.js 驱动（inline transform/opacity），淡出才开 transition */
+.stamp-toast.fading {
+  transition: opacity 0.3s ease;
+}
+
+/* 白文方印：朱砂边框 + 朱砂文字 */
+.seal {
+  padding: 16rpx 28rpx;
+  border: 5rpx solid var(--cinnabar);
+  border-radius: 8rpx;
+  color: var(--cinnabar);
+  background: rgba(244, 237, 220, 0.92);
+  font-size: 34rpx;
+  font-weight: 700;
+  letter-spacing: 6rpx;
+  transform: rotate(var(--rot));
+}

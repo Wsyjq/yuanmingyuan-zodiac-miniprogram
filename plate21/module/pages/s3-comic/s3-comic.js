@@ -1,0 +1,122 @@
+// 第三站 · 谜题1 十二时辰漫画推理（采风修订版玩法）
+// 谜题 S3-1：两小问。小问一答案「马」（子鼠丑牛……午马）；
+// 小问二答案「午时」（正午十二兽首齐喷）。错 1 次轻晃，错 2 次高亮漫画前两格线索。
+// 史料卡：常规报时每时辰对应兽首轮流喷水；正午马首喷水其余十一首齐喷。
+// 卡片角落数字：会话锁定日期的月份第一位数字。
+// 本页不调 completeStation（S3 由 s3-water 收口）。
+const session = require('../../store/session')
+
+Page({
+  data: {
+    showHistory: false,
+    cardNumber: 0,
+    historyLines: [
+      '常规报时：每个时辰（2 小时）由对应的兽首轮流喷水。',
+      '子时（23–1 点）鼠首，丑时（1–3 点）牛首，以此类推。',
+      '人们只要看到哪个兽首在喷水，就能知道当时的大致时辰。',
+      '正午盛景：到了正午时分，轮到马首喷水——此刻其余十一兽首一同喷水，蔚为壮观。'
+    ],
+    cells: [
+      '子时 · 鼠首喷水',
+      '丑时 · 牛首喷水',
+      '午时将至 · ？',
+      '十二首齐喷'
+    ],
+    heads: ['鼠', '牛', '虎', '兔', '马', '鸡'],
+    hours: ['子时', '丑时', '寅时', '卯时', '辰时', '巳时', '午时', '未时', '申时', '酉时', '戌时', '亥时'],
+    q1Selected: '',
+    q1Attempts: 0,
+    q1Done: false,
+    q2Selected: '',
+    q2Attempts: 0,
+    q2Done: false,
+    clue: false,
+    shakeKey: '',
+    advancing: false
+  },
+
+  onCloseHistory() {
+    this.setData({ showHistory: false })
+  },
+
+  onHistoryNext() {
+    this.setData({ showHistory: false })
+  },
+
+  onQ1(e) {
+    if (this.data.q1Done) return
+    const v = e.currentTarget.dataset.v
+    this.setData({ q1Selected: v })
+    if (v === '马') {
+      session.attemptPuzzle('s3-hour', this.data.q1Attempts + 1, true, 'tap')
+      // INT-404：答对先高亮选中项 300ms（铜绿描金）再切下一问，给即时正反馈
+      this.setData({ q1Correct: true, shakeKey: '' })
+      this._timers.push(setTimeout(() => this.setData({ q1Done: true, q1Correct: false }), 300))
+      return
+    }
+    this.wrong('q1Attempts')
+  },
+
+  onQ2(e) {
+    if (this.data.q2Done) return
+    const v = e.currentTarget.dataset.v
+    this.setData({ q2Selected: v })
+    if (v === '午时') {
+      session.attemptPuzzle('s3-hour', this.data.q1Attempts + this.data.q2Attempts + 2, true, 'tap')
+      this.setData({ q2Done: true, shakeKey: '', showHistory: true })
+      this.selectComponent('#stamp').show('考察记录已保存')
+      // 收集时辰推理卡片角落数字（月份第一位）——主线：卡片数字 → 日期密码
+      session.completePuzzle('s3-hour', {
+        answer: { zodiac: '马', hour: '午时' },
+        attempts: this.data.q1Attempts + this.data.q2Attempts + 2
+      }, { collectCard: true }).catch(function () {
+        wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' })
+      })
+      return
+    }
+    this.wrong('q2Attempts')
+  },
+
+  // 错 1 次轻晃；错 2 次高亮漫画前两格线索（clue）+ 文字提示
+  wrong(field) {
+    const n = this.data[field] + 1
+    const v = field === 'q1Attempts' ? this.data.q1Selected : this.data.q2Selected
+    this.setData({ [field]: n, shakeKey: v, clue: n >= 2 || this.data.clue })
+    session.attemptPuzzle('s3-hour', this.data.q1Attempts + this.data.q2Attempts, false, 'tap')
+    if (n === 2) session.viewHint('s3-hour', field === 'q1Attempts' ? 1 : 2)
+    this._timers.push(setTimeout(() => this.setData({ shakeKey: '' }), 400))
+  },
+
+  onNext() {
+    // 采风修订版顺序：comic（时辰推理）→ zodiac（兽首回归）→ water（水显马首）
+    if (this.data.advancing) return
+    this.setData({ advancing: true, showHistory: false })
+    session.completePuzzle('s3-hour', {
+      answer: { zodiac: '马', hour: '午时' },
+      attempts: this.data.q1Attempts + this.data.q2Attempts + 2
+    }, { collectCard: true, checkpoint: 's3-zodiac' }).then(function () {
+      wx.redirectTo({ url: '/plate21/module/pages/s3-zodiac/s3-zodiac' })
+    }).catch(() => {
+      this.setData({ advancing: false })
+      wx.showToast({ title: '进度保存失败，请重试', icon: 'none' })
+    })
+  },
+
+  onLoad() {
+    this._timers = []
+    session.viewPuzzle('s3-hour')
+    const puzzle = session.getPuzzle('s3-hour')
+    this.setData({
+      cardNumber: Number(session.getCardDigit('s3-hour')),
+      q1Done: !!puzzle,
+      q2Done: !!puzzle,
+      q1Selected: puzzle ? '马' : '',
+      q2Selected: puzzle ? '午时' : '',
+      showHistory: !!puzzle
+    })
+  },
+
+  onUnload() {
+    ;(this._timers || []).forEach(clearTimeout)
+  }
+})

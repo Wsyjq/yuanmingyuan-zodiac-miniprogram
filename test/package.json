@@ -1,0 +1,26 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "check": "node check-project.js",
+    "check:licenses": "node check-third-party.js",
+    "check:commercial": "node check-third-party.js --commercial",
+    "audit:images": "node audit-image-evidence.js",
+    "optimize:assets": "node optimize-assets.js",
+    "report:package": "node package-report.js",
+    "test": "node --test session.test.js page-flow.test.js smoke.test.js regression.test.js",
+    "test:all": "npm run check && npm run check:licenses && npm test && npm run report:package"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "fontmin": "^1.1.1",
+    "lucide-static": "^1.28.0",
+    "miniprogram-automator": "^0.12.1"
+  }
+}

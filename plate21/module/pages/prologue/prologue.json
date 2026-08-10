@@ -1,0 +1,8 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "nav-back": "../../components/nav-back/nav-back",
+    "novel-view": "../../components/novel-view/novel-view",
+    "stamp-toast": "../../components/stamp-toast/stamp-toast"
+  }
+}

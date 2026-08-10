@@ -1,0 +1,281 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-08-09",
+  "policy": "docs/古风档案UI闭源商用资源接入清单.md",
+  "resources": [
+    {
+      "id": "UI-01",
+      "name": "YangMann/Paper",
+      "version": "21d1d43ddbaf86880085e5f336e336635220d3a3",
+      "license": "MIT",
+      "licenseFile": "plate21/module/assets/licenses/MIT-YangMann-Paper-21d1d43.txt",
+      "evidenceUrl": "https://github.com/YangMann/Paper/blob/21d1d43ddbaf86880085e5f336e336635220d3a3/LICENSE",
+      "usage": "Selected Chinese document hierarchy principles rewritten as project-owned WXSS primitives",
+      "bundled": false,
+      "derivedFiles": ["app.wxss"],
+      "status": "approved"
+    },
+    {
+      "id": "UI-02",
+      "name": "PaperCSS",
+      "version": "v1.9.2",
+      "license": "ISC",
+      "licenseFile": "plate21/module/assets/licenses/ISC-PaperCSS-v1.9.2.txt",
+      "evidenceUrl": "https://github.com/papercss/papercss/blob/v1.9.2/LICENSE.md",
+      "integrity": "sha512-6pOXUbuNgjdufXu4F34BYCXzel0YyB25FS9jWwq38PWEyzcWU3SWUneCHmvM5zUK7omCQ2/VdMXf8hlJC73/mA==",
+      "usage": "Selected paper card and form principles rewritten for WXSS",
+      "bundled": false,
+      "derivedFiles": ["app.wxss"],
+      "status": "approved"
+    },
+    {
+      "id": "ICO-01",
+      "name": "Lucide Static",
+      "version": "1.28.0",
+      "license": "ISC AND MIT",
+      "licenseFile": "plate21/module/assets/licenses/ISC-Lucide-1.28.0.txt",
+      "evidenceUrl": "https://github.com/lucide-icons/lucide/blob/main/LICENSE",
+      "usage": "Functional icons rendered to local PNG files",
+      "bundled": true,
+      "filePrefixes": ["plate21/module/assets/img/icons/"],
+      "status": "approved"
+    },
+    {
+      "id": "ANI-01",
+      "name": "Anime.js",
+      "version": "4.5.0",
+      "license": "MIT",
+      "licenseFile": "plate21/module/assets/licenses/MIT-AnimeJS-v4.5.0.txt",
+      "evidenceUrl": "https://github.com/juliangarnier/anime/blob/v4.5.0/LICENSE.md",
+      "integrity": "sha512-NQimYX+lz8WaXonGS9zVVoviCIAjONeJayxacUditaivYLqyXgGjFKjuyl0aUUhFKm5MriX9ty1TGovNzoJQWA==",
+      "usage": "Object-value tweening through the local adapter",
+      "bundled": true,
+      "files": ["plate21/module/vendor/anime.umd.min.js"],
+      "hashes": {
+        "plate21/module/vendor/anime.umd.min.js": "14653ffe3bee52c7d865127553291edd1bd43664d98def917c358736155e7ba8"
+      },
+      "status": "approved"
+    },
+    {
+      "id": "AST-01",
+      "name": "OpenClipart scrapbook assets",
+      "version": "source pages captured in NOTICE.md",
+      "license": "CC0-1.0",
+      "licenseFile": "plate21/module/assets/licenses/CC0-1.0.txt",
+      "evidenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "usage": "Local decorative scrapbook PNG files",
+      "bundled": true,
+      "files": [
+        "plate21/module/assets/img/stickers/st-postmark-02.png",
+        "plate21/module/assets/img/stickers/st-ticket-01.png",
+        "plate21/module/assets/img/stickers/st-ticket-02.png",
+        "plate21/module/assets/img/stickers/st-hang-tag-01.png",
+        "plate21/module/assets/img/stickers/st-hang-tag-02.png",
+        "plate21/module/assets/img/stickers/st-botanical-01.png",
+        "plate21/module/assets/img/stickers/st-botanical-02.png",
+        "plate21/module/assets/img/stickers/st-paperclip-01.png",
+        "plate21/module/assets/img/stickers/st-paperclip-02.png",
+        "plate21/module/assets/img/stickers/st-binder-clip-01.png"
+      ],
+      "status": "approved"
+    },
+    {
+      "id": "AST-02",
+      "name": "Wikimedia Commons public-domain assets",
+      "version": "source pages captured in NOTICE.md",
+      "license": "Public Domain",
+      "licenseFile": "plate21/module/assets/NOTICE.md",
+      "usage": "Historic stamps and paper texture",
+      "bundled": true,
+      "files": [
+        "plate21/module/assets/img/stickers/st-stamp-01.png",
+        "plate21/module/assets/img/stickers/st-stamp-02.png",
+        "plate21/module/assets/img/stickers/st-paper-texture-01.jpg"
+      ],
+      "status": "approved"
+    },
+    {
+      "id": "AST-03",
+      "name": "Project-authored postmark",
+      "version": "local",
+      "license": "CC0-1.0",
+      "licenseFile": "plate21/module/assets/licenses/CC0-1.0.txt",
+      "usage": "YUANMINGYUAN PEKING postmark",
+      "bundled": true,
+      "files": ["plate21/module/assets/img/stickers/st-postmark-01.png"],
+      "status": "approved"
+    },
+    {
+      "id": "FNT-01",
+      "name": "LXGW WenKai subset",
+      "version": "v1.522",
+      "license": "OFL-1.1",
+      "licenseFile": "plate21/module/assets/licenses/OFL-LXGW-WenKai-v1.522.txt",
+      "evidenceUrl": "https://github.com/lxgw/LxgwWenKai/blob/v1.522/OFL.txt",
+      "sourceSha256": "39ad71264b588165b469e35e6afb162a378dacd1f95348160240ba9038ac3009",
+      "usage": "Renamed project-specific subset for handwritten annotations",
+      "bundled": true,
+      "files": [
+        "fonts/Plate21WenKai-Subset.b64.js",
+        "plate21/module/assets/fonts/Plate21WenKai-Subset.ttf",
+        "plate21/module/assets/licenses/OFL-LXGW-WenKai-v1.522-characters.txt"
+      ],
+      "hashes": {
+        "fonts/Plate21WenKai-Subset.b64.js": "e32fd88df2d87ef7956cdcebc01b564778586fd1af73ef63e58f7d1e0df2f9a4",
+        "plate21/module/assets/fonts/Plate21WenKai-Subset.ttf": "0d63564edd03efc81b02be7b18638e6810d0cc4f031890e12a0621f3d83c7bba"
+      },
+      "status": "approved"
+    },
+    {
+      "id": "IMG-HOLD-AI",
+      "name": "AI-generated runtime images",
+      "license": "Provider and model commercial-use evidence incomplete",
+      "usage": "Narrative and puzzle images listed in docs/开发进度与AI素材指南.md",
+      "bundled": true,
+      "files": [
+        "plate21/module/assets/img/IMG-M01.jpg",
+        "plate21/module/assets/img/IMG-P-WANZI.jpg",
+        "plate21/module/assets/img/IMG-P01.jpg",
+        "plate21/module/assets/img/IMG-P02.jpg",
+        "plate21/module/assets/img/IMG-R01.jpg",
+        "plate21/module/assets/img/IMG-R02.jpg",
+        "plate21/module/assets/img/IMG-S1A.jpg",
+        "plate21/module/assets/img/IMG-S1B.jpg",
+        "plate21/module/assets/img/IMG-S2A2.jpg",
+        "plate21/module/assets/img/IMG-S2B.jpg",
+        "plate21/module/assets/img/IMG-S2C.jpg",
+        "plate21/module/assets/img/IMG-S2C1.jpg",
+        "plate21/module/assets/img/IMG-S2C2.jpg",
+        "plate21/module/assets/img/IMG-S2C3.jpg",
+        "plate21/module/assets/img/IMG-S2C4.jpg",
+        "plate21/module/assets/img/IMG-S3A.jpg",
+        "plate21/module/assets/img/IMG-S3D1.jpg",
+        "plate21/module/assets/img/IMG-S3D2.jpg",
+        "plate21/module/assets/img/IMG-S3D3.jpg",
+        "plate21/module/assets/img/IMG-S3D4.jpg",
+        "plate21/module/assets/img/IMG-S3D5.jpg",
+        "plate21/module/assets/img/IMG-S3D6.jpg",
+        "plate21/module/assets/img/IMG-S3E1.jpg",
+        "plate21/module/assets/img/IMG-S3E2.jpg",
+        "plate21/module/assets/img/IMG-S3E3.jpg",
+        "plate21/module/assets/img/IMG-S3E4.jpg",
+        "plate21/module/assets/img/IMG-S3E5.jpg",
+        "plate21/module/assets/img/IMG-S3E6.jpg",
+        "plate21/module/assets/img/IMG-S4B1.jpg",
+        "plate21/module/assets/img/IMG-S4B2.jpg",
+        "plate21/module/assets/img/IMG-S4B3.jpg",
+        "plate21/module/assets/img/IMG-S4B4.jpg",
+        "plate21/module/assets/img/IMG-S5A.jpg",
+        "plate21/module/assets/img/IMG-V01.jpg",
+        "plate21/module/assets/img/IMG-V02.jpg"
+      ],
+      "bundledFiles": [
+        "plate21/module/assets/img/IMG-M01.jpg",
+        "plate21/module/assets/img/IMG-P-WANZI.jpg",
+        "plate21/module/assets/img/IMG-P02.jpg",
+        "plate21/module/assets/img/IMG-R01.jpg",
+        "plate21/module/assets/img/IMG-R02.jpg",
+        "plate21/module/assets/img/IMG-S2B.jpg",
+        "plate21/module/assets/img/IMG-S2C1.jpg",
+        "plate21/module/assets/img/IMG-S2C2.jpg",
+        "plate21/module/assets/img/IMG-S2C3.jpg",
+        "plate21/module/assets/img/IMG-S2C4.jpg",
+        "plate21/module/assets/img/IMG-S4B1.jpg",
+        "plate21/module/assets/img/IMG-S4B3.jpg",
+        "plate21/module/assets/img/IMG-S4B4.jpg"
+      ],
+      "hashes": {
+        "plate21/module/assets/img/IMG-M01.jpg": "b32a0bcde52349c8d50b8dfe37b8059bb56e8c77f9c672f0d09d2edb88177893",
+        "plate21/module/assets/img/IMG-P-WANZI.jpg": "9ed05e886d47dcc0342062009dd5e8513031350db5fe7937b8f7291408419554",
+        "plate21/module/assets/img/IMG-P01.jpg": "11619cfbf2a48f2483b7ab6e5113ccdea052ac3f3670ed3a34f9e989a2fe97bb",
+        "plate21/module/assets/img/IMG-P02.jpg": "703ddd88f122c5b4cb67a004901cb7f903f79eb3b5fc53ef64a48180533f0703",
+        "plate21/module/assets/img/IMG-R01.jpg": "00867b1ab365d58fa9e48344d3cdc7706de03bf3a03a4ef79efbb8c8f05d6867",
+        "plate21/module/assets/img/IMG-R02.jpg": "826401afd501cd80885c04126402b702a4027657e93ed3f98096cc5c9e43d601",
+        "plate21/module/assets/img/IMG-S1A.jpg": "b8ab71028226bef064594267a697e4fd82e9683b36c1792e7619c3977791556e",
+        "plate21/module/assets/img/IMG-S1B.jpg": "3344c5d07fbd1ab87c1df52014b2ad9ff99b6552b8723ab3fdc49cd53ae26677",
+        "plate21/module/assets/img/IMG-S2A2.jpg": "b187d761b461ce18966077c9473c89b7485f8e42df4ce838d051d445ad30340e",
+        "plate21/module/assets/img/IMG-S2B.jpg": "c84fad5879a4eb8583a24675c9ff9cba4fe0f0132f1c39e5a041a9f29d028a5a",
+        "plate21/module/assets/img/IMG-S2C.jpg": "e991ee55685b8c53e5a695f44bc73f7ba0c32c38a958ddfb7b78d4e4290301a7",
+        "plate21/module/assets/img/IMG-S2C1.jpg": "8cb1c3e732c735ddb38d681f9d7bae9c4bde845b4bc79c1a9df5ac761726cb52",
+        "plate21/module/assets/img/IMG-S2C2.jpg": "e397dca1aac2f86a8f35c89a79418a2d00f057c5daedfc9dbc9890e1148339a4",
+        "plate21/module/assets/img/IMG-S2C3.jpg": "68b329d7b07b1c6d794fbbeb703757a2496e910fc7492537535c9bd9ddb1e16f",
+        "plate21/module/assets/img/IMG-S2C4.jpg": "69c83f06889dccfeaed11a05dd566c575c51b3220dfe92c903c61c6ba89c6a5e",
+        "plate21/module/assets/img/IMG-S3A.jpg": "6d34c88c5e91ab55314a0b1c86c2b352de8cc7d413113ce957216f97241b9222",
+        "plate21/module/assets/img/IMG-S3D1.jpg": "6910692a7b3b60554f1f1657a87be50664ff7201c6cf883dc1d3c144a3cdcd66",
+        "plate21/module/assets/img/IMG-S3D2.jpg": "85804cb7fd30395ab5e4fb162821350a12ca61a00f7fa6858e5c3f17e4eddec9",
+        "plate21/module/assets/img/IMG-S3D3.jpg": "7d8200ac0e2d39bc9b24483909c132596ae3f006848be95e5335641ab1e416dc",
+        "plate21/module/assets/img/IMG-S3D4.jpg": "4a3a154a70a819131ad9a8b714d6128c0c9731934bce24d451434b04edec860e",
+        "plate21/module/assets/img/IMG-S3D5.jpg": "61357ca8e9387852064e04c3511ece9ba25b32d376922022a035db5be12fc77b",
+        "plate21/module/assets/img/IMG-S3D6.jpg": "a5672ddb85a8957203934b5709c442e206ac981d91496552ba14dc9ab95d11be",
+        "plate21/module/assets/img/IMG-S3E1.jpg": "2939573914b0952ba057b503a8980a9466e5e87174a03dc9611a9e03463ce86b",
+        "plate21/module/assets/img/IMG-S3E2.jpg": "a9e8ae62b566cdbb677faac403d051e465e1519f4598d04758d7e731e8163e07",
+        "plate21/module/assets/img/IMG-S3E3.jpg": "291cb85129c2ef27f52f961a9f7af7a6c8a3de0426804feb370e2af1187de6f3",
+        "plate21/module/assets/img/IMG-S3E4.jpg": "c36065e260bf77143a6398ba4b6af98565087952f452705ff9500248bc31110d",
+        "plate21/module/assets/img/IMG-S3E5.jpg": "7b9a4f1cfb31cd6443ab9d54cbb4d1c7255240eeefd98b27c6e29651af6625a5",
+        "plate21/module/assets/img/IMG-S3E6.jpg": "df2a1d3ff4b91826c3e8c86869782f5fb76af071cf1210d69ba2c12b291b574c",
+        "plate21/module/assets/img/IMG-S4B1.jpg": "36e7cf600c2a1cdf334355b15420263c3c0311f340620c3f59acdfcbfaf57634",
+        "plate21/module/assets/img/IMG-S4B2.jpg": "c6d97ee3557e41557bc6297adaf244fc4d808a7e394432c73323479209bbf95f",
+        "plate21/module/assets/img/IMG-S4B3.jpg": "a1762e3acb3db00500f2718ea3a40bb5d8ada36d0c8cc7463220261341a2cc73",
+        "plate21/module/assets/img/IMG-S4B4.jpg": "48d9667d16fe6f303b703196663766172a9d81292ee81a5bdf4e8f826f790432",
+        "plate21/module/assets/img/IMG-S5A.jpg": "d2bb95ee58089d757f919c0c343a7c85adb1a7e2a78a17e32124d3ea5dd6d0af",
+        "plate21/module/assets/img/IMG-V01.jpg": "8b8511207a885547d94fbea3c2ebb47079cd6e2abc5026e7dcc506f5f4127385",
+        "plate21/module/assets/img/IMG-V02.jpg": "df1308a9863c36648d305b15e34cdde790edfc343b185390307f959234c39775"
+      },
+      "evidenceFiles": [
+        "docs/compliance/IMG-HOLD-AI-evidence.md",
+        "docs/compliance/commercial-image-remediation.md",
+        "test/audit-image-evidence.js",
+        "test/gen-all-images.js",
+        "test/gen-all.log"
+      ],
+      "evidenceUrls": [
+        "https://gpunexus.com/terms",
+        "https://docs.volcengine.com/docs/85621/1536950?lang=zh"
+      ],
+      "generationLogSha256": "92982c83d473c8daa7902ae9a361e517da203d9395884bac2f97c93bc61e8b82",
+      "reviewedAt": "2026-08-09",
+      "status": "hold"
+    },
+    {
+      "id": "IMG-HOLD-SHUGE",
+      "name": "Shuge copperplate scans",
+      "license": "Underlying work public domain; digital scan commercial-use evidence incomplete",
+      "usage": "Historic copperplate scan derivatives used as narrative and puzzle images",
+      "bundled": true,
+      "files": [
+        "assets/host/IMG-F06.jpg",
+        "plate21/module/assets/img/IMG-F06.jpg",
+        "plate21/module/assets/img/IMG-S2A.jpg",
+        "plate21/module/assets/img/IMG-S3C.jpg",
+        "plate21/module/assets/img/IMG-S4A.jpg",
+        "plate21/module/assets/img/img-c01.jpg"
+      ],
+      "bundledFiles": [
+        "assets/host/IMG-F06.jpg",
+        "plate21/module/assets/img/IMG-F06.jpg",
+        "plate21/module/assets/img/IMG-S2A.jpg",
+        "plate21/module/assets/img/img-c01.jpg"
+      ],
+      "hashes": {
+        "assets/host/IMG-F06.jpg": "4728d6b611d583ce368e41bf1d018ad7aa97308324d8d6a676a3fbdbe29b3d3b",
+        "plate21/module/assets/img/IMG-F06.jpg": "4728d6b611d583ce368e41bf1d018ad7aa97308324d8d6a676a3fbdbe29b3d3b",
+        "plate21/module/assets/img/IMG-S2A.jpg": "b0b19a43240632b83b1546440e0da5d05d1f0e4a8de7ab1c46fcd685929e9396",
+        "plate21/module/assets/img/IMG-S3C.jpg": "2cbf2df7891ff83c875c7aab033cf5587c7854abf19a0471225241aeb90713a8",
+        "plate21/module/assets/img/IMG-S4A.jpg": "29ad535d3d297d2961a28682f3965e12f6ae1a6ecd69ddcbc83686c756cd51bd",
+        "plate21/module/assets/img/img-c01.jpg": "9b11b0c65dbdfe5c1ceb71c6157f284761ff4fd07d3f2f3366575275d8115cb3"
+      },
+      "evidenceFiles": [
+        "docs/compliance/IMG-HOLD-SHUGE-evidence.md",
+        "docs/compliance/commercial-image-remediation.md",
+        "test/audit-image-evidence.js"
+      ],
+      "evidenceUrls": [
+        "https://old.shuge.org/ebook/xi-yang-lou-tong-ban-hua/",
+        "https://www.shuge.org/about/shuge/",
+        "https://www.digitalcollections.manchester.ac.uk/terms/"
+      ],
+      "reviewedAt": "2026-08-09",
+      "status": "hold"
+    }
+  ]
+}

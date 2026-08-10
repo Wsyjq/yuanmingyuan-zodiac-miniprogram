@@ -1,0 +1,80 @@
+<!-- 第二站 · 谜题4 墙体花纹观察（采风修订版，复古手账风） -->
+<nav-back />
+<view class="page paper-grain paper-real">
+  <view class="binder"></view>
+
+  <!-- ============ 编号区 ============ -->
+  <view class="tag-no tag-no-fixed">No.S2-4</view>
+  <!-- 经历感贴纸：吊牌 + 邮票 + 票根（笔记强调的"经历感"元素）-->
+  <image class="sticker-hangtag" src="/plate21/module/assets/img/stickers/st-hang-tag-01.png" mode="aspectFit" />
+  <image class="sticker-stamp" src="/plate21/module/assets/img/stickers/st-stamp-02.png" mode="aspectFit" />
+  <image class="sticker-ticket" src="/plate21/module/assets/img/stickers/st-ticket-01.png" mode="aspectFit" />
+
+  <!-- ============ 标题区 ============ -->
+  <view class="title serif">墙体的花纹</view>
+  <view class="hatch-divider title-div"></view>
+  <view class="lead kaiti">这些花纹也有讲究。从黄花阵入口一路走来，我看到了好多花纹——你能认出墙体上反复出现的是哪一种吗？</view>
+
+  <!-- ============ 主图区（4 花纹格子）============ -->
+  <view class="grid">
+    <view
+      wx:for="{{patterns}}"
+      wx:key="key"
+      class="cell double-frame {{picked === item.key ? 'on' : ''}}"
+      bindtap="onPick"
+      data-key="{{item.key}}"
+    >
+      <image class="cell-img" src="{{item.img}}" mode="aspectFill" />
+      <view class="cell-name serif">{{item.name}}</view>
+      <view class="cell-desc">{{item.desc}}</view>
+      <view wx:if="{{picked === item.key}}" class="cell-pin">✓</view>
+    </view>
+  </view>
+
+  <!-- ============ 注释区（考察者手记）============ -->
+  <view class="note-hand olive annot">墙上的花纹，回转连绵，像是走不到头。</view>
+
+  <view wx:if="{{showHint}}" class="hint kaiti">{{hint}}</view>
+
+  <!-- ============ 日期区（朱砂日期章 = 真实记录证据）============ -->
+  <view class="date-row">
+    <view class="stamp-date mini">
+      <view>西洋楼</view>
+      <view>{{today}}</view>
+    </view>
+    <view class="note-hand date-note">考察记录 · 第二站</view>
+  </view>
+
+  <!-- ============ 操作区 ============ -->
+  <button
+    wx:if="{{!solved}}"
+    class="btn-seal {{!picked ? 'btn-disabled' : ''}}"
+    bindtap="onConfirm"
+    disabled="{{!picked}}"
+  >确认选择</button>
+
+  <!-- 纹样结论只说明寓意，不承担路线跳转。 -->
+  <view wx:if="{{revealText}}" class="reveal kaiti">{{revealText}}</view>
+
+  <view wx:if="{{showRoute}}" class="route-card archive-sheet">
+    <view class="archive-tab">线下道具 · 手绘路线图</view>
+    <view class="route-title serif">展开资料袋里的路线图</view>
+    <view class="archive-rule"></view>
+    <view class="route-copy">找到“黄花阵”的标记，沿手绘箭头向东北查看。下一处被圈出的地点是“海晏堂·大水法”。</view>
+    <view class="route-check">确认路线后，把地图折好收回资料袋，按现场步道前往下一站。</view>
+    <button class="btn-seal" bindtap="onGoS3" disabled="{{advancing}}">{{advancing ? '正在保存路线……' : '我已确认路线，出发'}}</button>
+  </view>
+
+  <history-card
+    wx:if="{{showHistory}}"
+    visible="{{showHistory}}"
+    title="黄花阵 · 万字回纹"
+    source="圆明园西洋楼景区史料"
+    lines="{{historyLines}}"
+    corner-number="{{cardNumber}}"
+    show-corner="{{showCardNumber}}"
+    btn-text="查看手绘路线图"
+    bind:next="onNext"
+    bind:close="onCloseHistory"
+  />
+</view>

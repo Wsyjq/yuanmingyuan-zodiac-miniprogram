@@ -1,0 +1,92 @@
+<!-- v1.3.1 手账：左侧活页装订孔列（移到 .page 外，避免 flex 影响 fixed） -->
+<view class="binder"></view>
+<view class="page paper-grain paper-real">
+  <view class="tag-no page-no">No.015</view>
+  <view class="title serif">西洋楼铜版图 · 第二十一图</view>
+  <view class="subtitle">考察报告 · {{editionLabel}}</view>
+  <view class="archive-rule report-rule"></view>
+
+  <!-- 万字纹画框（邮票齿孔框 + 角花）+ 完整第 21 图预览 -->
+  <view class="frame perfo-frame">
+    <view class="corner tl"></view>
+    <view class="corner tr"></view>
+    <view class="corner bl"></view>
+    <view class="corner br"></view>
+    <!-- v1.3.1 手账：长尾夹贴纸压在画框左上角，像夹住档案 -->
+    <image class="frame-clip" src="/plate21/module/assets/img/stickers/st-binder-clip-01.png" mode="aspectFit" />
+    <!-- v1.3.1 手账：票根贴纸压在画框右下角，凭证感 -->
+    <image class="frame-ticket" src="/plate21/module/assets/img/stickers/st-ticket-01.png" mode="aspectFit" />
+    <view class="stamp-date frame-stamp">
+      <text>考察之日</text>
+      <text>{{today}}</text>
+    </view>
+    <view class="frame-inner">
+      <view class="canvas">
+        <!-- IMG-F06 第21幅铜版画完整底版（终版主图，含背景/主体/万字纹边框） -->
+        <image class="canvas-bg" src="/plate21/module/assets/img/IMG-F06.jpg" mode="aspectFill" />
+        <view class="layer layer-l1">
+          <view class="l1-bar">
+            <text class="tag">L1 题跋</text>
+            <text class="l1-text kaiti">前二十幅记录建成，此幅记录毁灭之后——被修复，被注视，被重新看见。</text>
+          </view>
+        </view>
+        <view class="layer layer-l5">
+          <view class="l5-box">
+            <text class="l5-tag">L5 落款</text>
+            <text class="l5-line kaiti">1747 —— 今日</text>
+            <text class="l5-name kaiti">{{name}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="field-record archive-sheet">
+    <view class="field-head">
+      <view>
+        <view class="field-kicker">FIELD RECORD · S2-3</view>
+        <view class="field-title serif">现场四图考察记录</view>
+      </view>
+      <view class="field-count">{{photoCount}} / 4</view>
+    </view>
+    <view class="archive-rule"></view>
+    <view class="field-grid">
+      <view wx:for="{{fieldPhotos}}" wx:key="key" class="field-photo" data-key="{{item.key}}" bindtap="onPreviewPhoto" role="button" aria-label="预览{{item.title}}现场照片">
+        <image wx:if="{{item.photoPath}}" class="field-image" src="{{item.photoPath}}" mode="aspectFill" />
+        <view wx:else class="field-missing">待补录</view>
+        <view class="field-caption"><text>{{item.no}}</text>{{item.title}}</view>
+      </view>
+    </view>
+    <view class="field-note">本区只收录玩家实际拍摄照片；参考图不会进入报告。</view>
+    <button wx:if="{{photoCount < 4}}" class="btn-line repair-btn" bindtap="onRepairPhotos">返回现场照片页补录</button>
+  </view>
+
+  <view class="meta">绘制者 {{name}} · {{today}} · {{editionLabel}}</view>
+  <view class="note-hand olive frame-note" style="transform: rotate(-1.5deg);">刻痕已校，与阵中亭基座相合，可归档。</view>
+
+  <view class="actions">
+    <button class="btn-seal act-btn" bindtap="onSave" disabled="{{saving}}">
+      <image wx:if="{{!saving}}" class="act-icon" src="/plate21/module/assets/img/icons/ic-download-ink.png" mode="aspectFit" />
+      <text>{{saving ? '保存中……' : '保存到相册'}}</text>
+    </button>
+    <button class="btn-line act-btn" bindtap="onCollect" disabled="{{collected}}">{{collected ? '已收入考察手册' : '收入考察手册'}}</button>
+    <button class="btn-line act-btn" bindtap="onRubbingHint">拓印提示</button>
+  </view>
+  <view wx:if="{{saveError}}" class="save-recovery record-field">
+    <view class="save-error">{{saveError}}</view>
+    <button wx:if="{{canOpenAlbumSettings}}" class="btn-line settings-btn" bindtap="onOpenAlbumSettings">打开权限设置</button>
+  </view>
+
+  <!-- 拓印提示：轻提示条 + 剧情文字 -->
+  <view wx:if="{{showRubbing}}" class="rubbing">
+    <view class="rubbing-tip">提示 · 手册最后的折页留着一方空白</view>
+    <view class="rubbing-panel card-ticket">
+      <view class="rubbing-text">翻开考察手册最后的折页，那里留着一方空白，边缘印着细弱的万字纹……数字版归数字记录，纸上的痕迹，归这一路真实做过的动作。</view>
+      <button class="btn-seal rubbing-btn" bindtap="onContinue">继 续</button>
+    </view>
+    <view class="ticket-edge"></view>
+  </view>
+
+  <!-- 离屏导出画布（不参与布局，尺寸为导出分辨率基准像素） -->
+  <canvas type="2d" id="reportCanvas" class="offscreen" style="width: 700px; height: 1120px;"></canvas>
+</view>

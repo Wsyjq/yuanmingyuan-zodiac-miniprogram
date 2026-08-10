@@ -1,0 +1,137 @@
+<!-- v1.3.1 手账：左侧活页装订孔列（移到 .stage 外，避免 flex 影响 fixed；pointer-events:none 不扰演出点击） -->
+<view class="binder"></view>
+<view class="stage paper-grain paper-real {{night ? 'night' : ''}}" bindtap="onTapScreen">
+
+  <!-- v1.3 手账：档案编号标签（黑屏/打字机幕不显示，避让演出） -->
+  <view wx:if="{{act === 3 || act === 5}}" class="tag-no fin-no">No.014</view>
+
+  <!-- 幕1 黑屏：整页转 --night，无内容 -->
+  <view wx:if="{{act === 1}}" class="act1"></view>
+
+  <!-- 幕2 生成中：等宽感打字机逐行 -->
+  <view wx:if="{{act === 2}}" class="act2">
+    <view class="term">
+      <view wx:for="{{typeLines}}" wx:key="index" wx:if="{{index < typedCount}}" class="tline">
+        <text>{{item}}</text><text wx:if="{{index === typedCount - 1}}" class="cursor">▌</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 幕3 五层拼合 -->
+  <view wx:if="{{act === 3}}" class="act3">
+    <view class="perfo-frame">
+      <!-- v1.3.1 手账：吊牌贴纸压在画框右上角（幕3 才显，不扰演出） -->
+      <image class="fin-tag" src="/plate21/module/assets/img/stickers/st-hang-tag-02.png" mode="aspectFit" />
+      <!-- v1.3.1 手账：干花标本贴纸压在画框左下角 -->
+      <image class="fin-botanical" src="/plate21/module/assets/img/stickers/st-botanical-01.png" mode="aspectFit" />
+      <view class="canvas">
+      <view class="corner tl"></view>
+      <view class="corner tr"></view>
+      <view class="corner bl"></view>
+      <view class="corner br"></view>
+      <!-- IMG-F06 第21幅铜版画完整底版（终版主图）作 canvas 底，五层逐层擦除显现 -->
+      <image class="canvas-bg" src="/plate21/module/assets/img/IMG-F06.jpg" mode="aspectFill" />
+      <!-- L4 背景（垫底，F06 下半部） -->
+      <view class="layer layer-l4 {{layerCount >= 4 ? 'on' : ''}}">
+        <view class="veil" style="width: {{veils.l4}}%"></view>
+      </view>
+      <!-- L3 主体（F06 中部） -->
+      <view class="layer layer-l3 {{layerCount >= 3 ? 'on' : ''}}">
+        <view class="veil" style="width: {{veils.l3}}%"></view>
+      </view>
+      <!-- L2 边框（万字纹虚线矩形框） -->
+      <view class="layer layer-l2 {{layerCount >= 2 ? 'on' : ''}}">
+        <view class="l2-frame">
+          <view class="l2-inner"></view>
+        </view>
+        <view class="veil" style="width: {{veils.l2}}%"></view>
+      </view>
+      <!-- L1 题跋 -->
+      <view class="layer layer-l1 {{layerCount >= 1 ? 'on' : ''}}">
+        <view class="l1-bar">
+          <text class="l1-text kaiti">前二十幅记录建成，此幅记录毁灭之后——被修复，被注视，被重新看见。</text>
+        </view>
+        <view class="veil" style="width: {{veils.l1}}%"></view>
+      </view>
+      <!-- L5 落款 -->
+      <view class="layer layer-l5 {{layerCount >= 5 ? 'on' : ''}}">
+        <view class="l5-box">
+          <text class="l5-line kaiti">1747 —— 今日</text>
+        </view>
+        <view class="veil" style="width: {{veils.l5}}%"></view>
+      </view>
+      </view>
+    </view>
+    <view class="caption kaiti">{{caption}}</view>
+  </view>
+
+  <!-- 幕4 长文叙事（novel 风格，不可跳过） -->
+  <novel-view
+    wx:if="{{act === 4}}"
+    title="尾声 · 第二十一图"
+    paragraphs="{{novel}}"
+    finish-text="署名"
+    bind:finish="onNovelFinish"
+  />
+
+  <!-- 幕5 署名 -->
+  <view wx:if="{{act === 5}}" class="act5">
+    <view class="perfo-frame">
+      <view class="canvas">
+      <view class="corner tl"></view>
+      <view class="corner tr"></view>
+      <view class="corner bl"></view>
+      <view class="corner br"></view>
+      <!-- IMG-F06 完整铜版画（幕5 署名最终态） -->
+      <image class="canvas-bg" src="/plate21/module/assets/img/IMG-F06.jpg" mode="aspectFill" />
+      <view class="layer layer-l2 on">
+        <view class="l2-frame">
+          <view class="l2-inner"></view>
+        </view>
+      </view>
+      <view class="layer layer-l1 on">
+        <view class="l1-bar">
+          <text class="l1-text kaiti">前二十幅记录建成，此幅记录毁灭之后——被修复，被注视，被重新看见。</text>
+        </view>
+      </view>
+      <view class="layer layer-l5 on">
+        <view class="l5-box">
+          <text class="l5-line kaiti">1747 —— 今日</text>
+          <text class="l5-name kaiti">{{name}}</text>
+        </view>
+      </view>
+      </view>
+    </view>
+
+    <!-- v1.3 手账：考察者手记批注 -->
+    <view class="note-hand fin-note" style="transform: rotate(-1.5deg);">散落的五层，今日终于在我手中拼齐。</view>
+
+    <view class="sign-panel">
+      <view class="sign-row">
+        <text class="sign-label">绘制者</text>
+        <input
+          wx:if="{{!signed}}"
+          class="sign-input kaiti"
+          placeholder="写下你的名字"
+          placeholder-class="sign-ph"
+          value="{{name}}"
+          maxlength="12"
+          bindinput="onNameInput"
+        />
+        <text wx:else class="sign-name kaiti">{{name}}</text>
+      </view>
+      <view class="sign-row">
+        <text class="sign-label">绘制时间</text>
+        <text class="sign-value">{{today}}</text>
+      </view>
+      <view class="sign-row">
+        <text class="sign-label">版本号</text>
+        <text wx:if="{{signed}}" class="sign-value">{{editionNo ? '第 ' + editionNo + ' 版' : '第 — 版'}}</text>
+        <text wx:else class="sign-value dim">署名后领取</text>
+      </view>
+      <button wx:if="{{!signed}}" class="btn-seal sign-btn" bindtap="onSign" disabled="{{signing}}">{{signing ? '落款中……' : '署 名'}}</button>
+      <button wx:else class="btn-seal sign-btn" bindtap="goReport" disabled="{{reporting}}">{{reporting ? '正在归档……' : '查看考察报告'}}</button>
+    </view>
+  </view>
+
+</view>

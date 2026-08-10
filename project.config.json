@@ -1,39 +1,187 @@
 {
-  "description": "归途 · 十二兽首寻迹微信原生小程序开发壳",
-  "miniprogramRoot": "miniprogram/",
-  "compileType": "miniprogram",
-  "setting": {
-    "urlCheck": false,
-    "es6": true,
-    "enhance": true,
-    "postcss": true,
-    "minified": false,
-    "minifyWXML": true,
-    "compileWorklet": false,
-    "uglifyFileName": false,
-    "uploadWithSourceMap": true,
-    "packNpmManually": false,
-    "packNpmRelationList": [],
-    "minifyWXSS": true,
-    "localPlugins": false,
-    "disableUseStrict": false,
-    "useCompilerPlugins": false,
-    "condition": false,
-    "swc": false,
-    "disableSWC": true,
-    "babelSetting": {
-      "ignore": [],
-      "disablePlugins": [],
-      "outputPath": ""
-    }
-  },
+  "description": "西洋楼铜版图·第二十一图 —— 原型工程（含演示宿主主页）",
   "appid": "touristappid",
-  "projectname": "zodiac-miniprogram",
-  "libVersion": "3.5.0",
-  "simulatorPluginLibVersion": {},
-  "packOptions": {
-    "ignore": [],
-    "include": []
+  "compileType": "miniprogram",
+  "libVersion": "2.30.0",
+  "miniprogramRoot": "./",
+  "projectname": "plate21-proto",
+  "setting": {
+    "es6": true,
+    "postcss": true,
+    "minified": true,
+    "urlCheck": false,
+    "minifyWXML": true
   },
-  "editorSetting": {}
+  "packOptions": {
+    "ignore": [
+      {
+        "type": "folder",
+        "value": "docs"
+      },
+      {
+        "type": "folder",
+        "value": "test"
+      },
+      {
+        "type": "folder",
+        "value": "showcase"
+      },
+      {
+        "type": "folder",
+        "value": "showcase-demos"
+      },
+      {
+        "type": "folder",
+        "value": "tools"
+      },
+      {
+        "type": "folder",
+        "value": ".zcode"
+      },
+      {
+        "type": "folder",
+        "value": "plate21/module/assets/fonts"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-P-WANZI.png"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-S2C1.png"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-S2C2.png"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-S2C3.png"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-S2C4.png"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-ENVELOPE-FRONT.png"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-ENVELOPE-BACK.png"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-P01.jpg"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-S1A.jpg"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-S1B.jpg"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-S2A2.jpg"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-S2C.jpg"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-S3A.jpg"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-S3C.jpg"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-S3D1.jpg"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-S3D2.jpg"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-S3D3.jpg"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-S3D4.jpg"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-S3D5.jpg"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-S3D6.jpg"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-S3E1.jpg"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-S3E2.jpg"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-S3E3.jpg"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-S3E4.jpg"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-S3E5.jpg"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-S3E6.jpg"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-S4A.jpg"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-S4B2.jpg"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-S5A.jpg"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-V01.jpg"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/IMG-V02.jpg"
+      },
+      {
+        "type": "file",
+        "value": "plate21/module/assets/img/stickers/st-paper-texture-01.jpg"
+      },
+      {
+        "type": "file",
+        "value": "AGENTS.md"
+      },
+      {
+        "type": "file",
+        "value": "package.json"
+      },
+      {
+        "type": "file",
+        "value": "圆明园西洋楼遗址·拆字谜题构件考据.md"
+      }
+    ]
+  }
 }

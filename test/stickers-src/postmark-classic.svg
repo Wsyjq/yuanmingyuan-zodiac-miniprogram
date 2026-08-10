@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" viewBox="0 0 640 420">
+  <defs>
+    <path id="arcTop" d="M 72,210 A 128,128 0 0 1 328,210" fill="none"/>
+    <path id="arcBottom" d="M 84,210 A 116,116 0 0 0 316,210" fill="none"/>
+  </defs>
+  <g fill="none" stroke="#3b4257" opacity="0.92">
+    <circle cx="200" cy="210" r="162" stroke-width="9"/>
+    <circle cx="200" cy="210" r="100" stroke-width="3.5"/>
+  </g>
+  <g fill="#3b4257" opacity="0.92" font-family="Georgia, 'Times New Roman', serif">
+    <text font-size="30" font-weight="bold" letter-spacing="4">
+      <textPath href="#arcTop" startOffset="50%" text-anchor="middle">YUANMINGYUAN &#183; PEKING</textPath>
+    </text>
+    <text font-size="24" font-weight="bold" letter-spacing="5">
+      <textPath href="#arcBottom" startOffset="50%" text-anchor="middle">&#183; FIELD SURVEY &#183;</textPath>
+    </text>
+    <text x="200" y="205" font-size="40" font-weight="bold" text-anchor="middle" letter-spacing="2">18 OCT</text>
+    <text x="200" y="252" font-size="40" font-weight="bold" text-anchor="middle" letter-spacing="4">1860</text>
+  </g>
+  <g fill="none" stroke="#3b4257" stroke-width="8" stroke-linecap="round" opacity="0.92">
+    <path d="M 352,150 q 36,-13 72,0 t 72,0 72,0 72,0"/>
+    <path d="M 352,188 q 36,-13 72,0 t 72,0 72,0 72,0"/>
+    <path d="M 352,226 q 36,-13 72,0 t 72,0 72,0 72,0"/>
+    <path d="M 352,264 q 36,-13 72,0 t 72,0 72,0 72,0"/>
+  </g>
+</svg>
