@@ -160,14 +160,22 @@ test('novel view reveals each leaf and turns it like a paper page', () => {
   const config = loadComponent('plate21/module/components/novel-view/novel-view.js')
   const { instance, events, detach } = componentInstance(config, {
     title: '序章',
-    paragraphs: [{ text: '第一张纸' }, { text: '第二张纸', quote: true }],
+    // 密度化分页：短叙述 + 引文打包同页，长段独立成页
+    paragraphs: [
+      { text: '甲'.repeat(60) },
+      { text: '乙'.repeat(3), quote: true },
+      { text: '丙'.repeat(150) }
+    ],
     finishText: '继续'
   })
 
-  assert.equal(instance.data.currentItem.text, '第一张纸')
-  assert.equal(instance.data.typing, true)
-  assert.equal(instance.data.pageIndex, 0)
   assert.equal(instance.data.pageCount, 2)
+  assert.equal(instance.data.pageIndex, 0)
+  assert.equal(instance.data.currentPage.length, 2)
+  assert.equal(instance.data.currentPage[0].text, '甲'.repeat(60))
+  assert.equal(instance.data.currentPage[1].quote, true)
+  assert.equal(instance.data.leadIndex, 0)
+  assert.equal(instance.data.typing, true)
 
   instance.onPaperTap()
   assert.equal(instance.data.typing, false)
@@ -177,10 +185,11 @@ test('novel view reveals each leaf and turns it like a paper page', () => {
   assert.equal(instance.data.turning, true)
   assert.equal(instance.data.turnDirection, 'next')
   assert.equal(instance.data.pageIndex, 1)
-  assert.equal(instance.data.currentItem.text, '第二张纸')
+  assert.equal(instance.data.turnPage.length, 2)
 
   instance._finishTurn()
-  assert.equal(instance.data.currentItem.text, '第二张纸')
+  assert.equal(instance.data.currentPage.length, 1)
+  assert.equal(instance.data.currentPage[0].text, '丙'.repeat(150))
   assert.equal(instance.data.typing, true)
 
   instance.onPaperTap()
@@ -203,7 +212,7 @@ test('novel view immediately exposes text and turns directly with reduced motion
   global.wx = { getSystemSetting: () => ({ reduceMotionEnabled: true }) }
   const config = loadComponent('plate21/module/components/novel-view/novel-view.js')
   const { instance, detach } = componentInstance(config, {
-    paragraphs: [{ text: '第一页' }, { text: '第二页' }],
+    paragraphs: [{ text: '甲'.repeat(160) }, { text: '乙'.repeat(160) }],
     hapticFeedback: false
   })
 
@@ -224,7 +233,7 @@ test('novel view locks horizontal intent and gives two-stage page haptics', () =
   }
   const config = loadComponent('plate21/module/components/novel-view/novel-view.js')
   const { instance, detach } = componentInstance(config, {
-    paragraphs: [{ text: '第一页' }, { text: '第二页' }]
+    paragraphs: [{ text: '甲'.repeat(160) }, { text: '乙'.repeat(160) }]
   })
   instance._finishTyping()
 
@@ -254,7 +263,7 @@ test('novel view locks horizontal intent and gives two-stage page haptics', () =
 test('novel view accepts a short intentional flick without making slow drags too sensitive', () => {
   const config = loadComponent('plate21/module/components/novel-view/novel-view.js')
   const { instance, detach } = componentInstance(config, {
-    paragraphs: [{ text: '第一页' }, { text: '第二页' }],
+    paragraphs: [{ text: '甲'.repeat(160) }, { text: '乙'.repeat(160) }],
     hapticFeedback: false
   })
   instance._finishTyping()

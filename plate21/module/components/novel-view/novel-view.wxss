@@ -291,10 +291,20 @@
   word-break: break-all;
 }
 
-.narrative-copy .reveal-copy::first-letter,
-.turning-leaf .narrative-copy::first-letter {
+/* 首字下沉只给每页首个叙述块，密度化后其余段落平铺 */
+.narrative-copy.lead-copy .reveal-copy::first-letter,
+.turning-leaf .narrative-copy.lead-copy::first-letter {
   font-size: 48rpx;
   line-height: 1;
+}
+
+/* 同页多块堆叠：叙述段之间收紧纵向间距，保持手账拼贴节奏 */
+.page-body .narrative-copy + .narrative-copy {
+  padding-top: 0;
+}
+
+.page-body .narrative-copy:last-child {
+  padding-bottom: 12rpx;
 }
 
 .reveal-copy {
