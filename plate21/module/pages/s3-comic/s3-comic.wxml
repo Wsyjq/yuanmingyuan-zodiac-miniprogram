@@ -1,5 +1,6 @@
 <!-- P07 第三站 · 时辰漫画推理 -->
 <nav-back />
+<page-overlays />
 <view class="page page-shell paper-grain paper-real">
   <!-- v1.3.1 手账：左侧活页装订孔列（全站统一） -->
   <view class="binder"></view>

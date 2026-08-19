@@ -99,6 +99,20 @@
     <text class="report-empty-text">考察报告 · 尚未生成</text>
   </view>
 
+  <!-- 第伍折：成就印记（成就系统解锁记录，详见 store/achievements 规则表） -->
+  <view class="hatch-divider sec-div"></view>
+  <view class="sec-head serif">第伍折 · 成就印记</view>
+  <view class="ach-list">
+    <view wx:for="{{achievementList}}" wx:key="id" class="ach-item {{item.unlocked ? '' : 'locked'}}">
+      <view class="ach-seal {{item.unlocked ? 'got' : ''}} kaiti">{{item.unlocked ? '得' : '—'}}</view>
+      <view class="ach-main">
+        <view class="ach-title serif">{{item.title}}</view>
+        <view class="ach-desc">{{item.desc}}</view>
+      </view>
+    </view>
+  </view>
+  <view class="note-hand olive hb-note">已得 {{achievementCount}} 印，共 {{achievementList.length}} 印。</view>
+
 </view>
 
 <history-card

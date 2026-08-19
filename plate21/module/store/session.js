@@ -473,6 +473,12 @@ function capabilityFallback(capability, reason) {
   emit({ name: 'capability_fallback', capability: capability, reason: reason || 'unknown' })
 }
 
+const eventListeners = []
+
+function onEvent(fn) {
+  if (typeof fn === 'function') eventListeners.push(fn)
+}
+
 function emit(event) {
   const e = Object.assign({}, event || {})
   if (!e.ts) e.ts = Date.now()
@@ -488,6 +494,11 @@ function emit(event) {
   } catch (err) {
     console.warn('[plate21] emitEvent 异常', err)
   }
+  eventListeners.forEach(function (fn) {
+    try { fn(e) } catch (err) {
+      console.warn('[plate21] 事件订阅者异常', err && err.message)
+    }
+  })
 }
 
 function cleanupSavedPhotos(snap) {
@@ -545,5 +556,13 @@ module.exports = {
   viewHint: viewHint,
   capabilityFallback: capabilityFallback,
   emit: emit,
+  onEvent: onEvent,
   reset: reset
+}
+
+// 成就系统挂在事件流上（achievements 不 require session，无循环依赖）。
+try {
+  require('./achievements').attach(module.exports)
+} catch (err) {
+  console.warn('[plate21] 成就系统挂载失败', err && err.message)
 }

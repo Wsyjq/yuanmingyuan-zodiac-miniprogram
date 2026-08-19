@@ -166,6 +166,57 @@
 .photo-record-note { margin-top: 18rpx; font-size: 21rpx; line-height: 1.7; color: var(--ink60); }
 .photo-repair { width: 100%; margin-top: 20rpx; box-sizing: border-box; }
 
+/* ---------- 第伍折：成就印记 ---------- */
+.ach-list {
+  width: 100%;
+  max-width: 660rpx;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18rpx;
+}
+.ach-item {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 20rpx 18rpx;
+  background: var(--paper2);
+  border: 1rpx solid rgba(70, 56, 42, 0.34);
+  border-left: 5rpx solid var(--brass);
+  box-sizing: border-box;
+}
+.ach-item.locked {
+  opacity: 0.5;
+  border-left-color: var(--dash);
+}
+.ach-seal {
+  flex: none;
+  width: 52rpx;
+  height: 52rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx dashed var(--dash);
+  border-radius: 50%;
+  color: var(--dash);
+  font-size: 24rpx;
+}
+.ach-seal.got {
+  border: 3rpx solid var(--cinnabar);
+  color: var(--cinnabar);
+  transform: rotate(-8deg);
+}
+.ach-title {
+  font-size: 25rpx;
+  color: var(--ink-deep);
+  letter-spacing: 2rpx;
+}
+.ach-desc {
+  margin-top: 5rpx;
+  font-size: 20rpx;
+  line-height: 1.5;
+  color: var(--ink60);
+}
+
 /* ---------- 第叁折：史料卡列表 ---------- */
 .hlist {
   width: 100%;

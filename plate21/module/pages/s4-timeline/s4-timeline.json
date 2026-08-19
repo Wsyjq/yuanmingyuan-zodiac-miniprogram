@@ -4,6 +4,7 @@
     "nav-back": "../../components/nav-back/nav-back",
     "task-banner": "../../components/task-banner/task-banner",
     "history-card": "../../components/history-card/history-card",
-    "stamp-toast": "../../components/stamp-toast/stamp-toast"
+    "stamp-toast": "../../components/stamp-toast/stamp-toast",
+    "page-overlays": "../../capabilities/overlay-host/overlay-host"
   }
 }

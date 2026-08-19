@@ -1,4 +1,5 @@
 <nav-back />
+<page-overlays />
 <view class="page page-shell paper-grain paper-real">
   <view class="binder"></view>
   <view class="tag-no tag-no-fixed">No.S1-1</view>

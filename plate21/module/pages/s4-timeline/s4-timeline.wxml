@@ -1,4 +1,5 @@
 <nav-back />
+<page-overlays />
 
 <!-- 站名叙事 + 引文卡 -->
 <view class="page page-shell paper-grain paper-real" wx:if="{{phase === 'novel'}}">

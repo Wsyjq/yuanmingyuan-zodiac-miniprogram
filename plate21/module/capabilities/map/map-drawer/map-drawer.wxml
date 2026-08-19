@@ -1,0 +1,64 @@
+<view wx:if="{{open}}" class="md-mask {{closing ? 'overlay-out' : ''}}" bindtap="close"></view>
+<view wx:if="{{open}}" class="md-drawer {{closing ? 'overlay-out' : ''}}" catchtouchmove="true">
+
+  <view class="md-head">
+    <view class="md-head-main">
+      <view class="md-kicker">FIELD NAV · 西洋楼景区</view>
+      <view class="md-title serif">实地导引</view>
+    </view>
+    <button class="md-close" bindtap="close" aria-label="关闭地图">×</button>
+  </view>
+
+  <map
+    id="siteMap"
+    class="md-map"
+    longitude="{{center.longitude}}"
+    latitude="{{center.latitude}}"
+    scale="{{scale}}"
+    markers="{{markers}}"
+    polyline="{{polyline}}"
+    show-location="{{locState === 'ok'}}"
+    enable-rotate="{{false}}"
+    enable-3D="{{false}}"
+  ></map>
+
+  <view class="md-info">
+    <block wx:if="{{locState === 'ok'}}">
+      <view wx:if="{{nextSite}}" class="md-next">
+        <text class="md-next-label">下一站</text>
+        <text class="md-next-name serif">{{nextSite.name}}</text>
+        <text class="md-next-dist">{{nextSite.distanceText}}</text>
+      </view>
+      <view wx:else class="md-next">
+        <text class="md-next-name serif">四站皆已走遍</text>
+      </view>
+    </block>
+    <view wx:elif="{{locState === 'loading'}}" class="md-loc-tip">正在取得你的位置……</view>
+    <view wx:elif="{{locState === 'denied'}}" class="md-loc-tip warn">
+      定位权限未开启，看不到你与站点的距离。路线仍可查看。
+    </view>
+    <view wx:elif="{{locState === 'failed'}}" class="md-loc-tip warn">
+      暂时无法取得位置。路线仍可查看，可稍后重试。
+    </view>
+
+    <scroll-view scroll-y class="md-sites">
+      <view
+        wx:for="{{sites}}"
+        wx:key="id"
+        class="md-site {{item.isNext ? 'is-next' : ''}}"
+      >
+        <view class="md-site-dot {{item.done ? 'done' : ''}} {{item.isNext ? 'cur' : ''}}"></view>
+        <view class="md-site-name serif">{{item.name}}</view>
+        <view wx:if="{{item.done}}" class="md-site-badge kaiti">已录</view>
+        <view wx:elif="{{item.arrived}}" class="md-site-badge arrive kaiti">已到</view>
+        <view class="md-site-dist">{{item.distanceText}}</view>
+      </view>
+    </scroll-view>
+
+    <view class="md-actions">
+      <button wx:if="{{nextSite}}" class="btn-seal md-nav" bindtap="onNavigate">导航前往下一站</button>
+      <button wx:if="{{locState === 'denied'}}" class="btn-line md-sub" bindtap="onOpenSetting">去开启定位权限</button>
+      <button wx:if="{{locState === 'failed'}}" class="btn-line md-sub" bindtap="onRetryLocation">重试定位</button>
+    </view>
+  </view>
+</view>

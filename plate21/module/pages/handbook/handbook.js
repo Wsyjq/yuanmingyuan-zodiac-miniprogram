@@ -1,6 +1,7 @@
 // P17 考察手册（全局）：进度总览 + 史料卡回看 + 考察报告缩略位
 const session = require('../../store/session')
 const fieldRecord = require('../../store/field-record')
+const achievements = require('../../store/achievements')
 const sessionDate = require('../../utils/session-date')
 
 // 四份考察记录位（采风修订版四站结构）
@@ -56,6 +57,8 @@ Page({
     sessionDateLabel: '',
     fieldPhotos: fieldRecord.photosFromSnapshot(),
     photoCount: 0,
+    achievementList: [],
+    achievementCount: 0,
     showHistory: false,
     card: { title: '', source: '', lines: [] }
   },
@@ -73,6 +76,7 @@ Page({
   renderSnapshot(snap) {
     const stations = (snap && snap.stations) || {}
     const fieldPhotos = fieldRecord.photosFromSnapshot(snap)
+    const achievementList = achievements.list(snap)
     const slots = RECORD_SLOTS.map((s, index) => ({
       key: s.key,
       name: s.name,
@@ -93,7 +97,9 @@ Page({
       name: (snap && snap.name) || '',
       sessionDateLabel: sessionDate.formatDateKey(snap && snap.sessionDate),
       fieldPhotos: fieldPhotos,
-      photoCount: fieldPhotos.filter(function (photo) { return !!photo.photoPath }).length
+      photoCount: fieldPhotos.filter(function (photo) { return !!photo.photoPath }).length,
+      achievementList: achievementList,
+      achievementCount: achievementList.filter(function (item) { return item.unlocked }).length
     })
   },
 

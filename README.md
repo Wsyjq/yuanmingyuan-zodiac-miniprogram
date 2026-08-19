@@ -14,6 +14,8 @@
 - 终章、时间轴、阅读器和盖章反馈使用 CSS/有限状态动画；Anime.js 源码仅作历史留档，不进入运行包。
 - 项目方确认 41 个源 JPEG 均为可商用 AI 生成图片；生产页已接入 18 个可追溯压缩衍生文件，原始源图继续排除以控制包体。
 - 独立 `h5/` 是内部历史镜像，不是当前发布端。
+- 2026-08-19 起新增页面能力系统（`plate21/module/capabilities/`）：12 个站点页面经 `<page-overlays />` 挂载悬浮入口——实地导引地图抽屉（`wx.getLocation` + `wx.openLocation`，拒绝授权有降级态）与三站语音导览（音频素材待录制，当前为文稿阅读态）；geofence 到场打卡默认关闭，运营实测后再开。
+- 成就系统（`store/achievements.js`）订阅 session 事件流，六枚印记幂等落库到 `flags.achievements.*`，解锁经 overlay-host 弹印章 toast，手册页「第伍折 · 成就印记」汇总展示。
 
 ## 工程结构
 
@@ -34,7 +36,7 @@ test/                            Node 测试、H5 台架和门禁脚本
 ## 本地运行
 
 1. 使用微信开发者工具打开工程根目录 `D:/kc/ymy`。
-2. 当前 `project.config.json` 使用 `touristappid`，可做本地编译；预览、上传和真机验收需要正式 AppID。
+2. `project.config.json` 当前已配置正式 AppID（`wxa284707129230b80`），可本地编译与预览；上传和真机验收需在该 AppID 的合法域名与体验权限下进行。
 3. 如测试依赖未安装，运行 `npm --prefix test ci`。
 4. Playwright 视觉台架还要求本机可用的 Playwright Chromium。
 
@@ -52,7 +54,14 @@ node test/check-font.js
 
 ## 已验证基线
 
-2026-08-11 最后一轮本地验证结果：
+2026-08-19 增量复验（能力系统 + 成就系统合入后）：
+
+| 门禁 | 结果 |
+|---|---|
+| 静态检查 | `syntax=91 json=43 routes=17` |
+| Node 测试 | 99 项通过，0 失败 |
+
+其余门禁沿用 2026-08-11 基线：
 
 | 门禁 | 结果 |
 |---|---|

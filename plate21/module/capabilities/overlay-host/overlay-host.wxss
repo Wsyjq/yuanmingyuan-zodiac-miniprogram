@@ -1,0 +1,21 @@
+/* 页面级能力宿主：悬浮入口统一层 */
+.ov-fab {
+  position: fixed;
+  right: 26rpx;
+  z-index: 96;
+  width: 88rpx;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx solid var(--brass);
+  border-radius: 50%;
+  background: rgba(244, 237, 220, 0.94);
+  box-shadow: 0 6rpx 18rpx rgba(70, 56, 42, 0.22);
+}
+.ov-fab image {
+  width: 44rpx;
+  height: 44rpx;
+}
+.ov-fab:active { transform: scale(0.94); }
+.ov-map { bottom: 224rpx; }

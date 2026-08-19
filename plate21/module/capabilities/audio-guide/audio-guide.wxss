@@ -1,0 +1,114 @@
+/* 语音导览：悬浮入口 + 底部讲解面板 */
+.ag-fab {
+  position: fixed;
+  right: 26rpx;
+  bottom: 336rpx;
+  z-index: 96;
+  width: 88rpx;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx solid var(--brass);
+  border-radius: 50%;
+  background: rgba(244, 237, 220, 0.94);
+  box-shadow: 0 6rpx 18rpx rgba(70, 56, 42, 0.22);
+}
+.ag-fab image {
+  width: 44rpx;
+  height: 44rpx;
+}
+.ag-fab:active { transform: scale(0.94); }
+
+.ag-panel {
+  position: fixed;
+  left: 24rpx;
+  right: 24rpx;
+  bottom: 28rpx;
+  z-index: 114;
+  max-height: 62vh;
+  display: flex;
+  flex-direction: column;
+  padding: 26rpx 28rpx;
+  background: var(--paper);
+  border: 2rpx solid rgba(70, 56, 42, 0.55);
+  border-radius: 10rpx;
+  box-shadow: 0 14rpx 40rpx rgba(46, 31, 13, 0.32);
+  animation: ag-up 0.26s ease both;
+}
+@keyframes ag-up {
+  from { transform: translateY(40rpx); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.ag-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.ag-kicker {
+  font-family: "Courier New", monospace;
+  font-size: 18rpx;
+  letter-spacing: 3rpx;
+  color: var(--coffee);
+}
+.ag-title {
+  margin-top: 6rpx;
+  font-size: 30rpx;
+  letter-spacing: 2rpx;
+  color: var(--ink-deep);
+}
+.ag-close {
+  width: 52rpx;
+  height: 52rpx;
+  font-size: 32rpx;
+  color: var(--ink60);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ag-player {
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+  margin-top: 18rpx;
+}
+.ag-play {
+  padding: 10rpx 30rpx;
+  border: 2rpx solid var(--cinnabar);
+  border-radius: 6rpx;
+  color: var(--cinnabar);
+  font-size: 24rpx;
+  letter-spacing: 4rpx;
+}
+.ag-track {
+  flex: 1;
+  height: 6rpx;
+  background: rgba(70, 56, 42, 0.14);
+  border-radius: 3rpx;
+  overflow: hidden;
+}
+.ag-track-fill {
+  height: 100%;
+  background: var(--patina);
+  transition: width 0.3s linear;
+}
+.ag-pending {
+  margin-top: 18rpx;
+  color: var(--olive);
+  font-size: 24rpx;
+}
+
+.ag-script {
+  margin-top: 16rpx;
+  min-height: 0;
+  max-height: 34vh;
+}
+.ag-line {
+  padding: 10rpx 2rpx;
+  font-size: 27rpx;
+  line-height: 1.9;
+  color: var(--ink);
+}
+.ag-line + .ag-line { border-top: 1rpx dashed rgba(138, 122, 96, 0.28); }

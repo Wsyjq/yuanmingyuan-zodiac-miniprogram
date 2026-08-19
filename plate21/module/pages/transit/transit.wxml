@@ -2,6 +2,7 @@
 <view class="ink-mask"></view>
 
 <nav-back />
+<page-overlays />
 <view class="page page-shell paper-grain paper-real" wx:if="{{leg}}">
   <!-- v1.3.1 手账：左侧活页装订孔列（叙事过渡页） -->
   <view class="binder"></view>

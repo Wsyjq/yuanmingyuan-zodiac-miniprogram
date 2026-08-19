@@ -28,6 +28,12 @@ test/stickers-src/pv-*.png
 showcase/
 showcase-demos/
 
+# 本地隧道与调试脚本（内网预览用，不进仓库）
+/tunnel*
+/test.ps1
+/test2.ps1
+/*.txt
+
 /拾迹创游-项目介绍*.html
 /拾迹创游-项目介绍*.pdf
 

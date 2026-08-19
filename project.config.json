@@ -1,6 +1,6 @@
 {
   "description": "西洋楼铜版图·第二十一图 —— 原型工程（含演示宿主主页）",
-  "appid": "wxe16bf00dcc9e3f43",
+  "appid": "wxa284707129230b80",
   "compileType": "miniprogram",
   "libVersion": "2.30.0",
   "miniprogramRoot": "./",
@@ -32,6 +32,10 @@
   },
   "packOptions": {
     "ignore": [
+      {
+        "value": ".git",
+        "type": "folder"
+      },
       {
         "value": "docs",
         "type": "folder"

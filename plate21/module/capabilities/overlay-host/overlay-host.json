@@ -1,0 +1,9 @@
+{
+  "component": true,
+  "styleIsolation": "apply-shared",
+  "usingComponents": {
+    "map-drawer": "../map/map-drawer/map-drawer",
+    "audio-guide": "../audio-guide/audio-guide",
+    "stamp-toast": "../../components/stamp-toast/stamp-toast"
+  }
+}
