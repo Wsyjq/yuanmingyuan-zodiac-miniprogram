@@ -21,5 +21,24 @@
     <scroll-view scroll-y class="ag-script">
       <view wx:for="{{guide.script}}" wx:key="index" class="ag-line kaiti">{{item}}</view>
     </scroll-view>
+
+    <!-- v2 深讲层：永远折叠，玩家主动展开，绝不自动播 -->
+    <view wx:if="{{hasDeep}}" class="ag-deep">
+      <button class="ag-deep-toggle" bindtap="onToggleDeep" aria-label="展开深讲">
+        {{deepOpen ? '收起深讲' : '再听一段 · 深讲'}}
+      </button>
+      <block wx:if="{{deepOpen}}">
+        <view wx:if="{{guide.deepAudio}}" class="ag-player">
+          <button class="ag-play" bindtap="onToggleDeepPlay">{{deepPlaying ? '暂停深讲' : '播放深讲'}}</button>
+        </view>
+        <scroll-view scroll-y class="ag-script ag-deep-script">
+          <view wx:for="{{guide.deepScript}}" wx:key="index" class="ag-line kaiti">{{item}}</view>
+        </scroll-view>
+        <view wx:if="{{guide.guestPostcard && guest}}" class="ag-guest">
+          <view class="ag-guest-tag">上一手留下的明信片</view>
+          <view class="ag-guest-text kaiti">{{guest.text}}</view>
+        </view>
+      </block>
+    </view>
   </view>
 </block>

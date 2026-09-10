@@ -111,7 +111,8 @@ test('achievements are idempotent and list() reports unlocked state', async () =
   assert.equal(again.revision, afterFirst.revision)
 
   const list = achievements.list(session.getSnapshot())
-  assert.equal(list.length, 6)
+  // v2 顺路支线新增 side-walker 后共 7 枚印记
+  assert.equal(list.length, 7)
   assert.equal(list.find((r) => r.id === 'first-envelope').unlocked, true)
   assert.equal(list.find((r) => r.id === 'journey-done').unlocked, false)
   assert.ok(first.revision >= 0)

@@ -1,0 +1,50 @@
+<!-- v2 大水法留白站：废墟本身就是一种缺席，静默是唯一诚实的表达方式 -->
+<nav-back wx:if="{{stage !== 'silence'}}" />
+<view class="page page-shell paper-grain paper-real dsf-page">
+
+  <!-- 幕一：一句话 + 规则说明 -->
+  <view wx:if="{{stage === 'intro'}}" class="dsf-stage">
+    <view class="tag-no page-no">S·F</view>
+    <view class="dsf-pageturn note-hand olive">我往档案后面翻——翻到下一站，那一页是空的。</view>
+    <view class="dsf-quote kaiti">档案上说，这里原来是全园水声最大的地方。</view>
+    <view class="dsf-rule">
+      <view class="dsf-rule-line">这一站不给道具、不设谜题、不要求任何输入——全程唯一一个「只需要待在这儿」的地方。</view>
+      <view class="dsf-rule-line">接下来的两分钟：不加旁白、不加配乐，只留现场的声音。</view>
+      <view class="dsf-rule-line">风、游客、鸟、远处的车。</view>
+    </view>
+    <button class="btn-seal dsf-start" bindtap="onStart">开始两分钟</button>
+    <view class="dsf-skip note-hand olive">也可以现在就离开，什么都不亏。</view>
+  </view>
+
+  <!-- 幕二：静默。画面刻意接近空白 -->
+  <view wx:elif="{{stage === 'silence'}}" class="dsf-silence">
+    <view class="dsf-remain">{{remainLabel}}</view>
+    <view class="dsf-bar"><view class="dsf-bar-fill" style="width: {{progress}}%;"></view></view>
+    <button class="dsf-early" bindtap="onEndSilenceEarly">听够了，就继续</button>
+  </view>
+
+  <!-- 幕三：一句话三选一，可跳过 -->
+  <view wx:elif="{{stage === 'question'}}" class="dsf-stage">
+    <view class="dsf-quote kaiti">刚才那两分钟，你听见的是什么？</view>
+    <view class="dsf-choices">
+      <button
+        wx:for="{{choices}}"
+        wx:key="*this"
+        class="btn-line dsf-choice"
+        data-choice="{{item}}"
+        bindtap="onChoose"
+      >{{item}}</button>
+    </view>
+    <button class="dsf-skipq note-hand olive" bindtap="onSkipQuestion">跳过，不回答</button>
+  </view>
+
+  <!-- 幕四：不再有音频；玩家自行决定何时离开 -->
+  <view wx:else class="dsf-stage">
+    <view class="dsf-quote kaiti">这里没有题目。</view>
+    <view class="dsf-rule">
+      <view class="dsf-rule-line">你听见什么，它就是什么。</view>
+      <view class="dsf-rule-line">废墟本身就是一种缺席——静默，是唯一诚实的表达方式。</view>
+    </view>
+    <button class="btn-seal dsf-start" bindtap="onNext">继续顺路 · 线法画</button>
+  </view>
+</view>

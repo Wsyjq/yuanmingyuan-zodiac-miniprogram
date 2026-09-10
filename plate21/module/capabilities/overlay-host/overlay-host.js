@@ -7,6 +7,12 @@ const registry = require('../registry')
 const achievements = require('../../store/achievements')
 
 Component({
+  properties: {
+    // 可选：页面级导览站覆盖（如 transit 三段各有顺路站，由页面按 leg 传入）。
+    // 优先于 registry 静态配置；为空时回落 caps.audio。
+    audioStation: { type: String, value: '' }
+  },
+
   data: {
     caps: { map: false, audio: null }
   },

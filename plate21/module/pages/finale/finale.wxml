@@ -39,7 +39,7 @@
       <!-- L1 题跋 -->
       <view class="layer layer-l1">
         <view class="l1-bar">
-          <text class="l1-text kaiti">前二十幅记录建成，此幅记录毁灭之后——被修复，被注视，被重新看见。</text>
+          <text class="l1-text kaiti">前二十幅记录建成，此幅记录后来——刻版人的线，砌墙人的照片，你的勾。</text>
         </view>
       </view>
       <!-- L5 落款 -->
@@ -60,6 +60,7 @@
 
   <!-- 幕4 长文叙事（novel 风格，不可跳过） -->
   <novel-view
+    id="novelView"
     wx:if="{{act === 4}}"
     class="finale-novel-host"
     title="尾声 · 第二十一图"
@@ -84,7 +85,7 @@
       </view>
       <view class="layer layer-l1 on">
         <view class="l1-bar">
-          <text class="l1-text kaiti">前二十幅记录建成，此幅记录毁灭之后——被修复，被注视，被重新看见。</text>
+          <text class="l1-text kaiti">前二十幅记录建成，此幅记录后来——刻版人的线，砌墙人的照片，你的勾。</text>
         </view>
       </view>
       <view class="layer layer-l5 on">

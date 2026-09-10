@@ -1,0 +1,26 @@
+<!-- v2 回响：竖排信纸，读完没有按钮（红线：反结算、无分享导出） -->
+<view class="page page-shell letter-page paper-grain paper-real">
+  <view wx:if="{{state === 'loading'}}" class="letter-state note-hand">整理信笺……</view>
+
+  <view wx:elif="{{state === 'notFinished'}}" class="letter-state">
+    <view class="letter-wax">封</view>
+    <view class="letter-state-text kaiti">完成你的考察之后，这里会有一封给你的信。</view>
+    <button class="btn-line letter-back" bindtap="onBack">返回</button>
+  </view>
+
+  <view wx:elif="{{state === 'sealed'}}" class="letter-state">
+    <view class="letter-wax">封</view>
+    <view class="letter-state-title serif">明日启封</view>
+    <view class="letter-state-text kaiti">考察结束了。明天，这里会有一封写给你的信。</view>
+  </view>
+
+  <scroll-view wx:else scroll-x class="letter-scroll" enhanced show-scrollbar="{{false}}">
+    <view class="letter-body">
+      <view
+        wx:for="{{paragraphs}}"
+        wx:key="index"
+        class="letter-para kaiti {{item.cls ? 'letter-' + item.cls : ''}}"
+      >{{item.text}}</view>
+    </view>
+  </scroll-view>
+</view>

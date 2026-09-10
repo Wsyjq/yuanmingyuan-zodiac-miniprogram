@@ -47,12 +47,23 @@ const HISTORY_ITEMS = [
   }
 ]
 
+// v2 顺路支线：可选站点清单（走过与否按 flags.sideVisited_* 统计，随时可进）
+const SIDE_SITES = [
+  { key: 'xieqiqu', title: '谐奇趣', url: '/plate21/module/pages/waypoint/waypoint?site=xieqiqu' },
+  { key: 'yangquelong', title: '养雀笼', url: '/plate21/module/pages/waypoint/waypoint?site=yangquelong' },
+  { key: 'fangwaiguan', title: '方外观', url: '/plate21/module/pages/waypoint/waypoint?site=fangwaiguan' },
+  { key: 'xushuilou', title: '蓄水楼', url: '/plate21/module/pages/waypoint/waypoint?site=xushuilou' },
+  { key: 'dashuifa', title: '大水法 · 留白', url: '/plate21/module/pages/dashuifa/dashuifa' },
+  { key: 'xianfahua', title: '线法画', url: '/plate21/module/pages/waypoint/waypoint?site=xianfahua' }
+]
+
 Page({
   data: {
     slots: [],
     doneCount: 0,
     history: [],
     finaleDone: false,
+    letterReady: false,
     name: '',
     sessionDateLabel: '',
     fieldPhotos: fieldRecord.photosFromSnapshot(),
@@ -60,7 +71,9 @@ Page({
     achievementList: [],
     achievementCount: 0,
     showHistory: false,
-    card: { title: '', source: '', lines: [] }
+    card: { title: '', source: '', lines: [] },
+    sideSites: [],
+    sideVisitedCount: 0
   },
 
   onShow() {
@@ -83,6 +96,18 @@ Page({
       no: String(index + 1).padStart(2, '0'),
       done: !!stations[s.key]
     }))
+    const todayKey = sessionDate.dateKeyFromTimestamp(Date.now())
+    const sessionDay = sessionDate.isValidDateKey(snap && snap.sessionDate)
+      ? snap.sessionDate
+      : todayKey
+    const finaleDone = !!(snap && (snap.finale || (snap.flags && snap.flags.collectedReport)))
+    const sideFlags = (snap && snap.flags) || {}
+    const sideSites = SIDE_SITES.map((s) => ({
+      key: s.key,
+      title: s.title,
+      url: s.url,
+      visited: !!sideFlags['sideVisited_' + s.key]
+    }))
     this.setData({
       slots,
       doneCount: slots.filter((slot) => slot.done).length,
@@ -93,13 +118,16 @@ Page({
         source: h.source,
         available: !!stations[h.station]
       })),
-      finaleDone: !!(snap && (snap.finale || (snap.flags && snap.flags.collectedReport))),
+      finaleDone: finaleDone,
+      letterReady: finaleDone && todayKey > sessionDay,
       name: (snap && snap.name) || '',
       sessionDateLabel: sessionDate.formatDateKey(snap && snap.sessionDate),
       fieldPhotos: fieldPhotos,
       photoCount: fieldPhotos.filter(function (photo) { return !!photo.photoPath }).length,
       achievementList: achievementList,
-      achievementCount: achievementList.filter(function (item) { return item.unlocked }).length
+      achievementCount: achievementList.filter(function (item) { return item.unlocked }).length,
+      sideSites: sideSites,
+      sideVisitedCount: sideSites.filter(function (item) { return item.visited }).length
     })
   },
 
@@ -114,6 +142,22 @@ Page({
 
   onRepairPhotos() {
     wx.navigateTo({ url: '/plate21/module/pages/s2-blend/s2-blend?mode=repair' })
+  },
+
+  // v2 回响：次日之信入口
+  onOpenLetter() {
+    if (!this.data.letterReady) {
+      wx.showToast({ title: '明日启封', icon: 'none' })
+      return
+    }
+    wx.navigateTo({ url: '/plate21/module/pages/letter/letter' })
+  },
+
+  // v2 顺路支线：手册随时可进
+  onOpenSide(e) {
+    const key = e.currentTarget.dataset.key
+    const site = this.data.sideSites.find(function (item) { return item.key === key })
+    if (site) wx.navigateTo({ url: site.url })
   },
 
   // 已录史料可点重读：直接弹 history-card

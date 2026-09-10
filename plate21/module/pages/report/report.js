@@ -25,6 +25,13 @@ Page({
     collected: false,
     completed: false,
     completing: false,
+    finale: false,
+    letterReady: false,
+    messageText: '',
+    messageConsent: true,
+    messageSubmitted: false,
+    submittedText: '',
+    messageSubmitting: false,
     fieldPhotos: fieldRecord.photosFromSnapshot(),
     photoCount: 0
   },
@@ -40,17 +47,26 @@ Page({
 
   refreshSnapshot() {
     const snap = session.getSnapshot() || {}
+    const flags = snap.flags || {}
     const no = snap.editionNo || null
     const fieldPhotos = fieldRecord.photosFromSnapshot(snap)
+    const todayKey = sessionDate.dateKeyFromTimestamp(Date.now())
+    const sessionDay = sessionDate.isValidDateKey(snap.sessionDate) ? snap.sessionDate : todayKey
+    const finale = !!snap.finale
     this.setData({
       name: snap.name || '无名氏',
       editionNo: no,
       editionLabel: editionText(no),
       today: sessionDate.formatDateKey(snap.sessionDate),
-      collected: !!(snap.flags && snap.flags.collectedReport),
-      completed: !!(snap.flags && snap.flags.experienceCompletedAt),
+      collected: !!flags.collectedReport,
+      completed: !!flags.experienceCompletedAt,
       fieldPhotos: fieldPhotos,
-      photoCount: fieldPhotos.filter(function (photo) { return !!photo.photoPath }).length
+      photoCount: fieldPhotos.filter(function (photo) { return !!photo.photoPath }).length,
+      finale: finale,
+      letterReady: (finale || !!flags.experienceCompletedAt) && todayKey > sessionDay,
+      messageSubmitted: !!flags.messageSubmittedAt,
+      submittedText: flags.messageDraft || '',
+      messageText: flags.messageDraft || ''
     })
   },
 
@@ -165,8 +181,8 @@ Page({
     ctx.strokeRect(50, 110, CW - 100, 60)
     ctx.fillStyle = '#46382A'
     ctx.font = '15px STKaiti, KaiTi, serif'
-    ctx.fillText('前二十幅记录建成，此幅记录毁灭之后', CW / 2, 134)
-    ctx.fillText('——被修复，被注视，被重新看见。', CW / 2, 156)
+    ctx.fillText('前二十幅记录建成，此幅记录后来', CW / 2, 134)
+    ctx.fillText('——刻版人的线，砌墙人的照片，你的勾。', CW / 2, 156)
 
     const loadImage = (src) => new Promise((resolve) => {
       if (!src || !canvas || typeof canvas.createImage !== 'function') return resolve(null)
@@ -359,6 +375,48 @@ Page({
 
   onOpenHandbook() {
     wx.navigateTo({ url: '/plate21/module/pages/handbook/handbook' })
+  },
+
+  // —— v2 回响区：明信片投递（开放题不评判，仅落档）——
+  onMessageInput(e) {
+    this.setData({ messageText: e.detail.value })
+  },
+
+  onConsentToggle() {
+    this.setData({ messageConsent: !this.data.messageConsent })
+  },
+
+  onSubmitMessage() {
+    const text = (this.data.messageText || '').trim()
+    if (!text) {
+      wx.showToast({ title: '写下那句话，再投进信箱', icon: 'none' })
+      return
+    }
+    if (this.data.messageSubmitting) return
+    this.setData({ messageSubmitting: true })
+    session.setFlag('messageDraft', text)
+      .then(() => session.setFlag('messageConsentAnonymous', this.data.messageConsent))
+      .then(() => session.setFlag('messageSubmittedAt', Date.now()))
+      .then(() => {
+        this.setData({ messageSubmitting: false, messageSubmitted: true, submittedText: text })
+        wx.showToast({ title: '已投进信箱', icon: 'none' })
+      })
+      .catch(() => {
+        this.setData({ messageSubmitting: false })
+        wx.showToast({ title: '投递失败，请重试', icon: 'none' })
+      })
+  },
+
+  onEditMessage() {
+    this.setData({ messageSubmitted: false, messageText: this.data.submittedText })
+  },
+
+  onOpenLetter() {
+    if (!this.data.letterReady) {
+      wx.showToast({ title: '明日启封', icon: 'none' })
+      return
+    }
+    wx.navigateTo({ url: '/plate21/module/pages/letter/letter' })
   },
 
   onFinish() {

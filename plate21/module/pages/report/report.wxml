@@ -29,7 +29,7 @@
         <view class="layer layer-l1">
           <view class="l1-bar">
             <text class="tag">L1 题跋</text>
-            <text class="l1-text kaiti">前二十幅记录建成，此幅记录毁灭之后——被修复，被注视，被重新看见。</text>
+            <text class="l1-text kaiti">前二十幅记录建成，此幅记录后来——刻版人的线，砌墙人的照片，你的勾。</text>
           </view>
         </view>
         <view class="layer layer-l5">
@@ -61,6 +61,53 @@
     </view>
     <view class="field-note">本区只收录玩家实际拍摄照片；参考图不会进入报告。</view>
     <button wx:if="{{photoCount < 4}}" class="btn-line repair-btn" bindtap="onRepairPhotos">返回现场照片页补录</button>
+  </view>
+
+  <!-- v2 回响区：明信片投递 + 次日之信入口（finale 后出现） -->
+  <view wx:if="{{finale}}" class="echo-zone">
+    <view class="field-head">
+      <view>
+        <view class="field-kicker">ECHO · 回响</view>
+        <view class="field-title serif">明信片 · 一句话</view>
+      </view>
+    </view>
+    <view class="archive-rule"></view>
+    <view class="echo-question kaiti">一样东西放在哪儿，才算被保住了？</view>
+
+    <block wx:if="{{!messageSubmitted}}">
+      <textarea
+        class="echo-input kaiti"
+        value="{{messageText}}"
+        maxlength="50"
+        placeholder="想写就写，不写也可以空着带走"
+        bindinput="onMessageInput"
+      />
+      <view class="echo-tools">
+        <view class="echo-consent" bindtap="onConsentToggle" role="button" aria-label="切换匿名引用授权">
+          <view class="echo-check {{messageConsent ? 'on' : ''}}"></view>
+          <text>愿意被匿名引用，下一位考察者可能读到</text>
+        </view>
+        <view class="echo-count">{{messageText.length}}/50</view>
+      </view>
+      <button class="btn-line echo-submit" bindtap="onSubmitMessage" disabled="{{messageSubmitting}}">
+        {{messageSubmitting ? '投递中……' : '投进信箱'}}
+      </button>
+    </block>
+
+    <view wx:else class="echo-sent card-ticket">
+      <view class="echo-sent-text kaiti">{{submittedText}}</view>
+      <view class="echo-sent-note note-hand olive">已存入第21图的档案。下一位来到这里的人，会读到你写的那一句。</view>
+      <button class="btn-line echo-edit" bindtap="onEditMessage">重写这张明信片</button>
+    </view>
+
+    <view class="letter-entry {{letterReady ? '' : 'sealed'}}" bindtap="onOpenLetter" role="button" aria-label="次日之信入口">
+      <view class="letter-entry-wax">封</view>
+      <view class="letter-entry-main">
+        <view class="letter-entry-title serif">{{letterReady ? '有一封信在等你' : '明日启封'}}</view>
+        <view class="letter-entry-sub kaiti">{{letterReady ? '来自那个还在整理档案的人' : '明天，这里会有一封写给你的信'}}</view>
+      </view>
+      <view wx:if="{{letterReady}}" class="letter-entry-arrow">›</view>
+    </view>
   </view>
 
   <view class="meta">绘制者 {{name}} · {{today}} · {{editionLabel}}</view>
