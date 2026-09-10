@@ -83,28 +83,24 @@
         bindinput="onMessageInput"
       />
       <view class="echo-tools">
-        <view class="echo-consent" bindtap="onConsentToggle" role="button" aria-label="切换匿名引用授权">
-          <view class="echo-check {{messageConsent ? 'on' : ''}}"></view>
-          <text>愿意被匿名引用，下一位考察者可能读到</text>
-        </view>
         <view class="echo-count">{{messageText.length}}/50</view>
       </view>
       <button class="btn-line echo-submit" bindtap="onSubmitMessage" disabled="{{messageSubmitting}}">
-        {{messageSubmitting ? '投递中……' : '投进信箱'}}
+        {{messageSubmitting ? '保存中……' : '保存到私人记录'}}
       </button>
     </block>
 
     <view wx:else class="echo-sent card-ticket">
       <view class="echo-sent-text kaiti">{{submittedText}}</view>
-      <view class="echo-sent-note note-hand olive">已存入第21图的档案。下一位来到这里的人，会读到你写的那一句。</view>
+      <view class="echo-sent-note note-hand olive">已保存在私人记录中，仅自己可见。可在私人记录页编辑或删除。</view>
       <button class="btn-line echo-edit" bindtap="onEditMessage">重写这张明信片</button>
     </view>
 
     <view class="letter-entry {{letterReady ? '' : 'sealed'}}" bindtap="onOpenLetter" role="button" aria-label="次日之信入口">
       <view class="letter-entry-wax">封</view>
       <view class="letter-entry-main">
-        <view class="letter-entry-title serif">{{letterReady ? '有一封信在等你' : '明日启封'}}</view>
-        <view class="letter-entry-sub kaiti">{{letterReady ? '来自那个还在整理档案的人' : '明天，这里会有一封写给你的信'}}</view>
+        <view class="letter-entry-title serif">次日内容入口</view>
+        <view class="letter-entry-sub kaiti">查看开放时间与已发布内容</view>
       </view>
       <view wx:if="{{letterReady}}" class="letter-entry-arrow">›</view>
     </view>
@@ -140,3 +136,5 @@
   <!-- 离屏导出画布（不参与布局，尺寸为导出分辨率基准像素） -->
   <canvas type="2d" id="reportCanvas" class="offscreen" style="width: 700px; height: 1120px;"></canvas>
 </view>
+
+<page-overlays node-id="report" />

@@ -147,7 +147,7 @@ test('v2 card progress derives a puzzle-level checkpoint', async () => {
   assert.equal(session.isPuzzleComplete('s2-name'), true)
 })
 
-test('legacy snapshots migrate to schema v2 and repair station dependencies', async () => {
+test('legacy snapshots migrate to schema v3 and preserve historical station dependencies', async () => {
   const updatedAt = new Date(2026, 7, 8, 12, 0, 0).getTime()
   const storage = {
     plate21_session: {
@@ -166,22 +166,22 @@ test('legacy snapshots migrate to schema v2 and repair station dependencies', as
   const session = loadSession(storage)
   const snapshot = await session.init({})
 
-  assert.equal(snapshot.schemaVersion, 2)
+  assert.equal(snapshot.schemaVersion, 3)
   assert.equal(snapshot.sessionDate, '20260808')
   assert.equal(snapshot.stations.s3, true)
   assert.equal(Object.keys(snapshot.cards).length, 8)
   assert.equal(snapshot.checkpoint, 'finale')
-  assert.equal(storage.plate21_session.snapshot.schemaVersion, 2)
+  assert.equal(storage.plate21_session.snapshot.schemaVersion, 3)
 })
 
-test('reset delegates to the adapter and creates a fresh v2 session', async () => {
+test('reset delegates to the adapter and creates a fresh v3 session', async () => {
   const storage = {}
   const session = loadSession(storage)
   const first = await session.init({})
   const second = await session.reset()
 
   assert.notEqual(second.sessionId, first.sessionId)
-  assert.equal(second.schemaVersion, 2)
+  assert.equal(second.schemaVersion, 3)
   assert.deepEqual(second.cards, {})
 })
 

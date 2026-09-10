@@ -97,6 +97,7 @@ function unlock(rule) {
 
 function onUnlock(fn) {
   uiListeners.push(fn)
+  return function () { const i=uiListeners.indexOf(fn); if(i>=0)uiListeners.splice(i,1) }
 }
 
 // 手册展示：全部规则 + 解锁状态。

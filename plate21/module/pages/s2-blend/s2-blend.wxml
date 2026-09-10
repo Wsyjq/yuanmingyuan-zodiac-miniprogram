@@ -1,6 +1,9 @@
-<!-- 第二站 · 谜题3：现场四图考察记录 -->
 <nav-back />
-<page-overlays />
+<page-overlays node-id="s2-blend" />
+<challenge-gate node-id="s2-blend">
+<!-- 第二站 · 谜题3：现场四图考察记录 -->
+
+
 <view class="page page-shell paper-grain paper-real">
   <view class="binder"></view>
   <view class="tag-no tag-no-fixed">No.S2-3</view>
@@ -91,3 +94,5 @@
   bind:next="onNext"
   bind:close="onCloseHistory"
 />
+
+</challenge-gate>

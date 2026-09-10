@@ -1,8 +1,20 @@
-<block wx:if="{{caps.map || caps.audio}}">
-  <button wx:if="{{caps.map}}" class="ov-fab ov-map" bindtap="onOpenMap" aria-label="打开实地导引地图">
-    <image src="/plate21/module/assets/img/icons/ic-map-pin-brass.png" mode="aspectFit" />
-  </button>
-  <audio-guide id="audioGuide" wx:if="{{caps.audio || audioStation}}" station="{{audioStation ? audioStation : caps.audio}}" />
-  <map-drawer id="mapDrawer" />
-</block>
-<stamp-toast id="achStamp" />
+<button class="ov-tools {{inline ? 'ov-inline' : ''}}" bindtap="toggle">行程与声音</button>
+<audio-guide id="audioGuide" wx:if="{{caps.audio || audioStation}}" station="{{audioStation || caps.audio}}" />
+<map-drawer id="mapDrawer" /><stamp-toast id="achStamp" />
+<view wx:if="{{open}}" class="ov-mask" bindtap="close"><scroll-view scroll-y class="ov-sheet" catchtap="noop">
+ <view class="ov-heading">{{node ? node.title : '考察工具'}}<button bindtap="close">收起</button></view>
+ <view class="ov-actions"><button bindtap="journey">路线目录</button><button bindtap="onOpenMap">实地地图</button><button bindtap="journal">私人记录</button><button bindtap="library">资料阅读</button></view>
+ <block wx:if="{{node}}"><view class="ov-copy">当前动作 · {{node.action}}</view><view class="ov-copy">道具 · {{node.prop}}</view><view class="ov-note">{{node.common ? '当前使用共同版本，可在路线目录切换参与偏好。' : '已显示所选参与方式的内容。'}}</view>
+ <view wx:if="{{node.id !== 'finale' && node.id !== 'report'}}" class="ov-actions"><button data-status="skipped" bindtap="advance" disabled="{{busy}}">跳过本题</button><button data-status="later" bindtap="advance" disabled="{{busy}}">稍后再做</button><button bindtap="hint">{{hint === 0 ? '提示一' : '提示二'}}</button></view>
+ <view wx:if="{{hint > 0}}" class="ov-copy">{{node.hints[hint - 1]}}</view><view class="ov-note">跳过只记录游览位置，题目仍可回来补做。</view></block>
+ <view class="ov-heading">声音</view>
+ <view wx:if="{{sound.trackId}}"><view class="ov-copy">{{sound.title}}</view><button bindtap="toggleVoice">{{sound.playing ? '暂停讲解' : '继续讲解'}}</button><slider value="{{sound.duration ? sound.position / sound.duration * 100 : 0}}" bindchange="seek" /><view class="ov-note">{{sound.timeLabel}} / {{sound.durationLabel}}</view></view>
+ <view wx:else class="ov-note">本页没有已接入的旁白时，请使用文字讲解。</view>
+ <button wx:if="{{sound.error}}" bindtap="retry">{{sound.error}} 重试</button>
+ <view class="ov-actions"><button bindtap="toggleBgm">{{sound.bgmPlaying ? '暂停配乐' : '播放配乐'}}</button><button bindtap="mute">{{sound.muted ? '取消配乐静音' : '配乐静音'}}</button></view>
+ <view wx:if="{{sound.bgmError}}" class="ov-note">{{sound.bgmError}}<button bindtap="retryBgm">重新加载配乐</button></view>
+ <view class="ov-note">配乐音量</view><slider value="{{sound.volume * 100}}" bindchange="volume" />
+ <view class="ov-copy">连续播放已发布讲解 <switch checked="{{sound.continuous}}" bindchange="continuous" /></view>
+ <view class="ov-heading">停留片刻</view><view class="ov-copy">选一个愿意停留的位置，放下屏幕，听听身边的声音。随时可以结束。</view>
+ <button wx:if="{{!quiet}}" bindtap="startQuiet">安静休息 · 约两分钟</button><button wx:else bindtap="endQuiet">结束静默（余 {{remaining}} 秒）</button>
+</scroll-view></view>

@@ -1,6 +1,6 @@
 <!-- v2 顺路支线站（可选）：不设判定、不做裁判；留白即内容 -->
 <nav-back />
-<page-overlays audio-station="{{site.audioStation}}" />
+<page-overlays node-id="{{site.audioStation}}" audio-station="{{site.audioStation}}" />
 <view class="page page-shell paper-grain paper-real" wx:if="{{site}}">
   <view class="binder"></view>
   <view class="tag-no page-no">{{site.no}}</view>

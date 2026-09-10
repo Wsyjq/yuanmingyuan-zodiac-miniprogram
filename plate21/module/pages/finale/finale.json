@@ -1,6 +1,7 @@
 {
   "navigationStyle": "custom",
   "usingComponents": {
-    "novel-view": "../../components/novel-view/novel-view"
+    "novel-view": "../../components/novel-view/novel-view",
+    "page-overlays": "../../capabilities/overlay-host/overlay-host"
   }
 }

@@ -1,0 +1,4 @@
+<nav-back />
+<view class="fx-page page-shell paper-grain"><view class="fx-kicker">MEDIA LAB · 开发试听</view><view class="fx-title">配乐素材库</view><view wx:if="{{!enabled}}" class="fx-note">试听入口仅在开发版本开放。</view><block wx:else><view class="fx-note">当代音乐创作；双声道曲不代表历史演奏复原。此地址只用于当前开发设备。</view><input value="{{base}}" bindinput="input" placeholder="媒体目录 http(s) 地址" /><button bindtap="save">保存试听地址</button><view class="fx-note">{{sound.bgmTitle}} {{sound.bgmError}}</view><button bindtap="pause">{{sound.bgmPlaying ? '暂停配乐' : '恢复配乐'}}</button><slider value="{{sound.volume * 100}}" bindchange="volume" /><view wx:for="{{tracks}}" wx:key="id" class="fx-card"><view class="fx-card-title">{{item.title}}</view><view class="fx-note">{{item.duration}} 秒 · {{item.file}}</view><button bindtap="play" data-id="{{item.id}}">试听此曲</button></view></block></view>
+
+<page-overlays />

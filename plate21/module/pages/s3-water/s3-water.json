@@ -3,6 +3,7 @@
   "usingComponents": {
     "nav-back": "../../components/nav-back/nav-back",
     "history-card": "../../components/history-card/history-card",
-    "page-overlays": "../../capabilities/overlay-host/overlay-host"
+    "page-overlays": "../../capabilities/overlay-host/overlay-host",
+    "challenge-gate": "../../components/challenge-gate/challenge-gate"
   }
 }

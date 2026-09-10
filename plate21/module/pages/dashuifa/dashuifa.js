@@ -2,6 +2,7 @@
 // 结构按 v2 逐秒规格：一句话 → 两分钟完全静默（无旁白无配乐，只留现场声音）
 // → 一句话三选一（可跳过，全程唯一一次操作）→ 玩家自行离开。
 const session = require('../../store/session')
+const audio=require('../../services/audio')
 
 const SILENCE_SECONDS = 120
 const CHOICES = ['风声', '人声与鸟鸣', '几乎什么都听不到']
@@ -22,6 +23,8 @@ Page({
     choice: ''
   },
 
+  onShow(){audio.get().suspend('dashuifa-site')},
+  onHide(){audio.get().release('dashuifa-site')},
   onStart() {
     this.setData({ stage: 'silence', remain: SILENCE_SECONDS, remainLabel: fmt(SILENCE_SECONDS), progress: 0 })
     this.recordVisit()
@@ -91,6 +94,7 @@ Page({
   },
 
   onUnload() {
+    audio.get().release('dashuifa-site')
     if (this._timer) clearInterval(this._timer)
   }
 })

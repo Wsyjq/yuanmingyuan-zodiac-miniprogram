@@ -66,6 +66,7 @@
     <view class="ticket-edge"></view>
   </view>
 
+  <button class="btn-line" bindtap="onJourney">路线目录 · 声音 · 私人记录</button>
   <!-- 底部小字入口 -->
   <view class="foot-links">
     <button class="link" bindtap="onHandbook">
@@ -83,7 +84,7 @@
     <view class="restart-kicker">ARCHIVE RESET · 档案重建</view>
     <view class="restart-title serif">确认重新考察？</view>
     <view class="archive-rule"></view>
-    <view class="restart-copy">这会清除四站进度、八张日期卡、四张现场照片、署名与报告记录。此操作无法撤销。</view>
+    <view class="restart-copy">这会清除四站进度、八张日期卡、四张现场照片、署名与报告记录。私人记录也会重置；请先导出需要保留的内容。</view>
     <view class="restart-actions">
       <button class="btn-seal restart-keep" bindtap="onCancelRestart" disabled="{{restarting}}">保留当前记录</button>
       <button class="btn-line restart-confirm" bindtap="onConfirmRestart" disabled="{{restarting}}">{{restarting ? '正在重新建立档案……' : '确认重新考察'}}</button>
@@ -96,7 +97,9 @@
   <view class="help-card card-archive {{helpClosing ? 'overlay-out' : ''}}" catchtap="noop">
     <view class="help-title serif">玩法说明</view>
     <view class="help-body">这是一趟纸上考察：按序走访西洋楼四处遗址，拆信封破线索、考黄花阵、寻兽首与水显、读时间轴密码，完成四份考察记录。考察凭证会锁定本次建档日，每一张史料卡角落的数字都藏着最后的答案。</view>
-    <view class="help-body">谜题答错不锁死，提示会逐次变明显；带上附件夹里的考察资料（信、路线图、记录页），按图索骥。</view>
+    <view class="help-body">谜题可跳过、稍后再做或回看，跳过不计答对。提示会逐次变明显；带上附件夹里的考察资料（信、路线图、记录页），按图索骥。</view>
     <button class="btn-line help-close" bindtap="onCloseHelp">知道了</button>
   </view>
 </view>
+
+<page-overlays node-id="" />

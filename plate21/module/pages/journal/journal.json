@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "私人记录",
+  "usingComponents": {
+    "nav-back": "../../components/nav-back/nav-back",
+    "page-overlays": "../../capabilities/overlay-host/overlay-host"
+  }
+}

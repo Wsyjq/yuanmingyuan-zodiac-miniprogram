@@ -1,5 +1,5 @@
 /**
- * 模块侧唯一数据入口 —— v2 会话状态、串行 mutation、卡片账本与存档迁移。
+ * 模块侧唯一数据入口 —— v3 会话状态、串行 mutation、卡片账本与存档迁移。
  */
 
 const adapter = require('../adapters/local-adapter')
@@ -44,11 +44,20 @@ function clone(value) {
 function migrateSnapshot(input) {
   const original = input || {}
   const next = clone(original)
-  const legacy = next.schemaVersion !== contract.SESSION_SCHEMA_VERSION
+  const legacy = !next.schemaVersion || next.schemaVersion < 2
+  if (next.schemaVersion !== contract.SESSION_SCHEMA_VERSION && original.sessionId) {
+    const key = "plate21_backup_" + original.sessionId
+    if (!wx.getStorageSync(key)) wx.setStorageSync(key, clone(original))
+  }
   const hadPuzzleState = Object.keys(next.puzzles || {}).length > 0
   const baseTime = next.createdAt || next.updatedAt || Date.now()
 
+  require("../domain/experience").fields(next)
   next.schemaVersion = contract.SESSION_SCHEMA_VERSION
+  if (next.editionNo && !next.editionAuthority) {
+    next.legacyEditionNo = next.editionNo
+    delete next.editionNo
+  }
   next.sessionDate = sessionDate.isValidDateKey(next.sessionDate)
     ? next.sessionDate
     : sessionDate.dateKeyFromTimestamp(baseTime)
@@ -60,6 +69,14 @@ function migrateSnapshot(input) {
   next.records = next.records || []
   next.flags = next.flags || {}
   next.finale = !!next.finale
+  if (original.schemaVersion !== 3) {
+    for (const n of require('../config/experience').EXTRA_NODES) {
+      const at = next.flags['sideVisited_' + n.id.slice(2)]
+      if (at && !next.visits[n.id]) {
+        next.visits[n.id] = { status: 'visited', visitedAt: at, updatedAt: at }
+      }
+    }
+  }
 
   if (legacy) {
     if (next.finale || next.stations.s4) {
@@ -90,6 +107,7 @@ function migrateSnapshot(input) {
     delete next.flags.cardNumbers
   }
 
+  if (original.schemaVersion !== 3) {
   for (const [cardId, card] of Object.entries(next.cards || {})) {
     if (!progressFlow.isValidPuzzle(cardId) || next.puzzles[cardId]) continue
     next.puzzles[cardId] = {
@@ -104,6 +122,7 @@ function migrateSnapshot(input) {
     next.puzzles['s4-password'] = { completedAt: next.updatedAt, payload: { migratedFromStation: true } }
   }
 
+  }
   next.checkpoint = progressFlow.deriveCheckpoint(next, {
     preferEvidence: legacy || !hadPuzzleState
   })
@@ -167,6 +186,7 @@ function submit(command) {
       command: command
     }
     return sendWithRetry(input, 0).catch(function (err) {
+      if (err && err.code === 'INVALID_COMMAND') throw err
       console.warn('[plate21] updateSession 失败，已暂存待补发', err)
       if (!pendingMutations.some(function (item) { return item.operationId === input.operationId })) {
         pendingMutations.push(input)
@@ -423,8 +443,8 @@ function claimEdition() {
     sessionId: snapshot.sessionId,
     name: snapshot.name || ''
   }).then(function (res) {
-    if (snapshot) snapshot.editionNo = res.editionNo
-    return res.editionNo
+    if (snapshot && res && res.editionNo) snapshot.editionNo = res.editionNo
+    return res && res.editionNo || null
   }).catch(function (err) {
     console.warn('[plate21] claimEdition 失败，落款显示"第 — 版"', err)
     return null
@@ -533,7 +553,33 @@ function reset() {
     .then(function (snap) { return acceptSnapshot(snap) })
 }
 
+
+function extension(command) {
+  if(!snapshot) return init({}).then(()=>extension(command))
+  return mutateStatus(command).then(status=>{
+    if(!status.applied) throw new Error('尚未保存，请重试')
+    emit({name:'experience_updated',kind:command.type})
+    return status.snapshot
+  })
+}
+function visit(nodeId,status,nextId) {return extension({type:'visit',nodeId,status:status||'visited',nextId})}
+function setMode(mode) {return extension({type:'preferences',mode})}
+function setReading(id,patch) {return extension(Object.assign({},patch,{type:'reading',id}))}
+function saveEntry(entry,expectedUpdatedAt) {return extension({type:'journal_save',entry,expectedUpdatedAt})}
+function deleteEntry(id,expectedUpdatedAt) {return extension({type:'journal_delete',id,expectedUpdatedAt})}
+function setEchoProgress(id,position,completed) {return extension({type:'echo_progress',id,position,completed})}
+function adoptCloud(input) {
+  const task=mutationChain.then(()=>{
+    if(pendingMutations.length) throw new Error('请先完成本机待保存操作')
+    const migrated=migrateSnapshot(input).snapshot
+    return adapter.replaceSnapshot(migrated).then(()=>acceptSnapshot(migrated))
+  })
+  mutationChain=task.catch(()=>{})
+  return task
+}
+
 module.exports = {
+  visit, setMode, setReading, saveEntry, deleteEntry, setEchoProgress, adoptCloud,
   init: init,
   getSnapshot: getSnapshot,
   completeStation: completeStation,

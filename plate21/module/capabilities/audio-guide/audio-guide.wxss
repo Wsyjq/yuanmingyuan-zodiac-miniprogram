@@ -156,3 +156,9 @@
   line-height: 1.85;
   color: var(--ink);
 }
+
+/* Both retained reading tiers stay scrollable on short screens. */
+.ag-panel{max-height:80vh;box-sizing:border-box;}
+.ag-script{height:26vh;}
+.ag-deep-script{height:22vh;}
+.ag-deep{min-height:0;}

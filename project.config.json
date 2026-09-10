@@ -351,10 +351,23 @@
       {
         "value": "mor.poc.config.js",
         "type": "file"
+      },
+      {
+        "type": "folder",
+        "value": "cloudfunctions"
+      },
+      {
+        "type": "file",
+        "value": "plan.md"
+      },
+      {
+        "type": "file",
+        "value": "PROJECT_MAP.md"
       }
     ],
     "include": []
   },
   "simulatorPluginLibVersion": {},
-  "editorSetting": {}
+  "editorSetting": {},
+  "cloudfunctionRoot": "cloudfunctions/"
 }

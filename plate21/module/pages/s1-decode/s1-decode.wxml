@@ -1,5 +1,8 @@
 <nav-back />
-<page-overlays />
+<page-overlays node-id="s1-decode" />
+<challenge-gate node-id="s1-decode">
+
+
 <view class="page page-shell paper-grain paper-real">
   <view class="binder"></view>
   <view class="tag-no tag-no-fixed">No.S1-1</view>
@@ -39,3 +42,5 @@
     <button class="btn-seal next-btn" bindtap="onGoNext">前往黄花阵</button>
   </view>
 </view>
+
+</challenge-gate>

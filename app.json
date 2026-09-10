@@ -27,7 +27,13 @@
         "pages/finale/finale",
         "pages/report/report",
         "pages/handbook/handbook",
-        "pages/letter/letter"
+        "pages/letter/letter",
+        "pages/journey/journey",
+        "pages/library/library",
+        "pages/reader/reader",
+        "pages/journal/journal",
+        "pages/echo/echo",
+        "pages/audio-lab/audio-lab"
       ]
     }
   ],
@@ -48,5 +54,8 @@
       "desc": "查看你在圆明园西洋楼景区的位置并导航前往下一站"
     }
   },
-  "sitemapLocation": "sitemap.json"
+  "sitemapLocation": "sitemap.json",
+  "requiredBackgroundModes": [
+    "audio"
+  ]
 }

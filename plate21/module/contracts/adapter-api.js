@@ -16,6 +16,12 @@
  * @property {string} sessionId
  * @property {number} revision        乐观锁版本，宿主每次落库 +1
  * @property {string} sessionDate     本次考察锁定日期，YYYYMMDD
+ * @property {Object} preferences {mode: 'family'|'teen'|'adult'}，无差异内容时使用共同版本
+ * @property {Object} visits 节点状态 visited/later/skipped，与 puzzles 分离
+ * @property {string} [visitCheckpoint] 实际游览位置，优先于旧 checkpoint
+ * @property {Object} reading 资料收藏、稍后、页码、完成状态
+ * @property {Object} journal 私人记录，id/text/name/photos/status/createdAt/updatedAt/sealedAt
+ * @property {Object} echo 次日章节独立进度
  * @property {string} checkpoint      最近可恢复谜题
  * @property {Object} stations        四站完成状态
  * @property {boolean} stations.s1
@@ -27,7 +33,7 @@
  * @property {Object<string,Object>} cards 按 cardId 保存的八张日期卡
  * @property {boolean} finale         是否已看完反转揭示
  * @property {string} [name]          署名（未署名为空）
- * @property {number} [editionNo]     已领取的版本号
+ * @property {number} [editionNo]     仅受信编号服务返回时展示；本地适配器返回 unavailable
  * @property {Object<string,*>} [flags] 自定义标记位（如 s3Fragments 部首碎片、collectedReport 收入手册）
  * @property {number} updatedAt       服务器时间戳 ms
  * @property {number} createdAt       会话创建时间戳 ms
@@ -95,6 +101,12 @@
 /**
  * @typedef {Object} SetCheckpointCommand
  * @property {'set_checkpoint'} type
+ * @property {Object} preferences {mode: 'family'|'teen'|'adult'}，无差异内容时使用共同版本
+ * @property {Object} visits 节点状态 visited/later/skipped，与 puzzles 分离
+ * @property {string} [visitCheckpoint] 实际游览位置，优先于旧 checkpoint
+ * @property {Object} reading 资料收藏、稍后、页码、完成状态
+ * @property {Object} journal 私人记录，id/text/name/photos/status/createdAt/updatedAt/sealedAt
+ * @property {Object} echo 次日章节独立进度
  * @property {string} checkpoint
  */
 /**
@@ -102,7 +114,7 @@
  * @property {'migrate_snapshot'} type
  * @property {SessionSnapshot} snapshot
  */
-/** @typedef {CompleteStationCommand|CompleteFinaleCommand|SignCommand|SetFlagCommand|CollectCardCommand|CompletePuzzleCommand|SetCheckpointCommand|MigrateSnapshotCommand} SessionCommand */
+/** @typedef {CompleteStationCommand|CompleteFinaleCommand|SignCommand|SetFlagCommand|CollectCardCommand|CompletePuzzleCommand|SetCheckpointCommand|MigrateSnapshotCommand|ExperienceCommand} SessionCommand */
 
 /**
  * updateSession 的显式结果。冲突不能伪装成成功。
@@ -206,10 +218,10 @@
  */
 
 /** 契约版本，供 adapter 实现与契约测试引用 */
-const CONTRACT_VERSION = '1.2.0'
+const CONTRACT_VERSION = '1.3.0'
 
 /** 当前快照结构版本 */
-const SESSION_SCHEMA_VERSION = 2
+const SESSION_SCHEMA_VERSION = 3
 
 /** 八张日期卡的剧情顺序，数字从 SessionSnapshot.sessionDate 对应位置读取 */
 const CARD_ORDER = [
@@ -256,3 +268,28 @@ module.exports = {
   EVENT_NAMES,
   STATION_RECORD_TYPE
 }
+
+/**
+ * v3 extension commands: visit(nodeId,status,nextId), preferences(mode), reading(id,patch),
+ * journal_save(entry,expectedUpdatedAt), journal_delete(id,expectedUpdatedAt), echo_progress(id,position,completed).
+ * Validation errors reject with code INVALID_COMMAND and never enter retry outbox.
+ * Cloud snapshot transfer is explicit through services/sync: load/save/media/urls.
+ * The server derives identity from OPENID and owns the independent cloud version CAS.
+ * A duplicate operation returns applied:true with the latest snapshot, never an older snapshot.
+ */
+
+/**
+ * @typedef {Object} ExperienceCommand
+ * @property {'visit'|'preferences'|'reading'|'journal_save'|'journal_delete'|'echo_progress'} type
+ * @property {string} [nodeId]
+ * @property {'visited'|'later'|'skipped'} [status]
+ * @property {string} [nextId]
+ * @property {'family'|'teen'|'adult'} [mode]
+ * @property {string} [id]
+ * @property {Object} [entry] 私人记录，详见 SessionSnapshot.journal
+ * @property {number} [expectedUpdatedAt] 编辑/删除记录必需的并发版本
+ * @property {number} [position]
+ * @property {boolean} [completed]
+ * @property {boolean} [favorite]
+ * @property {boolean} [later]
+ */

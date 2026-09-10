@@ -46,6 +46,8 @@ const CHECKPOINT_ROUTES = {
   report: '/plate21/module/pages/report/report'
 }
 
+Object.assign(CHECKPOINT_ROUTES,require('../config/experience').EXTRA_ROUTES)
+
 const LEGACY_CHECKPOINT_ALIASES = {
   's2-quiz': 's2-purpose',
   's3-comic': 's3-hour'
@@ -97,6 +99,7 @@ function inferredCheckpoint(snapshot) {
 
 function deriveCheckpoint(snapshot, options) {
   const snap = snapshot || {}
+  if (snap.schemaVersion === 3 && isValidCheckpoint(snap.visitCheckpoint)) return snap.visitCheckpoint
   const recorded = normalizeCheckpoint(snap.checkpoint)
   const hasPuzzleState = Object.keys(snap.puzzles || {}).length > 0
   if (recorded && hasPuzzleState && !(options && options.preferEvidence)) return recorded

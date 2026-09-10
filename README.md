@@ -93,3 +93,7 @@ node test/check-font.js
 3. 宿主接入：`docs/宿主接入方案.md`。
 4. 商业资源：`plate21/module/assets/third-party-lock.json`、`plate21/module/assets/NOTICE.md`、`docs/compliance/`。
 5. `v1.x` 规格、旧 UI 设计和 `.zcode/plans/` 只用于追溯历史，不作为当前路由、资源或实现依据。
+
+## 功能补全分支
+
+[第廿一图 v4 功能交接](docs/functional-v4/README.md)：自由继续、全局声音、资料阅读、私人记录、次日框架、私人云存档与素材试听。原剧情保留。

@@ -8,7 +8,6 @@ const progressFlow = require('../store/progress-flow')
 const sessionDate = require('../utils/session-date')
 
 const STORAGE_KEY = 'plate21_session'
-const EDITION_KEY = 'plate21_edition_counter'
 
 function now() {
   return Date.now()
@@ -34,6 +33,7 @@ function createInitialSnapshot() {
     puzzles: {},
     cards: {},
     records: [],
+    preferences: {mode: "adult"}, visits: {}, reading: {}, journal: {}, echo: {},
     flags: {},
     finale: false,
     name: undefined,
@@ -56,93 +56,7 @@ function writeEnvelope(env) {
   wx.setStorageSync(STORAGE_KEY, env)
 }
 
-function applyCommand(current, command) {
-  let next = clone(current)
-  let changed = true
-
-  function applyCheckpoint(checkpoint) {
-    if (!checkpoint) return
-    const normalized = progressFlow.normalizeCheckpoint(checkpoint)
-    if (!normalized) throw new Error('未知 checkpoint: ' + checkpoint)
-    if (next.checkpoint !== normalized) {
-      next.checkpoint = normalized
-      changed = true
-    }
-  }
-
-  function applyStation(station, record) {
-    if (!station) return
-    next.stations = next.stations || {}
-    next.records = next.records || []
-    const index = next.records.findIndex(function (item) { return item.station === station })
-    if (!next.stations[station]) {
-      next.stations[station] = true
-      changed = true
-    }
-    if (index < 0 && record) {
-      next.records.push(record)
-      changed = true
-    }
-  }
-
-  if (command.type === 'complete_station') {
-    changed = false
-    applyStation(command.station, command.record)
-    applyCheckpoint(command.checkpoint)
-  } else if (command.type === 'complete_finale') {
-    next.finale = true
-  } else if (command.type === 'sign') {
-    next.name = command.name
-  } else if (command.type === 'set_flag') {
-    next.flags = next.flags || {}
-    next.flags[command.key] = command.value
-  } else if (command.type === 'collect_card') {
-    next.cards = next.cards || {}
-    const card = command.card
-    if (next.cards[card.cardId]) {
-      changed = false
-    } else {
-      next.cards[card.cardId] = card
-    }
-  } else if (command.type === 'complete_puzzle') {
-    if (!progressFlow.isValidPuzzle(command.puzzleId)) {
-      return Promise.reject(new Error('未知 puzzleId: ' + command.puzzleId))
-    }
-    changed = false
-    next.puzzles = next.puzzles || {}
-    if (!next.puzzles[command.puzzleId]) {
-      next.puzzles[command.puzzleId] = {
-        completedAt: command.completedAt || now(),
-        payload: clone(command.payload || {})
-      }
-      changed = true
-    }
-    if (command.card) {
-      next.cards = next.cards || {}
-      if (!next.cards[command.card.cardId]) {
-        next.cards[command.card.cardId] = clone(command.card)
-        changed = true
-      }
-    }
-    applyStation(command.station, command.record)
-    applyCheckpoint(command.checkpoint)
-  } else if (command.type === 'set_checkpoint') {
-    const checkpoint = progressFlow.normalizeCheckpoint(command.checkpoint)
-    if (!checkpoint) return Promise.reject(new Error('未知 checkpoint: ' + command.checkpoint))
-    if (next.checkpoint === checkpoint) changed = false
-    else next.checkpoint = checkpoint
-  } else if (command.type === 'migrate_snapshot') {
-    next = clone(command.snapshot)
-    next.sessionId = current.sessionId
-  } else {
-    return Promise.reject(new Error('未知 SessionCommand: ' + command.type))
-  }
-
-  if (!changed) return Promise.resolve(current)
-  next.revision = current.revision + 1
-  next.updatedAt = now()
-  return Promise.resolve(next)
-}
+const applyCommand = require('../domain/commands').applyCommand
 
 const localAdapter = {
   getIdentity() {
@@ -164,7 +78,7 @@ const localAdapter = {
     if (env.ops[input.operationId]) {
       const stored = env.ops[input.operationId]
       return Promise.resolve({
-        snapshot: stored.snapshot || stored,
+        snapshot: env.snapshot,
         applied: true,
         conflict: false
       })
@@ -176,13 +90,15 @@ const localAdapter = {
 
     return applyCommand(env.snapshot, input.command).then(function (next) {
       env.snapshot = next
-      env.ops[input.operationId] = next
+      env.ops[input.operationId] = {revision:next.revision}
+      const keys=Object.keys(env.ops);keys.slice(0,Math.max(0,keys.length-512)).forEach(k=>delete env.ops[k])
       writeEnvelope(env)
       return { snapshot: next, applied: true, conflict: false }
     })
   },
 
   resetSession() {
+    const previous=readEnvelope();if(previous.snapshot)wx.setStorageSync("plate21_before_reset",previous.snapshot)
     wx.removeStorageSync(STORAGE_KEY)
     const snapshot = createInitialSnapshot()
     writeEnvelope({ snapshot: snapshot, ops: {} })
@@ -194,22 +110,21 @@ const localAdapter = {
     return Promise.resolve({ available: false, pass: false, confidence: 0, failReason: 'unknown' })
   },
 
-  saveMedia() {
-    return Promise.resolve(null)
+  saveMedia(input) {
+    const path=input&&input.image&&input.image.filePath
+    if(!path||!wx.saveFile)return Promise.resolve({available:false,location:'local'})
+    return new Promise((resolve,reject)=>wx.saveFile({tempFilePath:path,success:r=>resolve({available:true,location:'local',filePath:r.savedFilePath}),fail:reject}))
   },
 
-  claimEdition(input) {
-    const env = readEnvelope()
-    if (env.snapshot && env.snapshot.sessionId === input.sessionId && env.snapshot.editionNo) {
-      return Promise.resolve({ editionNo: env.snapshot.editionNo })
-    }
-    const counter = (wx.getStorageSync(EDITION_KEY) || 0) + 1
-    wx.setStorageSync(EDITION_KEY, counter)
-    if (env.snapshot && env.snapshot.sessionId === input.sessionId) {
-      env.snapshot.editionNo = counter
-      writeEnvelope(env)
-    }
-    return Promise.resolve({ editionNo: counter })
+  claimEdition() {
+    return Promise.resolve({ editionNo: null, available: false })
+  },
+
+  replaceSnapshot(snapshot) {
+    const env=readEnvelope()
+    if(env.snapshot) wx.setStorageSync('plate21_before_cloud_replace', clone(env.snapshot))
+    writeEnvelope({snapshot:clone(snapshot),ops:{}})
+    return Promise.resolve(snapshot)
   },
 
   emitEvent(event) {

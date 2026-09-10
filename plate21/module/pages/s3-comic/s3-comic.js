@@ -5,6 +5,7 @@
 // 卡片角落数字：会话锁定日期的月份第一位数字。
 // 本页不调 completeStation（S3 由 s3-water 收口）。
 const session = require('../../store/session')
+const ANSWER=require('../../config/tasks').tasks['s3-hour'].answer
 
 Page({
   data: {
@@ -48,7 +49,7 @@ Page({
     if (this.data.q1Done) return
     const v = e.currentTarget.dataset.v
     this.setData({ q1Selected: v })
-    if (v === '马') {
+    if (v === ANSWER.zodiac) {
       session.attemptPuzzle('s3-hour', this.data.q1Attempts + 1, true, 'tap')
       // INT-404：答对先高亮选中项 300ms（铜绿描金）再切下一问，给即时正反馈
       this.setData({ q1Correct: true, shakeKey: '' })
@@ -62,13 +63,13 @@ Page({
     if (this.data.q2Done) return
     const v = e.currentTarget.dataset.v
     this.setData({ q2Selected: v })
-    if (v === '午时') {
+    if (v === ANSWER.hour) {
       session.attemptPuzzle('s3-hour', this.data.q1Attempts + this.data.q2Attempts + 2, true, 'tap')
       this.setData({ q2Done: true, shakeKey: '', showHistory: true })
       this.selectComponent('#stamp').show('考察记录已保存')
       // 收集时辰推理卡片角落数字（月份第一位）——主线：卡片数字 → 日期密码
       session.completePuzzle('s3-hour', {
-        answer: { zodiac: '马', hour: '午时' },
+        answer: ANSWER,
         attempts: this.data.q1Attempts + this.data.q2Attempts + 2
       }, { collectCard: true }).catch(function () {
         wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' })
@@ -93,7 +94,7 @@ Page({
     if (this.data.advancing) return
     this.setData({ advancing: true, showHistory: false })
     session.completePuzzle('s3-hour', {
-      answer: { zodiac: '马', hour: '午时' },
+      answer: ANSWER,
       attempts: this.data.q1Attempts + this.data.q2Attempts + 2
     }, { collectCard: true, checkpoint: 's3-zodiac' }).then(function () {
       wx.redirectTo({ url: '/plate21/module/pages/s3-zodiac/s3-zodiac' })

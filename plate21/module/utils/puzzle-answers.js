@@ -1,7 +1,7 @@
 'use strict'
 
 const ALL_ZODIAC = ['鼠', '牛', '虎', '兔', '龙', '蛇', '马', '羊', '猴', '鸡', '狗', '猪']
-const RETURNED_ZODIAC = ['鼠', '牛', '虎', '兔', '马', '猴', '猪']
+const RETURNED_ZODIAC = require('../config/tasks').tasks['s3-zodiac'].answer
 
 function normalizeText(value) {
   let text = String(value || '').trim()
