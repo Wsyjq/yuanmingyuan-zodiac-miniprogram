@@ -39,6 +39,15 @@ const RULES = [
   {
     id: 'journey-done', title: '考察完成', desc: '为第二十一图落下署名',
     when: (snap) => !!(snap.flags && snap.flags.experienceCompletedAt)
+  },
+  {
+    // v2 顺路支线：谐奇趣/养雀笼/方外观/蓄水楼/大水法留白/线法画，走进至少三处。
+    id: 'side-walker', title: '顺路人', desc: '顺路走进六处遗址中的至少三处',
+    when: (snap) => {
+      const f = snap.flags || {}
+      const sites = ['xieqiqu', 'yangquelong', 'fangwaiguan', 'xushuilou', 'dashuifa', 'xianfahua']
+      return sites.filter((key) => !!f['sideVisited_' + key]).length >= 3
+    }
   }
 ]
 

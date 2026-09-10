@@ -20,6 +20,7 @@ test/shots/
 test/shots-test/
 test/shots-h5/
 test/harness/out/
+test/shots-v2/
 test/_archived/
 test/gen-raw/
 test/gen-img-*.png

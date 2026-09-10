@@ -84,7 +84,7 @@
       <view class="canvas report-artwork">
         <image class="canvas-bg" src="/plate21/module/assets/img/IMG-RUNTIME-PLATE.jpg" mode="aspectFill" />
         <view class="layer layer-l2"><view class="l2-frame"><view class="l2-inner"></view></view></view>
-        <view class="layer layer-l1"><view class="l1-bar"><text class="l1-text kaiti">前二十幅记录建成，此幅记录毁灭之后</text></view></view>
+        <view class="layer layer-l1"><view class="l1-bar"><text class="l1-text kaiti">前二十幅记录建成，此幅记录后来</text></view></view>
         <view class="layer layer-l5">
           <view class="l5-box">
             <text class="l5-line kaiti">1747 —— 本次考察</text>
@@ -112,6 +112,36 @@
     </view>
   </view>
   <view class="note-hand olive hb-note">已得 {{achievementCount}} 印，共 {{achievementList.length}} 印。</view>
+
+  <!-- v2 顺路支线：可选站点，随时可进 -->
+  <view class="hatch-divider sec-div"></view>
+  <view class="sec-head serif">顺路 · 支线（{{sideVisitedCount}}/{{sideSites.length}}）</view>
+  <view class="side-grid">
+    <view
+      wx:for="{{sideSites}}"
+      wx:key="key"
+      class="side-chip {{item.visited ? 'got' : ''}}"
+      data-key="{{item.key}}"
+      bindtap="onOpenSide"
+      role="button"
+      aria-label="进入顺路站{{item.title}}"
+    >
+      <text class="side-chip-mark">{{item.visited ? '✓' : '·'}}</text>
+      <text class="side-chip-name">{{item.title}}</text>
+    </view>
+  </view>
+  <view class="note-hand olive hb-note">支线不设谜题、不做裁判；停不停，由你决定。</view>
+
+  <!-- v2 回响：次日之信入口（finale 后出现；当日封蜡，次日出信） -->
+  <view class="hatch-divider sec-div"></view>
+  <view class="hb-letter {{letterReady ? '' : 'sealed'}}" bindtap="onOpenLetter" role="button" aria-label="次日之信入口">
+    <view class="hb-letter-wax kaiti">封</view>
+    <view class="hb-letter-main">
+      <view class="hb-letter-title serif">{{letterReady ? '有一封信在等你' : '明日启封'}}</view>
+      <view class="hb-letter-sub kaiti">{{letterReady ? '来自那个还在整理档案的人' : '明天，这里会有一封写给你的信'}}</view>
+    </view>
+    <view wx:if="{{letterReady}}" class="hb-letter-arrow">›</view>
+  </view>
 
 </view>
 

@@ -29,7 +29,12 @@
   <view wx:if="{{showPack}}" class="pack pack-open">
     <view class="pack-sheet archive-sheet">
       <view class="physical-label archive-tab">信中内容</view>
-      <view class="letter-copy kaiti">“如果你想知道第二十一幅铜版画的秘密，就去圆明园西洋楼遗址吧，里面也许会有你想要的答案。”</view>
+      <view class="letter-copy kaiti">这份档案到我手里的时候，已经换过好几双手。</view>
+      <view class="letter-copy kaiti">印的那部分，是两百多年前刻版的人留下的；毛笔的那页，比卡片本身的年头还深；照片背面那行钢笔字，是照着一幅画把墙重新砌起来的人写的。再往后的几页，是我添的。</view>
+      <view class="letter-copy kaiti">我没找到第二十一幅。找到的都是别的东西——一件在别的湖里，一件在别的国家，有一处，只剩一行字。</view>
+      <view class="letter-copy kaiti">现在轮到你走一遍。走到每一处，翻到对应的页，替我看一眼：他们记下的，和地上剩下的，还对不对得上。</view>
+      <view class="letter-copy kaiti">对得上的，划个勾。对不上的，写下来。</view>
+      <view class="letter-copy kaiti">档案不用还我。你走完，它就跟着你了。</view>
       <view class="decision-copy">我不知道这份资料是谁留下的，也不知道它是否与那幅传闻中的铜版画有关。但既然线索已经指向圆明园西洋楼遗址，我决定带着这份资料前往现场，去一探究竟。</view>
       <view class="pack-title props-title serif">收好考察资料</view>
       <view class="pack-items">

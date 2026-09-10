@@ -237,7 +237,8 @@ const EVENT_NAMES = [
   'capability_fallback',
   'photo_check',
   'finale_viewed',
-  'report_saved'
+  'report_saved',
+  'side_visited'
 ]
 
 /** 站点 → 考察记录类型映射（四站结构：s1 西洋楼入口 / s2 黄花阵 / s3 海晏堂·大水法 / s4 雨果雕像） */

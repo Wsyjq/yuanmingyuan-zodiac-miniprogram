@@ -1,0 +1,77 @@
+/* v2 顺路支线站：档案卡式阅读，道具卡铜绿描边 */
+.page-no {
+  position: absolute;
+  top: 56rpx;
+  right: 40rpx;
+}
+.title {
+  font-size: 38rpx;
+  font-weight: 700;
+  letter-spacing: 4rpx;
+  color: var(--ink-deep);
+}
+.wp-intro {
+  margin-top: 22rpx;
+  font-size: 28rpx;
+  line-height: 1.95;
+  color: var(--ink);
+}
+.wp-rule {
+  width: 100%;
+  max-width: var(--content-max);
+  margin-top: 24rpx;
+  opacity: 0.72;
+}
+
+.wp-beat,
+.wp-reveal {
+  width: 100%;
+  max-width: var(--content-max);
+  box-sizing: border-box;
+  margin-top: 26rpx;
+  padding: 24rpx 28rpx;
+  border: 2rpx solid rgba(70, 56, 42, 0.4);
+  background: rgba(244, 237, 220, 0.55);
+}
+.wp-prop {
+  border: 2rpx dashed rgba(74, 107, 100, 0.75);
+  background: rgba(74, 107, 100, 0.07);
+}
+.wp-reveal {
+  border-color: rgba(166, 58, 46, 0.4);
+}
+.wp-kicker {
+  font-family: "Courier New", monospace;
+  font-size: 20rpx;
+  letter-spacing: 3rpx;
+  color: var(--coffee);
+}
+.wp-prop .wp-kicker {
+  color: var(--patina);
+}
+.wp-line {
+  margin-top: 12rpx;
+  font-size: 27rpx;
+  line-height: 1.9;
+  color: var(--ink);
+}
+.wp-confirm {
+  margin-top: 18rpx;
+}
+
+.wp-motif {
+  margin-top: 34rpx;
+  padding: 4rpx 0;
+  font-size: 30rpx;
+  line-height: 1.8;
+  color: var(--ink-deep);
+  border-top: 1rpx solid rgba(70, 56, 42, 0.3);
+  border-bottom: 1rpx solid rgba(70, 56, 42, 0.3);
+}
+.wp-note {
+  margin-top: 30rpx;
+  font-size: 22rpx;
+}
+.wp-next {
+  margin-top: 26rpx;
+}

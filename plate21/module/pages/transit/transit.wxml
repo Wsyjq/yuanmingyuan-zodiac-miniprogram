@@ -47,5 +47,14 @@
     <view class="narr-text">{{leg.text}}</view>
   </view>
 
+  <!-- v2 顺路支线：可选入口，停不停由你；走完支线一键回主线 -->
+  <view wx:if="{{side}}" class="side-entry" bindtap="onOpenSide" role="button" aria-label="进入顺路支线">
+    <view class="side-tag">顺路 · 支线可选</view>
+    <view class="side-title serif">{{side.title}}</view>
+    <view class="side-hook kaiti">{{side.hook}}</view>
+    <view wx:if="{{sideVisited}}" class="side-done note-hand olive">✓ 已走过</view>
+    <view class="side-arrow">›</view>
+  </view>
+
   <button class="btn-seal next-btn" bindtap="onNext" disabled="{{advancing}}">{{advancing ? '正在前往……' : '继 续 前 往'}}</button>
 </view>

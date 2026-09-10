@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "nav-back": "../../components/nav-back/nav-back"
+  },
+  "navigationBarTitleText": "顺路"
+}

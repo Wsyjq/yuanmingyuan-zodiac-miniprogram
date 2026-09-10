@@ -20,8 +20,12 @@ const PAGES = [
   { route: 'plate21/module/pages/s4-password/s4-password' },
   { route: 'plate21/module/pages/finale/finale' },
   { route: 'plate21/module/pages/report/report' },
+  { route: 'plate21/module/pages/letter/letter' },
   { route: 'plate21/module/pages/ending/ending' },
-  { route: 'plate21/module/pages/handbook/handbook' }
+  { route: 'plate21/module/pages/handbook/handbook' },
+  { route: 'plate21/module/pages/waypoint/waypoint', query: { site: 'xieqiqu' } },
+  { route: 'plate21/module/pages/waypoint/waypoint', query: { site: 'fangwaiguan' } },
+  { route: 'plate21/module/pages/dashuifa/dashuifa' }
 ]
 
 for (const spec of PAGES) {

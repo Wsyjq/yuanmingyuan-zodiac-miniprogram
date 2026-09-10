@@ -338,8 +338,10 @@ test('finale uses the latest Feishu narrative', async () => {
     settleMs: 10
   })
   const text = result.data.novel.map((item) => item.text).join('')
-  assert.match(text, /等待被后来者完成/)
-  assert.match(text, /记录毁灭，也记录重生/)
+  // 剧情改写计划 §4⑪：宣言段已换为顿悟段
+  assert.match(text, /一个人画不完的那一幅/)
+  assert.doesNotMatch(text, /记录毁灭，也记录重生/)
+  assert.doesNotMatch(text, /等待被后来者完成的新画/)
   assert.doesNotMatch(text, /百分之二/)
 })
 

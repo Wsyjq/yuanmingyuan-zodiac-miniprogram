@@ -1,0 +1,27 @@
+<!-- v2 顺路支线站（可选）：不设判定、不做裁判；留白即内容 -->
+<nav-back />
+<page-overlays audio-station="{{site.audioStation}}" />
+<view class="page page-shell paper-grain paper-real" wx:if="{{site}}">
+  <view class="binder"></view>
+  <view class="tag-no page-no">{{site.no}}</view>
+  <view class="title serif">{{site.title}}</view>
+  <view class="wp-intro kaiti">{{site.intro}}</view>
+  <view class="archive-rule wp-rule"></view>
+
+  <view wx:for="{{site.beats}}" wx:key="kicker" class="wp-beat {{item.prop ? 'wp-prop' : ''}}">
+    <view class="wp-kicker">{{item.kicker}}</view>
+    <view wx:for="{{item.lines}}" wx:for-item="line" wx:key="*this" class="wp-line kaiti">{{line}}</view>
+    <button wx:if="{{item.confirm && !confirmed}}" class="btn-line wp-confirm" bindtap="onConfirm">我拼好了</button>
+  </view>
+
+  <!-- 蓄水楼：拼合后才展开的卡条背面注释 -->
+  <view wx:if="{{revealLines.length}}" class="wp-reveal">
+    <view class="wp-kicker">拼对后才看 · 卡条背面注释</view>
+    <view wx:for="{{revealLines}}" wx:key="*this" class="wp-line kaiti">{{item}}</view>
+  </view>
+
+  <view wx:if="{{site.motif}}" class="wp-motif kaiti">{{site.motif}}</view>
+
+  <view class="wp-note note-hand olive">支线 · 可停可不停。停留多久由你决定，不影响主线。</view>
+  <button class="btn-seal wp-next" bindtap="onNext">{{site.nextLabel}}</button>
+</view>
