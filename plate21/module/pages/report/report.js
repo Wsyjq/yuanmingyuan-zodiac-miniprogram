@@ -1,5 +1,6 @@
 // P15 考察报告（成果页）：第 21 图成品展示 + 保存相册 + 拓印提示
 const session = require('../../store/session')
+const echoDomain=require('../../domain/experience'),runtime=require('../../config/runtime')
 const fieldRecord = require('../../store/field-record')
 const sessionDate = require('../../utils/session-date')
 
@@ -63,7 +64,7 @@ Page({
       fieldPhotos: fieldPhotos,
       photoCount: fieldPhotos.filter(function (photo) { return !!photo.photoPath }).length,
       finale: finale,
-      letterReady: (finale || !!flags.experienceCompletedAt) && todayKey > sessionDay,
+      letterReady: !!echoDomain.unlockAt(flags.experienceCompletedAt,runtime.echoUnlockHour) && Date.now()>=echoDomain.unlockAt(flags.experienceCompletedAt,runtime.echoUnlockHour),
       messageSubmitted: !!((snap.journal||{})['report-postcard']),
       submittedText: ((snap.journal||{})['report-postcard']||{}).text || flags.messageDraft || '',
       messageText: ((snap.journal||{})['report-postcard']||{}).text || flags.messageDraft || ''
@@ -395,7 +396,7 @@ Page({
     if (this.data.messageSubmitting) return
     this.setData({ messageSubmitting: true })
     const snap=session.getSnapshot(),old=(snap.journal||{})['report-postcard']
-    session.saveEntry({id:'report-postcard',text,name:snap.name||'',photos:[],status:'sealed'},old&&old.updatedAt)
+    return session.saveEntry({id:'report-postcard',text,name:snap.name||'',photos:[],status:'sealed'},old&&old.updatedAt)
       .then(() => {
         this.setData({ messageSubmitting: false, messageSubmitted: true, submittedText: text })
         wx.showToast({ title: '已保存到私人记录', icon: 'none' })

@@ -208,3 +208,14 @@ test('journal text wrapping preserves every character including newlines', () =>
   assert.equal(lines.join(''), text)
   assert.ok(lines.every((l) => l.length <= 5))
 })
+
+test('new main optional site preserves exact deep-link position and returns to nearby main route',async()=>{
+ const {session}=local();await session.init({});await session.visit('t-xieqiqu','visited');assert.equal(flow.deriveCheckpoint(session.getSnapshot()),'t-xieqiqu');assert.match(flow.routeForCheckpoint('t-xieqiqu'),/waypoint.*site=xieqiqu/);assert.equal(config.next('t-xieqiqu').id,'s2-purpose');assert.equal(config.next('t-xushuilou').id,'t-dashuifa')
+})
+test('retained report postcard saves privately and never fabricates public submission',async()=>{
+ const storage={};const result=await renderPage({route:'plate21/module/pages/report/report',settleMs:20,wxOverrides:{getStorageSync:k=>storage[k],setStorageSync:(k,v)=>storage[k]=JSON.parse(JSON.stringify(v)),removeStorageSync:k=>delete storage[k]},drive:async p=>{p.onMessageInput({detail:{value:'我的私人明信片'}});await p.onSubmitMessage();assert.equal(p.data.messageSubmitted,true)}})
+ assert.deepEqual(result.errors,[]);assert.equal(storage.plate21_session.snapshot.journal['report-postcard'].text,'我的私人明信片');assert.equal(storage.plate21_session.snapshot.flags.messageSubmittedAt,undefined)
+})
+test('legacy letter deep link uses the unified unpublished-content gate',async()=>{
+ let target='';await renderPage({route:'plate21/module/pages/letter/letter',settleMs:10,wxOverrides:{redirectTo:o=>{target=o.url}}});assert.equal(target,'/plate21/module/pages/echo/echo')
+})

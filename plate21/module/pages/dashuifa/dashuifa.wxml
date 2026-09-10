@@ -48,3 +48,5 @@
     <button class="btn-seal dsf-start" bindtap="onNext">继续顺路 · 线法画</button>
   </view>
 </view>
+
+<page-overlays node-id="t-dashuifa" />

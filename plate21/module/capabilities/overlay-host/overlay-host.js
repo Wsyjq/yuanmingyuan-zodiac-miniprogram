@@ -5,7 +5,16 @@ const config = require('../../config/experience')
 const audio = require('../../services/audio')
 const ui = require('../../services/ui')
 Component({
-  properties: { audioStation:{type:String,value:''}, nodeId: { type: String, value: '' }, inline: {type:Boolean,value:false} },
+  properties: {
+    audioStation: { type: String, value: '' },
+    nodeId: { type: String, value: '' },
+    inline: { type: Boolean, value: false }
+  },
+  observers: {
+    nodeId() {
+      this.enter()
+    }
+  },
   data: {
     caps: { map: false, audio: null },
     open: false,

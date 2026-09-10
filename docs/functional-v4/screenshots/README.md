@@ -1,43 +1,59 @@
 # 页面预览
 
-桌面页面台架截图，含测试草稿，不代表微信真机或真实游客内容。
+桌面页面台架截图，含测试草稿，不代表微信真机或真实游客内容。基于最终整合版本生成；完整 48 状态的复现方法见验证记录。
 
-### v4-journey
+### 路线目录与继续体验
 
-![v4-journey](v4-journey.png)
+![路线目录与继续体验](v4-journey.png)
 
-### v4-library
+### 资料目录与收藏
 
-![v4-library](v4-library.png)
+![资料目录与收藏](v4-library.png)
 
-### v4-reader
+### 来源可追溯的阅读页
 
-![v4-reader](v4-reader.png)
+![来源可追溯的阅读页](v4-reader.png)
 
-### v4-journal-empty
+### 无照片也可开始的私人记录
 
-![v4-journal-empty](v4-journal-empty.png)
+![无照片也可开始的私人记录](v4-journal-empty.png)
 
-### v4-journal-draft
+### 私人草稿与保存操作
 
-![v4-journal-draft](v4-journal-draft.png)
+![私人草稿与保存操作](v4-journal-draft.png)
 
-### v4-echo-empty
+### 未发布次日内容的空状态
 
-![v4-echo-empty](v4-echo-empty.png)
+![未发布次日内容的空状态](v4-echo-empty.png)
 
-### v4-audio-lab
+### 开发音乐试听
 
-![v4-audio-lab](v4-audio-lab.png)
+![开发音乐试听](v4-audio-lab.png)
 
-### v4-audio-controls
+### 全局声音与现场操作
 
-![v4-audio-controls](v4-audio-controls.png)
+![全局声音与现场操作](v4-audio-controls.png)
 
-### 05-s2-quiz
+### 保留原有深读内容
 
-![05-s2-quiz](05-s2-quiz.png)
+![保留原有深读内容](v4-deep-reading.png)
 
-### 13b-s4-password-open
+### 大水法静默与自由结束
 
-![13b-s4-password-open](13b-s4-password-open.png)
+![大水法静默与自由结束](v4-dashuifa-silence.png)
+
+### 保留顺路支线
+
+![保留顺路支线](v4-side-xushuilou.png)
+
+### 明信片转为私人保存
+
+![明信片转为私人保存](v4-private-postcard.png)
+
+### 题目默认收起
+
+![题目默认收起](05-s2-quiz.png)
+
+### 日期密码仍可回看与补做
+
+![日期密码仍可回看与补做](13b-s4-password-open.png)

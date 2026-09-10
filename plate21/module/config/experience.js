@@ -80,15 +80,37 @@ const ROUTES = {
   finale: 'finale',
   report: 'report'
 }
-const EXTRA_NODES=[['xieqiqu','谐奇趣'],['yangquelong','养雀笼'],['fangwaiguan','方外观'],['xushuilou','蓄水楼'],['xianfahua','线法画'],['dashuifa','大水法']].map(r=>({id:'t-'+r[0],title:'顺路 · '+r[1],station:'t-'+r[0],action:'按原页面引导，自由停留或继续',prop:'按页面道具说明；无道具仍可继续',hints:['先阅读本页基础介绍。','可使用继续按钮返回路线，不需完成全部观察。'],variants:{},optional:true}))
-const EXTRA_ROUTES={}
-EXTRA_NODES.forEach(n=>{const site=n.id.slice(2);EXTRA_ROUTES[n.id]=site==='dashuifa'?'/plate21/module/pages/dashuifa/dashuifa':'/plate21/module/pages/waypoint/waypoint?site='+site})
+const EXTRA_NODES = [
+  ['xieqiqu', '谐奇趣'],
+  ['yangquelong', '养雀笼'],
+  ['fangwaiguan', '方外观'],
+  ['xushuilou', '蓄水楼'],
+  ['xianfahua', '线法画'],
+  ['dashuifa', '大水法']
+].map((r) => ({
+  id: 't-' + r[0],
+  title: '顺路 · ' + r[1],
+  station: 't-' + r[0],
+  action: '按原页面引导，自由停留或继续',
+  prop: '按页面道具说明；无道具仍可继续',
+  hints: ['先阅读本页基础介绍。', '可使用继续按钮返回路线，不需完成全部观察。'],
+  variants: {},
+  optional: true
+}))
+const EXTRA_ROUTES = {}
+EXTRA_NODES.forEach((n) => {
+  const site = n.id.slice(2)
+  EXTRA_ROUTES[n.id] =
+    site === 'dashuifa'
+      ? '/plate21/module/pages/dashuifa/dashuifa'
+      : '/plate21/module/pages/waypoint/waypoint?site=' + site
+})
 function node(id, mode) {
   const n = NODES.concat(EXTRA_NODES).find((x) => x.id === id)
   return n ? Object.assign({}, n, n.variants[mode] || {}, { common: !n.variants[mode] }) : null
 }
 function route(id) {
-  if(EXTRA_ROUTES[id])return EXTRA_ROUTES[id]
+  if (EXTRA_ROUTES[id]) return EXTRA_ROUTES[id]
   const p = ROUTES[id]
   return p ? '/plate21/module/pages/' + p + '/' + p : ''
 }
@@ -100,7 +122,17 @@ function fromRoute(path) {
   return NODES.find((n) => ROUTES[n.id] === p) || null
 }
 function next(id) {
-  if(EXTRA_ROUTES[id])return NODES.find(n=>n.id==="s4-timeline")
+  if (EXTRA_ROUTES[id]) {
+    const idMap = {
+      't-xieqiqu': 's2-purpose',
+      't-yangquelong': 't-fangwaiguan',
+      't-fangwaiguan': 's3-hour',
+      't-xushuilou': 't-dashuifa',
+      't-dashuifa': 't-xianfahua',
+      't-xianfahua': 's4-timeline'
+    }
+    return node(idMap[id])
+  }
   const i = NODES.findIndex((n) => n.id === id)
   return NODES[Math.min(i + 1, NODES.length - 1)]
 }

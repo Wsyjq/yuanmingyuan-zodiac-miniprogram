@@ -13,11 +13,13 @@ node.variants.family = {
 }
 ```
 
+`EXTRA_NODES` / `EXTRA_ROUTES` 另外登记顺路点位，保存实际支线位置并按原路线衔接；不把这些可选观察计为主线答题完成。
+
 节点编号不可因为标题修改而更换。新增节点须同时登记路线和可恢复位置；同站多道题共享 `station`，因此不会重启配乐。切换参与偏好不会重置进度。
 
 ## 音频
 
-`config/narration.js` 从原 scripts 原样移动，兼容导出保留。目前旁白 `audio:null`，界面显示文字，不把音乐冒充讲解。提供正式 HTTPS 音频后设置该字段即可播放。
+`config/narration.js` 从原 scripts 原样移动，兼容导出保留。目前旁白 `audio:null`，界面显示文字，不把音乐冒充讲解。提供正式 HTTPS 音频后设置该字段即可播放。最新 main 的 `deepScript` 与 `deepAudio` 继续保留，基础讲解和深讲共用全局播放器，不建立第二套播放上下文。
 
 `config/runtime.js`：
 

@@ -30,6 +30,11 @@ function fieldPhotoFixture(points) {
 
 // 17 条生产路由 + 1 个仓库保留页及关键交互完成态，共 30 张 H5 截图。
 const PAGES = [
+  ...['xieqiqu','yangquelong','fangwaiguan','xushuilou','xianfahua'].map(site=>({name:'v4-side-'+site,route:'plate21/module/pages/waypoint/waypoint',query:{site}})),
+  {name:'v4-dashuifa-intro',route:'plate21/module/pages/dashuifa/dashuifa'},
+  {name:'v4-dashuifa-silence',route:'plate21/module/pages/dashuifa/dashuifa',drive:p=>p.onStart()},
+  {name:'v4-deep-reading',route:'plate21/module/pages/s4-timeline/s4-timeline',componentDrive:p=>{if(p.data.hasDeep)p.setData({open:true,deepOpen:true})}},
+  {name:'v4-private-postcard',screenshotSelector:'.echo-zone',route:'plate21/module/pages/report/report',drive:async p=>{p.setData({finale:true});p.onMessageInput({detail:{value:'这一句只保存在我的记录中。'}});await p.onSubmitMessage()}},
   {name:'v4-journey',route:'plate21/module/pages/journey/journey'},
   {name:'v4-library',route:'plate21/module/pages/library/library'},
   {name:'v4-reader',route:'plate21/module/pages/reader/reader',query:{id:'reading-guide'}},
@@ -275,7 +280,8 @@ function loadPlaywright() {
         })
       } catch (e) { /* 字体等待失败不阻塞 */ }
       await page.waitForTimeout(1500)
-      await page.screenshot({ path: path.join(OUT_SHOTS, spec.name + '.png') })
+      const screenshotTarget = spec.screenshotSelector ? page.locator(spec.screenshotSelector) : page
+      await screenshotTarget.screenshot({ path: path.join(OUT_SHOTS, spec.name + '.png') })
       for (const viewport of [{ width: 320, height: 568 }, { width: 375, height: 812 }, { width: 430, height: 932 }]) {
         await page.setViewportSize(viewport)
         const layout = await page.evaluate(() => {

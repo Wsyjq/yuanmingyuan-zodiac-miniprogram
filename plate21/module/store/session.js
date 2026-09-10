@@ -69,6 +69,14 @@ function migrateSnapshot(input) {
   next.records = next.records || []
   next.flags = next.flags || {}
   next.finale = !!next.finale
+  if (original.schemaVersion !== 3) {
+    for (const n of require('../config/experience').EXTRA_NODES) {
+      const at = next.flags['sideVisited_' + n.id.slice(2)]
+      if (at && !next.visits[n.id]) {
+        next.visits[n.id] = { status: 'visited', visitedAt: at, updatedAt: at }
+      }
+    }
+  }
 
   if (legacy) {
     if (next.finale || next.stations.s4) {
