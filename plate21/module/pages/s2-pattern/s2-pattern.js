@@ -9,12 +9,7 @@ const session = require('../../store/session')
 const sessionDate = require('../../utils/session-date')
 
 // 四种候选纹样使用项目方确认可商用的 AI 图片衍生文件。
-const PATTERNS = [
-  { key: 'wanzi', name: '万字回纹', src: '/plate21/module/assets/img/IMG-RUNTIME-PATTERN-WANZI.jpg', desc: '回转连绵，万字不断', correct: true },
-  { key: 'beike', name: '贝壳饰', src: '/plate21/module/assets/img/IMG-RUNTIME-PATTERN-SHELL.jpg', desc: '扇形放射，卷叶环绕', correct: false },
-  { key: 'juanco', name: '卷草饰', src: '/plate21/module/assets/img/IMG-RUNTIME-PATTERN-SCROLL.jpg', desc: '卷曲枝条彼此对称', correct: false },
-  { key: 'hualan', name: '花篮饰', src: '/plate21/module/assets/img/IMG-RUNTIME-PATTERN-BASKET.jpg', desc: '花束盛于西式饰篮', correct: false }
-]
+const PATTERNS = require('../../config/tasks').s2_pattern_patterns
 
 // 史料卡：仅剧情原文（"通水意"是开发脑补，已移除）
 const HISTORY_LINES = [

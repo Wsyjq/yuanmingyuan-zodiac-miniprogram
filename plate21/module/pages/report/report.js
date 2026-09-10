@@ -4,7 +4,7 @@ const fieldRecord = require('../../store/field-record')
 const sessionDate = require('../../utils/session-date')
 
 function editionText(no) {
-  return no ? '第 ' + no + ' 版' : '第 — 版'
+  return no ? '第 ' + no + ' 版' : '私人纪念'
 }
 
 // 离屏画布逻辑尺寸（导出分辨率基准，与屏幕 rpx 无关）
@@ -16,7 +16,7 @@ Page({
   data: {
     name: '',
     editionNo: null,
-    editionLabel: '第 — 版',
+    editionLabel: '私人纪念',
     today: '',
     showRubbing: false,
     saving: false,
@@ -64,9 +64,9 @@ Page({
       photoCount: fieldPhotos.filter(function (photo) { return !!photo.photoPath }).length,
       finale: finale,
       letterReady: (finale || !!flags.experienceCompletedAt) && todayKey > sessionDay,
-      messageSubmitted: !!flags.messageSubmittedAt,
-      submittedText: flags.messageDraft || '',
-      messageText: flags.messageDraft || ''
+      messageSubmitted: !!((snap.journal||{})['report-postcard']),
+      submittedText: ((snap.journal||{})['report-postcard']||{}).text || flags.messageDraft || '',
+      messageText: ((snap.journal||{})['report-postcard']||{}).text || flags.messageDraft || ''
     })
   },
 
@@ -389,21 +389,20 @@ Page({
   onSubmitMessage() {
     const text = (this.data.messageText || '').trim()
     if (!text) {
-      wx.showToast({ title: '写下那句话，再投进信箱', icon: 'none' })
+      wx.showToast({ title: '写下那句话，再保存', icon: 'none' })
       return
     }
     if (this.data.messageSubmitting) return
     this.setData({ messageSubmitting: true })
-    session.setFlag('messageDraft', text)
-      .then(() => session.setFlag('messageConsentAnonymous', this.data.messageConsent))
-      .then(() => session.setFlag('messageSubmittedAt', Date.now()))
+    const snap=session.getSnapshot(),old=(snap.journal||{})['report-postcard']
+    session.saveEntry({id:'report-postcard',text,name:snap.name||'',photos:[],status:'sealed'},old&&old.updatedAt)
       .then(() => {
         this.setData({ messageSubmitting: false, messageSubmitted: true, submittedText: text })
-        wx.showToast({ title: '已投进信箱', icon: 'none' })
+        wx.showToast({ title: '已保存到私人记录', icon: 'none' })
       })
       .catch(() => {
         this.setData({ messageSubmitting: false })
-        wx.showToast({ title: '投递失败，请重试', icon: 'none' })
+        wx.showToast({ title: '保存失败，请重试', icon: 'none' })
       })
   },
 
@@ -411,13 +410,7 @@ Page({
     this.setData({ messageSubmitted: false, messageText: this.data.submittedText })
   },
 
-  onOpenLetter() {
-    if (!this.data.letterReady) {
-      wx.showToast({ title: '明日启封', icon: 'none' })
-      return
-    }
-    wx.navigateTo({ url: '/plate21/module/pages/letter/letter' })
-  },
+  onOpenLetter() { wx.navigateTo({url:'/plate21/module/pages/echo/echo'}) },
 
   onFinish() {
     if (this.data.completing) return

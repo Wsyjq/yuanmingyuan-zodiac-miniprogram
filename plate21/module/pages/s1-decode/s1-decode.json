@@ -4,6 +4,7 @@
     "nav-back": "../../components/nav-back/nav-back",
     "task-banner": "../../components/task-banner/task-banner",
     "stamp-toast": "../../components/stamp-toast/stamp-toast",
-    "page-overlays": "../../capabilities/overlay-host/overlay-host"
+    "page-overlays": "../../capabilities/overlay-host/overlay-host",
+    "challenge-gate": "../../components/challenge-gate/challenge-gate"
   }
 }

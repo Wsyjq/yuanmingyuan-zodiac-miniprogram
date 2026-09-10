@@ -76,6 +76,8 @@ Page({
     sideVisitedCount: 0
   },
 
+  onLibrary() { wx.navigateTo({url:"/plate21/module/pages/library/library"}) },
+
   onShow() {
     const snap = session.getSnapshot()
     if (snap) {
@@ -145,13 +147,7 @@ Page({
   },
 
   // v2 回响：次日之信入口
-  onOpenLetter() {
-    if (!this.data.letterReady) {
-      wx.showToast({ title: '明日启封', icon: 'none' })
-      return
-    }
-    wx.navigateTo({ url: '/plate21/module/pages/letter/letter' })
-  },
+  onOpenLetter() { wx.navigateTo({url:'/plate21/module/pages/echo/echo'}) },
 
   // v2 顺路支线：手册随时可进
   onOpenSide(e) {

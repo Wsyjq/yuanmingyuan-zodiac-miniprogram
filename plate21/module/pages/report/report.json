@@ -1,4 +1,6 @@
 {
   "navigationStyle": "custom",
-  "usingComponents": {}
+  "usingComponents": {
+    "page-overlays": "../../capabilities/overlay-host/overlay-host"
+  }
 }

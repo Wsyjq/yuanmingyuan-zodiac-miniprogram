@@ -14,9 +14,10 @@
 
     <view wx:if="{{hasAudio}}" class="ag-player">
       <button class="ag-play" bindtap="onTogglePlay">{{playing ? '暂停' : '播放'}}</button>
-      <view class="ag-track"><view class="ag-track-fill" style="width: {{progress}}%;"></view></view>
+      <slider min="0" max="100" value="{{progress}}" bindchange="onSeek" aria-label="讲解进度" />
+      <button wx:if="{{error}}" bindtap="onRetry">重试</button>
     </view>
-    <view wx:else class="ag-pending note-hand">音频导览即将上线，先读文稿。</view>
+    <view wx:else class="ag-pending note-hand">本节提供文字讲解，暂无旁白音频。</view>
 
     <scroll-view scroll-y class="ag-script">
       <view wx:for="{{guide.script}}" wx:key="index" class="ag-line kaiti">{{item}}</view>
@@ -35,7 +36,7 @@
           <view wx:for="{{guide.deepScript}}" wx:key="index" class="ag-line kaiti">{{item}}</view>
         </scroll-view>
         <view wx:if="{{guide.guestPostcard && guest}}" class="ag-guest">
-          <view class="ag-guest-tag">上一手留下的明信片</view>
+          <view class="ag-guest-tag">明信片（待真实内容服务接入）</view>
           <view class="ag-guest-text kaiti">{{guest.text}}</view>
         </view>
       </block>

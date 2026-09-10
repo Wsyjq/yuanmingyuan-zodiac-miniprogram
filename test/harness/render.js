@@ -30,6 +30,14 @@ function fieldPhotoFixture(points) {
 
 // 17 条生产路由 + 1 个仓库保留页及关键交互完成态，共 30 张 H5 截图。
 const PAGES = [
+  {name:'v4-journey',route:'plate21/module/pages/journey/journey'},
+  {name:'v4-library',route:'plate21/module/pages/library/library'},
+  {name:'v4-reader',route:'plate21/module/pages/reader/reader',query:{id:'reading-guide'}},
+  {name:'v4-journal-empty',route:'plate21/module/pages/journal/journal'},
+  {name:'v4-journal-draft',route:'plate21/module/pages/journal/journal',drive:p=>{p.create();p.input({currentTarget:{dataset:{field:'text'}},detail:{value:'走到这里，我想把今天的光线留在这一页。'}})}},
+  {name:'v4-echo-empty',route:'plate21/module/pages/echo/echo'},
+  {name:'v4-audio-lab',route:'plate21/module/pages/audio-lab/audio-lab',wxOverrides:{getAccountInfoSync:()=>({miniProgram:{envVersion:'develop'}})}},
+  {name:'v4-audio-controls',route:'plate21/module/pages/s2-quiz/s2-quiz',componentDrive:p=>{if(p.data.caps)p.setData({open:true})}},
   { name: '00-host-index', route: 'pages/index/index' },
   { name: '01-cover', route: 'plate21/module/pages/cover/cover' },
   {
@@ -190,6 +198,7 @@ function startServer() {
   const server = http.createServer((req, res) => {
     try {
       let p = decodeURIComponent(req.url.split('?')[0])
+      if(p === '/favicon.ico'){res.writeHead(204);res.end();return}
       if (p.endsWith('/')) p += 'index.html'
       const file = path.normalize(path.join(ROOT, p))
       if (!file.startsWith(ROOT)) { res.writeHead(403); res.end(); return }
@@ -226,9 +235,9 @@ function loadPlaywright() {
   // 1. 逐页渲染 HTML
   const appCss = readWxssWithImports(path.join(ROOT, 'app.wxss'))
   const renderResults = []
-  for (const spec of PAGES) {
+  for (const spec of PAGES.filter(p=>!process.env.VISUAL_PAGES || process.env.VISUAL_PAGES.split(',').includes(p.name))) {
     try {
-      const r = await renderPage(spec)
+      const r = await renderPage(Object.assign({},spec,{componentDrive:spec.componentDrive || (spec.drive ? ((p)=>{if(p.data.expanded!==undefined)p.setData({expanded:true})}) : undefined)}))
       const pageCss = readWxssWithImports(path.join(ROOT, spec.route + '.wxss'))
       const doc = buildDoc(r.html, [appCss].concat(r.compCssList, [pageCss]))
       fs.writeFileSync(path.join(OUT_HTML, spec.name + '.html'), doc)
@@ -241,7 +250,7 @@ function loadPlaywright() {
   // 2. 静态服务 + Playwright 截图
   const { server, port } = await startServer()
   const playwright = loadPlaywright()
-  const browser = await playwright.chromium.launch()
+  const browser = await playwright.chromium.launch(process.env.PLAYWRIGHT_CHANNEL ? {channel:process.env.PLAYWRIGHT_CHANNEL} : {})
   const context = await browser.newContext({
     viewport: { width: 375, height: 812 },
     deviceScaleFactor: 2

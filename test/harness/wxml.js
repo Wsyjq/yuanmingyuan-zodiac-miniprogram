@@ -231,12 +231,12 @@ function renderElement(node, ctx) {
   if (tag === 'block') return renderChildren(node.children, ctx)
   if (tag === 'slot') {
     return ctx.slots && ctx.slots.length
-      ? renderChildren(ctx.slots, Object.assign({}, ctx, { slots: null }))
+      ? renderChildren(ctx.slots, Object.assign({}, ctx.slotContext || ctx, { slots: null }))
       : ''
   }
   // 自定义组件
   if (ctx.components && ctx.components.has(tag)) {
-    return ctx.renderComponent(tag, node.attrs, node.children, ctx.scope)
+    return ctx.renderComponent(tag, node.attrs, node.children, ctx.scope, ctx)
   }
 
   // ---- 属性收集 ----
@@ -288,6 +288,20 @@ function renderElement(node, ctx) {
     const ph = interp(node.attrs.get('placeholder'), ctx.scope)
     const val = interp(node.attrs.get('value'), ctx.scope)
     return openTag('input', '', '', ` placeholder="${escapeHtml(ph)}" value="${escapeHtml(val)}" readonly`)
+  }
+  if (tag === 'textarea') {
+    return openTag('textarea', '', '', ' readonly') + escapeHtml(interp(node.attrs.get('value'), ctx.scope)) + '</textarea>'
+  }
+  if (tag === 'slider') {
+    const value=Number(interp(node.attrs.get('value'),ctx.scope))||0
+    return openTag('input','__slider','width:100%;accent-color:#8b7352',` type="range" min="0" max="100" value="${value}"`)
+  }
+  if (tag === 'switch') {
+    const checked=truthy(evalDirective(node.attrs.get('checked'),ctx.scope))
+    return openTag('input','__switch','accent-color:#8b7352',` type="checkbox" ${checked?'checked':''}`)
+  }
+  if (tag === 'video') {
+    return openTag('video','','',` controls src="${escapeHtml(interp(node.attrs.get('src'),ctx.scope))}"`) + '</video>'
   }
   if (tag === 'scroll-view') {
     const inner = renderChildren(node.children, ctx)

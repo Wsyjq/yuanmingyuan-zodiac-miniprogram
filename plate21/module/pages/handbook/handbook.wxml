@@ -1,4 +1,5 @@
 <nav-back />
+<button class="btn-line" style="margin:150rpx 48rpx 0;" bindtap="onLibrary">资料阅读 · 来源 · 收藏</button>
 <!-- v1.3.1 手账：左侧活页装订孔列（移到 .page 外，避免 flex 影响 fixed） -->
 <view class="binder"></view>
 <view class="page page-shell paper-grain paper-real">
@@ -137,8 +138,8 @@
   <view class="hb-letter {{letterReady ? '' : 'sealed'}}" bindtap="onOpenLetter" role="button" aria-label="次日之信入口">
     <view class="hb-letter-wax kaiti">封</view>
     <view class="hb-letter-main">
-      <view class="hb-letter-title serif">{{letterReady ? '有一封信在等你' : '明日启封'}}</view>
-      <view class="hb-letter-sub kaiti">{{letterReady ? '来自那个还在整理档案的人' : '明天，这里会有一封写给你的信'}}</view>
+      <view class="hb-letter-title serif">次日内容入口</view>
+      <view class="hb-letter-sub kaiti">查看开放时间与已发布内容</view>
     </view>
     <view wx:if="{{letterReady}}" class="hb-letter-arrow">›</view>
   </view>
@@ -153,3 +154,5 @@
   bind:collect="onCollectHistory"
   bind:close="onCloseHistory"
 />
+
+<page-overlays node-id="" />

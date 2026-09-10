@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "开发试听",
+  "usingComponents": {
+    "nav-back": "../../components/nav-back/nav-back",
+    "page-overlays": "../../capabilities/overlay-host/overlay-host"
+  }
+}

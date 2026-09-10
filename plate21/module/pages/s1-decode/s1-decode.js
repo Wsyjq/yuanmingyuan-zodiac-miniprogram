@@ -1,6 +1,6 @@
 const session = require('../../store/session')
 
-const ANSWER = '黄花阵'
+const ANSWER = require('../../config/tasks').tasks['s1-decode'].answer
 
 Page({
   data: {

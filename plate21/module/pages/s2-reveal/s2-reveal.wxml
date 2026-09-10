@@ -1,6 +1,9 @@
-<!-- 第二站 · 谜题2 黄花阵名字由来（采风修订版：文字输入） -->
 <nav-back />
-<page-overlays />
+<page-overlays node-id="s2-name" />
+<challenge-gate node-id="s2-name">
+<!-- 第二站 · 谜题2 黄花阵名字由来（采风修订版：文字输入） -->
+
+
 <view class="page page-shell paper-grain paper-real">
   <view class="binder"></view>
   <view class="tag-no tag-no-fixed">No.S2-2</view>
@@ -45,3 +48,5 @@
     bind:close="onCloseHistory"
   />
 </view>
+
+</challenge-gate>

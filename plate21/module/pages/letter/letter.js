@@ -13,10 +13,7 @@ Page({
     paragraphs: []
   },
 
-  onLoad() {
-    if (session.getSnapshot()) this.refresh()
-    else session.init({}).then(() => this.refresh())
-  },
+  onLoad() { wx.redirectTo({url:'/plate21/module/pages/echo/echo'}) },
 
   refresh() {
     const snap = session.getSnapshot() || {}

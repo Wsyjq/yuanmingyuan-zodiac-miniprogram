@@ -46,3 +46,5 @@
 
   <stamp-toast id="stamp" />
 </view>
+
+<page-overlays node-id="prologue" />

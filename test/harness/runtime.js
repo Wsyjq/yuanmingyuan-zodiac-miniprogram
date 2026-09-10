@@ -286,7 +286,7 @@ function computeProps(config, attrs, scope) {
   return { props, observers }
 }
 
-function renderComponent(compDef, attrs, children, pageScope, env, registry, errors) {
+function renderComponent(compDef, attrs, children, pageScope, env, registry, errors, parentCtx) {
   const config = compDef.config
   const inst = createInstance(config, true, env.wx, registry)
   const { props, observers } = computeProps(config, attrs, pageScope)
@@ -303,12 +303,14 @@ function renderComponent(compDef, attrs, children, pageScope, env, registry, err
   for (const [obs, val] of observers) {
     try { obs.call(inst, val, val) } catch (e) { errors.push('组件 observer 异常: ' + (e && e.message)) }
   }
+  if(env.componentDrive) env.componentDrive(inst, props)
   const ctx = {
     scope: inst.data,
     components: compDef.components,
     slots: children,
-    renderComponent: (tag, a, ch, scope) =>
-      renderComponent(compDef.components.get(tag), a, ch, scope, env, registry, errors)
+    slotContext: parentCtx,
+    renderComponent: (tag, a, ch, scope, parent) =>
+      renderComponent(compDef.components.get(tag), a, ch, scope, env, registry, errors, parent)
   }
   return wxml.renderChildren(compDef.ast, ctx)
 }
@@ -329,6 +331,8 @@ async function renderPage(spec) {
     error: (...a) => { errors.push('[console.error] ' + a.map(String).join(' ')) }
   }
   const env = createContext(consoleSink, spec.wxOverrides)
+  env.sandbox.getCurrentPages=()=>[{route:spec.route}]
+  env.componentDrive=spec.componentDrive
   const registry = {}
   const cssCollector = { list: [], done: new Set() }
 
@@ -378,8 +382,8 @@ async function renderPage(spec) {
       scope: inst.data,
       components,
       slots: null,
-      renderComponent: (tag, attrs, children, scope) =>
-        renderComponent(components.get(tag), attrs, children, scope, env, registry, errors)
+      renderComponent: (tag, attrs, children, scope, parent) =>
+        renderComponent(components.get(tag), attrs, children, scope, env, registry, errors, parent)
     })
   } catch (e) {
     errors.push('渲染异常: ' + (e && e.stack ? e.stack.split('\n').slice(0, 3).join(' | ') : e))

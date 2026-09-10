@@ -37,18 +37,10 @@ const HISTORY_LINES = [
 ]
 
 // 槽位（顺序即正确答案）：5 个年份节点（采风修订版精简）
-const SLOTS = [
-  { label: '1747' }, { label: '1760' }, { label: '1860' }, { label: '1861' }, { label: '2010' }
-]
+const SLOTS = require('../../config/tasks').s4_timeline_slots
 
 // 事件卡（托盘顺序刻意打乱）；target = 槽位下标
-const CARDS = [
-  { id: 'c2010', title: '雨果雕像落成', sub: '中法文化交流纪念', target: 4 },
-  { id: 'c1860', title: '英法联军火烧圆明园', sub: '一场劫火留下废墟', target: 2 },
-  { id: 'c1747', title: '西洋楼开始建造', sub: '营造由此开始', target: 0 },
-  { id: 'c1861', title: '雨果致巴特勒上尉的信', sub: '公开谴责这场掠夺', target: 3 },
-  { id: 'c1760', title: '早期核心景观基本形成', sub: '远瀛观等景观仍有增建', target: 1 }
-]
+const CARDS = require('../../config/tasks').s4_timeline_cards
 
 function buildCards(solved) {
   return CARDS.map((card) => {

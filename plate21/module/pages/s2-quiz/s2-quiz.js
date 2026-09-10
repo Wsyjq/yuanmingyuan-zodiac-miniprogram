@@ -2,6 +2,7 @@
 // 谜题 S2-1：固定答案 C（中秋皇家娱乐·迷宫灯会）；答错不锁，第二次错给排除提示。
 // 答对弹史料卡（卡片角落数字 2）。本页不是 S2 末题，不调 completeStation（由 s2-pattern 收口）。
 const session = require('../../store/session')
+const ANSWER=require('../../config/tasks').tasks['s2-purpose'].answer
 
 Page({
   data: {
@@ -35,12 +36,12 @@ Page({
     const { selected, options, attempts, solved } = this.data
     if (!selected || solved) return
 
-    if (selected === 'C') {
+    if (selected === ANSWER) {
       session.attemptPuzzle('s2-purpose', attempts + 1, true, 'tap')
       // 铜钉点亮（wxml 中由 solved 驱动）→ 史料卡弹出
       this.setData({ solved: true, hint: '', showHistory: true })
       // 收集黄花阵作用卡片角落数字 2 ——主线：卡片数字 → 日期密码
-      session.completePuzzle('s2-purpose', { answer: 'C', attempts: attempts + 1 }, { collectCard: true })
+      session.completePuzzle('s2-purpose', { answer: ANSWER, attempts: attempts + 1 }, { collectCard: true })
         .catch(function () { wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' }) })
       return
     }
@@ -65,7 +66,7 @@ Page({
   onNext() {
     if (this.data.advancing) return
     this.setData({ advancing: true, showHistory: false })
-    session.completePuzzle('s2-purpose', { answer: 'C', attempts: this.data.attempts || 1 }, {
+    session.completePuzzle('s2-purpose', { answer: ANSWER, attempts: this.data.attempts || 1 }, {
       collectCard: true,
       checkpoint: 's2-name'
     }).then(function () {
@@ -82,7 +83,7 @@ Page({
     const puzzle = session.getPuzzle('s2-purpose')
     this.setData({
       cardNumber: Number(session.getCardDigit('s2-purpose')),
-      selected: puzzle ? 'C' : '',
+      selected: puzzle ? ANSWER : '',
       solved: !!puzzle,
       showHistory: !!puzzle,
       attempts: Number(puzzle && puzzle.payload && puzzle.payload.attempts) || 0

@@ -32,6 +32,10 @@ Page({
     })
   },
 
+  onShow() { this.setData({ navigating: false }); const snap=session.getSnapshot(); if(snap)this.setData({hasRecord:this.hasProgress(snap),completed:this.isCompleted(snap)}) },
+
+  onJourney() { wx.navigateTo({url:"/plate21/module/pages/journey/journey"}) },
+
   // 快照中是否有任何完成记录或进行中的现场照片。
   hasProgress(snap) {
     if (!snap) return false

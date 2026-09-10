@@ -1,5 +1,8 @@
 <nav-back />
-<page-overlays />
+<page-overlays node-id="s4-timeline" />
+<challenge-gate node-id="s4-timeline">
+
+
 
 <!-- 站名叙事 + 引文卡 -->
 <view class="page page-shell paper-grain paper-real" wx:if="{{phase === 'novel'}}">
@@ -100,3 +103,5 @@
 />
 <task-banner icon="hand" text="拖动事件卡，或先点事件卡再点年份" visible="{{phase === 'puzzle' && !monologue && !showHistory}}" />
 <stamp-toast id="stamp" />
+
+</challenge-gate>

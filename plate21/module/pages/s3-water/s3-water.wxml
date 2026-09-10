@@ -1,5 +1,8 @@
 <nav-back />
-<page-overlays />
+<page-overlays node-id="s3-water" />
+<challenge-gate node-id="s3-water">
+
+
 <view class="page page-shell paper-grain paper-real">
   <view class="binder"></view>
   <view class="tag-no tag-no-fixed">No.S3-3</view>
@@ -56,3 +59,5 @@
   bind:next="onHistoryNext"
   bind:close="onCloseHistory"
 />
+
+</challenge-gate>

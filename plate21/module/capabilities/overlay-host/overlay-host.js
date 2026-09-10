@@ -1,44 +1,143 @@
-/**
- * page-overlays —— 页面级能力宿主。
- * 按 capabilities/registry 中登记的路由渲染对应悬浮入口（地图 / 语音导览），
- * 并订阅成就解锁事件弹印章 toast。页面只需在 wxml 加一行 <page-overlays />。
- */
 const registry = require('../registry')
 const achievements = require('../../store/achievements')
-
+const session = require('../../store/session')
+const config = require('../../config/experience')
+const audio = require('../../services/audio')
+const ui = require('../../services/ui')
 Component({
-  properties: {
-    // 可选：页面级导览站覆盖（如 transit 三段各有顺路站，由页面按 leg 传入）。
-    // 优先于 registry 静态配置；为空时回落 caps.audio。
-    audioStation: { type: String, value: '' }
-  },
-
+  properties: { audioStation:{type:String,value:''}, nodeId: { type: String, value: '' }, inline: {type:Boolean,value:false} },
   data: {
-    caps: { map: false, audio: null }
+    caps: { map: false, audio: null },
+    open: false,
+    node: null,
+    hint: 0,
+    sound: {},
+    busy: false,
+    quiet: false,
+    remaining: 120
   },
-
   lifetimes: {
     attached() {
       let route = ''
       try {
         const pages = getCurrentPages()
-        const current = pages && pages[pages.length - 1]
-        route = (current && current.route) || ''
+        route = pages[pages.length - 1].route
       } catch (e) {}
-      // registry 键为 'pages/xxx' 短路由；真机 route 形如 'plate21/module/pages/xxx'
-      const short = route.replace(/^\/?plate21\/module\//, '')
-      this.setData({ caps: registry.capabilitiesFor(short) })
-      achievements.onUnlock((rule) => {
-        const stamp = this.selectComponent('#achStamp')
-        if (stamp && stamp.show) stamp.show('成就 · ' + rule.title)
+      this.setData({
+        caps: registry.capabilitiesFor(route.replace(/^\/?plate21\/module\//, '')),
+        node: config.node(this.data.nodeId, ((session.getSnapshot() || {}).preferences || {}).mode)
       })
+      this._off = audio
+        .get()
+        .subscribe((sound) =>
+          this.setData({ sound, quiet: sound.quiet, remaining: sound.remaining })
+        )
+      this._offStamp = achievements.onUnlock((rule) => {
+        const c = this.selectComponent('#achStamp')
+        if (c && c.show) c.show('成就 · ' + rule.title)
+      })
+      this.enter()
+    },
+    detached() {
+      if (this._off) this._off()
+      if (this._offStamp) this._offStamp()
     }
   },
-
+  pageLifetimes: {
+    show() {
+      this.enter()
+    }
+  },
   methods: {
+    enter() {
+      if (this._entering) return
+      this._entering = true
+      const ready = session.getSnapshot()
+        ? Promise.resolve(session.getSnapshot())
+        : session.init({})
+      return ready
+        .then((s) => {
+          const node = config.node(this.data.nodeId, s.preferences.mode)
+          this.setData({ node })
+          if (node) {
+            audio.get().setStation(node.station)
+            return session.visit(node.id, 'visited')
+          }
+        })
+        .catch(ui.error)
+        .then(() => {
+          this._entering = false
+        })
+    },
+    toggle() {
+      this.setData({ open: !this.data.open })
+    },
+    close() {
+      this.setData({ open: false })
+    },
+    noop() {},
     onOpenMap() {
+      this.close()
       const drawer = this.selectComponent('#mapDrawer')
       if (drawer && drawer.open) drawer.open()
+    },
+    journey() {
+      ui.go('journey')
+    },
+    journal() {
+      ui.go('journal')
+    },
+    library() {
+      ui.go('library')
+    },
+    hint() {
+      this.setData({ hint: Math.min(2, this.data.hint + 1) })
+    },
+    advance(e) {
+      if (this.data.busy || !this.data.node) return
+      const n = config.next(this.data.node.id)
+      this.setData({ busy: true })
+      return session
+        .visit(this.data.node.id, e.currentTarget.dataset.status, n.id)
+        .then(
+          () =>
+            new Promise((resolve, reject) =>
+              wx.redirectTo({ url: config.route(n.id), success: resolve, fail: reject })
+            )
+        )
+        .catch(ui.error)
+        .then(() => this.setData({ busy: false }))
+    },
+    toggleBgm() {
+      audio.get().toggleBgm()
+    },
+    mute() {
+      audio.get().prefs({ muted: !this.data.sound.muted })
+    },
+    volume(e) {
+      audio.get().prefs({ volume: e.detail.value / 100 })
+    },
+    continuous(e) {
+      audio.get().prefs({ continuous: e.detail.value })
+    },
+    toggleVoice() {
+      if (this.data.sound.playing) audio.get().pause()
+      else audio.get().resume()
+    },
+    seek(e) {
+      audio.get().seek((this.data.sound.duration * e.detail.value) / 100)
+    },
+    retry() {
+      audio.get().retry()
+    },
+    retryBgm() {
+      audio.get().retryBgm()
+    },
+    startQuiet() {
+      audio.get().suspend('quiet')
+    },
+    endQuiet() {
+      audio.get().release('quiet')
     }
   }
 })

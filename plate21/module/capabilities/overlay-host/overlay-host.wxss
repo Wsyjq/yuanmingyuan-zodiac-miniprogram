@@ -1,21 +1,2 @@
-/* 页面级能力宿主：悬浮入口统一层 */
-.ov-fab {
-  position: fixed;
-  right: 26rpx;
-  z-index: 96;
-  width: 88rpx;
-  height: 88rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2rpx solid var(--brass);
-  border-radius: 50%;
-  background: rgba(244, 237, 220, 0.94);
-  box-shadow: 0 6rpx 18rpx rgba(70, 56, 42, 0.22);
-}
-.ov-fab image {
-  width: 44rpx;
-  height: 44rpx;
-}
-.ov-fab:active { transform: scale(0.94); }
-.ov-map { bottom: 224rpx; }
+.ov-tools{position:fixed;right:24rpx;bottom:220rpx;z-index:95;border:1rpx solid #aa9271;border-radius:8rpx;padding:16rpx 22rpx;font-size:24rpx;background:#f7f0e0;color:#493d2e;box-shadow:0 4rpx 18rpx #0002;}.ov-mask{position:fixed;inset:0;z-index:500;background:#0005;display:flex;align-items:flex-end;}.ov-sheet{box-sizing:border-box;width:100%;height:80vh;background:#f5eedf;border-radius:24rpx 24rpx 0 0;padding:32rpx 32rpx calc(48rpx + env(safe-area-inset-bottom));}.ov-heading{font-family:serif;font-size:34rpx;margin:24rpx 0;display:flex;justify-content:space-between;align-items:center;}.ov-sheet button{font-size:25rpx;padding:14rpx 18rpx;margin:12rpx 0;background:#e8ddc5;line-height:1.6;border:1rpx solid #cbbb98;}.ov-actions{display:flex;flex-wrap:wrap;gap:12rpx;}.ov-actions button{flex:1;min-width:170rpx;}.ov-copy{font-size:28rpx;line-height:1.9;margin:16rpx 0;}.ov-note{font-size:24rpx;line-height:1.8;color:#796d5b;}.ov-sheet switch{transform:scale(.8);vertical-align:middle;}
+.ov-tools.ov-inline{position:static;display:block;width:200rpx;margin:0 0 24rpx auto;box-shadow:none;}

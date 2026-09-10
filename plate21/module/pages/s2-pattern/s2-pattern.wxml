@@ -1,6 +1,9 @@
-<!-- 第二站 · 谜题4 墙体花纹观察（采风修订版，复古手账风） -->
 <nav-back />
-<page-overlays />
+<page-overlays node-id="s2-pattern" />
+<challenge-gate node-id="s2-pattern">
+<!-- 第二站 · 谜题4 墙体花纹观察（采风修订版，复古手账风） -->
+
+
 <view class="page page-shell paper-grain paper-real">
   <view class="binder"></view>
 
@@ -83,3 +86,5 @@
     bind:close="onCloseHistory"
   />
 </view>
+
+</challenge-gate>

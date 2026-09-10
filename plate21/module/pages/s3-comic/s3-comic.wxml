@@ -1,6 +1,9 @@
-<!-- P07 第三站 · 时辰漫画推理 -->
 <nav-back />
-<page-overlays />
+<page-overlays node-id="s3-hour" />
+<challenge-gate node-id="s3-hour">
+<!-- P07 第三站 · 时辰漫画推理 -->
+
+
 <view class="page page-shell paper-grain paper-real">
   <!-- v1.3.1 手账：左侧活页装订孔列（全站统一） -->
   <view class="binder"></view>
@@ -88,3 +91,5 @@
   bind:close="onCloseHistory"
 />
 <stamp-toast id="stamp" />
+
+</challenge-gate>

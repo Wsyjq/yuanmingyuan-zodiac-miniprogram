@@ -1,0 +1,7 @@
+<nav-back />
+<view class="fx-page page-shell paper-grain"><view class="fx-kicker">FIELD GUIDE · 行程</view><view class="fx-title">把时间留给现场</view><view class="fx-note">谜题可以跳过，也可以回头补做。按实际开放范围游览，定位或道具不可用时仍能继续。</view>
+<button class="fx-primary" bindtap="resume">继续上次 · {{resumeTitle}}</button><view class="fx-row"><button bindtap="journal">私人记录</button><button bindtap="library">资料阅读</button><button bindtap="echo">次日来信</button></view>
+<view class="fx-card"><view class="fx-card-title">参与方式</view><view class="fx-row"><button wx:for="{{modes}}" wx:key="id" data-id="{{item.id}}" class="{{mode === item.id ? 'fx-selected' : ''}}" bindtap="mode">{{item.title}}</button></view><view class="fx-note">偏好随存档保留。目前沿用共同内容，后续差异内容发布后在同一故事中切换。</view></view>
+<button wx:if="{{dev}}" bindtap="lab">开发配乐试听</button><view class="fx-error">{{error}}</view><view wx:for="{{nodes}}" wx:key="id" class="fx-card"><view class="fx-tag">{{item.status}}</view><view class="fx-card-title">{{item.title}}</view><view class="fx-note">{{item.action}}</view><button data-id="{{item.id}}" bindtap="go">{{item.status === '未访问' ? '前往体验' : '回看 / 继续'}}</button></view></view>
+
+<page-overlays />

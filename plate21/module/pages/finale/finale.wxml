@@ -120,7 +120,7 @@
       </view>
       <view class="sign-row">
         <text class="sign-label">版本号</text>
-        <text wx:if="{{signed}}" class="sign-value">{{editionNo ? '第 ' + editionNo + ' 版' : '第 — 版'}}</text>
+        <text wx:if="{{signed}}" class="sign-value">{{editionNo ? '第 ' + editionNo + ' 版' : '私人纪念'}}</text>
         <text wx:else class="sign-value dim">署名后领取</text>
       </view>
       <button wx:if="{{!signed}}" class="btn-seal sign-btn" bindtap="onSign" disabled="{{signing}}">{{signing ? '落款中……' : '署 名'}}</button>
@@ -129,3 +129,5 @@
   </view>
 
 </view>
+
+<page-overlays node-id="finale" />
