@@ -2,6 +2,7 @@ node_modules/
 **/node_modules/
 
 .zcode/
+.grok/
 .playwright-cli/
 .env
 .env.*
@@ -49,3 +50,8 @@ __pycache__/
 *.pyc
 .DS_Store
 Thumbs.db
+# pollux 项目记忆（private 档：整个目录不入库）
+.projectmem/
+/CLAUDE.md
+# BGM 音频本地生成（ComfyUI），不入库
+/bgm/
