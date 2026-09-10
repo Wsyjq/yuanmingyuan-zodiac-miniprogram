@@ -319,6 +319,38 @@
       {
         "value": "圆明园西洋楼遗址·拆字谜题构件考据.md",
         "type": "file"
+      },
+      {
+        "value": "bgm",
+        "type": "folder"
+      },
+      {
+        "value": ".projectmem",
+        "type": "folder"
+      },
+      {
+        "value": ".grok",
+        "type": "folder"
+      },
+      {
+        "value": ".mor",
+        "type": "folder"
+      },
+      {
+        "value": "CLAUDE.md",
+        "type": "file"
+      },
+      {
+        "value": "ps-debug.log",
+        "type": "file"
+      },
+      {
+        "value": "mor.poc.browser.py",
+        "type": "file"
+      },
+      {
+        "value": "mor.poc.config.js",
+        "type": "file"
       }
     ],
     "include": []
