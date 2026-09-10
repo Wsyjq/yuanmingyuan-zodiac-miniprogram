@@ -1,20 +1,19 @@
 /**
- * 复古档案手账阅读器：一段内容对应一张纸，文字整段落墨，支持点按与滑动翻页。
+ * 复古档案手账阅读器：每页打包约一屏字数的段落块（buildPages 分页），
+ * 文字整段落墨、块间级联显影，支持点按与滑动翻页。
  */
 const motion = require('../../utils/motion')
+const novelPages = require('../../utils/novel-pages')
 
 const REVEAL_MIN_MS = 520
 const REVEAL_MAX_MS = 1200
 const REVEAL_MS_PER_CHAR = 12
+const BLOCK_STAGGER_MS = 150
 const INTENT_SLOP = 10
 const FLICK_MIN_DISTANCE = 16
 
 function pageLabel(index) {
   return String(index + 1).padStart(2, '0')
-}
-
-function itemText(item) {
-  return String((item && item.text) || '')
 }
 
 Component({
@@ -41,13 +40,16 @@ Component({
     pageCount: 1,
     pageLabel: '01',
     countLabel: '01',
-    currentItem: {},
+    currentPage: [],
+    leadIndex: -1,
+    blockDelay: BLOCK_STAGGER_MS,
     revealDuration: REVEAL_MIN_MS,
     typing: false,
     showAll: false,
     turning: false,
     turnDirection: '',
-    turnItem: {},
+    turnPage: [],
+    turnLeadIndex: -1,
     turnPageLabel: '01',
     dragging: false,
     gestureArmed: false,
@@ -74,7 +76,7 @@ Component({
     _resetPages(value) {
       this._clearTimers()
       this._finished = false
-      this._pages = Array.isArray(value) && value.length ? value.slice() : [{ text: '' }]
+      this._pages = novelPages.buildPages(value)
       this.setData({
         pageIndex: 0,
         pageCount: this._pages.length,
@@ -93,25 +95,32 @@ Component({
     },
 
     _activatePage(index) {
-      const item = this._pages[index] || { text: '' }
-      const text = itemText(item)
-      const charCount = Array.from(text).length
+      const page = this._pages[index] || []
+      const charCount = page.reduce(function (sum, item) {
+        return item && item.image ? sum : sum + novelPages.textLength(item && item.text)
+      }, 0)
+      // 首个非图片、非引文块承担整页首字下沉
+      const leadIndex = page.findIndex(function (item) {
+        return item && !item.image && !item.quote
+      })
+      const staggerTotal = Math.max(0, page.length - 1) * BLOCK_STAGGER_MS
       const typing = charCount > 0 && !this._reducedMotion
       const revealDuration = Math.min(REVEAL_MAX_MS, Math.max(REVEAL_MIN_MS, charCount * REVEAL_MS_PER_CHAR))
       this._clearTypeTimer()
       this.setData({
         pageIndex: index,
         pageLabel: pageLabel(index),
-        currentItem: item,
+        currentPage: page,
+        leadIndex: leadIndex,
         revealDuration,
         typing,
         showAll: !typing,
         turning: false,
         turnDirection: '',
-        turnItem: {}
+        turnPage: []
       })
       if (typing) {
-        this._typeTimer = setTimeout(() => this._finishTyping(), revealDuration)
+        this._typeTimer = setTimeout(() => this._finishTyping(), revealDuration + staggerTotal)
       }
     },
 
@@ -129,16 +138,20 @@ Component({
         return
       }
       this._clearTypeTimer()
-      const targetItem = this._pages[targetIndex] || { text: '' }
+      const targetPage = this._pages[targetIndex] || []
       this.setData({
         pageIndex: targetIndex,
         pageLabel: pageLabel(targetIndex),
-        currentItem: targetItem,
+        currentPage: targetPage,
+        leadIndex: targetPage.findIndex(function (item) {
+          return item && !item.image && !item.quote
+        }),
         typing: false,
         showAll: false,
         turning: true,
         turnDirection: direction,
-        turnItem: this.data.currentItem,
+        turnPage: this.data.currentPage,
+        turnLeadIndex: this.data.leadIndex,
         turnPageLabel: pageLabel(this.data.pageIndex)
       })
       if (!startHapticDone) this._pulseHaptic('light')
