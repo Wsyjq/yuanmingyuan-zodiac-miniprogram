@@ -579,13 +579,17 @@ test('pattern conclusion walks out via the photo back, with no invented water me
     }
   })
 
-  // V2.1：纹样页贴墙后收尾走照片背面（1987/1989 + 第 4、5 号），手绘路线图退出主线
+  // V2.2：纹样举纸对照后收尾走照片背面（1987/1989 + 砌墙师傅台词里的四、五号），手绘路线图退出主线
   assert.deepEqual(result.errors, [])
   assert.equal(result.data.showFinale, true)
   assert.match(result.html, /照原图，复位/)
-  assert.match(result.html, /第四号和第五号/)
+  assert.match(result.html, /砌墙师傅/)
+  assert.match(result.html, /四号、五号/)
+  assert.match(result.html, /离墙近一点，看砖/)
   assert.doesNotMatch(result.html, /手绘路线图/)
   assert.doesNotMatch(result.html, /万字纹[^<]{0,30}(寓意|暗示).{0,10}水/)
+  // V2.2 红线：不触摸文物（页内不得再出现贴墙/摸墙类指引）
+  assert.doesNotMatch(result.html, /贴墙|贴到墙上|摸一摸|摸完墙/)
 })
 
 test('zodiac and water conclusions render explicit physical-prop handoffs', async () => {
@@ -714,4 +718,86 @@ test('report distinguishes album permission denial and exposes settings recovery
   assert.equal(result.data.canOpenAlbumSettings, true)
   assert.match(result.html, /打开权限设置/)
   assert.equal(opened, true)
+})
+
+// ===== V2.2 讲述版：人物对话层（旁白＋人声＋屏＋纸） =====
+
+test('waypoint xieqiqu renders the dual-channel musician dialogue (V2.2)', async () => {
+  const result = await renderPage({
+    route: 'plate21/module/pages/waypoint/waypoint',
+    query: { site: 'xieqiqu' },
+    settleMs: 10
+  })
+  assert.deepEqual(result.errors, [])
+  assert.match(result.html, /东厅乐师/)
+  assert.match(result.html, /西厅乐师/)
+  assert.match(result.html, /左声道/)
+  assert.match(result.html, /右声道/)
+  assert.match(result.html, /他要什么，就往园子里搬什么/)
+  assert.match(result.html, /听 · 本页讲述/)
+})
+
+test('waypoint xushuilou renders three voices without picking a side (V2.2)', async () => {
+  const result = await renderPage({
+    route: 'plate21/module/pages/waypoint/waypoint',
+    query: { site: 'xushuilou' },
+    settleMs: 10
+  })
+  assert.deepEqual(result.errors, [])
+  assert.match(result.html, /亲历当差/)
+  assert.match(result.html, /当地老人/)
+  assert.match(result.html, /念册子的/)
+  assert.match(result.html, /停两秒/)
+  assert.match(result.html, /没个准数/)
+})
+
+test('waypoint guanshuifa marks the Qianlong dialogue as artistic interpretation', async () => {
+  const result = await renderPage({
+    route: 'plate21/module/pages/waypoint/waypoint',
+    query: { site: 'guanshuifa' },
+    settleMs: 10
+  })
+  assert.deepEqual(result.errors, [])
+  assert.match(result.html, /乾隆/)
+  assert.match(result.html, /台词为艺术演绎/)
+  assert.match(result.html, /中国之大，何奇不有/)
+})
+
+test('s2-quiz followup plays the palace maid line from the painting (V2.2)', async () => {
+  const result = await renderPage({
+    route: 'plate21/module/pages/s2-quiz/s2-quiz',
+    settleMs: 10,
+    drive(instance) {
+      instance.onInput({ detail: { value: '中秋灯会' } })
+      instance.onConfirm()
+      instance.onCloseHistory()
+    }
+  })
+  assert.deepEqual(result.errors, [])
+  assert.match(result.html, /宫女/)
+  assert.match(result.html, /跑起来跑起来/)
+})
+
+test('s3-comic opens with Benoist framing the site as a clock, marked as interpretation', async () => {
+  const result = await renderPage({
+    route: 'plate21/module/pages/s3-comic/s3-comic',
+    settleMs: 10
+  })
+  assert.deepEqual(result.errors, [])
+  assert.match(result.html, /蒋友仁/)
+  assert.match(result.html, /这一片，是一座钟/)
+  assert.match(result.html, /台词为艺术演绎/)
+})
+
+test('s4-timeline lets the archivist speak for the first time (V2.2)', async () => {
+  const result = await renderPage({
+    route: 'plate21/module/pages/s4-timeline/s4-timeline',
+    settleMs: 10
+  })
+  assert.deepEqual(result.errors, [])
+  assert.match(result.html, /守档人/)
+  assert.match(result.html, /到这儿，才轮到我说话/)
+  // V2.2 红线：不再替游客编感受（旧稿「愣了一下」句已删）
+  assert.doesNotMatch(result.html, /愣了/)
+  assert.doesNotMatch(result.html, /还在水里/)
 })

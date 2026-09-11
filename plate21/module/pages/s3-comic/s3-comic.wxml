@@ -12,9 +12,11 @@
   </view>
 
   <view class="novel">
-    <view class="novel-p">海晏堂前，扇形水池早已干涸，池底只余裂纹与荒草。</view>
-    <view class="novel-p">阶前十二座石座残存，其上兽首不知所终——这里曾是一座以水报时的钟。</view>
+    <view class="novel-p">海晏堂到了。入口抄的那半句乾隆的话，到这儿才见着实物：废墟摊在低洼地里一路铺开，扇形水池干着，池底积着落叶；两侧本来各有一列兽首的石座，一侧还认得出一排，另一侧几乎平了。档案翻到这一页，画上十二个兽首一齐对着池子喷水。纸和地一比，差就出来了——画上喷，地上干；画上有兽首，地上只剩座。这一页的人声，是当年造水法的人。</view>
   </view>
+  <dialogue-block speaker="蒋友仁" text="我叫蒋友仁，法兰西人。万岁爷要西洋的水法，我们就把西洋的水，搬进了这座园子。这园子里的水法，经我的手。水法水法，人人都当它是看的。要我说，这一片，是一座钟。" clip-id="dlg-haiyantang-1" note="历史人物 · 台词为艺术演绎" />
+  <view class="novel"><view class="novel-p">钟？画上这十二尊，也不像光为了好看，倒像在轮着值班。第一件事，把这座钟的班次看明白——</view></view>
+  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" />
 
   <!-- 已授权 AI 四格漫画；下方文字编号保留非颜色线索。 -->
   <view class="comic-plate double-frame" role="img" aria-label="十二兽首按时辰喷水的四格推理漫画">
@@ -69,10 +71,12 @@
   </view>
 
   <view class="followup prop-card archive-sheet" wx:if="{{q2Done && !showHistory}}">
+    <dialogue-block speaker="蒋友仁" text="十二尊，一尊管一个时辰。子时鼠，丑时牛，照生肖往下排，哪一尊在喷，就是几时。正午轮到马，其余十一尊，陪它一齐喷一回。皇帝要的是准，我们给的是水。水，有时候不听话。" clip-id="dlg-haiyantang-2" note="历史人物 · 台词为艺术演绎" />
+    <view class="novel-p">原来是报时：喷泉就是钟面，看谁在喷，就知道现在几时。只是这座钟如今停了——池子干着，没有谁在等那一响。</view>
     <view class="physical-label archive-tab">下一件道具 · 七纹样转盘</view>
     <view class="q-title serif">取出实体七纹样转盘</view>
     <view class="archive-rule"></view>
-    <view class="q-sub">报时规律已经明确。资料袋里那只转盘，正好能继续核对十二兽首的去向。</view>
+    <view class="q-sub">第二件事，抬头看那排石座：座是空的，座身上的花纹倒还清楚，这一页配了一只转盘，转盘上也是这些纹。</view>
     <button class="btn-seal" bindtap="onNext" disabled="{{advancing}}">我已取出转盘，继续</button>
   </view>
 </view>

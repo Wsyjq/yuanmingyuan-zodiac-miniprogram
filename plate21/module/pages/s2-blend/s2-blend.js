@@ -6,6 +6,7 @@
 const session = require('../../store/session')
 const sessionDate = require('../../utils/session-date')
 const photoPipeline = require('../../utils/photo-pipeline')
+const audioSrc = require('../../utils/audio-src')
 
 const POINTS = [
   {
@@ -98,7 +99,8 @@ Page({
     done: false,
     readyNext: false,
     advancing: false,
-    dateLabel: formatDate()
+    dateLabel: formatDate(),
+    narrSrc: audioSrc.clip('narr-s2-blend')
   },
 
   onLoad() {

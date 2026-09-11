@@ -4,6 +4,7 @@
 const session = require('../../store/session')
 const sessionDate = require('../../utils/session-date')
 const motion = require('../../utils/motion')
+const audioSrc = require('../../utils/audio-src')
 
 const TYPE_LINES = [
   '考察报告生成中……',
@@ -31,7 +32,7 @@ const NOVEL_PARAGRAPHS = [
   { text: '拼好了。是一幅长卷的轮廓，铜版画的笔意，从迷宫的亭子一路排到这几根柱子。只是中间空着一大块。空白处印着四个很浅的字：此处待绘。' },
   { text: '路上翻过那些夹页的话，这时可以叠在长卷周围——谐奇趣的楼、养雀笼的门、线法画的雪山，细节会变厚。没翻过，轮廓和空白一样在。' },
   { text: '再把这一路划过的空栏摊开。对得上的，勾还在；对不上的，那几笔也还在。哪样多、哪样少，没有人替你算。' },
-  { text: '盯着那块空白看了很久，你才反应过来。从进门到现在，走过的地方都在这张纸的边上。中间空着的这一块，就是你站着的位置。', highlight: true },
+  { text: '看看中间那块空白——从进门到现在走过的地方，都在这张纸的边上。空着的这一块，就是你站着的位置。', highlight: true },
   { text: '剩下的，是你的名字，和今天的日期。' }
 ]
 
@@ -44,6 +45,7 @@ Page({
     layerCount: 0,        // 幕3 已落下的层数（1~5）
     caption: '',          // 幕3 点题短文案
     novel: NOVEL_PARAGRAPHS,
+    narrSrc: audioSrc.clip('narr-finale'),
     today: '',
     name: '',
     signing: false,

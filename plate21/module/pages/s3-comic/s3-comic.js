@@ -1,13 +1,16 @@
-// 第三站 · 谜题1 十二时辰漫画推理（采风修订版玩法）
-// 谜题 S3-1：两小问。小问一答案「马」（子鼠丑牛……午马）；
+// 第三站 · 海晏堂 对读一：十二时辰推理（V2.2 讲述版，骨架沿用 V2.1）
+// 对读 S3-1：两小问。小问一答案「马」（子鼠丑牛……午马）；
 // 小问二答案「午时」（正午十二兽首齐喷）。错 1 次轻晃，错 2 次高亮漫画前两格线索。
 // 史料卡：常规报时每时辰对应兽首轮流喷水；正午马首喷水其余十一首齐喷。
 // 卡片角落数字：会话锁定日期的月份第一位数字。
 // 本页不调 completeStation（S3 由 s3-water 收口）。
+// V2.2 新增：蒋友仁台词两段（开场立论「这一片是一座钟」＋揭晓班次），标艺术演绎。
 const session = require('../../store/session')
+const audioSrc = require('../../utils/audio-src')
 
 Page({
   data: {
+    narrSrc: audioSrc.clip('narr-s3-comic'),
     showHistory: false,
     cardNumber: 0,
     historyLines: [

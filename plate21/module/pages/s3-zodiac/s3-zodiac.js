@@ -1,5 +1,6 @@
 const session = require('../../store/session')
 const answers = require('../../utils/puzzle-answers')
+const audioSrc = require('../../utils/audio-src')
 
 const RETURNED = answers.RETURNED_ZODIAC
 const HISTORY_LINES = [
@@ -22,7 +23,8 @@ Page({
     solved: false,
     skipped: false,
     showHandoff: false,
-    advancing: false
+    advancing: false,
+    narrSrc: audioSrc.clip('narr-s3-zodiac')
   },
 
   onLoad() {

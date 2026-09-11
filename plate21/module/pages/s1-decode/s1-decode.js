@@ -3,6 +3,7 @@
 // 信的内容只在实体信纸上（正面＝信全文，背面＝上半截字），软件不重复呈现，本页只给引导与判定。
 // 判定：拼出「黄花阵」即过，不拍照、不提交；卡住才出提示。
 const session = require('../../store/session')
+const audioSrc = require('../../utils/audio-src')
 
 const ANSWER = '黄花阵'
 
@@ -10,6 +11,7 @@ const ANSWER = '黄花阵'
 
 Page({
   data: {
+    narrSrc: audioSrc.clip('narr-s1-decode'),
     stage: 'sealed', // sealed → reading → puzzle
     answerInput: '',
     attempts: 0,

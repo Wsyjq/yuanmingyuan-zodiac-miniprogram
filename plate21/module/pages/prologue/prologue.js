@@ -2,6 +2,7 @@
 // novel-view 叙事（你对西洋楼有兴趣 → 馆里的人请你来 → 档案翻一翻 → 闻有第二十一图，未见）
 // → 档案交接面板（信不拆，到门口再拆）→ 前往西洋楼入口（s1-decode 拆信读信）。
 const session = require('../../store/session')
+const audioSrc = require('../../utils/audio-src')
 
 Page({
   data: {
@@ -38,6 +39,7 @@ Page({
       '一份封套 · 写着「到像下拆」'
     ],
     showHandover: false,
+    narrSrc: audioSrc.clip('narr-prologue'),
     advancing: false
   },
 

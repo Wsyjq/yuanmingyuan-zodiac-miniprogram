@@ -14,6 +14,8 @@
       <view class="navi-caption">雨果雕像 · 项目 AI 叙事图</view>
     </view>
     <view class="para" wx:for="{{paragraphs}}" wx:key="index">{{item}}</view>
+    <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" />
+    <dialogue-block speaker="守档人" text="到这儿，才轮到我说话，前面几站我没跟着你。拆封套之前，先听我两句。里头除了信，还有几张写着年份的条子，是我从各处抄回来的。抄的时候是齐的，你倒出来就乱了。先把它们捋回各自的位置。年不捋顺，这封信你不知道该站在哪一年读。" clip-id="dlg-yugao-1" />
     <view class="quote-card">
       <view class="hatch-divider quote-line"></view>
       <view class="quote-text kaiti">{{quote}}</view>
@@ -82,13 +84,19 @@
   <!-- V2.1：时间轴可跳——跳过不发该卡，直接读信 -->
   <button wx:if="{{phase === 'puzzle' && !monologue && !showHistory}}" class="skip-btn note-hand olive" bindtap="onSkipTimeline">年份先不对了，直接读信</button>
 
-  <!-- 站尾：年对齐了再读信；四件东西卡自排不评分；开放问不给选项（V2.1） -->
+  <!-- 站尾：守档人串场——拆信读信；四件东西卡自排不评分；开放问不给选项（V2.2） -->
   <view class="mono" wx:if="{{monologue}}">
     <view class="mono-text kaiti" wx:for="{{monologueParagraphs}}" wx:key="index">{{item}}</view>
+    <dialogue-block speaker="守档人" text="对了。现在拆信。信我不念，他的字，你自己看。" clip-id="dlg-yugao-2" />
+    <view class="mono-text kaiti">把信抽出来，站在像底下读。这封信本来就不是写给你的，把它读完。</view>
+    <dialogue-block speaker="守档人" text="读完了？这信不是写给你的，你也不是第一个这么读完的。行了，信封底下还有东西。四张卡，是我这些年从别处抄回来的下落：石屏风，翻尾石鱼，七根石柱，还有一对铜鹿十只铜狗。怎么摆，你自己定，我不打分。" clip-id="dlg-yugao-3" />
     <view class="mono-relics-label note-hand olive">信封下面还压着四张卡片——东西们后来的下落。自己排一列，不排序、不评分：</view>
     <view class="mono-relic" wx:for="{{relicCards}}" wx:key="no"><text class="mono-relic-no">{{item.no}}</text><text class="mono-relic-text">{{item.text}}</text></view>
+    <dialogue-block speaker="守档人" text="问你一句：一样东西放在哪儿，才算被保住了？别急着答我，这题没有标准答案，至少我没有。包里那张明信片，正面是回来的那七根柱子，背面是空的。想写就写。投进那个信箱，下一个走到这儿的人会读到一张，就一张。不投，自己收着，也行。" clip-id="dlg-yugao-4" />
     <view class="mono-question kaiti">{{openQuestion}}</view>
     <view class="mono-question-note">不给选项，不投票，不点评。想，和同行的人吵，什么都不想直接走，都不影响后面。</view>
+    <view class="mono-text kaiti">到这儿，八张写着数字的卡片到齐了，档案夹里的三张残片也都收在格子里，中间那块，还空着。</view>
+    <dialogue-block speaker="守档人" text="行了。就地摊开吧。" clip-id="dlg-yugao-5" />
     <view wx:if="{{saveError}}" class="hint">{{saveError}}</view>
     <button class="btn-seal" bindtap="goReport" disabled="{{advancing}}">{{advancing ? '正在保存……' : '就地摊开档案'}}</button>
   </view>

@@ -1,0 +1,47 @@
+/* audio-clip：墨线小播放条，与档案手账风格同源 */
+.ac-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 14rpx;
+  padding: 6rpx 0;
+}
+
+.ac-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  margin: 0;
+  padding: 6rpx 18rpx;
+  background: transparent;
+  border: 2rpx solid rgba(74, 64, 46, 0.55);
+  border-radius: 999rpx;
+  line-height: 1.5;
+  font-size: 24rpx;
+  color: #4a402e;
+}
+
+.ac-btn::after { border: none; }
+
+.ac-icon {
+  width: 26rpx;
+  height: 26rpx;
+  opacity: 0.75;
+}
+
+.ac-label { letter-spacing: 2rpx; }
+
+.ac-track {
+  width: 120rpx;
+  height: 4rpx;
+  background: rgba(74, 64, 46, 0.18);
+  border-radius: 2rpx;
+  overflow: hidden;
+}
+
+.ac-compact .ac-track { display: none; }
+
+.ac-track-fill {
+  height: 100%;
+  background: rgba(74, 64, 46, 0.6);
+  border-radius: 2rpx;
+}

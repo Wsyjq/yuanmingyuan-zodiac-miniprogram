@@ -1,0 +1,8 @@
+<!-- 语音播放条：src 为空/出错即整体隐藏（文稿阅读态不受影响） -->
+<view wx:if="{{src && !failed}}" class="ac-wrap {{compact ? 'ac-compact' : ''}}">
+  <button class="ac-btn" bindtap="onToggle" aria-label="{{label}}">
+    <image class="ac-icon" src="/plate21/module/assets/img/icons/ic-play-ink.png" mode="aspectFit" />
+    <text class="ac-label">{{playing ? '暂停' : label}}</text>
+  </button>
+  <view class="ac-track"><view class="ac-track-fill" style="width: {{progress}}%;"></view></view>
+</view>

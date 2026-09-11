@@ -3,9 +3,11 @@
 // 校验口径：会话锁定日期 YYYYMMDD；跳过通道与答对通道都完成第四站并进入 finale。
 const session = require('../../store/session')
 const sessionDate = require('../../utils/session-date')
+const audioSrc = require('../../utils/audio-src')
 
 Page({
   data: {
+    narrSrc: audioSrc.clip('narr-s4-password'),
     pwd: '',
     attempts: 0,
     showHint: false,

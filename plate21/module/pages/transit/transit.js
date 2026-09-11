@@ -17,7 +17,7 @@ const LEGS = {
       {
         key: 'xieqiqu',
         title: '谐奇趣',
-        hook: '去迷宫的路上会先经过西洋楼的第一座殿。路过能翻就翻，不翻也行。',
+        hook: '去迷宫的路上会先经过西洋楼的第一座殿。档案里最早的那页图，就是从那儿起稿的。路过能翻就翻。不翻也行。',
         url: '/plate21/module/pages/waypoint/waypoint?site=xieqiqu'
       }
     ],

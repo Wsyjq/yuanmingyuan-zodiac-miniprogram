@@ -1,11 +1,13 @@
-// 第二站 · 黄花阵 对读四：纹样页贴墙（V2.1 可用稿）
-// 玩法：把纹样页贴到墙上一处一处比，对上的那张就是万字纹（另三种墙上没有）。
-// 不是四选一测验——判定靠实物贴墙自校验，小程序只收「我认出了」；可跳过（跳过不发该卡）。
+// 第二站 · 黄花阵 对读四：纹样举纸对照（V2.2 讲述版，骨架沿用 V2.1）
+// 玩法：这一路的墙上都是同一种花纹，手里那页印着四种纹样图样——举纸对照，
+// 走向对上的那张就是万字纹（另三种墙上没有）。红线：举纸不贴墙。
+// 不是四选一测验——判定靠实物对照自校验，小程序只收「我认出了」；可跳过（跳过不发该卡）。
 // 卡片角落数字：6（年4=6）。
-// 收尾（不可跳）：翻照片背面「照原图，复位。1987、1989」＋摸墙验砖＋补的是第 4、5 号 → 记进空栏。
+// 收尾（不可跳）：翻照片背面「照原图，复位。1987、1989」＋离墙看砖＋砌墙师傅台词＋补的是四、五号 → 记进空栏。
 // 之后以原子命令完成第二站，转场走干池（transit s2-s3），不再依赖任何纹样「谜底」。
 const session = require('../../store/session')
 const sessionDate = require('../../utils/session-date')
+const audioSrc = require('../../utils/audio-src')
 
 // 四种候选纹样使用项目方确认可商用的 AI 图片衍生文件。
 const PATTERNS = [
@@ -20,19 +22,21 @@ const HISTORY_LINES = [
   '档案里这一页印了四种图样；这一路墙上反复出现的，只有其中一种。'
 ]
 
-// 收尾叙事（V2.1 可用稿 §第二站，图序按核对详本：黄花阵=第 4、5 幅）
-const FINALE_PARAGRAPHS = [
-  '这时再把那张照片翻过来。背面一行钢笔字：照原图，复位。1987 年、1989 年。',
-  '原来刚才在里面走错又退回来的那道墙，是一九八几年的人照着档案里这一幅画，一块砖一块砖重新砌起来的。摸一摸就知道，砖是新的，砖缝是新的，两百年前的墙不会这么齐。这行字你早读过，摸完墙，它才跟眼前的东西对上。',
-  '站一会儿，会算出另一件事。他们照着画补回来的，是画黄花阵的那两号，第四号和第五号。就算二十号全照着砌回地上，排在第二十一的那张，还是没有人画。',
-  '把这一笔记进空栏：对得上，但不是要找的那一页。',
-  '砌墙的人是在干活，没想替谁圆梦。不过要不是这道墙，今天谁也走不进这座迷宫，包括你。走错的那几条路，退回来就好。'
+// 收尾叙事（V2.2 §第二站：看砖不摸墙，砌墙师傅是这一页的第二个人声）
+const FINALE_LEAD = [
+  '都对完了，还有最后一件事，也是这一页真正的分量：把那张照片翻过来。背面一行钢笔字——'
+]
+const FINALE_QUOTE = '照原图，复位。1987、1989。'
+const FINALE_BRIDGE = '这行字什么意思？离墙近一点，看砖。砖是新的，砖缝是新的，两百年前的墙不会这么齐。这一页的人声也换了个人，年纪近得多。'
+const FINALE_TAIL = [
+  '字看过了，砖也看了，这行字才跟眼前的东西对上：刚才走过的这座阵，是一九八几年的人，照着两百年前的一幅画，一块砖一块砖砌回来的。他们砌的是画黄花阵的那两号——就算二十号全照着砌回地上，要找的那一页，还是没有人画。',
+  '这一笔记进空栏：对得上，但不是要找的那一页。砌墙的人是在干活；要不是这道墙，今天谁也走不进这座迷宫。从迷宫出来往东，地势塌下去一块，露出一口干池子，画上的喷泉还在喷，池子是干的——那是下一页的事。'
 ]
 
 Page({
   data: {
     patterns: PATTERNS,
-    picked: null,       // 贴墙比对后认出的 key
+    picked: null,       // 举纸对照后认出的 key
     attempts: 0,
     nudge: '',
     showHistory: false,
@@ -42,7 +46,13 @@ Page({
     solved: false,
     skipped: false,
     showFinale: false,
-    finaleParagraphs: FINALE_PARAGRAPHS,
+    finaleLead: FINALE_LEAD,
+    finaleQuote: FINALE_QUOTE,
+    finaleBridge: FINALE_BRIDGE,
+    finaleTail: FINALE_TAIL,
+    masonClip: audioSrc.clip('dlg-huanghuazhen-5'),
+    bricklayerClip: audioSrc.clip('dlg-huanghuazhen-6'),
+    narrSrc: audioSrc.clip('narr-s2-pattern'),
     advancing: false,
     today: ''           // 会话锁定日期（日期章用，跨午夜不变化）
   },
@@ -74,7 +84,7 @@ Page({
     this.setData({ picked: e.currentTarget.dataset.key, nudge: '' })
   },
 
-  // 我认出了：贴墙吻合即自校验。认成另三种时只轻推回去再比，不判错不锁。
+  // 我认出了：举纸对照走向吻合即自校验。认成另三种时只轻推回去再比，不判错不锁。
   onConfirm() {
     if (!this.data.picked || this.data.solved || this.data.skipped) return
     const right = PATTERNS.find((p) => p.key === this.data.picked).correct
@@ -88,7 +98,7 @@ Page({
       session.attemptPuzzle('s2-pattern', attempts, false, 'tap')
       this.setData({
         attempts: attempts,
-        nudge: '这一路摸过来的纹，好像不是这张。把纸再贴到墙上比一比——另几种，墙上没有。'
+        nudge: '纹的走向好像不是这张。把纸举起来再比一比——另几种，墙上没有。'
       })
     }
   },

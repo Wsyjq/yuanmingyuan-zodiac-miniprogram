@@ -55,6 +55,22 @@
   line-height: 1.9;
   color: var(--ink);
 }
+/* 纸·实物铭文引文（V2.2 四声部之「纸」）：档案页上本来就有的字 */
+.wp-quote {
+  margin: 14rpx 18rpx 6rpx;
+  padding: 12rpx 20rpx;
+  font-size: 26rpx;
+  line-height: 1.85;
+  color: var(--ink);
+  border-left: 4rpx solid rgba(70, 56, 42, 0.35);
+  background: rgba(255, 252, 243, 0.6);
+}
+/* 舞台与操作指示（括号小字）：看得见，不进音频 */
+.wp-stage {
+  margin: 6rpx 4rpx 0 18rpx;
+  font-size: 22rpx;
+  color: rgba(70, 56, 42, 0.66);
+}
 .wp-confirm {
   margin-top: 18rpx;
 }

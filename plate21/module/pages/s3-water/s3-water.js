@@ -1,5 +1,6 @@
 const session = require('../../store/session')
 const answers = require('../../utils/puzzle-answers')
+const audioSrc = require('../../utils/audio-src')
 
 const HISTORY_LINES = [
   '马首铜像曾流失海外，后由澳门爱国企业家何鸿燊先生出资购回。',
@@ -22,7 +23,8 @@ Page({
     solved: false,
     skipped: false,
     showHandoff: false,
-    advancing: false
+    advancing: false,
+    narrSrc: audioSrc.clip('narr-s3-water')
   },
 
   onLoad() {

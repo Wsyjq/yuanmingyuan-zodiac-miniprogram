@@ -1,4 +1,4 @@
-<!-- 第二站 · 黄花阵 对读四：纹样页贴墙（V2.1，贴墙自校验 + 可跳） -->
+<!-- 第二站 · 黄花阵 对读四：纹样举纸对照（V2.2 讲述版，举纸不贴墙 + 可跳） -->
 <nav-back />
 <page-overlays />
 <view class="page page-shell paper-grain paper-real">
@@ -10,9 +10,11 @@
   <image class="sticker-stamp" src="/plate21/module/assets/img/stickers/st-stamp-02.png" mode="aspectFit" />
 
   <!-- ============ 标题区 ============ -->
-  <view class="title serif">纹样页贴墙</view>
+  <view class="title serif">纹样举纸对照</view>
   <view class="hatch-divider title-div"></view>
-  <view class="lead kaiti">出亭子的时候，手还搭在墙上。档案里另有一页，印着四种花纹图样——把纸贴到墙上一处一处比，这一路摸过来的，正是其中的一种。</view>
+  <view class="lead kaiti">出亭子顺墙走。这一路的墙上都是同一种花纹，手里那页正好印着四种纹样图样，第四件事，举纸对照：哪种和墙上的纹对得上，就是这一路看到的纹。</view>
+  <dialogue-block speaker="造办处匠人" text="四种花样，举到墙跟前比，别贴着。哪个的走向和墙上的对得上，就是它。" clip-id="dlg-huanghuazhen-5" />
+  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" />
 
   <!-- ============ 主图区（4 花纹格子）============ -->
   <view class="grid" wx:if="{{!solved && !skipped}}">
@@ -49,7 +51,7 @@
     <view class="note-hand date-note">考察记录 · 第二站</view>
   </view>
 
-  <!-- ============ 操作区：贴墙比对后「我认出了」；可跳 ============ -->
+  <!-- ============ 操作区：举纸对照后「我认出了」；可跳 ============ -->
   <block wx:if="{{!solved && !skipped}}">
     <button
       class="btn-seal {{!picked ? 'btn-disabled' : ''}}"
@@ -59,9 +61,13 @@
     <button class="skip-btn note-hand olive" bindtap="onSkip">先不认，往下走</button>
   </block>
 
-  <!-- ============ 收尾：翻照片背面（V2.1，不可跳的两下之一）============ -->
+  <!-- ============ 收尾：翻照片背面（V2.2：看砖＋砌墙师傅，不可跳）============ -->
   <view wx:if="{{showFinale}}" class="reveal-block">
-    <view class="novel-p" wx:for="{{finaleParagraphs}}" wx:key="index">{{item}}</view>
+    <view class="novel-p" wx:for="{{finaleLead}}" wx:key="index">{{item}}</view>
+    <view class="paper-quote kaiti">{{finaleQuote}}</view>
+    <view class="novel-p">{{finaleBridge}}</view>
+    <dialogue-block speaker="砌墙师傅" text="我八七年进的场。那会儿这儿就是一片土坡子，墙影子都看不真。图？图就你们夹子里那张，我们对着它放的线。砖是新的，砖缝也新，你别嫌。不照着图把它砌回来，你今天进都进不来。八九年，又收了一回尾。画这阵的，就占两号，四号、五号，我们砌回来的，也就这两号。再往下，没派给我们。" clip-id="dlg-huanghuazhen-6" />
+    <view class="novel-p" wx:for="{{finaleTail}}" wx:key="index">{{item}}</view>
     <button class="btn-seal" bindtap="onGoS3" disabled="{{advancing}}">{{advancing ? '正在保存……' : '出迷宫，往东'}}</button>
   </view>
 

@@ -8,6 +8,7 @@
     finish-text="翻完这一册档案"
     bind:finish="onNovelFinish"
   />
+  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 序章讲述" />
 
   <!-- 叙事结束：档案交接清点。信不拆——到遗址门口再拆（V2.1）。 -->
   <view wx:if="{{showHandover}}" class="pack">

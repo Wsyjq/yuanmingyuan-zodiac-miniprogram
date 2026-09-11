@@ -1,8 +1,10 @@
-// 第二站 · 黄花阵 对读一：灯戏图对空墙（V2.1 可用稿）
+// 第二站 · 黄花阵 对读一：灯戏图对空墙（V2.2 讲述版，骨架沿用 V2.1）
 // 玩法：先对墙（画上墙的走向和眼前对得上）→ 再对人（画上有人、地上没有）。
 // 开放作答，命中「中秋／灯／宫女／玩／赏」任一即过；可跳过（跳过不发该卡）。
 // 答对弹史料卡（卡片角落数字 2，年1=2）。本页不是 S2 末题，不调 completeStation（由 s2-pattern 收口）。
+// V2.2 新增：揭晓后画里传来宫女台词（dlg-huanghuazhen-1）。
 const session = require('../../store/session')
+const audioSrc = require('../../utils/audio-src')
 
 const KEYWORDS = ['中秋', '灯', '宫女', '玩', '赏']
 
@@ -18,6 +20,7 @@ Page({
     cardNumber: 2,
     followup: false,
     advancing: false,
+    narrSrc: audioSrc.clip('narr-s2-quiz'),
     historyLines: [
       '中秋夜，皇帝坐阵心凉亭，宫女跑阵，先到有赏。',
       '画上提灯往中心亭跑的人群，就是灯会本身。'

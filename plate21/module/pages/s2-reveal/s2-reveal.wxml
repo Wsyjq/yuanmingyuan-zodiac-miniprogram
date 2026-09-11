@@ -1,12 +1,13 @@
-<!-- 第二站 · 谜题2 黄花阵名字由来（采风修订版：文字输入） -->
+<!-- 第二站 · 黄花阵 对读二：黄花从灯上来（V2.2 讲述版，文字输入可跳） -->
 <nav-back />
 <page-overlays />
 <view class="page page-shell paper-grain paper-real">
   <view class="binder"></view>
   <view class="tag-no tag-no-fixed">No.S2-2</view>
 
-  <view class="title serif">黄花阵名字由来</view>
-  <view class="lead kaiti">这又不是游乐场，修什么迷宫啊？好嘛，这下不出门就有游乐场了。可是这又和「黄花」有什么关系呢？</view>
+  <view class="title serif">黄花，从灯上来</view>
+  <view class="lead kaiti">画上跑阵的人手里都提着一盏灯，灯是黄的。这地方又叫黄花阵——「黄花」两个字，是不是打灯上来的？</view>
+  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" />
 
   <!-- 已授权 AI 参考图：宫女手持黄色彩绸莲花灯 -->
   <view class="ref-img">
@@ -29,9 +30,9 @@
   <view wx:if="{{hint}}" class="hint">{{hint}}</view>
 
   <view wx:if="{{solved && !showHistory}}" class="followup double-frame">
-    <view wx:if="{{!skipped}}" class="kaiti">答案已经收入考察记录：黄色彩绸扎成的莲花灯。</view>
-    <view wx:else class="kaiti">是黄绸扎的莲花灯。名字就是从这灯上来的。</view>
-    <button class="btn-seal" bindtap="onNext">继续现场观察</button>
+    <dialogue-block speaker="宫女" text="今年的灯，黄绸扎的莲花，一人一盏。点亮了，满阵都是黄的。管事的说，这阵就叫黄花阵。" clip-id="dlg-huanghuazhen-2" />
+    <view class="kaiti">名字就是从灯上来的。画上看不出迷宫难不难走，中心亭就在那边，路得自己用脚找；这一页配了张俯视卡，墙印上了，路是空的。拿着卡进阵，走错了就退回来，人站到中心亭，这一段就算完。</view>
+    <button class="btn-seal" bindtap="onNext">拿俯视卡，进阵</button>
   </view>
 
   <history-card
