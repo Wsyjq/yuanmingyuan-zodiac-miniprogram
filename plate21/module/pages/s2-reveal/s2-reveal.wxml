@@ -24,11 +24,13 @@
       bindconfirm="onSubmit"
     />
     <button class="btn-seal ans-btn" bindtap="onSubmit">提 交</button>
+    <button class="skip-btn note-hand olive" bindtap="onSkip">先不猜，往下走</button>
   </view>
   <view wx:if="{{hint}}" class="hint">{{hint}}</view>
 
   <view wx:if="{{solved && !showHistory}}" class="followup double-frame">
-    <view class="kaiti">答案已经收入考察记录：黄色彩绸扎成的莲花灯。</view>
+    <view wx:if="{{!skipped}}" class="kaiti">答案已经收入考察记录：黄色彩绸扎成的莲花灯。</view>
+    <view wx:else class="kaiti">是黄绸扎的莲花灯。名字就是从这灯上来的。</view>
     <button class="btn-seal" bindtap="onNext">继续现场观察</button>
   </view>
 

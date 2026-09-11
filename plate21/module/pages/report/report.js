@@ -1,11 +1,8 @@
 // P15 考察报告（成果页）：第 21 图成品展示 + 保存相册 + 拓印提示
+// 定格口径（V2.1）：《西洋楼铜版图·第二十一图》/ 今日对读。非馆藏原件。/ 绘制者 / 绘制时间。
 const session = require('../../store/session')
 const fieldRecord = require('../../store/field-record')
 const sessionDate = require('../../utils/session-date')
-
-function editionText(no) {
-  return no ? '第 ' + no + ' 版' : '第 — 版'
-}
 
 // 离屏画布逻辑尺寸（导出分辨率基准，与屏幕 rpx 无关）
 const CW = 700
@@ -15,8 +12,7 @@ const REPORT_PLATE_SRC = '/plate21/module/assets/img/IMG-RUNTIME-PLATE.jpg'
 Page({
   data: {
     name: '',
-    editionNo: null,
-    editionLabel: '第 — 版',
+    editionLabel: '今日对读',
     today: '',
     showRubbing: false,
     saving: false,
@@ -48,15 +44,13 @@ Page({
   refreshSnapshot() {
     const snap = session.getSnapshot() || {}
     const flags = snap.flags || {}
-    const no = snap.editionNo || null
     const fieldPhotos = fieldRecord.photosFromSnapshot(snap)
     const todayKey = sessionDate.dateKeyFromTimestamp(Date.now())
     const sessionDay = sessionDate.isValidDateKey(snap.sessionDate) ? snap.sessionDate : todayKey
     const finale = !!snap.finale
     this.setData({
       name: snap.name || '无名氏',
-      editionNo: no,
-      editionLabel: editionText(no),
+      editionLabel: '今日对读',
       today: sessionDate.formatDateKey(snap.sessionDate),
       collected: !!flags.collectedReport,
       completed: !!flags.experienceCompletedAt,
@@ -120,8 +114,8 @@ Page({
               success: () => {
                 this.setData({ saving: false, saveError: '', canOpenAlbumSettings: false })
                 wx.showToast({ title: '已保存到相册', icon: 'none' })
-                session.saveMedia({ type: 'report', image: { filePath: r.tempFilePath }, meta: { editionNo: this.data.editionNo } })
-                session.emit({ name: 'report_saved', destination: 'album', success: true, editionNo: this.data.editionNo })
+                session.saveMedia({ type: 'report', image: { filePath: r.tempFilePath }, meta: { editionLabel: this.data.editionLabel } })
+                session.emit({ name: 'report_saved', destination: 'album', success: true, editionLabel: this.data.editionLabel })
               },
               fail: (error) => this.setSaveFailure('album', error)
             })
@@ -173,7 +167,7 @@ Page({
     ctx.textAlign = 'center'
     ctx.font = '700 30px STSong, SimSun, serif'
     ctx.fillText('西洋楼铜版图·第二十一图', CW / 2, 84)
-    // L1 题跋横条
+    // L1 题跋横条（V2.1 副行：今日对读，非馆藏原件）
     ctx.fillStyle = '#EBE1CB'
     ctx.strokeStyle = '#46382A'
     ctx.lineWidth = 1
@@ -181,8 +175,7 @@ Page({
     ctx.strokeRect(50, 110, CW - 100, 60)
     ctx.fillStyle = '#46382A'
     ctx.font = '15px STKaiti, KaiTi, serif'
-    ctx.fillText('前二十幅记录建成，此幅记录后来', CW / 2, 134)
-    ctx.fillText('——刻版人的线，砌墙人的照片，你的勾。', CW / 2, 156)
+    ctx.fillText('今日对读。非馆藏原件。', CW / 2, 145)
 
     const loadImage = (src) => new Promise((resolve) => {
       if (!src || !canvas || typeof canvas.createImage !== 'function') return resolve(null)
@@ -348,15 +341,15 @@ Page({
     ctx.textAlign = 'right'
     ctx.fillStyle = '#46382A'
     ctx.font = '18px STKaiti, KaiTi, serif'
-    ctx.fillText('1747 —— 本次考察', CW - 82, 540)
+    ctx.fillText('绘制者：' + name, CW - 82, 540)
     ctx.fillStyle = '#A63A2E'
     ctx.font = '22px STKaiti, KaiTi, serif'
-    ctx.fillText(name, CW - 82, 572)
+    ctx.fillText('今日对读', CW - 82, 572)
 
     ctx.textAlign = 'center'
     ctx.fillStyle = '#8A7A60'
     ctx.font = '14px sans-serif'
-    ctx.fillText('绘制时间：' + this.data.today + '    ' + this.data.editionLabel, CW / 2, 1078)
+    ctx.fillText('绘制时间：' + this.data.today, CW / 2, 1078)
   },
 
   // 「收入考察手册」INT-202：真正写入 session，handbook 据此显示缩略

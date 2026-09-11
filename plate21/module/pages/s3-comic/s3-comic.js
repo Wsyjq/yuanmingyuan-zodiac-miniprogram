@@ -33,6 +33,7 @@ Page({
     q2Done: false,
     clue: false,
     shakeKey: '',
+    skipped: false,
     advancing: false
   },
 
@@ -42,6 +43,15 @@ Page({
 
   onHistoryNext() {
     this.setData({ showHistory: false })
+  },
+
+  // V2.1 对读一可跳：跳过不发该卡，下一拍（转盘）照常展开。
+  onSkip() {
+    if (this.data.q1Done) return
+    this.setData({ skipped: true, q1Done: true, q2Done: true, clue: false })
+    session.attemptPuzzle('s3-hour', this.data.q1Attempts + this.data.q2Attempts, true, 'skip')
+    session.completePuzzle('s3-hour', { action: 'skipped', attempts: this.data.q1Attempts + this.data.q2Attempts })
+      .catch(function () { /* 进度失败不阻断浏览 */ })
   },
 
   onQ1(e) {
@@ -95,7 +105,7 @@ Page({
     session.completePuzzle('s3-hour', {
       answer: { zodiac: '马', hour: '午时' },
       attempts: this.data.q1Attempts + this.data.q2Attempts + 2
-    }, { collectCard: true, checkpoint: 's3-zodiac' }).then(function () {
+    }, { collectCard: !this.data.skipped, checkpoint: 's3-zodiac' }).then(function () {
       wx.redirectTo({ url: '/plate21/module/pages/s3-zodiac/s3-zodiac' })
     }).catch(() => {
       this.setData({ advancing: false })
@@ -107,13 +117,15 @@ Page({
     this._timers = []
     session.viewPuzzle('s3-hour')
     const puzzle = session.getPuzzle('s3-hour')
+    const skipped = !!(puzzle && puzzle.payload && puzzle.payload.action === 'skipped')
     this.setData({
       cardNumber: Number(session.getCardDigit('s3-hour')),
       q1Done: !!puzzle,
       q2Done: !!puzzle,
-      q1Selected: puzzle ? '马' : '',
-      q2Selected: puzzle ? '午时' : '',
-      showHistory: !!puzzle
+      skipped: skipped,
+      q1Selected: puzzle && !skipped ? '马' : '',
+      q2Selected: puzzle && !skipped ? '午时' : '',
+      showHistory: !!puzzle && !skipped
     })
   },
 

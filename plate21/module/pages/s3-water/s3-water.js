@@ -20,6 +20,7 @@ Page({
     cardNumber: 0,
     operated: false,
     solved: false,
+    skipped: false,
     showHandoff: false,
     advancing: false
   },
@@ -27,12 +28,15 @@ Page({
   onLoad() {
     session.viewPuzzle('s3-water')
     const puzzle = session.getPuzzle('s3-water')
+    const skipped = !!(puzzle && puzzle.payload && puzzle.payload.action === 'skipped')
     this.setData({
       cardNumber: Number(session.getCardDigit('s3-water')),
       operated: !!puzzle,
       solved: !!puzzle,
-      showHistory: !!puzzle,
-      answerInput: puzzle ? '马首' : '',
+      skipped: skipped,
+      showHistory: !!puzzle && !skipped,
+      showHandoff: skipped,
+      answerInput: puzzle && !skipped ? '马首' : '',
       attempts: Number(puzzle && puzzle.payload && puzzle.payload.attempts) || 0
     })
   },
@@ -83,11 +87,20 @@ Page({
     this.setData({ showHistory: false, showHandoff: this.data.solved })
   },
 
+  // V2.1 对读三可跳：跳过不发该卡，收尾照常（往东=大水法，不预告雨果）。
+  onSkip() {
+    if (this.data.solved || this.data.skipped) return
+    this.setData({ skipped: true, solved: true, showHistory: false, showHandoff: true })
+    session.attemptPuzzle('s3-water', this.data.attempts, true, 'skip')
+    session.completePuzzle('s3-water', { action: 'skipped', attempts: this.data.attempts })
+      .catch(function () { /* 进度失败不阻断浏览 */ })
+  },
+
   onNext() {
     if (this.data.advancing) return
     this.setData({ advancing: true })
     session.completePuzzle('s3-water', { answer: '马首', attempts: this.data.attempts || 1 }, {
-      collectCard: true,
+      collectCard: !this.data.skipped,
       station: 's3',
       checkpoint: 's4-timeline'
     })

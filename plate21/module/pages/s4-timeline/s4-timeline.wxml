@@ -19,7 +19,7 @@
       <view class="quote-text kaiti">{{quote}}</view>
       <view class="hatch-divider quote-line"></view>
     </view>
-    <view class="note-hand navi-note" style="transform: rotate(1.5deg)">此信写于劫火之后一年，字字带火。</view>
+    <view class="note-hand navi-note" style="transform: rotate(1.5deg)">先把年份对齐，再读信。</view>
   </scroll-view>
   <view class="navi-footer">
     <button class="btn-seal" bindtap="onNovelFinish">继续</button>
@@ -35,7 +35,7 @@
   <view class="subtitle">把事件卡拖回它发生的那一年（可左右拖动时间轴）</view>
   <!-- v1.3.1 手账：邮戳贴纸压在编号签下方页边（不扰时间轴拖拽） -->
   <image class="tl-postmark" src="/plate21/module/assets/img/stickers/st-postmark-02.png" mode="aspectFit" />
-  <view class="note-hand olive tl-note" style="transform: rotate(-1deg)">一八六零年十月，一炬成灰。</view>
+  <view class="note-hand olive tl-note" style="transform: rotate(-1deg)">底座的年与信封的年，对不齐。</view>
 
   <!-- 横向时间轴：1747 —— 2010（采风修订版 5 节点） -->
   <scroll-view class="tl" scroll-x scroll-with-animation scroll-left="{{scrollLeft}}" enhanced show-scrollbar="{{false}}">
@@ -79,11 +79,18 @@
 
   <view wx:if="{{pointTip && !monologue}}" class="point-tip">{{pointTip}}</view>
 
-  <!-- 独白 + 前往密码锁 -->
+  <!-- V2.1：时间轴可跳——跳过不发该卡，直接读信 -->
+  <button wx:if="{{phase === 'puzzle' && !monologue && !showHistory}}" class="skip-btn note-hand olive" bindtap="onSkipTimeline">年份先不对了，直接读信</button>
+
+  <!-- 站尾：年对齐了再读信；四件东西卡自排不评分；开放问不给选项（V2.1） -->
   <view class="mono" wx:if="{{monologue}}">
-    <view class="mono-text kaiti">时间排好了。可第二十一幅版画呢？也许，最后还有一道锁——需要本次考察的日期。</view>
+    <view class="mono-text kaiti" wx:for="{{monologueParagraphs}}" wx:key="index">{{item}}</view>
+    <view class="mono-relics-label note-hand olive">信封下面还压着四张卡片——东西们后来的下落。自己排一列，不排序、不评分：</view>
+    <view class="mono-relic" wx:for="{{relicCards}}" wx:key="no"><text class="mono-relic-no">{{item.no}}</text><text class="mono-relic-text">{{item.text}}</text></view>
+    <view class="mono-question kaiti">{{openQuestion}}</view>
+    <view class="mono-question-note">不给选项，不投票，不点评。想，和同行的人吵，什么都不想直接走，都不影响后面。</view>
     <view wx:if="{{saveError}}" class="hint">{{saveError}}</view>
-    <button class="btn-seal" bindtap="goReport" disabled="{{advancing}}">{{advancing ? '正在保存时间轴……' : '前往最后一道锁'}}</button>
+    <button class="btn-seal" bindtap="goReport" disabled="{{advancing}}">{{advancing ? '正在保存……' : '就地摊开档案'}}</button>
   </view>
 </view>
 

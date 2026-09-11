@@ -24,6 +24,7 @@ Page({
     showCardNumber: false,
     hint: '',
     solved: false,
+    skipped: false,
     advancing: false
   },
 
@@ -63,18 +64,33 @@ Page({
   onLoad() {
     session.viewPuzzle('s2-name')
     const puzzle = session.getPuzzle('s2-name')
+    const skipped = !!(puzzle && puzzle.payload && puzzle.payload.action === 'skipped')
     this.setData({
       cardNumber: Number(session.getCardDigit('s2-name')),
       solved: !!puzzle,
-      showHistory: !!puzzle,
-      showCardNumber: !!puzzle,
+      skipped: skipped,
+      showHistory: !!puzzle && !skipped,
+      showCardNumber: !!puzzle && !skipped,
       answer: puzzle && puzzle.payload && puzzle.payload.answer || '',
       attempts: Number(puzzle && puzzle.payload && puzzle.payload.attempts) || 0
     })
   },
 
+  onHistoryNext() {
+    this.setData({ showHistory: false })
+  },
+
   onCloseHistory() {
     this.setData({ showHistory: false })
+  },
+
+  // V2.1 对读二可跳：跳过不发该卡，揭晓照常给（下一拍在亭下）。
+  onSkip() {
+    if (this.data.solved) return
+    this.setData({ solved: true, skipped: true, showHistory: false })
+    session.attemptPuzzle('s2-name', this.data.attempts, true, 'skip')
+    session.completePuzzle('s2-name', { action: 'skipped', attempts: this.data.attempts })
+      .catch(function () { /* 进度失败不阻断浏览 */ })
   },
 
   onNext() {
@@ -83,7 +99,7 @@ Page({
     session.completePuzzle('s2-name', {
       answer: this.data.answer,
       attempts: this.data.attempts || 1
-    }, { collectCard: true, checkpoint: 's2-blend' }).then(() => {
+    }, { collectCard: !this.data.skipped, checkpoint: 's2-blend' }).then(() => {
       wx.redirectTo({
         url: '/plate21/module/pages/s2-blend/s2-blend',
         fail: () => {

@@ -24,7 +24,7 @@
     </view>
     <view class="hatch-divider hero-hatch"></view>
     <!-- v1.3 手账：考察者手记批注（图框下缘左侧） -->
-    <view class="note-hand hero-note" style="transform: rotate(-2deg);">此图与皇家档案所藏第二十一图同源</view>
+    <view class="note-hand hero-note" style="transform: rotate(-2deg);">闻有第二十一图，未见。</view>
     <!-- v1.3 手账：朱砂日期章（盖在主视觉右下角） -->
     <view class="stamp-date cover-stamp">
       <view>乾隆四十六年</view>
@@ -83,7 +83,7 @@
     <view class="restart-kicker">ARCHIVE RESET · 档案重建</view>
     <view class="restart-title serif">确认重新考察？</view>
     <view class="archive-rule"></view>
-    <view class="restart-copy">这会清除四站进度、八张日期卡、四张现场照片、署名与报告记录。此操作无法撤销。</view>
+    <view class="restart-copy">这会清除全程进度、八张日期卡、现场照片、署名与报告记录。此操作无法撤销。</view>
     <view class="restart-actions">
       <button class="btn-seal restart-keep" bindtap="onCancelRestart" disabled="{{restarting}}">保留当前记录</button>
       <button class="btn-line restart-confirm" bindtap="onConfirmRestart" disabled="{{restarting}}">{{restarting ? '正在重新建立档案……' : '确认重新考察'}}</button>
@@ -95,8 +95,8 @@
 <view wx:if="{{showHelp}}" class="mask {{helpClosing ? 'overlay-out' : ''}}" bindtap="onCloseHelp">
   <view class="help-card card-archive {{helpClosing ? 'overlay-out' : ''}}" catchtap="noop">
     <view class="help-title serif">玩法说明</view>
-    <view class="help-body">这是一趟纸上考察：按序走访西洋楼四处遗址，拆信封破线索、考黄花阵、寻兽首与水显、读时间轴密码，完成四份考察记录。考察凭证会锁定本次建档日，每一张史料卡角落的数字都藏着最后的答案。</view>
-    <view class="help-body">谜题答错不锁死，提示会逐次变明显；带上附件夹里的考察资料（信、路线图、记录页），按图索骥。</view>
+    <view class="help-body">这是一趟纸上考察：拿档案夹从西往东走西洋楼，每到一站翻到对应的页，做「纸和地」的对读——拆信读信、对灯戏图、对水力钟、对座上的年，一路收日期卡和残片，最后拼图、出报告。路上夹着的页都是可选的：不翻，正页一个字不少。</view>
+    <view class="help-body">对读没有「答错」——对不上就记下来。卡住才有提示，跳过也不影响走完。八位数字是加料，不是门：缺卡，报告照出。</view>
     <button class="btn-line help-close" bindtap="onCloseHelp">知道了</button>
   </view>
 </view>

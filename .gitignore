@@ -3,6 +3,7 @@ node_modules/
 
 .zcode/
 .grok/
+.workbuddy/
 .playwright-cli/
 .env
 .env.*

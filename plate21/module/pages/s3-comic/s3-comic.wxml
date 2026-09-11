@@ -46,12 +46,13 @@
     </view>
     <view class="note-hand note-q" style="transform: rotate(1deg);">兽首各按时辰当值，如更鼓然。</view>
     <view class="hint" wx:if="{{q1Attempts >= 2}}">提示：看漫画前两格——子时鼠首，丑时牛首，各按时辰当值。</view>
+    <button class="skip-btn note-hand olive" bindtap="onSkip">两问都先不答，继续</button>
   </view>
 
   <!-- 小问二 -->
   <view class="q" wx:if="{{q1Done && !q2Done}}">
     <view class="q-title serif">十二兽首齐喷，此时是什么时辰？</view>
-    <view class="q-sub">每个时辰两小时，正午为马首。</view>
+    <view class="q-sub">从前两格的规律往后推。</view>
     <view class="hours">
       <view
         wx:for="{{hours}}"

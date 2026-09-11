@@ -22,6 +22,6 @@
 
   <view wx:if="{{site.motif}}" class="wp-motif kaiti">{{site.motif}}</view>
 
-  <view class="wp-note note-hand olive">支线 · 可停可不停。停留多久由你决定，不影响主线。</view>
+  <view class="wp-note note-hand olive">路上的页 · 翻多久由你决定，不翻也不缺什么。</view>
   <button class="btn-seal wp-next" bindtap="onNext">{{site.nextLabel}}</button>
 </view>

@@ -1,64 +1,95 @@
-// P03 站间过渡（通用页，设计文档 §4.6 / §5-P03）
-// query: leg = s1-s2 / s2-s3 / s3-s4
+// P03 站间过渡（通用页，设计文档 §4.6 / §5-P03；剧情文案对齐 V2.1 可用稿）
+// query: leg = s1-s2 / s2-s3 / s3-s4 / s4-s5
 // 三段式：墨晕转场进入 → 路线推进图（黄铜点位 + 当前段铜绿加粗线）→ 该段环境叙事 → 继续前往。
+//
+// 主线五点（V2.1）：入口 → 黄花阵 → 海晏堂 → 大水法（主线站，无对读）→ 雨果雕像。
+// sides：v2 顺路散页的可选入口（数组，一段可挂多张；不进主线，停不停由玩家决定）。
+// 转场红线（总设定 §5）：现场先发生，台词后跟上——不预告雨果、不发明象征、导航退页脚。
 
-// 三段过渡配置（四站结构：西洋楼入口 → 黄花阵 → 海晏堂·大水法 → 雨果雕像）
-// side：v2 顺路支线的可选入口（不进主线，停不停由玩家决定；走完支线一键回主线）。
+// 四段过渡配置
 const LEGS = {
   's1-s2': {
     from: '西洋楼入口',
     to: '黄花阵',
     seg: 0,
-    text: '信封指引的方向，正是前方那座迷宫。穿过断柱与荒草，往黄花阵去。',
-    side: {
-      key: 'xieqiqu',
-      title: '谐奇趣',
-      hook: '第一座欧式水法大殿。站在台基中间，听左边和右边一起响。',
-      url: '/plate21/module/pages/waypoint/waypoint?site=xieqiqu'
-    },
+    text: '两半合上，是三个字：黄花阵。正是夹着那张照片的一页。往东，墙齐腰高，是一座迷宫。',
+    sides: [
+      {
+        key: 'xieqiqu',
+        title: '谐奇趣',
+        hook: '去迷宫的路上会先经过西洋楼的第一座殿。路过能翻就翻，不翻也行。',
+        url: '/plate21/module/pages/waypoint/waypoint?site=xieqiqu'
+      }
+    ],
     next: '/plate21/module/pages/s2-quiz/s2-quiz'
   },
   's2-s3': {
     from: '黄花阵',
-    to: '海晏堂 · 大水法',
+    to: '海晏堂',
     seg: 1,
-    text: '万字纹寓意福寿绵长，并不暗示“水”。展开资料袋里的手绘路线图：从黄花阵沿标注向东北行进，下一处圈注正是海晏堂·大水法。',
-    side: {
-      key: 'yangquelong',
-      title: '养雀笼 · 方外观',
-      hook: '一半烧了的大门，和一座有人在门外等过的殿。',
-      url: '/plate21/module/pages/waypoint/waypoint?site=yangquelong'
-    },
+    text: '从迷宫出来往东，地势塌下去一块，露出一口干池子。画上的喷泉还在喷，池子是干的。往东，路上第一座水法大殿，档案的下一页就是它。',
+    sides: [
+      {
+        key: 'yangquelong',
+        title: '养雀笼 · 方外观',
+        hook: '甬道右手有一座门，东面还完整，西面什么都没有。再往前几十步，还有一页，档案上只有一行字。',
+        url: '/plate21/module/pages/waypoint/waypoint?site=yangquelong'
+      }
+    ],
     next: '/plate21/module/pages/s3-comic/s3-comic'
   },
   's3-s4': {
-    from: '海晏堂 · 大水法',
-    to: '雨果雕像',
+    from: '海晏堂',
+    to: '大水法',
     seg: 2,
-    text: '让水显纸自然晾干后收回资料袋。马首曾经流失海外，也终于回到圆明园；而在劫掠发生后的 1861 年，雨果写信公开谴责这场掠夺。循着信件线索，去近旁树荫下寻找他的雕像。',
-    side: {
-      key: 'xushuilou',
-      title: '蓄水楼 · 大水法 · 线法画',
-      hook: '水从哪儿来，去哪儿了；还有两分钟，什么都不做。',
-      url: '/plate21/module/pages/waypoint/waypoint?site=xushuilou'
-    },
+    text: '把水显纸晾干收好，往东看——几根残柱已经戳在视线尽头。档案的下一页就在那儿，画上水花翻得很凶。',
+    sides: [
+      {
+        key: 'xushuilou',
+        title: '蓄水楼',
+        hook: '路过一座土台。喷泉没有电泵，水是从那儿来的。路过能翻就翻，不翻也行。',
+        url: '/plate21/module/pages/waypoint/waypoint?site=xushuilou'
+      }
+    ],
+    next: '/plate21/module/pages/dashuifa/dashuifa'
+  },
+  's4-s5': {
+    from: '大水法',
+    to: '雨果雕像',
+    seg: 3,
+    text: '往东本就是出路。草地当中立着一尊铜像——先看见人，再翻档案。夹里最后一份封套上写着：到像下拆。',
+    sides: [
+      {
+        key: 'guanshuifa',
+        title: '观水法',
+        hook: '皇帝看喷泉坐在南面。档案里夹着这一页。路过能翻就翻。',
+        url: '/plate21/module/pages/waypoint/waypoint?site=guanshuifa'
+      },
+      {
+        key: 'xianfahua',
+        title: '线法画',
+        hook: '往东还有几道空墙。档案上说那里曾经有一条假的街。能翻就翻，不翻也行。',
+        url: '/plate21/module/pages/waypoint/waypoint?site=xianfahua'
+      }
+    ],
     next: '/plate21/module/pages/s4-timeline/s4-timeline'
   }
 }
 
-// 四站在地图占位块上的点位（rpx，容器 670×480）
+// 五站在地图占位块上的点位（rpx，容器 670×480；从西往东）
 const POINTS = [
-  { name: '西洋楼入口', x: 90, y: 400 },
-  { name: '黄花阵', x: 260, y: 290 },
-  { name: '海晏堂', x: 430, y: 180 },
-  { name: '雨果雕像', x: 600, y: 70 }
+  { name: '西洋楼入口', x: 85, y: 400 },
+  { name: '黄花阵', x: 240, y: 305 },
+  { name: '海晏堂', x: 385, y: 220 },
+  { name: '大水法', x: 515, y: 145 },
+  { name: '雨果雕像', x: 615, y: 65 }
 ]
 
 Page({
   data: {
     leg: null,
-    side: null,
-    sideVisited: false,
+    sides: [],
+    sideVisited: {},
     points: POINTS,
     lines: [],
     advancing: false
@@ -87,23 +118,34 @@ Page({
       done: i <= leg.seg,           // 已抵达（含起点）
       current: i === leg.seg + 1    // 当前前往的目标点
     }))
-    this.setData({ leg: leg, side: leg.side || null, sideVisited: false, lines: lines, points: points })
+    this.setData({ leg: leg, sides: leg.sides || [], sideVisited: {}, lines: lines, points: points })
+    this.refreshSideVisited()
   },
 
   onShow() {
     // 从支线返回本页时刷新「已走过」标记
+    this.refreshSideVisited()
+  },
+
+  refreshSideVisited() {
     const leg = this.data.leg
-    if (!leg || !leg.side) return
+    if (!leg || !(leg.sides || []).length) return
     try {
       const snap = require('../../store/session').getSnapshot()
-      this.setData({ sideVisited: !!(snap && snap.flags && snap.flags['sideVisited_' + leg.side.key]) })
+      const flags = (snap && snap.flags) || {}
+      const visited = {}
+      leg.sides.forEach(function (side) {
+        visited[side.key] = !!flags['sideVisited_' + side.key]
+      })
+      this.setData({ sideVisited: visited })
     } catch (e) { /* 快照不可用时忽略 */ }
   },
 
-  // v2 顺路支线：可选进入，不影响主线推进
-  onOpenSide() {
+  // v2 顺路散页：可选进入，不影响主线推进
+  onOpenSide(e) {
     if (this.data.advancing) return
-    wx.navigateTo({ url: this.data.side.url })
+    const url = e.currentTarget.dataset.url
+    if (url) wx.navigateTo({ url: url })
   },
 
   onNext() {

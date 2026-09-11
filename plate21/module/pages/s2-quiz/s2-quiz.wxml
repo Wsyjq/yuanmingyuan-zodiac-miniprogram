@@ -1,51 +1,47 @@
-<!-- P04 第二站 · 黄花阵选择题 -->
+<!-- 第二站 · 黄花阵 对读一：灯戏图对空墙（V2.1，开放作答可跳） -->
 <nav-back />
 <page-overlays />
 <view class="page page-shell paper-grain paper-real">
-  <!-- v1.3.1 手账：左侧活页装订孔列（全站统一） -->
   <view class="binder"></view>
   <view class="tag-no">No.004</view>
   <view class="novel">
-    <view class="novel-p">穿过西洋楼的断柱残垣，你在一方矮墙围合的园圃前停住脚步。</view>
-    <view class="novel-p">皇家宫苑中竟有一座迷宫——砖墙不过肩高，却纵横曲折如阵，踮起脚也望不穿它的路径。</view>
+    <view class="novel-p">黄花阵到了——齐腰高的砖墙在草地上排开，一眼望不见里面的路。</view>
+    <view class="novel-p">皇家园林里修迷宫？你的第一反应是，这儿又不是游乐场。先翻夹照片的那一页：正面是一幅画，画的也是这座阵，不过是夜里的——一群人提着灯，正往中心亭跑。画上的墙和眼前的墙对得上；画上的人，大白天，一个也没有。</view>
   </view>
 
   <view class="img-ph img-s2a double-frame">
     <view class="tape" style="top:-20rpx; left:50%; margin-left:-90rpx;"></view>
-    <!-- v1.3.1 手账：邮票贴纸压在黄花阵图右上角 -->
     <image class="s2a-stamp" src="/plate21/module/assets/img/stickers/st-stamp-02.png" mode="aspectFit" />
     <image class="s2a-img" src="/plate21/module/assets/img/IMG-RUNTIME-MAZE.jpg" mode="aspectFill" />
   </view>
-  <view class="note-hand olive" style="transform: rotate(-1.5deg); margin-top: 16rpx;">砖墙仅及肩，入阵便迷向，奇哉。</view>
+  <view class="note-hand olive" style="transform: rotate(-1.5deg); margin-top: 16rpx;">夜里提灯往中心亭跑——他们在干什么？</view>
 
   <view class="hatch-divider" style="width: 140rpx; margin: 44rpx auto;"></view>
 
-  <view class="quiz">
-    <view class="q-title serif">这迷宫的修建目的是</view>
-    <view class="note-hand" style="transform: rotate(1deg); margin-bottom: 16rpx;">须想透「戏」字，方得正解。</view>
-    <view class="opts" role="radiogroup" aria-label="黄花阵修建目的选项">
-      <view
-        wx:for="{{options}}"
-        wx:key="key"
-        class="opt {{selected === item.key ? 'opt-sel' : ''}} {{item.wrong ? 'opt-wrong' : ''}} {{shakeKey === item.key ? 'shake' : ''}}"
-        data-key="{{item.key}}"
-        bindtap="onSelect"
-        role="radio"
-        aria-checked="{{selected === item.key}}"
-        aria-label="{{item.key}}，{{item.text}}{{item.wrong ? '，不对应' : (selected === item.key ? '，已选择' : '')}}"
-      >
-        <view class="opt-key serif">{{item.key}}</view>
-        <view class="opt-text">{{item.text}}</view>
-        <view wx:if="{{item.wrong || selected === item.key}}" class="opt-state">{{item.wrong ? '不对应' : (solved ? '正确' : '已选择')}}</view>
-        <view class="pin {{solved && item.key === 'C' ? 'pin-lit' : ''}}"></view>
-      </view>
+  <!-- 对读一：开放作答，命中即过；卡住才出提示；可跳过（跳过不发该卡） -->
+  <view class="quiz" wx:if="{{!solved}}">
+    <view class="q-title serif">纸上有人，地上没有。他们在干什么？</view>
+    <view class="note-hand" style="transform: rotate(1deg); margin-bottom: 16rpx;">说个大概就行，猜错不扣什么。</view>
+    <input
+      class="ans-input"
+      placeholder="写下你在画里看到的"
+      placeholder-class="ans-ph"
+      value="{{answer}}"
+      bindinput="onInput"
+      bindconfirm="onConfirm"
+    />
+    <view wx:if="{{wrongTip}}" class="hint">{{wrongTip}}</view>
+    <view wx:if="{{hint}}" class="hint">{{hint}}</view>
+    <view class="q-actions">
+      <button wx:if="{{!hint && attempts >= 1}}" class="hint-btn-inline" bindtap="onShowHint">想不出来了</button>
+      <button class="btn-seal confirm" bindtap="onConfirm" disabled="{{!answer}}">就 是 这 样</button>
+      <button class="skip-btn note-hand olive" bindtap="onSkip">先不猜，往下走</button>
     </view>
-    <view class="hint" wx:if="{{hint}}">{{hint}}</view>
-    <button wx:if="{{!solved}}" class="btn-seal confirm" bindtap="onConfirm" disabled="{{!selected}}">确 认</button>
   </view>
 
   <view class="followup" wx:if="{{followup}}">
-    <view class="novel-p">可是这又和「黄花」有什么关系呢？</view>
+    <view class="novel-p">原来是个中秋灯会。皇帝坐在阵心的凉亭里看，宫女们提着灯在阵里跑，谁先到中心谁领赏。好嘛，不出门也有得玩。</view>
+    <view class="novel-p">再对同一幅画。跑阵的人手里都提着一盏灯，灯是黄的。这地方又叫黄花阵——「黄花」两个字，是不是打灯上来的？</view>
     <button class="btn-seal" bindtap="onNext">继 续</button>
   </view>
 </view>
@@ -58,7 +54,6 @@
   corner-number="{{cardNumber}}"
   show-corner="{{showHistory}}"
   btn-text="继 续"
-  bind:next="onNext"
+  bind:next="onCloseHistory"
   bind:close="onCloseHistory"
 />
-<stamp-toast id="stamp" />

@@ -29,6 +29,7 @@
     <view class="wrong-tip" wx:if="{{wrongTip}}">{{wrongTip}}</view>
     <button class="btn-seal confirm-btn record-action" bindtap="onSubmit">核 对 纸 上 答 案</button>
   </view>
+  <button class="skip-btn note-hand olive" bindtap="onSkip" wx:if="{{!solved && !showHandoff}}">纸先不湿了，往下走</button>
 
   <view class="prop-card archive-sheet" wx:if="{{showHandoff}}">
     <view class="prop-label archive-tab">道具收尾 · 下一条线索</view>
@@ -36,11 +37,10 @@
     <view class="archive-rule"></view>
     <view class="care-note">将纸张平放自然晾干，不要擦拭或折叠湿润区域；完全干燥后再收好。</view>
     <view class="archive-steps">
-      <view class="step-row"><view class="step-no">1</view><view class="step-copy">马首曾流失海外，后来终于回到圆明园。</view></view>
-      <view class="step-row"><view class="step-no">2</view><view class="step-copy">这场流失始于 1860 年的劫掠；次年，雨果写下公开谴责的信。</view></view>
-      <view class="step-row"><view class="step-no">3</view><view class="step-copy">下一站去寻找雨果雕像，继续核对这封信留下的时间线。</view></view>
+      <view class="step-row"><view class="step-no">1</view><view class="step-copy">把纸晾干收好。正午值班的那一尊，档案里已经写清了。</view></view>
+      <view class="step-row"><view class="step-no">2</view><view class="step-copy">往东看——几根残柱已经戳在视线尽头。档案的下一页就在那儿。</view></view>
     </view>
-    <button class="btn-seal confirm-btn record-action" bindtap="onNext" disabled="{{advancing}}">水显纸已收好，寻找雨果</button>
+    <button class="btn-seal confirm-btn record-action" bindtap="onNext" disabled="{{advancing}}">水显纸已收好，往东走</button>
   </view>
 </view>
 

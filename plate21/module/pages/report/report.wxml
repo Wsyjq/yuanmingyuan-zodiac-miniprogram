@@ -3,7 +3,7 @@
 <view class="page page-shell paper-grain paper-real">
   <view class="tag-no page-no">No.015</view>
   <view class="title serif">西洋楼铜版图 · 第二十一图</view>
-  <view class="subtitle">考察报告 · {{editionLabel}}</view>
+  <view class="subtitle">考察报告 · {{editionLabel}} · 非馆藏原件</view>
   <view class="archive-rule report-rule"></view>
 
   <!-- 万字纹画框（邮票齿孔框 + 角花）+ 完整第 21 图预览 -->
@@ -29,13 +29,13 @@
         <view class="layer layer-l1">
           <view class="l1-bar">
             <text class="tag">L1 题跋</text>
-            <text class="l1-text kaiti">前二十幅记录建成，此幅记录后来——刻版人的线，砌墙人的照片，你的勾。</text>
+            <text class="l1-text kaiti">今日对读。非馆藏原件。</text>
           </view>
         </view>
         <view class="layer layer-l5">
           <view class="l5-box">
             <text class="l5-tag">L5 落款</text>
-            <text class="l5-line kaiti">1747 —— 本次考察</text>
+            <text class="l5-line kaiti">今日对读</text>
             <text class="l5-name kaiti">{{name}}</text>
           </view>
         </view>
@@ -47,9 +47,9 @@
     <view class="field-head">
       <view>
         <view class="field-kicker">FIELD RECORD · S2-3</view>
-        <view class="field-title serif">现场四图考察记录</view>
+        <view class="field-title serif">亭下考察记录</view>
       </view>
-      <view class="field-count">{{photoCount}} / 4</view>
+      <view class="field-count">已记 {{photoCount}} / 4 处</view>
     </view>
     <view class="archive-rule"></view>
     <view class="field-grid">
@@ -110,8 +110,8 @@
     </view>
   </view>
 
-  <view class="meta">绘制者 {{name}} · {{today}} · {{editionLabel}}</view>
-  <view class="note-hand olive frame-note" style="transform: rotate(-1.5deg);">刻痕已校，与阵中亭基座相合，可归档。</view>
+  <view class="meta">绘制者 {{name}} · 绘制时间 {{today}}</view>
+  <view class="note-hand olive frame-note" style="transform: rotate(-1.5deg);">中间那块空着的，就是你站着的位置。</view>
 
   <view class="actions">
     <button class="btn-seal act-btn finish-btn" bindtap="onFinish" disabled="{{completing}}">{{completing ? '正在完成考察……' : (completed ? '返回考察模块首页' : '完成考察并返回首页')}}</button>

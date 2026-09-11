@@ -4,38 +4,79 @@
   <view class="binder"></view>
   <view class="tag-no tag-no-fixed">No.S1-1</view>
 
-  <view class="title serif">信封上的半字</view>
-  <view class="hatch-divider title-div"></view>
-  <view class="lead kaiti">信封和信纸没有失去作用。请拿出刚才拆开的实体信封与其中的信，从它们上面找到第一站。</view>
+  <!-- 幕一：到门口，信还封着 -->
+  <block wx:if="{{stage === 'sealed'}}">
+    <view class="title serif">西洋楼入口 · 拆信</view>
+    <view class="hatch-divider title-div"></view>
+    <view class="lead kaiti">到了西洋楼入口。你是被请来的。门里一条路往东伸进去，两边的残基一处接一处，看不出当年谁是谁。</view>
+    <view class="lead kaiti">信还封着，先翻哪一页，拆开才知道。</view>
 
-  <view class="prop-card archive-sheet">
-    <view class="prop-label archive-tab">线下道具 · 实体信封与信件</view>
-    <view class="prop-title serif">观察封口与信纸背面的半字</view>
-    <view class="archive-rule"></view>
-    <view class="archive-steps">
-      <view class="step-row"><view class="step-no">1</view><view class="step-copy">找到实体信封封口处和信纸背面的残缺字形。</view></view>
-      <view class="step-row"><view class="step-no">2</view><view class="step-copy">按位置将对应的两半组合，依次还原三个完整汉字。</view></view>
-      <view class="step-row"><view class="step-no">3</view><view class="step-copy">把得到的地点填在下面，小程序只核对结果。</view></view>
+    <view class="prop-card archive-sheet">
+      <view class="prop-label archive-tab">线下道具 · 实体信封</view>
+      <view class="prop-title serif">撕开封口</view>
+      <view class="archive-rule"></view>
+      <view class="archive-steps">
+        <view class="step-row"><view class="step-no">1</view><view class="step-copy">拿出一路封着的信封，撕开封口，抽出信纸。</view></view>
+        <view class="step-row"><view class="step-no">2</view><view class="step-copy">抽出来先读信，别的先不管。</view></view>
+      </view>
+      <button class="btn-seal confirm-btn record-action" bindtap="onTear">撕 开 封 口</button>
     </view>
-  </view>
+  </block>
 
-  <view class="hint-area" wx:if="{{!solved}}">
-    <button class="hint-btn" bindtap="onShowSurfaceHint">提示一：观察哪里</button>
-    <button class="hint-btn" wx:if="{{hintLevel == 1}}" bindtap="onShowJoinHint">提示二：怎样组合</button>
-    <view class="hint-copy note-hand" wx:if="{{hintText}}">{{hintText}}</view>
-  </view>
+  <!-- 幕二：信在玩家手里（纸），屏幕不再呈现信稿，只给一句引导 -->
+  <block wx:elif="{{stage === 'reading'}}">
+    <view class="title serif">信在你手里</view>
+    <view class="hatch-divider title-div"></view>
+    <view class="lead kaiti tear-note">撕开封口，抽出信，先读信。封口上还印着点什么，当时没往眼里去。</view>
 
-  <view class="answer-area record-field" wx:if="{{!solved}}">
-    <view class="answer-label">第一站地点</view>
-    <input class="answer-input" value="{{answerInput}}" bindinput="onInput" placeholder="请输入三个汉字" maxlength="8" />
-    <view class="wrong-tip" wx:if="{{wrongTip}}">{{wrongTip}}</view>
-    <button class="btn-seal confirm-btn record-action" bindtap="onSubmit">核 对 地 点</button>
-  </view>
+    <view class="prop-card archive-sheet">
+      <view class="prop-label archive-tab">线下道具 · 信纸</view>
+      <view class="prop-title serif">读这封信</view>
+      <view class="archive-rule"></view>
+      <view class="archive-steps">
+        <view class="step-row"><view class="step-no">1</view><view class="step-copy">正面印着信，慢慢读，没有时限。</view></view>
+        <view class="step-row"><view class="step-no">2</view><view class="step-copy">读完翻到背面，看看还有什么。</view></view>
+      </view>
+    </view>
 
-  <view class="result double-frame" wx:if="{{solved}}">
-    <view class="result-mark">线索成立</view>
-    <view class="result-title serif">第一站的去处很明确了：黄花阵</view>
-    <view class="result-copy">把实体信封收好，前往黄花阵继续调查。</view>
-    <button class="btn-seal next-btn" bindtap="onGoNext">前往黄花阵</button>
-  </view>
+    <button class="btn-seal confirm-btn record-action" bindtap="onReadDone">信 读 完 了</button>
+  </block>
+
+  <!-- 幕三：半字拼合（谜题1） -->
+  <block wx:else>
+    <view class="title serif">封口上的半字</view>
+    <view class="hatch-divider title-div"></view>
+    <view class="lead kaiti">信读完了。去处写的正是西洋楼，你已经站在门口。先去对哪一座，得回头看那个封口。上面留着半截字，只有下面一半。翻过信纸，背面印的正是上面那一半。</view>
+
+    <view class="prop-card archive-sheet">
+      <view class="prop-label archive-tab">线下道具 · 实体信封与信纸</view>
+      <view class="prop-title serif">两半合上</view>
+      <view class="archive-rule"></view>
+      <view class="archive-steps">
+        <view class="step-row"><view class="step-no">1</view><view class="step-copy">看封口：上面留着三个字的下半截。</view></view>
+        <view class="step-row"><view class="step-no">2</view><view class="step-copy">信纸翻到背面：印着三个字的上半截。</view></view>
+        <view class="step-row"><view class="step-no">3</view><view class="step-copy">上下拼合，把得到的地点填在下面。</view></view>
+      </view>
+    </view>
+
+    <view class="hint-area" wx:if="{{!solved}}">
+      <button class="hint-btn" bindtap="onShowSurfaceHint">提示一：看哪里</button>
+      <button class="hint-btn" wx:if="{{hintLevel == 1}}" bindtap="onShowJoinHint">提示二：怎么合</button>
+      <view class="hint-copy note-hand" wx:if="{{hintText}}">{{hintText}}</view>
+    </view>
+
+    <view class="answer-area record-field" wx:if="{{!solved}}">
+      <view class="answer-label">先去对哪一座</view>
+      <input class="answer-input" value="{{answerInput}}" bindinput="onInput" placeholder="三个字" maxlength="8" />
+      <view class="wrong-tip" wx:if="{{wrongTip}}">{{wrongTip}}</view>
+      <button class="btn-seal confirm-btn record-action" bindtap="onSubmit">两 半 合 上</button>
+    </view>
+
+    <view class="result double-frame" wx:if="{{solved}}">
+      <view class="result-mark">两半合上了</view>
+      <view class="result-title serif">黄花阵</view>
+      <view class="result-copy">正是夹着那张照片的一页。往东，墙齐腰高，是一座迷宫。</view>
+      <button class="btn-seal next-btn" bindtap="onGoNext">前往黄花阵</button>
+    </view>
+  </block>
 </view>

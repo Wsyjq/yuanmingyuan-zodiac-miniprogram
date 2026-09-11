@@ -1,6 +1,7 @@
-// v2 大水法 · 留白站（顺路支线）：不给道具、不设谜题、不要求任何输入。
+// v2 大水法 · 主线站（零对读，V2.1 可用稿）：不给道具、不设谜题、不要求任何输入。
 // 结构按 v2 逐秒规格：一句话 → 两分钟完全静默（无旁白无配乐，只留现场声音）
 // → 一句话三选一（可跳过，全程唯一一次操作）→ 玩家自行离开。
+// 主线链路：transit(s3-s4) → 本页 → transit(s4-s5 → 雨果)。
 const session = require('../../store/session')
 
 const SILENCE_SECONDS = 120
@@ -24,7 +25,6 @@ Page({
 
   onStart() {
     this.setData({ stage: 'silence', remain: SILENCE_SECONDS, remainLabel: fmt(SILENCE_SECONDS), progress: 0 })
-    this.recordVisit()
     this._timer = setInterval(() => {
       const remain = this.data.remain - 1
       if (remain <= 0) {
@@ -73,19 +73,9 @@ Page({
     } catch (e) { /* 忽略 */ }
   },
 
-  recordVisit() {
-    try {
-      const snap = session.getSnapshot()
-      if (!snap || (snap.flags && snap.flags.sideVisited_dashuifa)) return
-      session.setFlag('sideVisited_dashuifa', Date.now())
-        .then(() => { session.emit({ name: 'side_visited', site: 'dashuifa' }) })
-        .catch(() => {})
-    } catch (e) { /* 忽略 */ }
-  },
-
   onNext() {
     wx.redirectTo({
-      url: '/plate21/module/pages/waypoint/waypoint?site=xianfahua',
+      url: '/plate21/module/pages/transit/transit?leg=s4-s5',
       fail: () => wx.showToast({ title: '页面跳转失败，请重试', icon: 'none' })
     })
   },

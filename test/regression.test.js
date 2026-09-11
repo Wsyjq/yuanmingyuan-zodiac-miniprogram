@@ -89,9 +89,11 @@ test('report draws the approved AI plate before the signature and metadata', asy
 
   await instance.drawReport(ctx, canvas)
   const plateIndex = calls.indexOf('image')
-  const signatureIndex = calls.indexOf('text:测试者')
+  // V2.1 定格：署名=「绘制者：<名字>」，副行=今日对读。非馆藏原件。
+  const signatureIndex = calls.findIndex((call) => call === 'text:绘制者：测试者')
   assert.notEqual(plateIndex, -1)
   assert.notEqual(signatureIndex, -1)
+  assert.ok(calls.includes('text:今日对读。非馆藏原件。'))
   assert.ok(plateIndex < signatureIndex)
 })
 

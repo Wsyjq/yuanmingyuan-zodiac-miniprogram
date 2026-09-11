@@ -11,7 +11,7 @@
 
 const RULES = [
   {
-    id: 'first-envelope', title: '初拆信封', desc: '拆开那封没有署名的信',
+    id: 'first-envelope', title: '接过档案', desc: '接过那册没走完的档案',
     when: (snap) => !!(snap.puzzles && snap.puzzles['prologue-envelope'])
   },
   {
@@ -19,8 +19,15 @@ const RULES = [
     when: (snap) => !!(snap.puzzles && snap.puzzles['s1-decode'])
   },
   {
+    // V2.1 对读三改为「一处即算」，四图全拍降为厚记录的奖励性印记：
+    // 仅当现场记录里四处细目都拍了才解锁。
     id: 'four-photos', title: '四图全拍', desc: '在中心亭留下四张现场照片',
-    when: (snap) => !!(snap.puzzles && snap.puzzles['s2-blend'])
+    when: (snap) => {
+      const record = snap.flags && snap.flags.s2PhotoRecord
+      const photos = record && record.photos
+      const keys = ['dome', 'beast', 'lotus', 'swan']
+      return !!photos && keys.every((key) => !!photos[key])
+    }
   },
   {
     id: 'four-stations', title: '四站全通', desc: '走完西洋楼的四站考察',
@@ -45,7 +52,8 @@ const RULES = [
     id: 'side-walker', title: '顺路人', desc: '顺路走进六处遗址中的至少三处',
     when: (snap) => {
       const f = snap.flags || {}
-      const sites = ['xieqiqu', 'yangquelong', 'fangwaiguan', 'xushuilou', 'dashuifa', 'xianfahua']
+      // v2 顺路散页六处：谐奇趣/养雀笼/方外观/蓄水楼/观水法/线法画（大水法已转主线站）。
+      const sites = ['xieqiqu', 'yangquelong', 'fangwaiguan', 'xushuilou', 'guanshuifa', 'xianfahua']
       return sites.filter((key) => !!f['sideVisited_' + key]).length >= 3
     }
   }

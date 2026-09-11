@@ -27,6 +27,7 @@
     <view class="hint-copy note-hand" wx:if="{{hintText}}">{{hintText}}</view>
     <view class="wrong-tip" wx:if="{{wrongTip}}">{{wrongTip}}</view>
     <button class="btn-seal confirm-btn record-action" bindtap="onConfirm">核 对 转 盘 结 果</button>
+    <button class="skip-btn note-hand olive" bindtap="onSkip">转盘先不转了，往下走</button>
   </view>
 
   <view class="prop-card archive-sheet" wx:if="{{showHandoff}}">
