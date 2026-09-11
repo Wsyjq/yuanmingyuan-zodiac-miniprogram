@@ -113,6 +113,27 @@
   </view>
   <view class="note-hand olive hb-note">已得 {{achievementCount}} 印，共 {{achievementList.length}} 印。</view>
 
+  <!-- V2.2 独立音频开关：背景音乐 / 人声讲述，各自独立、默认全开（产品定位拍板项） -->
+  <view class="hatch-divider sec-div"></view>
+  <view class="sec-head serif">音频 · 独立开关</view>
+  <view class="audio-set">
+    <view class="audio-set-row">
+      <view class="audio-set-main">
+        <view class="audio-set-title serif">背景音乐</view>
+        <view class="audio-set-sub">各站的氛围曲，循环低音量；人声讲话时自动让路。</view>
+      </view>
+      <switch checked="{{audioBgm}}" bindchange="onToggleBgm" aria-label="背景音乐开关" color="#4a6b64" />
+    </view>
+    <view class="audio-set-row">
+      <view class="audio-set-main">
+        <view class="audio-set-title serif">人声讲述</view>
+        <view class="audio-set-sub">台词、旁白与语音导览的播放键；关掉后只读文稿，一处不留按钮。</view>
+      </view>
+      <switch checked="{{audioVoice}}" bindchange="onToggleVoice" aria-label="人声讲述开关" color="#4a6b64" />
+    </view>
+  </view>
+  <view class="note-hand olive hb-note">两个开关互不影响；大水法那一段什么都不会响——那是设计。</view>
+
   <!-- v2 顺路散页：可选站点，随时可进；不显示 X/N 完成度（反结算红线） -->
   <view class="hatch-divider sec-div"></view>
   <view class="sec-head serif">路上的页 · 可选</view>

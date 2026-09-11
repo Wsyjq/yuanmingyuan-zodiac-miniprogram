@@ -1,6 +1,7 @@
 <!-- 第二站 · 黄花阵 对读三：亭子线稿对眼前这座亭（V2.2 讲述版，拍一处即算） -->
 <nav-back />
 <page-overlays />
+<bgm-ambience />
 <view class="page page-shell paper-grain paper-real">
   <view class="binder"></view>
   <view class="tag-no tag-no-fixed">No.S2-3</view>

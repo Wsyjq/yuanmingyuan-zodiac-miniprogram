@@ -1,6 +1,7 @@
 <!-- 第二站 · 黄花阵 对读一：灯戏图对空墙（V2.2 讲述版，开放作答可跳） -->
 <nav-back />
 <page-overlays />
+<bgm-ambience />
 <view class="page page-shell paper-grain paper-real">
   <view class="binder"></view>
   <view class="tag-no">No.004</view>

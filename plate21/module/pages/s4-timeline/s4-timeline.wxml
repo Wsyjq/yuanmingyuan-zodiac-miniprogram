@@ -1,5 +1,6 @@
 <nav-back />
 <page-overlays />
+<bgm-ambience />
 
 <!-- 站名叙事 + 引文卡 -->
 <view class="page page-shell paper-grain paper-real" wx:if="{{phase === 'novel'}}">

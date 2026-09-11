@@ -1,6 +1,7 @@
 <!-- v2 顺路支线站（可选）：不设判定、不做裁判；留白即内容。V2.2 讲述版：旁白＋人声＋纸 -->
 <nav-back />
 <page-overlays audio-station="{{site.audioStation}}" />
+<bgm-ambience station="{{site.audioStation}}" />
 <view class="page page-shell paper-grain paper-real" wx:if="{{site}}">
   <view class="binder"></view>
   <view class="tag-no page-no">{{site.no}}</view>
@@ -41,7 +42,7 @@
   <view wx:if="{{bgmSrc}}" class="wp-beat wp-prop">
     <view class="wp-kicker">现场 · 听 · 当年两边同时响</view>
     <view class="wp-line kaiti">左耳机是中乐，右耳机是西乐——先各响各的，后头合到一处。戴上耳机听，别用单边外放。</view>
-    <audio-clip src="{{bgmSrc}}" label="听 · 左右同响" />
+    <audio-clip src="{{bgmSrc}}" label="听 · 左右同响" kind="bgm" />
   </view>
 
   <!-- 蓄水楼：拼合后才展开的卡条背面注释 -->

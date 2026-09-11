@@ -1,12 +1,16 @@
 /**
  * audio-guide —— 悬浮「语音导览」入口 + 底部讲解面板（v2 双版本）。
  * 基础层 script 到站即读；深讲层 deepScript 永远折叠，玩家点「再听一段」才展开。
- * audio/deepAudio 为 null（当前）：展示文稿阅读态，不出现不可用的播放器按钮。
+ * V2.2：audio/deepAudio 已回填 TTS 路径（audio/v22/guide-*），经 audio-src 取流；
+ * 受「人声讲述」独立开关控制（关=播放器隐藏、退回文稿阅读态）；
+ * 经 audio-bus 与其他播放路互斥（起导览时压停别的，别人起时让路）。
  * guestPostcard 站点（s4 雨果）展开深讲时附「一位考察者留下的明信片」：
  * 本地种子池确定性取张（同一会话同一张），后端就绪后由 adapter 替换。
  */
 const GUIDES = require('./scripts').GUIDES
 const postcards = require('./postcards')
+const audioSettings = require('../../utils/audio-settings')
+const audioBus = require('../../utils/audio-bus')
 
 let sessionStore = null
 // 延迟引入 session：组件可能在快照未建时挂载，取不到则用固定种子兜底。
@@ -26,6 +30,7 @@ Component({
     hasDeep: false,
     deepOpen: false,
     deepPlaying: false,
+    voiceOn: true,
     guest: null,
     progress: 0
   },
@@ -35,7 +40,7 @@ Component({
       const guide = GUIDES[id] || null
       this.setData({
         guide: guide,
-        hasAudio: !!(guide && guide.audio),
+        hasAudio: !!(guide && guide.audio && this.data.voiceOn),
         hasDeep: !!(guide && guide.deepScript && guide.deepScript.length),
         deepOpen: false,
         guest: null
@@ -46,14 +51,32 @@ Component({
 
   lifetimes: {
     attached() {
+      this.kind = 'voice'
+      audioBus.register(this)
+      this._onSettings = (settings) => {
+        const guide = this.data.guide
+        this.setData({
+          voiceOn: settings.voice,
+          hasAudio: !!(guide && guide.audio && settings.voice)
+        })
+        if (!settings.voice) {
+          this.pause()
+          this.pauseDeep()
+        }
+      }
+      audioSettings.subscribe(this._onSettings)
+      const voiceOn = audioSettings.get().voice
       const guide = GUIDES[this.data.station] || null
       this.setData({
+        voiceOn: voiceOn,
         guide: guide,
-        hasAudio: !!(guide && guide.audio),
+        hasAudio: !!(guide && guide.audio && voiceOn),
         hasDeep: !!(guide && guide.deepScript && guide.deepScript.length)
       })
     },
     detached() {
+      audioBus.unregister(this)
+      audioSettings.unsubscribe(this._onSettings)
       this.destroyCtx()
     }
   },
@@ -68,6 +91,7 @@ Component({
     close() {
       if (this.data.closing) return
       this.pause()
+      this.pauseDeep()
       this.setData({ closing: true })
       setTimeout(() => {
         this.setData({ open: false, closing: false, deepOpen: false })
@@ -119,36 +143,59 @@ Component({
       }
       if (!this._ctx) this.createCtx()
       if (!this._ctx) return
+      audioBus.activate(this)
       this._ctx.play()
       this.setData({ playing: true })
     },
 
-    // 深讲音频（deepAudio 就绪后可用；当前为 null，仅展示文稿阅读态）。
+    // 深讲音频播放（V2.2 已回填 deepAudio）。
     onToggleDeepPlay() {
-      if (!this.data.guide || !this.data.guide.deepAudio) return
+      if (!this.data.guide || !this.data.guide.deepAudio || !this.data.voiceOn) return
       if (this.data.deepPlaying) {
-        if (this._deepCtx) {
-          try { this._deepCtx.pause() } catch (e) {}
-        }
-        this.setData({ deepPlaying: false })
+        this.pauseDeep()
         return
       }
       if (!this._deepCtx) {
         const ctx = wx.createInnerAudioContext()
         ctx.src = this.data.guide.deepAudio
-        ctx.onEnded(() => this.setData({ deepPlaying: false }))
-        ctx.onError(() => this.setData({ deepPlaying: false }))
+        ctx.onEnded(() => {
+          this.setData({ deepPlaying: false })
+          if (audioBus.isActive(this)) audioBus.release()
+        })
+        ctx.onError(() => {
+          this.setData({ deepPlaying: false })
+          if (audioBus.isActive(this)) audioBus.release()
+        })
         this._deepCtx = ctx
       }
+      audioBus.activate(this)
       this._deepCtx.play()
       this.setData({ deepPlaying: true })
+    },
+
+    // audio-bus 约定接口（导览的两路都算 voice）
+    isPlaying() {
+      return this.data.playing || this.data.deepPlaying
     },
 
     pause() {
       if (this._ctx) {
         try { this._ctx.pause() } catch (e) {}
       }
-      if (this.data.playing) this.setData({ playing: false })
+      if (this.data.playing) {
+        this.setData({ playing: false })
+        if (audioBus.isActive(this)) audioBus.release()
+      }
+    },
+
+    pauseDeep() {
+      if (this._deepCtx) {
+        try { this._deepCtx.pause() } catch (e) {}
+      }
+      if (this.data.deepPlaying) {
+        this.setData({ deepPlaying: false })
+        if (audioBus.isActive(this)) audioBus.release()
+      }
     },
 
     createCtx() {
@@ -159,8 +206,14 @@ Component({
         if (!ctx.duration) return
         this.setData({ progress: Math.min(100, Math.round(ctx.currentTime / ctx.duration * 100)) })
       })
-      ctx.onEnded(() => this.setData({ playing: false, progress: 0 }))
-      ctx.onError(() => this.setData({ playing: false }))
+      ctx.onEnded(() => {
+        this.setData({ playing: false, progress: 0 })
+        if (audioBus.isActive(this)) audioBus.release()
+      })
+      ctx.onError(() => {
+        this.setData({ playing: false })
+        if (audioBus.isActive(this)) audioBus.release()
+      })
       this._ctx = ctx
     },
 

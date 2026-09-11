@@ -6,6 +6,7 @@
     "stamp-toast": "../../components/stamp-toast/stamp-toast",
     "page-overlays": "../../capabilities/overlay-host/overlay-host",
     "audio-clip": "../../components/audio-clip/audio-clip",
-    "dialogue-block": "../../components/dialogue-block/dialogue-block"
+    "dialogue-block": "../../components/dialogue-block/dialogue-block",
+    "bgm-ambience": "../../components/bgm-ambience/bgm-ambience"
   }
 }

@@ -1,3 +1,4 @@
+<bgm-ambience />
 <!-- v1.3.1 手账：左侧活页装订孔列（移到 .stage 外，避免 flex 影响 fixed；pointer-events:none 不扰演出点击） -->
 <view class="binder"></view>
 <view class="stage page-shell paper-grain paper-real {{night ? 'night' : ''}}" bindtap="onTapScreen">

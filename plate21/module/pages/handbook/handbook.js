@@ -3,6 +3,8 @@ const session = require('../../store/session')
 const fieldRecord = require('../../store/field-record')
 const achievements = require('../../store/achievements')
 const sessionDate = require('../../utils/session-date')
+const audioSettings = require('../../utils/audio-settings')
+const audioBus = require('../../utils/audio-bus')
 
 // 四份考察记录位（V2.1 对读口径；主线站序=入口→黄花阵→海晏堂→雨果，大水法零对读不占记录位）
 const RECORD_SLOTS = [
@@ -74,10 +76,15 @@ Page({
     achievementCount: 0,
     showHistory: false,
     card: { title: '', source: '', lines: [] },
-    sideSites: []
+    sideSites: [],
+    audioBgm: true,
+    audioVoice: true
   },
 
   onShow() {
+    // V2.2 独立音频开关：进手册即回显当前设备偏好
+    const audio = audioSettings.get()
+    this.setData({ audioBgm: audio.bgm, audioVoice: audio.voice })
     const snap = session.getSnapshot()
     if (snap) {
       this.renderSnapshot(snap)
@@ -158,6 +165,21 @@ Page({
     const key = e.currentTarget.dataset.key
     const site = this.data.sideSites.find(function (item) { return item.key === key })
     if (site) wx.navigateTo({ url: site.url })
+  },
+
+  // V2.2 独立音频开关：各自独立、即时生效（关=正在播的对应类别立即停）
+  onToggleBgm(e) {
+    const next = !!(e.detail && e.detail.value)
+    this.setData({ audioBgm: next })
+    if (!next) audioBus.stopKind('bgm')
+    audioSettings.set('bgm', next)
+  },
+
+  onToggleVoice(e) {
+    const next = !!(e.detail && e.detail.value)
+    this.setData({ audioVoice: next })
+    if (!next) audioBus.stopKind('voice')
+    audioSettings.set('voice', next)
   },
 
   // 已录史料可点重读：直接弹 history-card

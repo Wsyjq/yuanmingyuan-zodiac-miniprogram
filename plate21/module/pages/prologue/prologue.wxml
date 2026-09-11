@@ -2,6 +2,7 @@
   <!-- v1.3.1 手账：左侧活页装订孔列（叙事页） -->
   <view class="binder"></view>
   <nav-back />
+<bgm-ambience />
   <novel-view
     title="序章"
     paragraphs="{{paragraphs}}"
