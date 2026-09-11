@@ -801,3 +801,51 @@ test('s4-timeline lets the archivist speak for the first time (V2.2)', async () 
   assert.doesNotMatch(result.html, /愣了/)
   assert.doesNotMatch(result.html, /还在水里/)
 })
+
+// V2.2 支线可跳过（用户口径）：散页随时进出、无判定门；大水法静默可提前结束、三选一可跳
+test('side quests stay fully skippable (no gating, exit always available)', async () => {
+  // 散页：进入即有返回与推进，无任何需要先完成的判定
+  const wp = await renderPage({
+    route: 'plate21/module/pages/waypoint/waypoint',
+    query: { site: 'xieqiqu' },
+    settleMs: 10
+  })
+  assert.deepEqual(wp.errors, [])
+  assert.match(wp.html, /nav-back/)
+  assert.match(wp.html, /wp-next/)
+  assert.ok(!/wp-next[^>]*disabled/.test(wp.html), '推进按钮不得被任何前置交互禁用')
+
+  // 蓄水楼：拼卡确认只是可选展开，推进不受其钳制
+  const xs = await renderPage({
+    route: 'plate21/module/pages/waypoint/waypoint',
+    query: { site: 'xushuilou' },
+    settleMs: 10
+  })
+  assert.deepEqual(xs.errors, [])
+  assert.match(xs.html, /wp-next/)
+  assert.ok(!/wp-next[^>]*disabled/.test(xs.html))
+
+  // transit：主线「继续前往」独立于散页卡存在，不等散页
+  const tr = await renderPage({
+    route: 'plate21/module/pages/transit/transit',
+    query: { leg: 's1-s2' },
+    settleMs: 10
+  })
+  assert.deepEqual(tr.errors, [])
+  assert.match(tr.html, /继 续 前 往/)
+  assert.match(tr.html, /不翻也行/)
+
+  // 大水法：静默可提前结束、三选一可跳过（跳完即 done，不欠任何东西）
+  const dsf = await renderPage({
+    route: 'plate21/module/pages/dashuifa/dashuifa',
+    settleMs: 10,
+    drive(instance) {
+      instance.onStart()
+      instance.onEndSilenceEarly()
+      instance.onSkipQuestion()
+    }
+  })
+  assert.deepEqual(dsf.errors, [])
+  assert.equal(dsf.data.stage, 'done')
+  assert.equal(dsf.data.choice, '')
+})
