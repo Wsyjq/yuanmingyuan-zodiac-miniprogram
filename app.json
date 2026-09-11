@@ -38,12 +38,6 @@
     "navigationBarTextStyle": "black"
   },
   "permission": {
-    "scope.camera": {
-      "desc": "拍摄黄花阵建筑细节并生成现场考察记录"
-    },
-    "scope.writePhotosAlbum": {
-      "desc": "保存你的考察报告（第21图）到相册"
-    },
     "scope.userLocation": {
       "desc": "查看你在圆明园西洋楼景区的位置并导航前往下一站"
     }

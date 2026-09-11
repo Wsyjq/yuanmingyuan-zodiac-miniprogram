@@ -1,28 +1,34 @@
 # -*- coding: utf-8 -*-
-"""V2.2 语音（TTS）批量生成 —— edge-tts 驱动，产物不进 git、不进小程序包。
+"""V2.2 语音（TTS）批量生成 —— 双引擎：MiniMax t2a_v2（首选，正式配音）+ edge-tts（兜底）。
 
 用法（在仓库根目录）:
-  python tools/gen_voice.py            # 增量生成（已存在的 mp3 跳过）
-  python tools/gen_voice.py --force    # 全部重生成
-  python tools/gen_voice.py --only dlg-haiyantang-1   # 只生成指定 id（可多次）
-  python tools/gen_voice.py --report   # 只输出时长报告（不生成）
-  python tools/gen_voice.py --post     # 生成后 ffmpeg mono+loudnorm 后处理（需 ffmpeg）
+  MINIMAX_API_KEY=sk-... python tools/gen_voice.py --engine minimax   # MiniMax 全量
+  python tools/gen_voice.py --engine edge                             # edge-tts 兜底
+  python tools/gen_voice.py --only dlg-haiyantang-1                   # 指定 id（可多次）
+  python tools/gen_voice.py --report                                  # 只输出时长报告
+  python tools/gen_voice.py --post                                    # ffmpeg mono+loudnorm 后处理
+
+MiniMax 环境变量（key 不入库）:
+  MINIMAX_API_KEY   必填（Bearer）
+  MINIMAX_BASE      默认 https://api.minimaxi.com（备选 https://api.minimax.chat）
+  MINIMAX_MODEL     默认 speech-02-hd（可降 speech-02-turbo）
 
 声部表与文本在 tools/voice_manifest.json：
-  - 台词（dlg-*）与页面 dialogue-block 逐字一致（V2.2 文稿为源）；
-  - 导览（guide-*-base/-deep）对应 capabilities/audio-guide/scripts.js 两层文稿；
-  - 旁白（narr-*）为各页「无标记正文段」（V2.2 音频主线）。
-
-产物落 audio/v22/*.mp3；经 tools/serve_audio.py（或任意静态服务）对外提供，
-小程序经 utils/audio-src.js 的 AUDIO_BASE 单常量取流。
+  - 文本由 tools/sync_voice_manifest.py 从页面反向同步（页面=唯一事实源，
+    tools/audit_voice_sync.py 校验归零）；
+  - casts[].mm_voice / mm_speed / mm_pitch 为 MiniMax 音色（speed 0.5-2，pitch -12..12）；
+    edge 引擎沿用 voice/rate/pitch 字段。
+产物落 audio/v22/*.mp3；经 tools/serve_audio.py 播放，AUDIO_BASE 单常量取流。
 """
 import argparse
 import asyncio
+import base64
 import json
 import os
 import subprocess
 import sys
 import time
+import urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -38,7 +44,52 @@ def load_manifest():
         return json.load(f)
 
 
-async def synth_one(edge_tts, clip, cast_table, force=False, post=False):
+# ---------------- MiniMax t2a_v2 ----------------
+
+def minimax_post(path, body, timeout=180):
+    base = os.environ.get("MINIMAX_BASE", "https://api.minimaxi.com").rstrip("/")
+    key = os.environ.get("MINIMAX_API_KEY")
+    if not key:
+        raise RuntimeError("MINIMAX_API_KEY not set")
+    req = urllib.request.Request(
+        base + path,
+        data=json.dumps(body).encode(),
+        headers={"Authorization": "Bearer " + key, "Content-Type": "application/json"},
+    )
+    return json.loads(urllib.request.urlopen(req, timeout=timeout).read())
+
+
+def synth_minimax(text, cast, out_path):
+    body = {
+        "model": os.environ.get("MINIMAX_MODEL", "speech-02-hd"),
+        "text": text,
+        "stream": False,
+        "voice_setting": {
+            "voice_id": cast.get("mm_voice", "male-qn-jingying"),
+            "speed": float(cast.get("mm_speed", 1.0)),
+            "vol": 1.0,
+            "pitch": int(cast.get("mm_pitch", 0)),
+        },
+        "audio_setting": {
+            "sample_rate": 32000, "bitrate": 128000,
+            "format": "mp3", "channel": 1,
+        },
+    }
+    resp = minimax_post("/v1/t2a_v2", body)
+    if resp.get("base_resp", {}).get("status_code", 0) != 0:
+        raise RuntimeError("minimax %s: %s" % (
+            resp.get("base_resp", {}).get("status_code"), resp.get("base_resp", {}).get("status_msg")))
+    audio = resp["data"]["audio"]
+    try:
+        raw = bytes.fromhex(audio)
+    except ValueError:
+        raw = base64.b64decode(audio)
+    with open(out_path, "wb") as f:
+        f.write(raw)
+    return resp.get("extra_info", {}).get("audio_length", 0) / 1000.0  # ms -> s
+
+
+async def synth_one(edge_tts, clip, cast_table, force=False, post=False, engine="edge"):
     out_path = os.path.join(OUT_DIR, clip["id"] + ".mp3")
     if not force and os.path.exists(out_path) and os.path.getsize(out_path) > 1024:
         return {"id": clip["id"], "status": "skip"}
@@ -47,21 +98,28 @@ async def synth_one(edge_tts, clip, cast_table, force=False, post=False):
     last_err = None
     for attempt in range(1, RETRY + 1):
         try:
-            comm = edge_tts.Communicate(
-                text,
-                cast["voice"],
-                rate=cast.get("rate", "+0%"),
-                pitch=cast.get("pitch", "+0Hz"),
-            )
-            await comm.save(out_path + ".tmp.mp3")
-            os.replace(out_path + ".tmp.mp3", out_path)
+            if engine == "minimax":
+                synth_minimax(text, cast, out_path)
+            else:
+                await synth_edge(edge_tts, text, cast, out_path)
             if post:
                 postprocess(out_path)
             return {"id": clip["id"], "status": "ok"}
-        except Exception as e:  # noqa: BLE001 - 网络抖动重试
+        except Exception as e:  # noqa: BLE001 - 网络/配额抖动重试
             last_err = e
             await asyncio.sleep(1.5 * attempt)
     return {"id": clip["id"], "status": "error", "error": str(last_err)}
+
+
+async def synth_edge(edge_tts, text, cast, out_path):
+    comm = edge_tts.Communicate(
+        text,
+        cast["voice"],
+        rate=cast.get("rate", "+0%"),
+        pitch=cast.get("pitch", "+0Hz"),
+    )
+    await comm.save(out_path + ".tmp.mp3")
+    os.replace(out_path + ".tmp.mp3", out_path)
 
 
 def postprocess(path):
@@ -95,7 +153,9 @@ def duration_of(path):
 
 
 async def run(args):
-    import edge_tts  # 延迟导入，--report 无需联网
+    edge_tts = None
+    if args.engine == "edge":
+        import edge_tts  # 延迟导入，--report 无需联网
 
     data = load_manifest()
     cast_table = data["casts"]
@@ -110,7 +170,8 @@ async def run(args):
 
     async def worker(clip):
         async with sem:
-            return await synth_one(edge_tts, clip, cast_table, force=args.force, post=args.post)
+            return await synth_one(edge_tts, clip, cast_table,
+                                   force=args.force, post=args.post, engine=args.engine)
 
     t0 = time.time()
     results = await asyncio.gather(*(worker(c) for c in clips))
@@ -157,6 +218,8 @@ def main():
     ap.add_argument("--post", action="store_true", help="ffmpeg mono+loudnorm")
     ap.add_argument("--only", action="append", help="only these clip ids")
     ap.add_argument("--report", action="store_true", help="duration report only")
+    ap.add_argument("--engine", default=os.environ.get("VOICE_ENGINE", "edge"),
+                    choices=["edge", "minimax"], help="tts engine (default edge)")
     args = ap.parse_args()
     if args.report:
         report()
