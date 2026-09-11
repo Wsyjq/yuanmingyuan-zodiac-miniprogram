@@ -37,6 +37,13 @@
     <button wx:if="{{item.confirm && !confirmed}}" class="btn-line wp-confirm" bindtap="onConfirm">我拼好了</button>
   </view>
 
+  <!-- 谐奇趣：双声道成品曲试听（先左后右再合，还原「左右同响」） -->
+  <view wx:if="{{bgmSrc}}" class="wp-beat wp-prop">
+    <view class="wp-kicker">现场 · 听 · 当年两边同时响</view>
+    <view class="wp-line kaiti">左耳机是中乐，右耳机是西乐——先各响各的，后头合到一处。戴上耳机听，别用单边外放。</view>
+    <audio-clip src="{{bgmSrc}}" label="听 · 左右同响" />
+  </view>
+
   <!-- 蓄水楼：拼合后才展开的卡条背面注释 -->
   <view wx:if="{{revealLines.length}}" class="wp-reveal">
     <view class="wp-kicker">拼对后才看 · 卡条背面注释</view>

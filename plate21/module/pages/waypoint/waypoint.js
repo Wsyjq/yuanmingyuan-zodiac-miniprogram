@@ -13,6 +13,7 @@ const SITES = {
     title: '顺路 · 谐奇趣',
     audioStation: 't-xieqiqu',
     narrClip: 'narr-waypoint-xieqiqu',
+    bgmFile: 'bgm-07x-xieqiqu-dual.mp3',
     intro: '还没到迷宫，先撞见一处废墟。绕过一道土坡，一片汉白玉的残基横在眼前，台基上还立着几根柱子，柱头的卷草纹让风磨圆了，花瓣的层数还数得清。档案里多出来的这一页，写着这里叫谐奇趣：西洋楼里第一座盖起来的欧式水法大殿，乾隆十六年秋天建成；主楼三层，楼前两侧各有一排琉璃厅。',
     beats: [
       {
@@ -284,7 +285,8 @@ Page({
       site: site,
       confirmed: false,
       revealLines: [],
-      narrSrc: site.narrClip ? audioSrc.clip(site.narrClip) : ''
+      narrSrc: site.narrClip ? audioSrc.clip(site.narrClip) : '',
+      bgmSrc: site.bgmFile ? audioSrc.bgm(site.bgmFile) : ''
     })
     this.recordVisit(key)
   },

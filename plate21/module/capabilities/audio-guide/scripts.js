@@ -3,24 +3,27 @@
  *   script    基础层（约1分钟）：方向 + 一个知识锚 + 生疑句，到站默认展开；
  *   deepScript 深讲层（约2-3分钟）：史实细节 + 争议口径 + 档案主人线索，
  *             永远折叠、玩家主动展开，绝不自动播。
- * audio / deepAudio 暂为 null（素材待录制）：届时只回填路径，组件与页面零改动。
+ * audio / deepAudio 已回填（V2.2 TTS，tools/gen_voice.py 生成，audio/v22/guide-*）：
+ * 经 utils/audio-src.js 的 AUDIO_BASE 取流（本地静态服务或 CDN），组件与页面零改动。
  * guestPostcard：该站深讲层展示「一位考察者留下的明信片」（本地种子池降级，
  * 后端就绪后换真实留言池单张）。信息点依据 docs/方案设计-…-v2对齐.md §3.2，
  * 口吻待剧情整体定稿后统一润色，本稿只固化信息。
  */
 'use strict'
 
+const audioSrc = require('../../utils/audio-src')
+
 const GUIDES = {
   s2: {
     station: 's2',
     title: '黄花阵 · 语音导览',
-    audio: null,
+    audio: audioSrc.clip('guide-s2-base'),
     script: [
       '你眼前的这座迷宫叫黄花阵，仿照欧洲迷宫而建，却是地道的皇家游园。',
       '阵墙以青砖砌成，不过一人高，墙面满刻万字不断纹，取“福寿绵长”之意。',
       '中秋之夜，宫女手持黄色彩绸扎成的莲花灯穿行阵中，皇帝登上中央圆亭，看谁的灯最先到亭前。'
     ],
-    deepAudio: null,
+    deepAudio: audioSrc.clip('guide-s2-deep'),
     deepScript: [
       '档案里夹着一张1987年的工地照片。照片背面一行钢笔字：照原图，复位。',
       '这道墙不是乾隆年间的原物——1987年和1989年，人们照着两百年前的铜版画，把阵墙和中心圆亭在原址按原样重新砌了起来。他们手上那幅画，是这套铜版图里画黄花阵的那两号——第四号、第五号。',
@@ -32,13 +35,13 @@ const GUIDES = {
   s3: {
     station: 's3',
     title: '海晏堂 · 大水法 · 语音导览',
-    audio: null,
+    audio: audioSrc.clip('guide-s3-base'),
     script: [
       '海晏堂是西洋楼诸景中规模最大的建筑，阶前这座喷水池，曾是一座以水报时的钟。',
       '池边十二生肖铜像各代表一个时辰，到点由对应的兽首喷水；正午时分，十二首齐喷。',
       '如今鼠、牛、虎、兔、马、猴、猪七尊已经归来，其余五尊仍下落不明。'
     ],
-    deepAudio: null,
+    deepAudio: audioSrc.clip('guide-s3-deep'),
     deepScript: [
       '档案翻到水力钟的图纸页。给十二尊兽首定时刻的机械，也是从欧洲来的——设计它的人叫蒋友仁。',
       '十二兽首里，已有七尊归来：牛、虎、猴、猪、鼠、兔、马。其余五尊，至今下落不明。',
@@ -51,13 +54,13 @@ const GUIDES = {
   s4: {
     station: 's4',
     title: '雨果雕像 · 语音导览',
-    audio: null,
+    audio: audioSrc.clip('guide-s4-base'),
     script: [
       '档案里离得最远的一手，来自一个从没来过中国的人。1861年，他写下《致巴特勒上尉的信》。',
       '他称圆明园为“世界奇迹”，公开谴责这场掠夺：“两个强盗闯进了圆明园。一个叫法兰西，一个叫英吉利。”',
       '2010年，罹难150周年之际，这尊雕像在此落成，面朝大水法残柱。'
     ],
-    deepAudio: null,
+    deepAudio: audioSrc.clip('guide-s4-deep'),
     guestPostcard: true,
     deepScript: [
       '雨果没有来过中国。他关于圆明园的一切，来自掠夺品清单、随军画家的速写和报纸上的文章——他想象出来的圆明园，比亲眼见过的更接近真相。',
@@ -72,30 +75,30 @@ const GUIDES = {
   't-xieqiqu': {
     station: 't-xieqiqu',
     title: '顺路 · 谐奇趣 · 语音导览',
-    audio: null,
+    audio: audioSrc.clip('guide-t-xieqiqu-base'),
     script: [
       '去黄花阵的路上会先撞见一片汉白玉残基——谐奇趣，乾隆十六年秋天建成，是西洋楼里第一座盖起来的欧式水法大殿。',
       '主楼三层，楼前两侧各有九间弧形游廊，连着两座八角楼厅。',
       '档案上写着：乾隆在主楼进膳，两侧的琉璃厅一边奏东方的乐器，一边奏西方的，楼前看喷泉。他就坐在正中间。'
     ],
-    deepAudio: null,
+    deepAudio: audioSrc.clip('guide-t-xieqiqu-deep'),
     deepScript: [
       '这地方不是欧洲，也不是中国。它是一个中国皇帝按自己的趣味，把两边都搬过来，摆在左右手边的样子。整个西洋楼是什么性质，站在这儿想一遍，比看多少资料都清楚。',
       '南边那座海棠形的水池里，原来有铜羊、铜鸭，还有一条西洋式的翻尾石鱼，一起喷水。我在池底找了一圈——基座还在，鱼没有。',
-      '后来我查到了它在哪儿：那条石鱼现在在北京大学的未名湖里，还在水里。先记下一句话——东西不在原来的地方，不一定就是没了。'
+      '后来我查到了它在哪儿：那条石鱼现在在北京大学的未名湖里。先记下一句话——东西不在原来的地方，不一定就是没了。'
     ]
   },
 
   't-yangquelong': {
     station: 't-yangquelong',
     title: '顺路 · 养雀笼 · 语音导览',
-    audio: null,
+    audio: audioSrc.clip('guide-t-yangquelong-base'),
     script: [
       '往海晏堂走，右手边会先出现一座几乎完整的大理石门框——养雀笼。中间是过道门，两侧原来养着孔雀和各种珍禽，从这道门穿过去，就进入西洋楼的东半部。',
       '东面是大理石西洋门：券顶、壁柱、雕花，纹样是西洋的涡卷。',
       '西面原是中式木牌坊。木头的那一半，烧了。留下来的那一半，是石头做的。'
     ],
-    deepAudio: null,
+    deepAudio: audioSrc.clip('guide-t-yangquelong-deep'),
     deepScript: [
       '如果道具包里有那两张叠层卡：一张印东面石门的线稿，一张印西面牌坊的复原线稿。叠起来对着天光看——两个半边合成一座完整的门。',
       '放下纸，眼前只有石头的那一半。',
@@ -106,13 +109,13 @@ const GUIDES = {
   't-fangwaiguan': {
     station: 't-fangwaiguan',
     title: '顺路 · 方外观 · 语音导览',
-    audio: null,
+    audio: audioSrc.clip('guide-t-fangwaiguan-base'),
     script: [
       '再往前几十步，是一座三开间的台基——方外观，乾隆二十四年建成，原来是一座礼拜殿，供着阿拉伯文碑刻。',
       '档案说，这里是给容妃做礼拜用的。她确有其人；「香妃」「体有异香」是民间传说，没有实证。',
       '正对面隔着石桥是五竹亭：五座西洋式重檐亭子，连着十八间竹廊。档案说，她每次来，乾隆都陪着来。但他不进去。'
     ],
-    deepAudio: null,
+    deepAudio: audioSrc.clip('guide-t-fangwaiguan-deep'),
     deepScript: [
       '他是皇帝，想进当然能进去。他没进。档案上就一句话，没写他等了多久，也没写他在想什么。',
       '纹样对照卡：绕着台基走一圈，能找到几种纹样就划几种。档案上的数目和现场对不上——对不上就对上了，我不做裁判。',
@@ -124,13 +127,13 @@ const GUIDES = {
   't-xushuilou': {
     station: 't-xushuilou',
     title: '顺路 · 蓄水楼 · 语音导览',
-    audio: null,
+    audio: audioSrc.clip('guide-t-xushuilou-base'),
     script: [
       '绕到海晏堂背面，是一座很高的工字形土台——蓄水楼，也叫锡海。楼顶是铺了锡板防渗的大蓄水池，一次能蓄一百六十多立方米水。',
       '水提到楼顶，靠高差的压力经铜管送到各处喷口——不用任何动力，因为水已经在高处了。',
       '那么只剩一个问题：谁把水提上去的？站到台子底下仰头看——得摞几个你，才够得着池沿。水要被提到那个高度，一天十二个时辰，不能停。'
     ],
-    deepAudio: null,
+    deepAudio: audioSrc.clip('guide-t-xushuilou-deep'),
     deepScript: [
       '关于那套提水的水车到底怎么转，我的档案这一栏是空着的。三种说法都摆给你，我一种也不敢选——',
       '一说人力蹬攀，见于《圆明园研究》第86期；一说畜力齿轮，郭黛姮团队据蒋友仁书信复原；还有一份图说写的是骡子拉水车。到今天还在争。',
@@ -141,13 +144,13 @@ const GUIDES = {
   't-xianfahua': {
     station: 't-xianfahua',
     title: '顺路 · 线法画 · 语音导览',
-    audio: null,
+    audio: audioSrc.clip('guide-t-xianfahua-base'),
     script: [
       '几排砖墙的基址，一层层往里收，中间一条笔直的通道——线法画。',
       '乾隆命人用西洋的透视法，把西洋风景画画在墙上：从方河西岸往东看，七道断墙会显出纵深，像一条望不到头的西方街市。',
       '如今线法墙已荡然无存，方河已清整植荷。'
     ],
-    deepAudio: null,
+    deepAudio: audioSrc.clip('guide-t-xianfahua-deep'),
     deepScript: [
       '《圆明园研究》第86期据样式雷图档指出：两列十一面梯形收口，强化了一点透视的效果——引用请点名86期。',
       '墙是收着口的，越往里越窄，为的是把你的眼睛骗到底。站在这头往里望，平面自己会显出纵深。',
@@ -158,13 +161,13 @@ const GUIDES = {
   't-guanshuifa': {
     station: 't-guanshuifa',
     title: '顺路 · 观水法 · 语音导览',
-    audio: null,
+    audio: audioSrc.clip('guide-t-guanshuifa-base'),
     script: [
       '大水法对面，坐南朝北一座平台，上面设过宝座——观水法。皇帝当年就在这儿看喷泉。',
       '喷泉在南，宝座在北，中间隔着水。站到平台往南看，谁坐着看、谁对着谁，位置本身就说明了一半。',
       '不出题，无道具。看完就走。'
     ],
-    deepAudio: null,
+    deepAudio: audioSrc.clip('guide-t-guanshuifa-deep'),
     deepScript: [
       '档案里记着，乾隆五十八年的英国使团、六十年的荷兰使臣，都被安排在这儿瞻仰过水法。',
       '写的是「曾安排」——没写死谁坐过、坐没坐上那张椅子。史料说不到的，就不替它说。'
