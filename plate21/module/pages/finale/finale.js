@@ -1,40 +1,39 @@
-// P14 反转揭示（演出页）：分幕自动演出，点按屏幕轻推（不强制等待）
-// 幕1 黑屏 → 幕2 生成中打字机 → 幕3 五层拼合 → 幕4 长文叙事（不可跳过）→ 幕5 署名
-// 幕3 五层遮片由 CSS transition 揭示，JS 只在五个固定时点切换层级。
+// P14 结局（V2.1 可用稿）：三张正页残片拼合 → 空栏摊开 → 此处待绘 → 署名定格。
+// 幕1 黑屏 → 幕2 生成中打字机 → 幕3 拼合揭示 → 幕4 长文叙事（不可跳过）→ 幕5 署名。
+// 红线：禁止宣言段/金句排比/「第 N 版」（已废）；定格副行＝今日对读。非馆藏原件。
 const session = require('../../store/session')
 const sessionDate = require('../../utils/session-date')
 const motion = require('../../utils/motion')
+const audioSrc = require('../../utils/audio-src')
 
 const TYPE_LINES = [
   '考察报告生成中……',
-  '正在整合这一路的见闻……',
-  '铭文 · 黄花阵 ✓',
-  '兽首 · 海晏堂 ✓',
-  '时间 · 雨果 ✓',
-  '日期 · 考察日 ✓',
+  '正页残片 · 三张在格 ✓',
+  '黄花阵 · 亭与墙 ✓',
+  '海晏堂 · 水力钟 ✓',
+  '雨果 · 信 ✓',
   '报告格式识别中……'
 ]
 
-// 五层点题短文案，对齐飞书 revision 2174 的“后来者完成新画”主旨。
+// 拼合五层（V2.1：主线三张正页残片拼出轮廓与空白；路上的夹页只加厚，不叠也在）
 const LAYER_CAPTIONS = [
-  '黄花阵、海晏堂、大水法与雨果雕像',
-  '它不是等待被发现的旧画',
-  '而是等待后来者完成的新画',
-  '刻版人的线，砌墙人的照片',
-  '写信人的信，考古队探出的圈'
+  '亭与墙 —— 黄花阵那一页的残片',
+  '水力钟 —— 海晏堂那一页的残片',
+  '信 —— 雨果那一页的残片',
+  '路上翻过的夹页可叠上去加细节，不叠也在',
+  '中央空着一大块，印着四个很浅的字'
 ]
-const FINAL_CAPTION = '每一个认真看过它的人，都在画第21幅的第N个版本。'
+const FINAL_CAPTION = '此处待绘。'
 
-// 幕4 长文叙事（飞书 revision 2174；宣言段按《剧情文案改写计划》§4⑪ 换为顿悟段，反宣告红线）
+// 幕4 长文叙事（V2.1 §结局；无宣言段，意义从一路的空栏里长出来）
 const NOVEL_PARAGRAPHS = [
-  { text: '如果你看到这里，说明你已经走完了这条路。你一定很好奇，那幅传闻中的第二十一幅版画，究竟在哪里。' },
-  { text: '我把档案夹摊开在膝盖上，从头翻了一遍。', quote: true },
-  { text: '刻版人的线、砌墙人的照片、写信人的信、考古队探出的圈——我把它们从头翻了一遍才明白：他们记的从来不是二十处房子。是同一幅画，一个人画不完的那一幅。', quote: true },
-  { text: '西洋楼的二十幅版画，把西洋楼收得完完整整——二十幅铜版画，每版红铜二十五公斤，开幅九十三乘五十七厘米，喷泉、石柱、兽首、琉璃瓦，样样俱全。' },
-  { text: '可是，站在今天的遗址前，还有许多东西没有被画下来。' },
-  { text: '那些断裂的石柱，那些被火焚烧后的痕迹，那些流散海外、等待归来的文物，还有无数后来的人，站在废墟前发出的叹息。' },
-  { text: '所以，我留下了这个传闻。希望有一天，会有人因为这个问题，重新走进这片遗址，将那些未曾被记录的一一记下。' },
-  { text: '每一个来到这里、认真看过它的人，都在画第21幅的第N个版本。' }
+  { text: '在像前的台阶上坐下来，把档案夹摊开，三张残片取出来摆在一块儿。' },
+  { text: '三张残片边缘是异形切口，只有一种排法能接上。拼错，接不上；不拍照、不提交——接上了，自己就知道。' },
+  { text: '拼好了。是一幅长卷的轮廓，铜版画的笔意，从迷宫的亭子一路排到这几根柱子。只是中间空着一大块。空白处印着四个很浅的字：此处待绘。' },
+  { text: '路上翻过那些夹页的话，这时可以叠在长卷周围——谐奇趣的楼、养雀笼的门、线法画的雪山，细节会变厚。没翻过，轮廓和空白一样在。' },
+  { text: '再把这一路划过的空栏摊开。对得上的，勾还在；对不上的，那几笔也还在。哪样多、哪样少，没有人替你算。' },
+  { text: '看看中间那块空白——从进门到现在走过的地方，都在这张纸的边上。空着的这一块，就是你站着的位置。', highlight: true },
+  { text: '剩下的，是你的名字，和今天的日期。' }
 ]
 
 Page({
@@ -46,9 +45,9 @@ Page({
     layerCount: 0,        // 幕3 已落下的层数（1~5）
     caption: '',          // 幕3 点题短文案
     novel: NOVEL_PARAGRAPHS,
+    narrSrc: audioSrc.clip('narr-finale'),
     today: '',
     name: '',
-    editionNo: null,      // null → 「第 — 版」
     signing: false,
     signed: false,
     reporting: false
@@ -71,14 +70,20 @@ Page({
     this._reducedMotion = motion.prefersReducedMotion()
     const snap = session.getSnapshot() || {}
     const signed = !!snap.finale
+    // V2.3 回显：全程仅两处游客输入，只在结局屏显（跳过/未走到则不显示）
+    const flags = snap.flags || {}
+    const choiceMap = { '风声': '风声', '人声与鸟鸣': '人声与鸟鸣', '几乎什么都听不到': '几乎什么都听不到' }
+    const echoDashuifa = choiceMap[flags.dashuifaChoice] || ''
+    const echoPostcard = flags.messageSubmittedAt ? '已投递，进了档案' : ''
     this.setData({
       today: sessionDate.formatDateKey(snap.sessionDate),
       act: signed ? 5 : 1,
       name: snap.name || '',
-      editionNo: snap.editionNo || null,
       signed: signed,
       layerCount: signed ? 5 : 0,
-      caption: signed ? FINAL_CAPTION : ''
+      caption: signed ? FINAL_CAPTION : '',
+      echoDashuifa: echoDashuifa,
+      echoPostcard: echoPostcard
     })
     if (signed) return
     // 幕1：整页底色转夜景墨蓝，「屏幕暗了一下」500ms
@@ -166,16 +171,15 @@ Page({
     this.setData({ name: e.detail.value })
   },
 
-  // 幕5 署名：sign → claimEdition 取版本号（失败显示「第 — 版」）→ completeFinale
+  // 幕5 署名：sign → completeFinale（V2.1 定格无「第 N 版」）
   onSign() {
     if (this.data.signing || this.data.signed) return
     const name = (this.data.name || '').trim() || '无名氏'
     this.setData({ signing: true, name: name })
     session.sign(name)
-      .then(() => session.claimEdition())
-      .then((no) => {
-        this.setData({ editionNo: no, signed: true, signing: false })
-        session.emit({ name: 'finale_viewed', editionNo: no })
+      .then(() => {
+        this.setData({ signed: true, signing: false })
+        session.emit({ name: 'finale_viewed' })
         return session.completeFinale()
       })
       .then(() => {})

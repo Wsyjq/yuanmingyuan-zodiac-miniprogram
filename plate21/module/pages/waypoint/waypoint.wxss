@@ -1,4 +1,8 @@
 /* v2 顺路支线站：档案卡式阅读，道具卡铜绿描边 */
+/* 返回钮为 fixed 圆钮，页面内容顶部让位（与主线页 .page 220rpx 口径一致） */
+.page {
+  padding-top: 220rpx;
+}
 .page-no {
   position: absolute;
   top: 56rpx;
@@ -55,6 +59,22 @@
   line-height: 1.9;
   color: var(--ink);
 }
+/* 纸·实物铭文引文（V2.2 四声部之「纸」）：档案页上本来就有的字 */
+.wp-quote {
+  margin: 14rpx 18rpx 6rpx;
+  padding: 12rpx 20rpx;
+  font-size: 26rpx;
+  line-height: 1.85;
+  color: var(--ink);
+  border-left: 4rpx solid rgba(70, 56, 42, 0.35);
+  background: rgba(255, 252, 243, 0.6);
+}
+/* 舞台与操作指示（括号小字）：看得见，不进音频 */
+.wp-stage {
+  margin: 6rpx 4rpx 0 18rpx;
+  font-size: 22rpx;
+  color: rgba(70, 56, 42, 0.66);
+}
 .wp-confirm {
   margin-top: 18rpx;
 }
@@ -74,4 +94,37 @@
 }
 .wp-next {
   margin-top: 26rpx;
+}
+
+/* 步进分页（issue #0029）：非当前步整块隐藏（保留 DOM，配合可跳过红线与页面检索） */
+.wp-step-off {
+  display: none;
+}
+.wp-step {
+  width: 100%;
+  max-width: var(--content-max);
+  box-sizing: border-box;
+}
+/* 分页导航：位置指示 + 上一节/继续 */
+.wp-pager {
+  width: 100%;
+  max-width: var(--content-max);
+  box-sizing: border-box;
+  margin-top: 48rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18rpx;
+}
+.wp-pager-pos {
+  font-size: 22rpx;
+  letter-spacing: 4rpx;
+}
+.wp-pager-btns {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+}
+.wp-prev {
+  min-width: 200rpx;
 }

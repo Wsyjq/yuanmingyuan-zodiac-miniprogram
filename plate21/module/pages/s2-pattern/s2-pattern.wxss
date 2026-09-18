@@ -65,3 +65,15 @@
 .route-check { padding: 18rpx 20rpx; border-left: 5rpx solid var(--patina); background: rgba(72, 112, 103, 0.08); }
 
 .btn-disabled { opacity: .45; }
+
+/* V2.1 对读四：收尾叙事与跳过按钮 */
+.reveal-block { margin-top: 36rpx; }
+.novel-p { font-size: 30rpx; line-height: 1.9; color: var(--ink); margin-bottom: 22rpx; text-align: justify; }
+.skip-btn { width: 100%; min-height: 0; line-height: 1.6; margin-top: 16rpx; padding: 6rpx 10rpx; border: 0; border-radius: 0; background: transparent; font-size: 26rpx; text-decoration: underline dotted; }
+.skip-btn::after { border: 0; }
+
+/* V2.3 【记】证据句 */
+.result-evidence {
+  margin: 20rpx 0;
+  text-align: center;
+}

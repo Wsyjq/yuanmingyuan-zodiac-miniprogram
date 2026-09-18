@@ -1,52 +1,64 @@
-// 序章（采风修订版玩法）
-// novel-view 纯叙事 → 取出并拆开实体信封 → 信中指引 → 前往第一站。
+// 序章（V2.1 可用稿 · 受邀者口径）
+// novel-view 叙事（你对西洋楼有兴趣 → 馆里的人请你来 → 档案翻一翻 → 闻有第二十一图，未见）
+// → 档案交接面板（信不拆，到门口再拆）→ 前往西洋楼入口（s1-decode 拆信读信）。
 const session = require('../../store/session')
+const audioSrc = require('../../utils/audio-src')
 
 Page({
   data: {
-    // 序章叙事（对照采风修订版原文）
+    // 序章叙事（docs/剧情可用稿-人物对话版-V2.3.md §序章：段落收短、删「这些都是常识」「照这行字说」「愿意看的话」）
     paragraphs: [
-      { text: '我在博物馆做了两年研究助理，日常都是在整理馆藏图像档案。一天下午，我在整理一批清代铜版画的数字化记录，翻到《西洋楼铜版图》二十幅的条目。' },
-      { image: 'IMG-P01', src: '/plate21/module/assets/img/IMG-RUNTIME-PROLOGUE-STUDY.jpg', caption: '图像档案整理台' },
-      { text: '《西洋楼铜版图》于乾隆四十六年至五十一年（1781–1786），由宫廷画家伊兰泰起稿、造办处刻印，贺清泰、潘廷璋等参与，记录了圆明园西洋楼建成时的全貌。这是常识，所有图录都这么写。' },
-      { text: '但有一份民国年间的著录卡片，在"第二十图"后面用铅笔补了一行小字：' },
+      { text: '你对圆明园的西洋楼有兴趣，不然不会读到这里。馆里整理这套图的人给你留了一封信，请你来现场走一趟。信封没拆，说好了到遗址门口再拆。随信还有一份没走完的档案，一并交到你手上。' },
+      { text: '档案夹的封面印着「西洋楼铜版图」。翻开，二十幅，一幅一号。图录页写着：乾隆四十六年到五十一年，宫廷画家伊兰泰起稿，造办处刻版刷印，贺清泰、潘廷璋这些在宫里当差的西洋画家也搭过手。画的是刚建成的样子，喷泉、石柱、楼顶都在，一样不缺。' },
+      { text: '翻到后面，是一张民国著录卡。「第二十图」的条目后面，有人用铅笔补了一行小字——' },
       { text: '闻有第二十一图，未见。', quote: true },
-      { image: 'IMG-P02', src: '/plate21/module/assets/img/IMG-RUNTIME-PROLOGUE-CARD.jpg', caption: '民国著录卡片特写' },
-      { text: '字迹潦草，像是随手记下的传闻。再往后查，零星还有几处类似的记载——有人说它被藏起来了，有人说它根本没画完，有人说它早就毁了。没有一份能给出实证。传闻在学术档案的缝隙里反复出现，像一根刺，拔不掉，也按不平。' },
-      { text: '我继续翻阅那份残缺的档案，在附件夹中，发现了一份尚未整理完成的考察资料。' },
-      { text: '里面有一封信、一张手绘路线图、几张空白记录页，以及几件用于现场记录的工具。', highlight: true },
-      { text: '翻着翻着我停住了——这册档案不止一种笔迹。铜版画的条目页是两百多年前的刻版印刷；那张民国卡片上是毛笔小字；一张工地照片的背面有钢笔字；再往后，是复印的论文页、图说和考古简报。' },
-      { text: '这册档案不是一个人的。它传过好几双手——有的手留下了字，有的手留下了照片，有的手什么都没敢写。', quote: true },
-      { text: '我把那只尚未拆封的信封拿在手里。封口已经有些发脆，接下来的答案，也许要从它开始。' }
+      { image: 'IMG-P02', src: '/plate21/module/assets/img/IMG-RUNTIME-PROLOGUE-CARD.jpg', caption: '民国著录卡片 · 铅笔补记' },
+      { text: '数一下图名：一到二十，盛景收完；第二十一行不在清单里，空着。档案缝里还夹着几种说法——藏起来了，没画完，跟楼一起烧了，谁也没拿出实证。' },
+      { text: '二十页里，只有黄花阵那一页多夹了一张照片，回形针还别着：正面像一处工地，矮墙的走向和画上的迷宫几乎一样；翻过来，背面一行钢笔字——' },
+      { text: '照原图，复位。1987、1989。', quote: true },
+      { text: '每页边上留着一道空栏，印着两行小字：' },
+      { text: '对得上的，划个勾；对不上的，记下来。', quote: true },
+      { text: '档案最底下压着一份封套，封口上写着：' },
+      { text: '到像下拆。', quote: true },
+      { text: '条目旁边，不知是谁抄了半句乾隆自己的话——' },
+      { text: '水法不过工巧之一端……中国之大，何奇不有。', quote: true },
+      { text: '后来楼烧了。画还在。邀请写的就是这儿。', highlight: true }
     ],
-    props: ['手绘路线图', '空白记录页', '现场记录工具'],
-    showPack: false,
-    showEnvelope: false,
+    // 交接清点：档案夹里的东西（信不拆，到门口再拆——V2.1 序章口径）
+    props: [
+      '一封信 · 封着，到门口再拆',
+      '二十幅铜版图 · 每幅有号',
+      '民国著录卡 · 铅笔补了一行',
+      '夹照片的一页 · 回形针还别着',
+      '页边空栏 · 对得上划勾，对不上记下',
+      '一份封套 · 写着「到像下拆」'
+    ],
+    showHandover: false,
+    narrSrc: audioSrc.clip('narr-prologue'),
     advancing: false
   },
 
   onNovelFinish() {
-    // 叙事结束后，引导玩家操作手中的实体信封。
-    this.setData({ showEnvelope: true })
+    // 叙事结束：清点交到手上的档案。信不拆——到遗址门口再拆。
+    this.setData({ showHandover: true })
   },
 
-  // 玩家确认已经读完实体信件后，再展示信中内容并推进剧情。
-  onOpenEnvelope() {
+  // 确认收好档案（信仍封着）。拆信读信在入口站 s1-decode 完成。
+  onTakeArchive() {
     session.attemptPuzzle('prologue-envelope', 1, true, 'physical')
-    this.setData({ showEnvelope: false, showPack: true })
-    session.completePuzzle('prologue-envelope', { action: 'opened-and-read' }).catch(function () {
+    session.completePuzzle('prologue-envelope', { action: 'archive-received' }).catch(function () {
       wx.showToast({ title: '进度暂未保存，继续时会重试', icon: 'none' })
     })
     this._timers.push(setTimeout(() => {
       const stamp = this.selectComponent('#stamp')
-      if (stamp) stamp.show('考察资料已备好')
+      if (stamp) stamp.show('档案已收好')
     }, 800))
   },
 
   onGoS1() {
     if (this.data.advancing) return
     this.setData({ advancing: true })
-    session.completePuzzle('prologue-envelope', { action: 'opened-and-read' }, { checkpoint: 's1-decode' }).then(() => {
+    session.completePuzzle('prologue-envelope', { action: 'archive-received' }, { checkpoint: 's1-decode' }).then(() => {
       wx.navigateTo({
         url: '/plate21/module/pages/s1-decode/s1-decode',
         fail: () => this.setData({ advancing: false })
@@ -61,7 +73,7 @@ Page({
     this._timers = []
     session.viewPuzzle('prologue-envelope')
     if (session.isPuzzleComplete('prologue-envelope')) {
-      this.setData({ showPack: true })
+      this.setData({ showHandover: true })
     }
   },
 

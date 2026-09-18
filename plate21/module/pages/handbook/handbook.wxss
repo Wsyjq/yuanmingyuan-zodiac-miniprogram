@@ -461,3 +461,39 @@
   font-size: 22rpx;
   color: var(--patina);
 }
+
+/* V2.2 独立音频开关卡片 */
+.audio-set {
+  width: 100%;
+  max-width: var(--content-max);
+  box-sizing: border-box;
+  margin-top: 20rpx;
+  padding: 8rpx 28rpx;
+  border: 2rpx solid rgba(70, 56, 42, 0.4);
+  background: rgba(244, 237, 220, 0.55);
+}
+.audio-set-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24rpx;
+  padding: 20rpx 0;
+}
+.audio-set-row + .audio-set-row {
+  border-top: 1rpx dashed rgba(70, 56, 42, 0.25);
+}
+.audio-set-main {
+  flex: 1;
+  min-width: 0;
+}
+.audio-set-title {
+  font-size: 28rpx;
+  color: var(--ink-deep);
+  letter-spacing: 2rpx;
+}
+.audio-set-sub {
+  margin-top: 6rpx;
+  font-size: 22rpx;
+  line-height: 1.6;
+  color: rgba(74, 64, 46, 0.72);
+}

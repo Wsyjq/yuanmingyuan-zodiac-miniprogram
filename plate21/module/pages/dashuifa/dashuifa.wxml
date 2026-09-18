@@ -1,14 +1,14 @@
-<!-- v2 大水法留白站：废墟本身就是一种缺席，静默是唯一诚实的表达方式 -->
+<!-- v2 大水法 · 主线站（零对读）：纸上最响，地上一根水都没有 -->
 <nav-back wx:if="{{stage !== 'silence'}}" />
 <view class="page page-shell paper-grain paper-real dsf-page">
 
   <!-- 幕一：一句话 + 规则说明 -->
   <view wx:if="{{stage === 'intro'}}" class="dsf-stage">
-    <view class="tag-no page-no">S·F</view>
-    <view class="dsf-pageturn note-hand olive">我往档案后面翻——翻到下一站，那一页是空的。</view>
-    <view class="dsf-quote kaiti">档案上说，这里原来是全园水声最大的地方。</view>
+    <view class="tag-no page-no">No.012</view>
+    <view class="dsf-pageturn note-hand olive">不用谁指路，柱子已经在眼前了。</view>
+    <view class="dsf-quote kaiti">档案翻到这一页，画上水花翻得正凶。抬头，一根水都没有。档案上说，这里原来是全园水声最大的地方。</view>
     <view class="dsf-rule">
-      <view class="dsf-rule-line">这一站不给道具、不设谜题、不要求任何输入——全程唯一一个「只需要待在这儿」的地方。</view>
+      <view class="dsf-rule-line">这一站不给道具、不设对读、不要求任何输入。</view>
       <view class="dsf-rule-line">接下来的两分钟：不加旁白、不加配乐，只留现场的声音。</view>
       <view class="dsf-rule-line">风、游客、鸟、远处的车。</view>
     </view>
@@ -40,11 +40,11 @@
 
   <!-- 幕四：不再有音频；玩家自行决定何时离开 -->
   <view wx:else class="dsf-stage">
-    <view class="dsf-quote kaiti">这里没有题目。</view>
+    <view class="dsf-quote kaiti">风，人声，远处有人在拍照。就是没有水声。</view>
     <view class="dsf-rule">
-      <view class="dsf-rule-line">你听见什么，它就是什么。</view>
-      <view class="dsf-rule-line">废墟本身就是一种缺席——静默，是唯一诚实的表达方式。</view>
+      <view class="dsf-rule-line">在这儿站着的不止你一个。</view>
+      <view class="dsf-rule-line">之后不再有音频。下一句要自己点开。</view>
     </view>
-    <button class="btn-seal dsf-start" bindtap="onNext">继续顺路 · 线法画</button>
+    <button class="btn-seal dsf-start" bindtap="onNext">继续往东</button>
   </view>
 </view>

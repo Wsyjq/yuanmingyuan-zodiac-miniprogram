@@ -17,3 +17,7 @@ page{background:var(--paper)}
 .hint-copy{font-size:14px;line-height:1.65;color:var(--olive);padding:7px 2px}
 .wrong-tip{font-size:13px;line-height:1.6;color:var(--cinnabar);margin-top:8px}
 .confirm-btn{width:100%;margin-top:15px}
+
+/* V2.1 可跳通道 */
+.skip-btn { display: block; width: 100%; min-height: 0; line-height: 1.6; margin-top: 14rpx; padding: 6rpx 10rpx; border: 0; border-radius: 0; background: transparent; font-size: 26rpx; text-decoration: underline dotted; }
+.skip-btn::after { border: 0; }

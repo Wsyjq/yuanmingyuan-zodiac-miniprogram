@@ -173,3 +173,41 @@ test('reset clears achievement flags so a fresh run re-unlocks', async () => {
   await flushMutations()
   assert.equal(typeof session.getSnapshot().flags['achievements.first-envelope'], 'number')
 })
+
+// V2.2：语音导览两层音频已回填（本地静态服务/CDN 取流，组件零改动即亮播放器）
+test('audio guide backfills TTS sources for every station (V2.2)', () => {
+  const { GUIDES } = require('../plate21/module/capabilities/audio-guide/scripts')
+  const audioSrc = require('../plate21/module/utils/audio-src')
+  const ids = Object.keys(GUIDES)
+  assert.ok(ids.length >= 9, 'expected >=9 guide stations')
+  for (const id of ids) {
+    const guide = GUIDES[id]
+    assert.equal(guide.audio, audioSrc.clip('guide-' + id + '-base'), id + ' base audio')
+    assert.equal(guide.deepAudio, audioSrc.clip('guide-' + id + '-deep'), id + ' deep audio')
+  }
+})
+
+// V2.2：声部清单与导览文稿数量对齐（音频 id ↔ manifest 一致性抽查）
+test('voice manifest covers guide stations and dialogue clip ids', () => {
+  const fs = require('node:fs')
+  const path = require('node:path')
+  const manifest = JSON.parse(fs.readFileSync(
+    path.join(__dirname, '..', 'tools', 'voice_manifest.json'), 'utf8'))
+  const clipIds = new Set(manifest.clips.map((c) => c.id))
+  const { GUIDES } = require('../plate21/module/capabilities/audio-guide/scripts')
+  for (const id of Object.keys(GUIDES)) {
+    assert.ok(clipIds.has('guide-' + id + '-base'), 'manifest missing guide-' + id + '-base')
+    assert.ok(clipIds.has('guide-' + id + '-deep'), 'manifest missing guide-' + id + '-deep')
+  }
+  // 页面引用的关键台词 clip 必须在 manifest 中（抽查每站第一条）
+  for (const id of [
+    'dlg-huanghuazhen-1', 'dlg-xieqiqu-1', 'dlg-yangquelong-1', 'dlg-fangwaiguan-1',
+    'dlg-xushuilou-1', 'dlg-guanshuifa-1', 'dlg-xianfahua-1', 'dlg-haiyantang-1',
+    'dlg-yugao-1', 'dlg-huanghuazhen-6'
+  ]) {
+    assert.ok(clipIds.has(id), 'manifest missing ' + id)
+  }
+  // 红线：匠人与砌墙师傅不同音色
+  const casts = manifest.casts
+  assert.notEqual(casts.jiangren.voice, casts.shifu.voice, 'mason vs bricklayer voice')
+})

@@ -1,10 +1,12 @@
 'use strict'
 
-// 第二站 · 谜题3：现场拍摄四处中西结合细节，生成一张考察卡。
+// 第二站 · 黄花阵 对读三：亭子线稿对眼前这座亭（V2.1 可用稿）。
+// 举线稿对照，用手机拍下中西混作的细节——找到一处即算；四处细目都拍，记录更厚。
 // 最低交付只记录玩家实际拍摄结果，不调用或伪造场景识别。
 const session = require('../../store/session')
 const sessionDate = require('../../utils/session-date')
 const photoPipeline = require('../../utils/photo-pipeline')
+const audioSrc = require('../../utils/audio-src')
 
 const POINTS = [
   {
@@ -97,7 +99,8 @@ Page({
     done: false,
     readyNext: false,
     advancing: false,
-    dateLabel: formatDate()
+    dateLabel: formatDate(),
+    narrSrc: audioSrc.clip('narr-s2-blend')
   },
 
   onLoad() {
@@ -125,7 +128,7 @@ Page({
     this.setData({
       points: points,
       photoCount: photoCount,
-      done: !!completed && !hasNewerDraft && photoCount === POINTS.length,
+      done: !!completed && !hasNewerDraft && photoCount >= 1,
       dateLabel: draft.dateLabel || sessionDate.formatArchiveDate(snap && snap.sessionDate) || formatDate(),
       cardNumber: Number(session.getCardDigit('s2-blend'))
     })
@@ -283,9 +286,10 @@ Page({
   onComplete() {
     const completeAttempts = this.data.completeAttempts + 1
     this.setData({ completeAttempts: completeAttempts })
-    if (this.data.photoCount < POINTS.length) {
+    // V2.1：观察＋拍照，产品不判图——拍到一处即算，四处更厚。
+    if (this.data.photoCount < 1) {
       session.attemptPuzzle('s2-blend', completeAttempts, false, 'camera')
-      wx.showToast({ title: '请先完成四处拍摄', icon: 'none' })
+      wx.showToast({ title: '至少拍下一处细节', icon: 'none' })
       return Promise.resolve(false)
     }
     if (this.data.done) {

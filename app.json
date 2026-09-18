@@ -9,6 +9,7 @@
     {
       "root": "plate21/module",
       "pages": [
+        "pages/gate/gate",
         "pages/cover/cover",
         "pages/prologue/prologue",
         "pages/s1-decode/s1-decode",
@@ -27,23 +28,159 @@
         "pages/finale/finale",
         "pages/report/report",
         "pages/handbook/handbook",
-        "pages/letter/letter"
+        "pages/letter/letter",
+        "pages/board/board"
+      ]
+    },
+    {
+      "root": "voice-a",
+      "pages": [
+        "pages/hold/hold"
+      ]
+    },
+    {
+      "root": "voice-b",
+      "pages": [
+        "pages/hold/hold"
+      ]
+    },
+    {
+      "root": "voice-c",
+      "pages": [
+        "pages/hold/hold"
+      ]
+    },
+    {
+      "root": "voice-d",
+      "pages": [
+        "pages/hold/hold"
+      ]
+    },
+    {
+      "root": "voice-e",
+      "pages": [
+        "pages/hold/hold"
+      ]
+    },
+    {
+      "root": "voice-f",
+      "pages": [
+        "pages/hold/hold"
+      ]
+    },
+    {
+      "root": "voice-g",
+      "pages": [
+        "pages/hold/hold"
+      ]
+    },
+    {
+      "root": "voice-h",
+      "pages": [
+        "pages/hold/hold"
+      ]
+    },
+    {
+      "root": "voice-i",
+      "pages": [
+        "pages/hold/hold"
+      ]
+    },
+    {
+      "root": "voice-j",
+      "pages": [
+        "pages/hold/hold"
       ]
     }
   ],
+  "preloadRule": {
+    "plate21/module/pages/prologue/prologue": {
+      "network": "all",
+      "packages": [
+        "voice-a"
+      ]
+    },
+    "plate21/module/pages/s1-decode/s1-decode": {
+      "network": "all",
+      "packages": [
+        "voice-a"
+      ]
+    },
+    "plate21/module/pages/s2-quiz/s2-quiz": {
+      "network": "all",
+      "packages": [
+        "voice-b"
+      ]
+    },
+    "plate21/module/pages/s2-reveal/s2-reveal": {
+      "network": "all",
+      "packages": [
+        "voice-c"
+      ]
+    },
+    "plate21/module/pages/s2-blend/s2-blend": {
+      "network": "all",
+      "packages": [
+        "voice-h"
+      ]
+    },
+    "plate21/module/pages/s2-pattern/s2-pattern": {
+      "network": "all",
+      "packages": [
+        "voice-g"
+      ]
+    },
+    "plate21/module/pages/s3-comic/s3-comic": {
+      "network": "all",
+      "packages": [
+        "voice-d"
+      ]
+    },
+    "plate21/module/pages/s3-water/s3-water": {
+      "network": "all",
+      "packages": [
+        "voice-i"
+      ]
+    },
+    "plate21/module/pages/s4-timeline/s4-timeline": {
+      "network": "all",
+      "packages": [
+        "voice-e"
+      ]
+    },
+    "plate21/module/pages/finale/finale": {
+      "network": "all",
+      "packages": [
+        "voice-c"
+      ]
+    },
+    "plate21/module/pages/transit/transit": {
+      "network": "all",
+      "packages": [
+        "voice-f"
+      ]
+    },
+    "plate21/module/pages/dashuifa/dashuifa": {
+      "network": "all",
+      "packages": [
+        "voice-j"
+      ]
+    },
+    "plate21/module/pages/handbook/handbook": {
+      "network": "all",
+      "packages": [
+        "voice-i"
+      ]
+    }
+  },
   "window": {
     "backgroundColor": "#F4EFE3",
     "backgroundTextStyle": "dark",
     "navigationBarBackgroundColor": "#F4EFE3",
     "navigationBarTextStyle": "black"
   },
+  "requiredPrivateInfos": ["getLocation"],
   "permission": {
-    "scope.camera": {
-      "desc": "拍摄黄花阵建筑细节并生成现场考察记录"
-    },
-    "scope.writePhotosAlbum": {
-      "desc": "保存你的考察报告（第21图）到相册"
-    },
     "scope.userLocation": {
       "desc": "查看你在圆明园西洋楼景区的位置并导航前往下一站"
     }

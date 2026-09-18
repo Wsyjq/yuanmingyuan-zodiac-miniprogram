@@ -58,11 +58,11 @@ test('finale stretches the novel host across its centered flex stage', () => {
 })
 
 test('quiz, pattern and comic expose non-color interaction cues', () => {
+  // V2.1：quiz 改开放作答——非颜色线索=键盘确认路径、未作答禁用态、跳过通道文字
   const quiz = read('plate21/module/pages/s2-quiz/s2-quiz.wxml')
-  assert.match(quiz, /role="radiogroup"/)
-  assert.match(quiz, /role="radio"/)
-  assert.match(quiz, /aria-checked=/)
-  assert.match(quiz, /class="opt-state"/)
+  assert.match(quiz, /bindconfirm="onConfirm"/)
+  assert.match(quiz, /disabled="\{\{!answer\}\}"/)
+  assert.match(quiz, /先不猜，往下走/)
 
   const patternTemplate = read('plate21/module/pages/s2-pattern/s2-pattern.wxml')
   const patternStyles = read('plate21/module/pages/s2-pattern/s2-pattern.wxss')

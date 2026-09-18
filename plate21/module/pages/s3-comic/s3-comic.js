@@ -1,13 +1,17 @@
-// 第三站 · 谜题1 十二时辰漫画推理（采风修订版玩法）
-// 谜题 S3-1：两小问。小问一答案「马」（子鼠丑牛……午马）；
+// 第三站 · 海晏堂 对读一：十二时辰推理（V2.2 讲述版，骨架沿用 V2.1）
+// 对读 S3-1：两小问。小问一答案「马」（子鼠丑牛……午马）；
 // 小问二答案「午时」（正午十二兽首齐喷）。错 1 次轻晃，错 2 次高亮漫画前两格线索。
 // 史料卡：常规报时每时辰对应兽首轮流喷水；正午马首喷水其余十一首齐喷。
 // 卡片角落数字：会话锁定日期的月份第一位数字。
 // 本页不调 completeStation（S3 由 s3-water 收口）。
+// V2.2 新增：蒋友仁台词两段（开场立论「这一片是一座钟」＋揭晓班次），标艺术演绎。
 const session = require('../../store/session')
+const audioSrc = require('../../utils/audio-src')
+const audioBus = require('../../utils/audio-bus')
 
 Page({
   data: {
+    narrSrc: audioSrc.clip('narr-s3-comic'),
     showHistory: false,
     cardNumber: 0,
     historyLines: [
@@ -33,6 +37,7 @@ Page({
     q2Done: false,
     clue: false,
     shakeKey: '',
+    skipped: false,
     advancing: false
   },
 
@@ -44,7 +49,18 @@ Page({
     this.setData({ showHistory: false })
   },
 
+  // V2.1 对读一可跳：跳过不发该卡，下一拍（转盘）照常展开。
+  onSkip() {
+    if (this.data.q1Done) return
+    this.setData({ skipped: true, q1Done: true, q2Done: true, clue: false })
+    session.attemptPuzzle('s3-hour', this.data.q1Attempts + this.data.q2Attempts, true, 'skip')
+    session.completePuzzle('s3-hour', { action: 'skipped', attempts: this.data.q1Attempts + this.data.q2Attempts })
+      .catch(function () { /* 进度失败不阻断浏览 */ })
+  },
+
   onQ1(e) {
+    // V2.3：答题交互起，压停正在播的人声（做题与听讲不打架）
+    audioBus.stopKind('voice')
     if (this.data.q1Done) return
     const v = e.currentTarget.dataset.v
     this.setData({ q1Selected: v })
@@ -59,6 +75,8 @@ Page({
   },
 
   onQ2(e) {
+    // V2.3：答题交互起，压停正在播的人声（做题与听讲不打架）
+    audioBus.stopKind('voice')
     if (this.data.q2Done) return
     const v = e.currentTarget.dataset.v
     this.setData({ q2Selected: v })
@@ -95,7 +113,7 @@ Page({
     session.completePuzzle('s3-hour', {
       answer: { zodiac: '马', hour: '午时' },
       attempts: this.data.q1Attempts + this.data.q2Attempts + 2
-    }, { collectCard: true, checkpoint: 's3-zodiac' }).then(function () {
+    }, { collectCard: !this.data.skipped, checkpoint: 's3-zodiac' }).then(function () {
       wx.redirectTo({ url: '/plate21/module/pages/s3-zodiac/s3-zodiac' })
     }).catch(() => {
       this.setData({ advancing: false })
@@ -107,13 +125,15 @@ Page({
     this._timers = []
     session.viewPuzzle('s3-hour')
     const puzzle = session.getPuzzle('s3-hour')
+    const skipped = !!(puzzle && puzzle.payload && puzzle.payload.action === 'skipped')
     this.setData({
       cardNumber: Number(session.getCardDigit('s3-hour')),
       q1Done: !!puzzle,
       q2Done: !!puzzle,
-      q1Selected: puzzle ? '马' : '',
-      q2Selected: puzzle ? '午时' : '',
-      showHistory: !!puzzle
+      skipped: skipped,
+      q1Selected: puzzle && !skipped ? '马' : '',
+      q2Selected: puzzle && !skipped ? '午时' : '',
+      showHistory: !!puzzle && !skipped
     })
   },
 

@@ -1,6 +1,9 @@
 {
   "navigationStyle": "custom",
   "usingComponents": {
-    "novel-view": "../../components/novel-view/novel-view"
+    "novel-view": "../../components/novel-view/novel-view",
+    "audio-clip": "../../components/audio-clip/audio-clip",
+    "dialogue-block": "../../components/dialogue-block/dialogue-block",
+    "bgm-ambience": "../../components/bgm-ambience/bgm-ambience"
   }
 }

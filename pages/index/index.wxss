@@ -53,6 +53,60 @@
   margin: 32rpx 0 48rpx;
 }
 
+/* ---------- 次日回访卡（通关次日起显示，直达留言簿） ---------- */
+.revisit-card {
+  position: relative;
+  width: 100%;
+  max-width: 620rpx;
+  box-sizing: border-box;
+  margin-bottom: 36rpx;
+  padding: 28rpx;
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  z-index: 2;
+  border: 2rpx solid rgba(166, 58, 46, 0.5);
+}
+/* 朱砂「回访」戳记 */
+.revisit-stamp {
+  flex-shrink: 0;
+  width: 120rpx;
+  height: 120rpx;
+  border: 3rpx solid var(--cinnabar);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34rpx;
+  letter-spacing: 4rpx;
+  font-family: "STKaiti", "KaiTi", serif;
+  color: var(--cinnabar);
+  background: rgba(166, 58, 46, 0.05);
+  transform: rotate(-6deg);
+}
+.revisit-info {
+  flex: 1;
+  min-width: 0;
+}
+.revisit-name {
+  font-size: 30rpx;
+  font-weight: 700;
+  letter-spacing: 3rpx;
+  color: var(--cinnabar);
+}
+.revisit-desc {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: var(--ink);
+  letter-spacing: 2rpx;
+}
+.revisit-meta {
+  margin-top: 10rpx;
+  font-size: 20rpx;
+  color: var(--ink60);
+  line-height: 1.5;
+}
+
 /* ---------- 入口卡（第二十一图） ---------- */
 .module-card {
   position: relative;

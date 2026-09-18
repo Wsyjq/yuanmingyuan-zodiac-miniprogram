@@ -89,9 +89,11 @@ test('report draws the approved AI plate before the signature and metadata', asy
 
   await instance.drawReport(ctx, canvas)
   const plateIndex = calls.indexOf('image')
-  const signatureIndex = calls.indexOf('text:测试者')
+  // V2.1 定格：署名=「绘制者：<名字>」，副行=今日对读。非馆藏原件。
+  const signatureIndex = calls.findIndex((call) => call === 'text:绘制者：测试者')
   assert.notEqual(plateIndex, -1)
   assert.notEqual(signatureIndex, -1)
+  assert.ok(calls.includes('text:今日对读。非馆藏原件。'))
   assert.ok(plateIndex < signatureIndex)
 })
 
@@ -297,4 +299,26 @@ test('history card custom action ignores duplicate taps', () => {
   assert.deepEqual(events, ['next'])
   assert.equal(instance.data.closing, true)
   detach()
+})
+
+// V2.2 红线词静态扫描：游客侧页面标记（wxml，剥注释后）不得出现触摸指引与假设感受句
+test('V2.2 red-line words stay out of visitor-facing page markup', () => {
+  const fs = require('node:fs')
+  const path = require('node:path')
+  const root = path.join(__dirname, '..', 'plate21', 'module', 'pages')
+  const forbidden = [/贴墙/, /摸一摸/, /摸完墙/, /看了很久/, /愣了/, /还在水里/]
+  const hits = []
+  ;(function walk(dir) {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name)
+      if (entry.isDirectory()) walk(full)
+      else if (entry.name.endsWith('.wxml')) {
+        const src = fs.readFileSync(full, 'utf8').replace(/<!--[\s\S]*?-->/g, '')
+        for (const re of forbidden) {
+          if (re.test(src)) hits.push(path.relative(root, full) + ' ~ ' + re.source)
+        }
+      }
+    }
+  })(root)
+  assert.deepEqual(hits, [])
 })

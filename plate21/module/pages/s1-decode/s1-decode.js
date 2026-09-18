@@ -1,9 +1,18 @@
+// 第一站 · 西洋楼入口（V2.1 可用稿）：拆信读信 → 封口半字 → 两半合上=黄花阵。
+// 三段交互：sealed（到门口，撕开封口）→ reading（去读纸上的信）→ puzzle（半字拼合，输入校验）。
+// 信的内容只在实体信纸上（正面＝信全文，背面＝上半截字），软件不重复呈现，本页只给引导与判定。
+// 判定：拼出「黄花阵」即过，不拍照、不提交；卡住才出提示。
 const session = require('../../store/session')
+const audioSrc = require('../../utils/audio-src')
 
 const ANSWER = '黄花阵'
 
+// 信全文见 docs/剧情可用稿-主线走一遍.md §第一站【信·可直接用】，印在实体信纸正面，此处不再复制。
+
 Page({
   data: {
+    narrSrc: audioSrc.clip('narr-s1-decode'),
+    stage: 'sealed', // sealed → reading → puzzle
     answerInput: '',
     attempts: 0,
     hintLevel: 0,
@@ -18,11 +27,22 @@ Page({
     const puzzle = session.getPuzzle('s1-decode')
     if (puzzle) {
       this.setData({
+        stage: 'puzzle',
         solved: true,
         answerInput: ANSWER,
         attempts: Number(puzzle.payload && puzzle.payload.attempts) || 1
       })
     }
+  },
+
+  // 撕开封口：转到「去读纸上的信」。信不在屏幕上，这里只给一句引导。
+  onTear() {
+    this.setData({ stage: 'reading' })
+  },
+
+  // 读完纸信，回头看封口上那半截字
+  onReadDone() {
+    this.setData({ stage: 'puzzle' })
   },
 
   onInput(e) {
@@ -33,7 +53,7 @@ Page({
     session.viewHint('s1-decode', 1)
     this.setData({
       hintLevel: Math.max(this.data.hintLevel, 1),
-      hintText: '先对照信封封口和信纸背面的半字，不要只看单个字形。'
+      hintText: '封口上留着半截字，只有下面一半。'
     })
   },
 
@@ -41,14 +61,14 @@ Page({
     session.viewHint('s1-decode', 2)
     this.setData({
       hintLevel: 2,
-      hintText: '把对应位置的两半字在脑中合拢，完整地点由三个字组成。'
+      hintText: '信纸翻过来，背面印着上面那一半。两半合上。'
     })
   },
 
   onSubmit() {
     const value = String(this.data.answerInput || '').replace(/\s+/g, '')
     if (!value) {
-      wx.showToast({ title: '请先填写地点', icon: 'none' })
+      wx.showToast({ title: '先填一个地点试试', icon: 'none' })
       return
     }
     if (value.includes(ANSWER)) {
@@ -65,8 +85,8 @@ Page({
     this.setData({
       attempts,
       wrongTip: attempts > 1
-        ? '还不是这个地点。试着把对应位置的上下半字拼成完整汉字。'
-        : '答案没有对上，再检查一次实体信封。'
+        ? '还不是这三个字。封口那半和信纸背面那半，要对上位置再合。'
+        : '答案没有对上。先看看封口上留着的那半截字。'
     })
   },
 

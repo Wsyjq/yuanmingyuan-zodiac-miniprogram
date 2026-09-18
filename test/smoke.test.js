@@ -5,6 +5,7 @@ const { renderPage } = require('./harness/runtime')
 
 const PAGES = [
   { route: 'pages/index/index' },
+  { route: 'plate21/module/pages/gate/gate' },
   { route: 'plate21/module/pages/cover/cover' },
   { route: 'plate21/module/pages/prologue/prologue' },
   { route: 'plate21/module/pages/s1-decode/s1-decode' },
@@ -21,6 +22,7 @@ const PAGES = [
   { route: 'plate21/module/pages/finale/finale' },
   { route: 'plate21/module/pages/report/report' },
   { route: 'plate21/module/pages/letter/letter' },
+  { route: 'plate21/module/pages/board/board' },
   { route: 'plate21/module/pages/ending/ending' },
   { route: 'plate21/module/pages/handbook/handbook' },
   { route: 'plate21/module/pages/waypoint/waypoint', query: { site: 'xieqiqu' } },

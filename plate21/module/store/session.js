@@ -417,6 +417,100 @@ function setFlag(key, value) {
   })
 }
 
+// —— 留言簿（UGC，契约 v1.3.0）：写走 adapter（宿主机检+人工审），读走 adapter 展示池 ——
+
+function submitBoardMessage(text) {
+  const value = String(text || '').trim().slice(0, contract.BOARD_MESSAGE_MAX_LEN)
+  if (!value) return Promise.reject(new Error('留言为空'))
+  if (!snapshot) return init({}).then(function () { return submitBoardMessage(text) })
+  return Promise.resolve()
+    .then(function () {
+      return adapter.submitBoardMessage({ sessionId: snapshot.sessionId, text: value })
+    })
+    .catch(function (err) {
+      console.warn('[plate21] submitBoardMessage 不可用，回落本地保存（不公开展示）', err)
+      capabilityFallback('submitBoardMessage', 'adapter_failed')
+      return { status: 'pending_review', fallback: true }
+    })
+    .then(function (res) {
+      return setFlag('boardDraft', value)
+        .then(function () { return setFlag('boardSubmittedAt', Date.now()) })
+        .then(function () {
+          emit({ name: 'board_message_submitted', moderation: res.status })
+          return res
+        })
+    })
+}
+
+function listBoardMessages(options) {
+  const limit = (options && options.limit) || 6
+  return Promise.resolve()
+    .then(function () {
+      return adapter.listBoardMessages({ sessionId: snapshot && snapshot.sessionId, limit: limit })
+    })
+    .catch(function (err) {
+      console.warn('[plate21] listBoardMessages 不可用，回落官方种子池', err)
+      capabilityFallback('listBoardMessages', 'adapter_failed')
+      const seeds = require('../capabilities/board/seeds')
+      return {
+        messages: seeds.pickBoardMessages(snapshot && snapshot.sessionId, limit).map(function (m) {
+          return { text: m.text, from: m.from, date: m.date, source: 'official_seed' }
+        })
+      }
+    })
+}
+
+// —— 门票付费（gate，契约 v1.4.0）：权益以宿主订单为准，本地 flags.premiumUnlockedAt 只是缓存 ——
+
+const PREMIUM_FLAG = 'premiumUnlockedAt'
+
+// 权益查询：本地缓存命中直接放行；未命中查宿主（模拟器=storage envelope），
+// unlocked 时回写缓存。退款收回发生在下次冷启动查询。
+function checkPremiumUnlocked() {
+  const snap = snapshot || {}
+  if (snap.flags && snap.flags[PREMIUM_FLAG]) return Promise.resolve(true)
+  return Promise.resolve()
+    .then(function () {
+      return adapter.checkEntitlement({ sessionId: snap.sessionId })
+    })
+    .then(function (res) {
+      if (res && res.unlocked) {
+        return setFlag(PREMIUM_FLAG, res.unlockedAt || Date.now()).then(function () { return true })
+      }
+      return false
+    })
+    .catch(function (err) {
+      console.warn('[plate21] checkEntitlement 不可用，按未解锁处理', err)
+      capabilityFallback('checkEntitlement', 'adapter_failed')
+      return false
+    })
+}
+
+// 购买：paid 落缓存（权威在宿主库）；unavailable 返回给门页隐藏入口。
+function purchaseUnlock(sku) {
+  if (!snapshot) return init({}).then(function () { return purchaseUnlock(sku) })
+  emit({ name: 'purchase_initiated', sku: sku || 'plate21_full' })
+  return Promise.resolve()
+    .then(function () {
+      return adapter.requestPayment({ sessionId: snapshot.sessionId, sku: sku || 'plate21_full' })
+    })
+    .catch(function (err) {
+      console.warn('[plate21] requestPayment 不可用', err)
+      capabilityFallback('requestPayment', 'adapter_failed')
+      return { status: 'unavailable' }
+    })
+    .then(function (res) {
+      if (res && res.status === 'paid') {
+        return setFlag(PREMIUM_FLAG, Date.now())
+          .then(function () {
+            emit({ name: 'purchase_completed', sku: sku || 'plate21_full' })
+            return res
+          })
+      }
+      return res
+    })
+}
+
 function claimEdition() {
   if (!snapshot) return Promise.resolve(null)
   return adapter.claimEdition({
@@ -547,6 +641,10 @@ module.exports = {
   getCardDigit: getCardDigit,
   getCardDigits: getCardDigits,
   setFlag: setFlag,
+  submitBoardMessage: submitBoardMessage,
+  listBoardMessages: listBoardMessages,
+  checkPremiumUnlocked: checkPremiumUnlocked,
+  purchaseUnlock: purchaseUnlock,
   sign: sign,
   claimEdition: claimEdition,
   recognizeScene: recognizeScene,

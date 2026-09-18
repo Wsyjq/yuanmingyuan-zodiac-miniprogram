@@ -3,6 +3,7 @@ node_modules/
 
 .zcode/
 .grok/
+.workbuddy/
 .playwright-cli/
 .env
 .env.*
@@ -56,3 +57,4 @@ Thumbs.db
 /CLAUDE.md
 # BGM 音频本地生成（ComfyUI），不入库
 /bgm/
+/audio/

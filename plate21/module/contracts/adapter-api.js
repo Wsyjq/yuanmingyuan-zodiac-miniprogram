@@ -1,8 +1,8 @@
 /**
  * Plate21 Host Adapter 接口契约（JS / JSDoc 版）
- * 正式定义见 docs/宿主接入方案.md §3，本文件为该契约的原样 JS 转写。
+ * 契约正式定义见《完全接入对接文档-V2.2.md》§4（宿主接入方案.md v1.2.1 已被取代），本文件为该契约的原样 JS 转写。
  *
- * 模块（plate21/module）只认识这里定义的 8 个方法；
+ * 模块（plate21/module）只认识这里定义的 12 个方法；
  * 开发期由 adapters/local-adapter.js 实现，接入期由宿主按同一契约实现。
  * 两种实现必须返回完全相同的数据结构，模块内部不写两套流程。
  */
@@ -166,13 +166,85 @@
  * @property {boolean} [pass]     photo_check 时携带
  */
 
+/* ============================== 留言簿（UGC）============================== */
+
+/**
+ * 留言提交入参（通关当天 report 末尾「写」动作）
+ * @typedef {Object} BoardMessageSubmitInput
+ * @property {string} sessionId
+ * @property {string} text            玩家留言，trim 后 1–50 字
+ */
+
+/**
+ * 留言提交结果：宿主侧必须先检后收。
+ * @typedef {Object} BoardMessageSubmitResult
+ * @property {'accepted'|'pending_review'|'rejected'} status
+ *   accepted=过审入库并进入展示池；pending_review=已收待人工审（先审后发模式下玩家看不到自己的话上墙）；
+ *   rejected=内容安全接口或人工拒绝（附 reason，模块原样 toast）
+ * @property {string} [reason]        rejected 时的可展示原因（如「内容不适宜展示」）
+ * @property {string} [messageId]     宿主侧留言 ID，供后台管理与下架定位
+ */
+
+/**
+ * 展示池单条留言（次日回访/信末「读」动作）
+ * @typedef {Object} BoardMessage
+ * @property {string} text            过审后的留言文本
+ * @property {string} from            展示署名，固定「一位考察者」（宿主不得透出真实昵称/头像）
+ * @property {string} date            展示日期 YYYY.MM.DD（宿主按过审时间或考察日期给）
+ * @property {'official_seed'|'user_generated'} source
+ *   official_seed=官方预置内容（冷启动/降级）；user_generated=真实玩家过审留言
+ */
+
+/**
+ * 留言展示池拉取入参
+ * @typedef {Object} BoardMessageListInput
+ * @property {string} [sessionId]     可选，宿主可据此做同会话固定排序（重看不换）
+ * @property {number} [limit]         默认 6，宿主按冷启动策略返回
+ */
+
+/**
+ * @typedef {Object} BoardMessageListResult
+ * @property {BoardMessage[]} messages 只允许包含过审内容；空池时返回官方预置种子
+ */
+
+/* ============================== 门票付费（gate）============================== */
+
+/**
+ * 购买/解锁入参（门页「解锁完整考察」按钮）
+ * @typedef {Object} PaymentRequestInput
+ * @property {string} sessionId
+ * @property {'plate21_full'} sku 商品 SKU；商品与价格在宿主商品库维护，前端零金额逻辑
+ */
+
+/**
+ * 支付结果。宿主对接已有付费工程的两种形态（接口级统单 / 页面级收银台）对模块完全透明。
+ * @typedef {Object} PaymentRequestResult
+ * @property {'paid'|'cancelled'|'failed'|'unavailable'} status
+ *   paid=支付成功（权益已落宿主库）；cancelled=用户取消；failed=支付失败（附 reason）；
+ *   unavailable=宿主未提供付费能力（iOS 差异/类目受限等），门页隐藏购买入口
+ * @property {string} [reason]        failed 时的可展示原因
+ * @property {string} [orderId]       宿主订单号（对账/客服）
+ * @property {string} [entitlementId] 宿主权益号（跨设备恢复购买）
+ */
+
+/**
+ * 权益查询结果（门页放行判定 + 冷启动刷新本地缓存）。
+ * 放行口径：本地 flags.premiumUnlockedAt 命中即放行（离线友好，gate.test.js 固化）；
+ * 缓存未命中时以宿主订单为准——换设备自动恢复；宿主置 unlocked=false（如退款）
+ * 在下一次真实查询（缓存未命中/本地清空）时生效收回。
+ * @typedef {Object} EntitlementResult
+ * @property {boolean} unlocked
+ * @property {string} [entitlementId]
+ * @property {number} [unlockedAt]    宿主落库时间戳
+ */
+
 /* ============================== 主接口（§3.1） ============================== */
 
 /**
  * @interface Plate21HostAdapter
  *
  * 宿主适配层：模块与宿主系统之间的唯一通道。
- * 任何适配器实现（local-adapter / 宿主 adapter）都必须满足以下 8 个方法。
+ * 任何适配器实现（local-adapter / 宿主 adapter）都必须满足以下 12 个方法。
  *
  * getIdentity(): Promise<{userId: string, accessToken?: string}>
  *   取当前用户标识。模块进入时调用（P00 封面）。
@@ -203,13 +275,40 @@
  *
  * emitEvent(event: ModuleEvent): void
  *   埋点事件。同步、不返回；宿主可批量上报。模块保证事件枚举稳定。
+ *
+ * submitBoardMessage(input: BoardMessageSubmitInput): Promise<BoardMessageSubmitResult>
+ *   留言簿提交（通关当天 report 末尾）。UGC 硬合规通道：宿主实现必须
+ *   ①调微信内容安全接口 msgSecCheck（含 2.0 版 user 平台昵称场景）做机检，
+ *   ②进入宿主审核后台的人工队列（或先审后发），
+ *   ③留存提交记录（谁/何时/原文/机检结果）供监管追溯与下架。
+ *   机检不过或人工拒绝 → status:'rejected' 并给可展示 reason；模块 toast 原样提示，不重试。
+ *   失败/降级（resolve null 或 reject 不适用）：宿主不可用时模块回落本地 flags 保存（不公开展示）。
+ *
+ * listBoardMessages(input: BoardMessageListInput): Promise<BoardMessageListResult>
+ *   留言展示池（次日回访 / 信末「读」）。只允许返回过审内容，署名一律「一位考察者」，
+ *   不得透出可识别个人信息的字段。空池/冷启动返回 official_seed 官方预置。
+ *   宿主不可用时模块回落本地种子池（capabilities/board/seeds.js，确定性取张）。
+ *
+ * requestPayment(input: PaymentRequestInput): Promise<PaymentRequestResult>
+ *   门票购买（gate 门页「解锁完整考察」）。对接宿主已有付费工程的两种形态对模块透明：
+ *   形态A=接口级（宿主 Adapter 内统单→wx.requestPayment）；形态B=页面级（跳宿主收银台页，
+ *   回来后查单确认）。金额/商品全部在宿主商品库，模块前端零金额逻辑。
+ *   unavailable（宿主未开通付费/iOS 差异）时门页隐藏购买入口，不得出现死按钮。
+ *
+ * checkEntitlement(input: {sessionId: string}): Promise<EntitlementResult>
+ *   权益查询。门页放行判定 + 缓存未命中时的权威来源：本地 flags.premiumUnlockedAt
+ *   命中即放行（离线友好）；缓存未命中以宿主订单状态为准（换设备自动恢复；
+ *   宿主置 unlocked=false 的收回在下一次真实查询时生效）。
  */
 
-/** 契约版本，供 adapter 实现与契约测试引用 */
-const CONTRACT_VERSION = '1.2.0'
+/** 契约版本，供 adapter 实现与契约测试引用（1.4.0：新增门票 requestPayment / checkEntitlement） */
+const CONTRACT_VERSION = '1.4.0'
 
 /** 当前快照结构版本 */
 const SESSION_SCHEMA_VERSION = 2
+
+/** 留言簿单条字数上限（report 明信片同口径） */
+const BOARD_MESSAGE_MAX_LEN = 50
 
 /** 八张日期卡的剧情顺序，数字从 SessionSnapshot.sessionDate 对应位置读取 */
 const CARD_ORDER = [
@@ -238,7 +337,10 @@ const EVENT_NAMES = [
   'photo_check',
   'finale_viewed',
   'report_saved',
-  'side_visited'
+  'side_visited',
+  'board_message_submitted',
+  'purchase_initiated',
+  'purchase_completed'
 ]
 
 /** 站点 → 考察记录类型映射（四站结构：s1 西洋楼入口 / s2 黄花阵 / s3 海晏堂·大水法 / s4 雨果雕像） */
@@ -252,6 +354,7 @@ const STATION_RECORD_TYPE = {
 module.exports = {
   CONTRACT_VERSION,
   SESSION_SCHEMA_VERSION,
+  BOARD_MESSAGE_MAX_LEN,
   CARD_ORDER,
   EVENT_NAMES,
   STATION_RECORD_TYPE

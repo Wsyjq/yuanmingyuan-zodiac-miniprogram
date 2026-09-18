@@ -156,3 +156,36 @@
   line-height: 1.85;
   color: var(--ink);
 }
+
+/* 全局音频开关行（BGM/人声，与手册页同状态源） */
+.ag-switches {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 20rpx;
+}
+.ag-switch {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12rpx 20rpx;
+  border: 2rpx solid var(--dash);
+  border-radius: 999rpx;
+  background: rgba(244, 237, 220, 0.6);
+}
+.ag-switch.on {
+  border-color: var(--patina);
+}
+.ag-switch-name {
+  font-size: 22rpx;
+  letter-spacing: 2rpx;
+  color: var(--ink);
+}
+.ag-switch-state {
+  font-size: 20rpx;
+  letter-spacing: 2rpx;
+  color: var(--ink60);
+}
+.ag-switch.on .ag-switch-state {
+  color: var(--patina);
+}

@@ -212,8 +212,66 @@ const localAdapter = {
     return Promise.resolve({ editionNo: counter })
   },
 
+  // —— 留言簿（UGC）本地降级 ——
+  // 本地无审核后台：提交一律收件待审（pending_review），永不进公池；
+  // 展示池恒为官方种子（official_seed）。真实宿主实现见 contracts/adapter-api.js v1.3.0。
+  submitBoardMessage(input) {
+    const text = String(input && input.text || '').trim()
+    if (!text) return Promise.reject(new Error('留言为空'))
+    return Promise.resolve({
+      status: 'pending_review',
+      messageId: 'local-' + now().toString(36)
+    })
+  },
+
+  listBoardMessages(input) {
+    const seeds = require('../capabilities/board/seeds')
+    const limit = Math.min(Number(input && input.limit) || 6, seeds.SEED_MESSAGES.length)
+    return Promise.resolve({
+      messages: seeds.pickBoardMessages(input && input.sessionId, limit).map(function (m) {
+        return { text: m.text, from: m.from, date: m.date, source: 'official_seed' }
+      })
+    })
+  },
+
   emitEvent(event) {
     console.log('[plate21:event]', event)
+  },
+
+  // —— 门票付费（gate）本地演示 ——
+  // 本地无支付工程：requestPayment 模拟支付成功（演示门页放行全流程）；
+  // 权益以 storage envelope 的 flags 为准（模拟宿主订单库）。
+  // 真实宿主对接已有付费工程（接口级/页面级）见 contracts/adapter-api.js v1.4.0。
+  requestPayment(input) {
+    const sku = input && input.sku || 'plate21_full'
+    // 模拟宿主权益落库：写入 envelope flags，checkEntitlement 据此返回
+    const env = readEnvelope()
+    if (env.snapshot) {
+      env.snapshot.flags = env.snapshot.flags || {}
+      env.snapshot.flags.premiumEntitlement = {
+        sku: sku,
+        entitlementId: 'local-ent-' + now().toString(36),
+        unlockedAt: now()
+      }
+      writeEnvelope(env)
+    }
+    return Promise.resolve({
+      status: 'paid',
+      orderId: 'local-order-' + now().toString(36),
+      entitlementId: env.snapshot && env.snapshot.flags.premiumEntitlement.entitlementId
+    })
+  },
+
+  checkEntitlement() {
+    const env = readEnvelope()
+    const snap = env.snapshot
+    const ent = snap && snap.flags && snap.flags.premiumEntitlement
+    if (!ent) return Promise.resolve({ unlocked: false })
+    return Promise.resolve({
+      unlocked: true,
+      entitlementId: ent.entitlementId,
+      unlockedAt: ent.unlockedAt
+    })
   }
 }
 

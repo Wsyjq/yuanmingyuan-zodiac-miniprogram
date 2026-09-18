@@ -9,6 +9,8 @@
 const session = require('../../store/session')
 const drag = require('../../utils/drag')
 const motion = require('../../utils/motion')
+const audioSrc = require('../../utils/audio-src')
+const audioBus = require('../../utils/audio-bus')
 
 // INT-403：触觉反馈辅助——wx.vibrateShort 带 type 参数，旧基础库降级为无参
 function haptic(type) {
@@ -19,16 +21,27 @@ function haptic(type) {
   } catch (e) { /* 部分设备/台架不支持，静默 */ }
 }
 
+// 站名叙事（V2.2 讲述版 §第五站：守档人全剧首次出声，先对年再读信）
 const PARAGRAPHS = [
-  '两百多年前，也曾有人与我有同样的悲愤。',
-  '他不是中国人，他没有亲眼见过圆明园的辉煌，也没有站在这片废墟之中。',
-  '当他得知这样一座凝聚人类文明成果的园林遭到破坏时，他依然写下了《致巴特勒上尉的信》，公开谴责这场掠夺。',
-  '雨果雕像是一尊立于花岗岩底座上的青铜半身像。他的面容在树荫下沉静，眉头微蹙，目光投向远方的大水法残柱。',
-  '雨果没有来到圆明园，却通过留下来的资料、图像和文字，想象出了这座园林曾经的辉煌，也记下了全人类文明的遗憾。',
-  '而今天，我站在这些残留下来的遗迹面前，也试图寻找那些被时间掩埋的故事。'
+  '再往东，草地当中立着一尊铜像：一张外国人的脸，眉头微蹙，望向大水法的方向。',
+  '水法的页到这儿对完了，档案夹里还剩最后一份封着口的，封套上那行「到像下拆」，说的就是这儿。到了像下，手机里起了一个声音——就是给你写信的那个人，头一回出声。'
 ]
 
 const QUOTE = '2010年，这尊雕像落成，法国雕塑家娜什拉·凯努女士无偿创作，中法两方代表共同揭幕，作为中法文化交流的纪念。'
+
+// 站尾收束（V2.2：守档人四段台词串起 拆封套→读信→四件东西→开放问→收束）
+const MONOLOGUE_PARAGRAPHS = [
+  '排完才对上：信是一八六一年写的，写的人从没来过中国；像是二〇一〇年才立的。年对齐了，再读信。'
+]
+
+const RELIC_CARDS = [
+  { no: '一', text: '观水法石屏风。曾搬进城里私园，1977 年运回原址。圆明园第一件完整回归的流失文物。' },
+  { no: '二', text: '翻尾石鱼。谐奇趣南池那条，现在北京大学未名湖西侧。去过谐奇趣的人会多一声，原来那座空池说的就是它。没去过，这张卡自己也成立。' },
+  { no: '三', text: '七根汉白玉石柱。流到挪威一百多年，完好，2023 年回来了。' },
+  { no: '四', text: '铜鹿和十只铜狗。大水法池里的。1860 年之后没有任何下落。石座还在，东西没了。' }
+]
+
+const OPEN_QUESTION = '一样东西放在哪儿，才算被保住了？'
 
 const HISTORY_LINES = [
   '将排列好顺序的时间轴和图片形成一张卡片：',
@@ -87,6 +100,9 @@ Page({
     phase: 'novel', // novel | puzzle
     paragraphs: PARAGRAPHS,
     quote: QUOTE,
+    monologueParagraphs: MONOLOGUE_PARAGRAPHS,
+    relicCards: RELIC_CARDS,
+    openQuestion: OPEN_QUESTION,
     showHistory: false,
     historyLines: HISTORY_LINES,
     slots: SLOTS.map(s => ({ ...s, filled: '', flash: false })),
@@ -94,12 +110,14 @@ Page({
     scrollLeft: 0,
     timelineComplete: false,
     monologue: false, // 独白 + 生成报告按钮
+    skipped: false,   // V2.1：时间轴可跳，跳过直接读信（不发日期卡）
     cardNumber: 0,    // 时间轴卡片角落数字（日期第二位）
     saveError: '',
     selectedCard: -1,
     pointTip: '',
     attempts: 0,
     advancing: false,
+    narrSrc: audioSrc.clip('narr-s4-timeline'),
   },
 
   onLoad() {
@@ -107,14 +125,16 @@ Page({
     this._reducedMotion = motion.prefersReducedMotion()
     session.viewPuzzle('s4-timeline')
     const solved = session.isPuzzleComplete('s4-timeline')
+    const skipped = !!(solved && session.getPuzzle('s4-timeline') && session.getPuzzle('s4-timeline').payload && session.getPuzzle('s4-timeline').payload.action === 'skipped')
     this.setData({
       phase: solved ? 'puzzle' : 'novel',
       cardNumber: Number(session.getCardDigit('s4-timeline')),
       slots: buildSlots(solved),
       cards: buildCards(solved),
-      timelineComplete: solved,
+      timelineComplete: solved && !skipped,
       monologue: solved,
-      showHistory: solved
+      skipped: skipped,
+      showHistory: solved && !skipped
     })
   },
 
@@ -127,6 +147,8 @@ Page({
   },
 
   onCardStart(e) {
+    // V2.3：答题交互起，压停正在播的人声（做题与听讲不打架）
+    audioBus.stopKind('voice')
     const idx = e.currentTarget.dataset.idx
     const c = this.data.cards[idx]
     if (!c || c.placed || this.data.monologue) return
@@ -275,6 +297,17 @@ Page({
     }, this._reducedMotion ? 0 : 900))
   },
 
+  // V2.1：时间轴可跳——跳过不发该卡，直接进读信收尾（monologue）。
+  onSkipTimeline() {
+    if (this.data.monologue) return
+    this.setData({ monologue: true, skipped: true })
+    session.attemptPuzzle('s4-timeline', this.data.attempts, true, 'skip')
+    session.completePuzzle('s4-timeline', { action: 'skipped', attempts: this.data.attempts })
+      .catch(() => {
+        this.setData({ saveError: '进度暂未保存，下一步会自动重试。' })
+      })
+  },
+
   // 前往密码输入页（第四站在密码校验通过后才 completeStation）
   goReport() {
     if (this.data.advancing) return
@@ -282,7 +315,7 @@ Page({
     session.completePuzzle('s4-timeline', {
       answer: SLOTS.map(function (slot) { return slot.label }),
       attempts: this.data.attempts || 1
-    }, { collectCard: true, checkpoint: 's4-password' }).then(() => {
+    }, { collectCard: !this.data.skipped, checkpoint: 's4-password' }).then(() => {
       wx.redirectTo({
         url: '/plate21/module/pages/s4-password/s4-password',
         fail: () => this.setData({ advancing: false })

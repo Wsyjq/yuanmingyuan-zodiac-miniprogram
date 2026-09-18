@@ -1,9 +1,12 @@
 // P00 封面 / 入口（设计文档 §5-P00）
 // 进入时 init 会话恢复进度；按快照决定「开始考察」或「继续考察 + 重新考察」。
+// 门票守卫（2026-09-18）：深链直达 cover 时自查权益，未解锁 redirect 回 gate 门页；
+// 已解锁用户命中本地 flags 缓存不受接口抖动影响。
 const session = require('../../store/session')
 const progressFlow = require('../../store/progress-flow')
 const sessionDate = require('../../utils/session-date')
 const PROLOGUE_URL = '/plate21/module/pages/prologue/prologue'
+const GATE_URL = '/plate21/module/pages/gate/gate'
 
 Page({
   data: {
@@ -25,6 +28,10 @@ Page({
         completed: this.isCompleted(snap),
         archiveDate: sessionDate.formatArchiveDate(snap.sessionDate),
         loading: false
+      })
+      // 门票守卫：深链/分享直达绕过 gate 的兜底（正常流已在 gate 检过票）
+      session.checkPremiumUnlocked().then((unlocked) => {
+        if (!unlocked) wx.redirectTo({ url: GATE_URL })
       })
     }).catch(() => {
       this.setData({ loading: false })

@@ -1,10 +1,10 @@
 {
-  "description": "西洋楼铜版图·第二十一图 —— 原型工程（含演示宿主主页）",
+  "description": "西洋楼铜版图·第二十一图 —— 1.0.0 交付版（A1 业务分包 + 演示宿主首页）",
   "appid": "wxa284707129230b80",
   "compileType": "miniprogram",
   "libVersion": "2.30.0",
   "miniprogramRoot": "./",
-  "projectname": "plate21-proto",
+  "projectname": "plate21",
   "setting": {
     "es6": true,
     "postcss": true,
@@ -322,6 +322,10 @@
       },
       {
         "value": "bgm",
+        "type": "folder"
+      },
+      {
+        "value": "audio",
         "type": "folder"
       },
       {

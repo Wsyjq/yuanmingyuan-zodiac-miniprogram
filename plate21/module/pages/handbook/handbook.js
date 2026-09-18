@@ -3,13 +3,15 @@ const session = require('../../store/session')
 const fieldRecord = require('../../store/field-record')
 const achievements = require('../../store/achievements')
 const sessionDate = require('../../utils/session-date')
+const audioSettings = require('../../utils/audio-settings')
+const audioBus = require('../../utils/audio-bus')
 
-// 四份考察记录位（采风修订版四站结构）
+// 四份考察记录位（V2.1 对读口径；主线站序=入口→黄花阵→海晏堂→雨果，大水法零对读不占记录位）
 const RECORD_SLOTS = [
-  { key: 's1', name: '拆信封破译' },
-  { key: 's2', name: '黄花阵考察' },
-  { key: 's3', name: '兽首与水显' },
-  { key: 's4', name: '时间轴与密码' }
+  { key: 's1', name: '入口 · 拆信对半字' },
+  { key: 's2', name: '黄花阵 · 对读四拍' },
+  { key: 's3', name: '海晏堂 · 对读三拍' },
+  { key: 's4', name: '雨果 · 对年读信' }
 ]
 
 // 史料卡静态条目（available 按快照站点完成状态推导）
@@ -47,13 +49,15 @@ const HISTORY_ITEMS = [
   }
 ]
 
-// v2 顺路支线：可选站点清单（走过与否按 flags.sideVisited_* 统计，随时可进）
+// v2 顺路散页：可选站点清单（走过与否按 flags.sideVisited_* 标记，随时可进）。
+// 反结算红线：不显示 X/N 完成度——散页只让档案变厚，不做计数催促（V2.1 拍板建议）。
+// 大水法已转主线站，散页六处 = 谐奇趣/养雀笼/方外观/蓄水楼/观水法/线法画。
 const SIDE_SITES = [
   { key: 'xieqiqu', title: '谐奇趣', url: '/plate21/module/pages/waypoint/waypoint?site=xieqiqu' },
   { key: 'yangquelong', title: '养雀笼', url: '/plate21/module/pages/waypoint/waypoint?site=yangquelong' },
   { key: 'fangwaiguan', title: '方外观', url: '/plate21/module/pages/waypoint/waypoint?site=fangwaiguan' },
   { key: 'xushuilou', title: '蓄水楼', url: '/plate21/module/pages/waypoint/waypoint?site=xushuilou' },
-  { key: 'dashuifa', title: '大水法 · 留白', url: '/plate21/module/pages/dashuifa/dashuifa' },
+  { key: 'guanshuifa', title: '观水法', url: '/plate21/module/pages/waypoint/waypoint?site=guanshuifa' },
   { key: 'xianfahua', title: '线法画', url: '/plate21/module/pages/waypoint/waypoint?site=xianfahua' }
 ]
 
@@ -73,10 +77,14 @@ Page({
     showHistory: false,
     card: { title: '', source: '', lines: [] },
     sideSites: [],
-    sideVisitedCount: 0
+    audioBgm: true,
+    audioVoice: true
   },
 
   onShow() {
+    // V2.2 独立音频开关：进手册即回显当前设备偏好
+    const audio = audioSettings.get()
+    this.setData({ audioBgm: audio.bgm, audioVoice: audio.voice })
     const snap = session.getSnapshot()
     if (snap) {
       this.renderSnapshot(snap)
@@ -126,8 +134,7 @@ Page({
       photoCount: fieldPhotos.filter(function (photo) { return !!photo.photoPath }).length,
       achievementList: achievementList,
       achievementCount: achievementList.filter(function (item) { return item.unlocked }).length,
-      sideSites: sideSites,
-      sideVisitedCount: sideSites.filter(function (item) { return item.visited }).length
+      sideSites: sideSites
     })
   },
 
@@ -158,6 +165,21 @@ Page({
     const key = e.currentTarget.dataset.key
     const site = this.data.sideSites.find(function (item) { return item.key === key })
     if (site) wx.navigateTo({ url: site.url })
+  },
+
+  // V2.2 独立音频开关：各自独立、即时生效（关=正在播的对应类别立即停）
+  onToggleBgm(e) {
+    const next = !!(e.detail && e.detail.value)
+    this.setData({ audioBgm: next })
+    if (!next) audioBus.stopKind('bgm')
+    audioSettings.set('bgm', next)
+  },
+
+  onToggleVoice(e) {
+    const next = !!(e.detail && e.detail.value)
+    this.setData({ audioVoice: next })
+    if (!next) audioBus.stopKind('voice')
+    audioSettings.set('voice', next)
   },
 
   // 已录史料可点重读：直接弹 history-card

@@ -1,5 +1,7 @@
 const session = require('../../store/session')
 const answers = require('../../utils/puzzle-answers')
+const audioSrc = require('../../utils/audio-src')
+const audioBus = require('../../utils/audio-bus')
 
 const RETURNED = answers.RETURNED_ZODIAC
 const HISTORY_LINES = [
@@ -20,20 +22,25 @@ Page({
     showCardNumber: false,
     operated: false,
     solved: false,
+    skipped: false,
     showHandoff: false,
-    advancing: false
+    advancing: false,
+    narrSrc: audioSrc.clip('narr-s3-zodiac')
   },
 
   onLoad() {
     session.viewPuzzle('s3-zodiac')
     const puzzle = session.getPuzzle('s3-zodiac')
+    const skipped = !!(puzzle && puzzle.payload && puzzle.payload.action === 'skipped')
     this.setData({
       cardNumber: Number(session.getCardDigit('s3-zodiac')),
       operated: !!puzzle,
       solved: !!puzzle,
-      showHistory: !!puzzle,
-      showCardNumber: !!puzzle,
-      answerInput: puzzle ? RETURNED.join('、') : '',
+      skipped: skipped,
+      showHistory: !!puzzle && !skipped,
+      showCardNumber: !!puzzle && !skipped,
+      showHandoff: skipped,
+      answerInput: puzzle && !skipped ? RETURNED.join('、') : '',
       attempts: Number(puzzle && puzzle.payload && puzzle.payload.attempts) || 0
     })
   },
@@ -52,6 +59,8 @@ Page({
   },
 
   onConfirm() {
+    // V2.3：答题交互起，压停正在播的人声（做题与听讲不打架）
+    audioBus.stopKind('voice')
     if (this.data.showHistory) return
     const parsed = answers.parseReturnedZodiac(this.data.answerInput)
     if (!parsed.selected.length && !parsed.extra.length) {
@@ -83,13 +92,22 @@ Page({
     this.setData({ showHistory: false, showHandoff: true })
   },
 
+  // V2.1 对读二可跳：跳过不发该卡，水显纸交接照常。
+  onSkip() {
+    if (this.data.solved) return
+    this.setData({ skipped: true, solved: true, showHistory: false, showCardNumber: false, showHandoff: true })
+    session.attemptPuzzle('s3-zodiac', this.data.attempts, true, 'skip')
+    session.completePuzzle('s3-zodiac', { action: 'skipped', attempts: this.data.attempts })
+      .catch(function () { /* 进度失败不阻断浏览 */ })
+  },
+
   onNext() {
     if (this.data.advancing) return
     this.setData({ advancing: true })
     session.completePuzzle('s3-zodiac', {
       answer: RETURNED,
       attempts: this.data.attempts || 1
-    }, { collectCard: true, checkpoint: 's3-water' }).then(function () {
+    }, { collectCard: !this.data.skipped, checkpoint: 's3-water' }).then(function () {
       wx.redirectTo({ url: '/plate21/module/pages/s3-water/s3-water' })
     }).catch(() => {
       this.setData({ advancing: false })
