@@ -343,3 +343,27 @@
   .reveal-curtain { transition: none; }
   .cursor { animation: none; }
 }
+
+/* V2.3 回显块：两处游客输入只在结局屏显 */
+.echo-panel {
+  width: 100%;
+  max-width: 620rpx;
+  box-sizing: border-box;
+  margin: 24rpx auto 0;
+  padding: 24rpx 28rpx;
+  border: 2rpx dashed var(--dash);
+  border-radius: 8rpx;
+  background: rgba(244, 237, 220, 0.6);
+  text-align: center;
+}
+.echo-title {
+  font-size: 24rpx;
+  letter-spacing: 4rpx;
+  color: var(--patina);
+}
+.echo-line {
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  line-height: 1.7;
+  color: var(--ink);
+}

@@ -10,6 +10,7 @@ const session = require('../../store/session')
 const drag = require('../../utils/drag')
 const motion = require('../../utils/motion')
 const audioSrc = require('../../utils/audio-src')
+const audioBus = require('../../utils/audio-bus')
 
 // INT-403：触觉反馈辅助——wx.vibrateShort 带 type 参数，旧基础库降级为无参
 function haptic(type) {
@@ -146,6 +147,8 @@ Page({
   },
 
   onCardStart(e) {
+    // V2.3：答题交互起，压停正在播的人声（做题与听讲不打架）
+    audioBus.stopKind('voice')
     const idx = e.currentTarget.dataset.idx
     const c = this.data.cards[idx]
     if (!c || c.placed || this.data.monologue) return

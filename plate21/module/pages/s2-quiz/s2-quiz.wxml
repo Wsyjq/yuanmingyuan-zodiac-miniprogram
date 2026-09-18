@@ -6,7 +6,8 @@
   <view class="binder"></view>
   <view class="tag-no">No.004</view>
   <view class="novel">
-    <view class="novel-p">黄花阵到了：齐腰高的砖墙在草地上排开，一眼望不见里面的路，这一页要办的事不少，一件一件来。先翻夹照片的那一页，正面是一幅画，画的也是这座阵，不过是夜里的——一群人提着灯，正往中心亭跑。第一件事，对画和地：画上的墙和眼前的墙对得上；画上的人，大白天一个也没有。</view>
+    <view class="novel-p">信封的半字把你指到这儿。黄花阵到了：齐腰高的砖墙在草地上排开，一眼望不见里面的路。这一页要办的事不少，一件一件来。先翻夹照片的那一页：正面是一幅画，画的也是这座阵，不过是夜里的——一群人提着灯，正往中心亭跑。</view>
+    <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">对画和地：画上的墙和眼前的墙对得上吗？画上的人呢，大白天一个也没有。</text></view>
   </view>
   <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" />
 
@@ -41,8 +42,9 @@
   </view>
 
   <view class="followup" wx:if="{{followup}}">
-    <view class="novel-p">原来是个中秋灯会：皇帝坐在阵心的凉亭里看，宫女们提着灯在阵里跑，谁先到中心谁领赏。答完，画里远远传来人声——</view>
-    <dialogue-block speaker="宫女" aside="画里，远远地" text="跑起来跑起来！先到亭子的有赏！灯提稳了，油别洒，洒了要挨说的。翠儿又拐进岔道了，回头，退回来再走！" clip-id="dlg-huanghuazhen-1" />
+    <view class="novel-p">答完，画里远远传来人声——</view>
+    <dialogue-block speaker="宫女" aside="画里，远远地" text="跑起来跑起来！先到亭子的有赏！灯提稳了，油别洒。翠儿又拐进岔道了，退回来再走！" clip-id="dlg-huanghuazhen-1" />
+    <view class="novel-p">原来是个中秋灯会：皇帝坐在阵心的凉亭里看，宫女们提着灯在阵里跑，谁先到中心谁领赏。小程序发来头一张卡，角落印着个数字，2。先收着，往后每对上一处，就来一张。</view>
     <view class="novel-p">再看同一幅画，第二件事还在画上——跑阵的人手里都提着一盏灯，灯是黄的，这地方又叫黄花阵。「黄花」两个字，是不是打灯上来的？</view>
     <button class="btn-seal" bindtap="onNext">继 续</button>
   </view>

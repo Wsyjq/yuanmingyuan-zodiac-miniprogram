@@ -1,6 +1,7 @@
 const session = require('../../store/session')
 const answers = require('../../utils/puzzle-answers')
 const audioSrc = require('../../utils/audio-src')
+const audioBus = require('../../utils/audio-bus')
 
 const HISTORY_LINES = [
   '马首铜像曾流失海外，后由澳门爱国企业家何鸿燊先生出资购回。',
@@ -57,6 +58,8 @@ Page({
   },
 
   onSubmit() {
+    // V2.3：答题交互起，压停正在播的人声（做题与听讲不打架）
+    audioBus.stopKind('voice')
     if (this.data.showHistory) return
     const value = String(this.data.answerInput || '').trim()
     if (!value) {

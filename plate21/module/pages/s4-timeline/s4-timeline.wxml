@@ -22,6 +22,7 @@
       <view class="quote-text kaiti">{{quote}}</view>
       <view class="hatch-divider quote-line"></view>
     </view>
+    <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">把乱掉的年份条子，一条条拖回时间轴原位。</text></view>
     <view class="note-hand navi-note" style="transform: rotate(1.5deg)">先把年份对齐，再读信。</view>
   </scroll-view>
   <view class="navi-footer">

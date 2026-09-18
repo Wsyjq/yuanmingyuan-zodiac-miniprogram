@@ -5,6 +5,7 @@
 // V2.2 新增：揭晓后画里传来宫女台词（dlg-huanghuazhen-1）。
 const session = require('../../store/session')
 const audioSrc = require('../../utils/audio-src')
+const audioBus = require('../../utils/audio-bus')
 
 const KEYWORDS = ['中秋', '灯', '宫女', '玩', '赏']
 
@@ -32,6 +33,8 @@ Page({
   },
 
   onConfirm() {
+    // V2.3：答题交互起，压停正在播的人声（做题与听讲不打架）
+    audioBus.stopKind('voice')
     if (this.data.solved) return
     const value = String(this.data.answer || '').trim()
     if (!value) {

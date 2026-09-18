@@ -8,6 +8,7 @@
 const session = require('../../store/session')
 const sessionDate = require('../../utils/session-date')
 const audioSrc = require('../../utils/audio-src')
+const audioBus = require('../../utils/audio-bus')
 
 // 四种候选纹样使用项目方确认可商用的 AI 图片衍生文件。
 const PATTERNS = [
@@ -24,13 +25,12 @@ const HISTORY_LINES = [
 
 // 收尾叙事（V2.2 §第二站：看砖不摸墙，砌墙师傅是这一页的第二个人声）
 const FINALE_LEAD = [
-  '都对完了，还有最后一件事，也是这一页真正的分量：把那张照片翻过来。背面一行钢笔字——'
+  '都对完了，还有最后一件事：把那张照片翻过来。背面一行钢笔字——'
 ]
 const FINALE_QUOTE = '照原图，复位。1987、1989。'
-const FINALE_BRIDGE = '这行字什么意思？离墙近一点，看砖。砖是新的，砖缝是新的，两百年前的墙不会这么齐。这一页的人声也换了个人，年纪近得多。'
+const FINALE_BRIDGE = '这行字什么意思？'
 const FINALE_TAIL = [
-  '字看过了，砖也看了，这行字才跟眼前的东西对上：刚才走过的这座阵，是一九八几年的人，照着两百年前的一幅画，一块砖一块砖砌回来的。他们砌的是画黄花阵的那两号——就算二十号全照着砌回地上，要找的那一页，还是没有人画。',
-  '这一笔记进空栏：对得上，但不是要找的那一页。砌墙的人是在干活；要不是这道墙，今天谁也走不进这座迷宫。从迷宫出来往东，地势塌下去一块，露出一口干池子，画上的喷泉还在喷，池子是干的——那是下一页的事。'
+  '字看过了，砖也看了，这行字才跟眼前的东西对上：刚才走过的这座阵，是一九八几年的人，照着两百年前的一幅画，一块砖一块砖砌回来的。他们砌的是画黄花阵的那两号——就算二十号全照着砌回地上，要找的那一页，还是没有人画。'
 ]
 
 Page({
@@ -86,6 +86,8 @@ Page({
 
   // 我认出了：举纸对照走向吻合即自校验。认成另三种时只轻推回去再比，不判错不锁。
   onConfirm() {
+    // V2.3：答题交互起，压停正在播的人声（做题与听讲不打架）
+    audioBus.stopKind('voice')
     if (!this.data.picked || this.data.solved || this.data.skipped) return
     const right = PATTERNS.find((p) => p.key === this.data.picked).correct
     const attempts = this.data.attempts + 1

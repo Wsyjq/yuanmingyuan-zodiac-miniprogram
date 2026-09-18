@@ -32,7 +32,8 @@
 
   <view wx:if="{{solved && !showHistory}}" class="followup double-frame">
     <dialogue-block speaker="宫女" text="今年的灯，黄绸扎的莲花，一人一盏。点亮了，满阵都是黄的。管事的说，这阵就叫黄花阵。" clip-id="dlg-huanghuazhen-2" />
-    <view class="kaiti">名字就是从灯上来的。画上看不出迷宫难不难走，中心亭就在那边，路得自己用脚找；这一页配了张俯视卡，墙印上了，路是空的。拿着卡进阵，走错了就退回来，人站到中心亭，这一段就算完。</view>
+    <view class="kaiti">名字就是从灯上来的。画上看不出迷宫难不难走，中心亭就在那边，路得自己用脚找。</view>
+    <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">拿俯视卡进阵：墙印上了，路是空的；走错了退回来，站到中心亭就算完。</text></view>
     <button class="btn-seal" bindtap="onNext">拿俯视卡，进阵</button>
   </view>
 

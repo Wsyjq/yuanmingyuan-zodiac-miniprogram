@@ -7,6 +7,7 @@
 // V2.2 新增：蒋友仁台词两段（开场立论「这一片是一座钟」＋揭晓班次），标艺术演绎。
 const session = require('../../store/session')
 const audioSrc = require('../../utils/audio-src')
+const audioBus = require('../../utils/audio-bus')
 
 Page({
   data: {
@@ -58,6 +59,8 @@ Page({
   },
 
   onQ1(e) {
+    // V2.3：答题交互起，压停正在播的人声（做题与听讲不打架）
+    audioBus.stopKind('voice')
     if (this.data.q1Done) return
     const v = e.currentTarget.dataset.v
     this.setData({ q1Selected: v })
@@ -72,6 +75,8 @@ Page({
   },
 
   onQ2(e) {
+    // V2.3：答题交互起，压停正在播的人声（做题与听讲不打架）
+    audioBus.stopKind('voice')
     if (this.data.q2Done) return
     const v = e.currentTarget.dataset.v
     this.setData({ q2Selected: v })

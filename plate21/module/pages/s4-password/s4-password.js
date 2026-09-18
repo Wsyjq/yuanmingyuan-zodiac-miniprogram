@@ -4,6 +4,7 @@
 const session = require('../../store/session')
 const sessionDate = require('../../utils/session-date')
 const audioSrc = require('../../utils/audio-src')
+const audioBus = require('../../utils/audio-bus')
 
 Page({
   data: {
@@ -77,6 +78,8 @@ Page({
   },
 
   onSubmit() {
+    // V2.3：答题交互起，压停正在播的人声（做题与听讲不打架）
+    audioBus.stopKind('voice')
     if (this.data.correct) return
     const input = this.data.pwd
     if (input.length < 8) {

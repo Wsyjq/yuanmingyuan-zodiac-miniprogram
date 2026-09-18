@@ -24,6 +24,7 @@
   >
     <view class="wp-beat {{item.prop ? 'wp-prop' : ''}}">
       <view class="wp-kicker">{{item.kicker}}</view>
+      <view wx:if="{{item.action}}" class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">{{item.action}}</text></view>
       <view wx:for="{{item.lines}}" wx:for-item="line" wx:key="*this" class="wp-line kaiti">{{line}}</view>
       <view wx:for="{{item.quotes}}" wx:for-item="quote" wx:key="*this" class="wp-quote kaiti">{{quote}}</view>
       <dialogue-block

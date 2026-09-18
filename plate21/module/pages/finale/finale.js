@@ -70,13 +70,20 @@ Page({
     this._reducedMotion = motion.prefersReducedMotion()
     const snap = session.getSnapshot() || {}
     const signed = !!snap.finale
+    // V2.3 回显：全程仅两处游客输入，只在结局屏显（跳过/未走到则不显示）
+    const flags = snap.flags || {}
+    const choiceMap = { '风声': '风声', '人声与鸟鸣': '人声与鸟鸣', '几乎什么都听不到': '几乎什么都听不到' }
+    const echoDashuifa = choiceMap[flags.dashuifaChoice] || ''
+    const echoPostcard = flags.messageSubmittedAt ? '已投递，进了档案' : ''
     this.setData({
       today: sessionDate.formatDateKey(snap.sessionDate),
       act: signed ? 5 : 1,
       name: snap.name || '',
       signed: signed,
       layerCount: signed ? 5 : 0,
-      caption: signed ? FINAL_CAPTION : ''
+      caption: signed ? FINAL_CAPTION : '',
+      echoDashuifa: echoDashuifa,
+      echoPostcard: echoPostcard
     })
     if (signed) return
     // 幕1：整页底色转夜景墨蓝，「屏幕暗了一下」500ms

@@ -22,3 +22,9 @@ page{background:var(--paper)}
 /* V2.1 可跳通道：跳过不发该卡 */
 .skip-btn { display: block; width: auto; min-height: 0; line-height: 1.6; margin: 14rpx auto 0; padding: 6rpx 10rpx; border: 0; border-radius: 0; background: transparent; font-size: 26rpx; text-decoration: underline dotted; }
 .skip-btn::after { border: 0; }
+
+/* V2.3 【记】证据句 */
+.result-evidence {
+  margin: 16rpx 0;
+  text-align: center;
+}

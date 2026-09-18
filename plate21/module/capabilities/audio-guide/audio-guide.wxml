@@ -6,7 +6,7 @@
   <view wx:if="{{open}}" class="ag-panel {{closing ? 'overlay-out' : ''}}">
     <view class="ag-head">
       <view>
-        <view class="ag-kicker">AUDIO GUIDE · 站点讲解</view>
+        <view class="ag-kicker">AUDIO GUIDE · 本站讲解（覆盖本站各页）</view>
         <view class="ag-title serif">{{guide.title}}</view>
       </view>
       <button class="ag-close" bindtap="close" aria-label="关闭语音导览">×</button>

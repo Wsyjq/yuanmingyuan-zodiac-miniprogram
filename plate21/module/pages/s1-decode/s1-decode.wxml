@@ -9,8 +9,7 @@
   <block wx:if="{{stage === 'sealed'}}">
     <view class="title serif">西洋楼入口 · 拆信</view>
     <view class="hatch-divider title-div"></view>
-    <view class="lead kaiti">到了西洋楼入口。你是被请来的。门里一条路往东伸进去，两边的残基一处接一处，看不出当年谁是谁。</view>
-    <view class="lead kaiti">信还封着，先翻哪一页，拆开才知道。</view>
+    <view class="lead kaiti">到了西洋楼入口。门里一条路往东伸进去，两边残基一处接一处，看不出当年谁是谁。说好了到门口拆信，现在就是门口。</view>
     <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" />
 
     <view class="prop-card archive-sheet">
@@ -29,7 +28,7 @@
   <block wx:elif="{{stage === 'reading'}}">
     <view class="title serif">信在你手里</view>
     <view class="hatch-divider title-div"></view>
-    <view class="lead kaiti tear-note">撕开封口，抽出信，先读信；封口上还印着点什么，这时候先不管它。</view>
+    <view class="lead kaiti tear-note">撕开封口，抽出信，先读信。封口上印着的什么，先不管它。</view>
 
     <view class="prop-card archive-sheet">
       <view class="prop-label archive-tab">线下道具 · 信纸</view>
@@ -48,7 +47,7 @@
   <block wx:else>
     <view class="title serif">封口上的半字</view>
     <view class="hatch-divider title-div"></view>
-    <view class="lead kaiti">信读完了。去处写的正是西洋楼，你已经站在门口。先去对哪一座，得回头看那个封口。上面留着半截字，只有下面一半。翻过信纸，背面印的正是上面那一半。</view>
+    <view class="lead kaiti">信读完了。去处就是这儿。那先去哪一座？线索在手里：回头看封口，上面留着半截字，只有下面一半。把信纸翻过来，看看背面。</view>
 
     <view class="prop-card archive-sheet">
       <view class="prop-label archive-tab">线下道具 · 实体信封与信纸</view>
@@ -77,7 +76,8 @@
     <view class="result double-frame" wx:if="{{solved}}">
       <view class="result-mark">两半合上了</view>
       <view class="result-title serif">黄花阵</view>
-      <view class="result-copy">正是夹着那张照片的一页。往东，墙齐腰高，是一座迷宫。</view>
+      <view class="result-copy">正是夹着那张照片的一页——二十页里唯一夹了照片的一页，从它查起。往东，墙齐腰高，是一座迷宫。</view>
+      <view class="result-evidence note-hand olive">【记】方向有了：从唯一夹照片的那一页查起。</view>
       <button class="btn-seal next-btn" bindtap="onGoNext">前往黄花阵</button>
     </view>
   </block>

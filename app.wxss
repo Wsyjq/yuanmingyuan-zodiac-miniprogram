@@ -673,3 +673,32 @@ button::after { border: none; }
   font-size: 22rpx;
   color: rgba(70, 56, 42, 0.66);
 }
+
+/* ================ V2.3 【做】动作条（红线9：常显一行动作，关人声可玩） ================ */
+.act-strip {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  width: 100%;
+  max-width: 620rpx;
+  box-sizing: border-box;
+  margin: 22rpx auto;
+  padding: 14rpx 22rpx;
+  border: 2rpx dashed var(--cinnabar);
+  border-radius: 8rpx;
+  background: rgba(166, 58, 46, 0.05);
+}
+.act-strip-tag {
+  flex-shrink: 0;
+  font-size: 20rpx;
+  letter-spacing: 2rpx;
+  color: var(--cinnabar);
+  border: 2rpx solid var(--cinnabar);
+  border-radius: 6rpx;
+  padding: 2rpx 10rpx;
+}
+.act-strip-text {
+  font-size: 26rpx;
+  line-height: 1.6;
+  color: var(--ink);
+}
