@@ -17,6 +17,48 @@
       <view class="board-intro kaiti">走完那条路的人，在这里留一句话。后来的人，会读到它。</view>
     </view>
 
+    <!-- 昨日之路：通关次日起出现的回访长卷（当日不渲染、不留预告） -->
+    <view wx:if="{{journeyReady}}" class="jr-section">
+      <view class="jr-head">
+        <view class="board-eyebrow">次日 · 回访</view>
+        <view class="jr-title serif">昨日之路</view>
+        <view class="board-sub">第廿一图 · 你的一卷</view>
+        <view class="jr-intro kaiti">信里说，它在昨天你走过的那条路上。就是这一卷。</view>
+      </view>
+      <scroll-view class="jr-strip" scroll-x enhanced show-scrollbar="{{false}}">
+        <view class="jr-track">
+          <view
+            wx:for="{{journey}}"
+            wx:key="key"
+            class="jr-panel {{index === journeyActiveIndex ? 'jr-on' : ''}}"
+            data-index="{{index}}"
+            bindtap="onPickPoint"
+          >
+            <view class="jr-plate">
+              <image wx:if="{{item.img}}" class="jr-img" src="{{item.img}}" mode="aspectFill" />
+              <view wx:else class="jr-seal serif">{{item.seal}}</view>
+            </view>
+            <view class="jr-kicker note-hand">{{item.kicker}}</view>
+            <view class="jr-name serif">{{item.title}}</view>
+            <view class="jr-chips" wx:if="{{item.chips.length}}">
+              <text class="jr-chip" wx:for="{{item.chips}}" wx:for-item="chip">{{chip}}</text>
+            </view>
+            <view class="jr-node"></view>
+          </view>
+        </view>
+      </scroll-view>
+      <view class="jr-detail clip-card" wx:if="{{journey.length}}">
+        <view class="corner tl"></view>
+        <view class="corner tr"></view>
+        <view class="corner bl"></view>
+        <view class="corner br"></view>
+        <view class="jr-detail-kicker note-hand">{{journey[journeyActiveIndex].kicker}} · {{journey[journeyActiveIndex].title}}</view>
+        <view class="jr-detail-motif kaiti">{{journey[journeyActiveIndex].motif}}</view>
+        <view class="jr-detail-other" wx:if="{{journey[journeyActiveIndex].otherHalf}}">{{journey[journeyActiveIndex].otherHalf}}</view>
+      </view>
+      <view class="jr-hint note-hand">点一处点位，读那一句</view>
+    </view>
+
     <!-- 我的话：已投递展示卡片，可换一句 -->
     <view wx:if="{{mine && !editing}}" class="board-note clip-card board-mine tilt-l">
       <view class="corner tl"></view>
