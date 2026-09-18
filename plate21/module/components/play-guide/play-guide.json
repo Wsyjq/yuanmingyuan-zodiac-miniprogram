@@ -1,7 +1,5 @@
 {
   "component": true,
-  "options": {
-    "virtualHost": true
-  },
+  "styleIsolation": "apply-shared",
   "usingComponents": {}
 }

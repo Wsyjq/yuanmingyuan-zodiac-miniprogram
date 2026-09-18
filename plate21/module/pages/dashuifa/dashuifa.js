@@ -3,6 +3,8 @@
 // → 一句话三选一（可跳过，全程唯一一次操作）→ 玩家自行离开。
 // 主线链路：transit(s3-s4) → 本页 → transit(s4-s5 → 雨果)。
 const session = require('../../store/session')
+const playGuide = require('../../capabilities/play-guide/guide')
+const coachHost = require('../../capabilities/play-guide/coach-host')
 
 const SILENCE_SECONDS = 120
 const CHOICES = ['风声', '人声与鸟鸣', '几乎什么都听不到']
@@ -14,6 +16,7 @@ function fmt(sec) {
 }
 
 Page({
+  behaviors: [coachHost],
   data: {
     stage: 'intro', // intro → silence → question → done
     remain: SILENCE_SECONDS,
@@ -23,7 +26,18 @@ Page({
     choice: ''
   },
 
+  onReady() {
+    if (this.data.stage === 'intro') this.scheduleCoach([playGuide.SPOTS.dashuifa])
+  },
+
   onStart() {
+    this.runAfterCoach(function () {
+      if (this.data.stage !== 'intro') return
+      this._startSilence()
+    })
+  },
+
+  _startSilence() {
     this.setData({ stage: 'silence', remain: SILENCE_SECONDS, remainLabel: fmt(SILENCE_SECONDS), progress: 0 })
     this._timer = setInterval(() => {
       const remain = this.data.remain - 1

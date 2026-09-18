@@ -1,0 +1,25 @@
+<view wx:if="{{visible}}" class="pg-mask {{closing ? 'overlay-out' : ''}}" bindtap="onSkip">
+  <view class="pg-sheet card-archive {{closing ? 'pg-sheet-out' : ''}}" catchtap="noop">
+    <view class="pg-kicker">FIELD NOTE · 小标签</view>
+    <view class="pg-title serif">怎么走这一趟</view>
+    <view class="pg-lead">红字说这个钮干什么。路上碰到，对一下就行。</view>
+
+    <scroll-view class="pg-scroll" scroll-y>
+      <view wx:for="{{groups}}" wx:key="title" class="pg-group">
+        <view class="pg-group-title kaiti">{{item.title}}</view>
+        <view class="pg-tag-row">
+          <view wx:for="{{item.tags}}" wx:for-item="chip" wx:key="tap" class="pg-chip">
+            <view class="pg-chip-hole"></view>
+            <view class="pg-chip-tag kaiti">{{chip.tag}}</view>
+            <view class="pg-chip-tap">{{chip.tap}}</view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <view class="pg-actions">
+      <button wx:if="{{showSkip}}" class="pg-skip" bindtap="onSkip">先跳过</button>
+      <button class="btn-seal pg-next" bindtap="onNext">{{primaryText}}</button>
+    </view>
+  </view>
+</view>

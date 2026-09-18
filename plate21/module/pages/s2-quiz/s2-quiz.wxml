@@ -37,7 +37,9 @@
     <view class="q-actions">
       <button wx:if="{{!hint && attempts >= 1}}" class="hint-btn-inline" bindtap="onShowHint">想不出来了</button>
       <button class="btn-seal confirm" bindtap="onConfirm" disabled="{{!answer}}">就 是 这 样</button>
-      <button class="skip-btn note-hand olive" bindtap="onSkip">先不猜，往下走</button>
+      <view id="coachSkip" class="coach-hit">
+        <button class="skip-btn note-hand olive" bindtap="onSkip">先不猜，往下走</button>
+      </view>
     </view>
   </view>
 
@@ -60,4 +62,17 @@
   btn-text="继 续"
   bind:next="onCloseHistory"
   bind:close="onCloseHistory"
+/>
+<coach-spot
+  class="coach-host"
+  style="top: {{coachWin.top}}px; left: {{coachWin.left}}px; width: {{coachWin.windowWidth}}px; height: {{coachWin.windowHeight}}px;"
+  visible="{{showCoach}}"
+  closing="{{coachClosing}}"
+  index="{{coachIndex}}"
+  total="{{coachSteps.length}}"
+  step="{{coachStep}}"
+  hole="{{coachHole}}"
+  win="{{coachWin}}"
+  bind:next="onCoachNext"
+  bind:skip="onCoachSkip"
 />

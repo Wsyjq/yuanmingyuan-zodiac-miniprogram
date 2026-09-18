@@ -5,8 +5,11 @@
  */
 const registry = require('../registry')
 const achievements = require('../../store/achievements')
+const playGuide = require('../play-guide/guide')
+const coachHost = require('../play-guide/coach-host')
 
 Component({
+  behaviors: [coachHost],
   properties: {
     // 可选：页面级导览站覆盖（如 transit 三段各有顺路站，由页面按 leg 传入）。
     // 优先于 registry 静态配置；为空时回落 caps.audio。
@@ -27,18 +30,23 @@ Component({
       } catch (e) {}
       // registry 键为 'pages/xxx' 短路由；真机 route 形如 'plate21/module/pages/xxx'
       const short = route.replace(/^\/?plate21\/module\//, '')
-      this.setData({ caps: registry.capabilitiesFor(short) })
+      const caps = registry.capabilitiesFor(short)
+      this.setData({ caps: caps })
       achievements.onUnlock((rule) => {
         const stamp = this.selectComponent('#achStamp')
         if (stamp && stamp.show) stamp.show('成就 · ' + rule.title)
       })
+      if (caps.map) this.scheduleCoach([playGuide.SPOTS.map], 700)
     }
   },
 
   methods: {
     onOpenMap() {
-      const drawer = this.selectComponent('#mapDrawer')
-      if (drawer && drawer.open) drawer.open()
+      const self = this
+      this.runAfterCoach(function () {
+        const drawer = self.selectComponent('#mapDrawer')
+        if (drawer && drawer.open) drawer.open()
+      })
     }
   }
 })

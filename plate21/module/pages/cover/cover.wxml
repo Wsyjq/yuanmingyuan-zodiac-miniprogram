@@ -54,10 +54,14 @@
         <button wx:if="{{loading}}" class="btn-line record-action" disabled>正在调取档案……</button>
         <block wx:else>
         <block wx:if="{{!hasRecord}}">
-          <button class="btn-seal record-action" bindtap="onStart" disabled="{{navigating}}">{{navigating ? '正在开启……' : '开 始 考 察'}}</button>
+          <view id="coachStart" class="coach-hit">
+            <button class="btn-seal record-action" bindtap="onStart" disabled="{{navigating}}">{{navigating ? '正在开启……' : '开 始 考 察'}}</button>
+          </view>
         </block>
         <block wx:else>
-          <button class="btn-seal record-action" bindtap="onContinue" disabled="{{navigating}}">{{navigating ? '正在调取……' : (completed ? '查 看 考 察 报 告' : '继 续 考 察')}}</button>
+          <view id="coachStart" class="coach-hit">
+            <button class="btn-seal record-action" bindtap="onContinue" disabled="{{navigating}}">{{navigating ? '正在调取……' : (completed ? '查 看 考 察 报 告' : '继 续 考 察')}}</button>
+          </view>
           <button class="btn-line restart" bindtap="onRestart">重新考察</button>
         </block>
         </block>
@@ -68,12 +72,16 @@
 
   <!-- 底部小字入口 -->
   <view class="foot-links">
-    <button class="link" bindtap="onHandbook">
-      <image class="link-icon" src="/plate21/module/assets/img/icons/ic-notebook-pen-ink.png" mode="aspectFit" />
-      <text>考察手册</text>
-    </button>
+    <view id="coachHandbook" class="coach-hit">
+      <button class="link" bindtap="onHandbook">
+        <image class="link-icon" src="/plate21/module/assets/img/icons/ic-notebook-pen-ink.png" mode="aspectFit" />
+        <text>考察手册</text>
+      </button>
+    </view>
     <view class="link-dot"></view>
-    <button class="link" bindtap="onShowHelp">玩法说明</button>
+    <view id="coachHelp" class="coach-hit">
+      <button class="link" bindtap="onShowHelp">玩法说明</button>
+    </view>
   </view>
 </view>
 
@@ -91,12 +99,25 @@
   </view>
 </view>
 
-<!-- 玩法说明浮层 -->
-<view wx:if="{{showHelp}}" class="mask {{helpClosing ? 'overlay-out' : ''}}" bindtap="onCloseHelp">
-  <view class="help-card card-archive {{helpClosing ? 'overlay-out' : ''}}" catchtap="noop">
-    <view class="help-title serif">玩法说明</view>
-    <view class="help-body">这是一趟纸上考察：拿档案夹从西往东走西洋楼，每到一站翻到对应的页，做「纸和地」的对读——拆信读信、对灯戏图、对水力钟、对座上的年，一路收日期卡和残片，最后拼图、出报告。路上夹着的页都是可选的：不翻，正页一个字不少。</view>
-    <view class="help-body">对读没有「答错」——对不上就记下来。卡住才有提示，跳过也不影响走完。八位数字是加料，不是门：缺卡，报告照出。</view>
-    <button class="btn-line help-close" bindtap="onCloseHelp">知道了</button>
-  </view>
-</view>
+<coach-spot
+  class="coach-host"
+  style="top: {{coachWin.top}}px; left: {{coachWin.left}}px; width: {{coachWin.windowWidth}}px; height: {{coachWin.windowHeight}}px;"
+  visible="{{showCoach}}"
+  closing="{{coachClosing}}"
+  index="{{coachIndex}}"
+  total="{{coachSteps.length}}"
+  step="{{coachStep}}"
+  hole="{{coachHole}}"
+  win="{{coachWin}}"
+  bind:next="onCoachNext"
+  bind:skip="onCoachSkip"
+/>
+
+<play-guide
+  id="playGuide"
+  visible="{{showGuide}}"
+  mode="browse"
+  closing="{{guideClosing}}"
+  bind:next="onGuideNext"
+  bind:skip="onGuideSkip"
+/>

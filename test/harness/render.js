@@ -28,7 +28,7 @@ function fieldPhotoFixture(points) {
   ]).map((point, index) => Object.assign({}, point, { photoPath: PLAYER_PHOTO_FIXTURES[index] }))
 }
 
-// 17 条生产路由 + 1 个仓库保留页及关键交互完成态，共 30 张 H5 截图。
+// 17 条生产路由 + 1 个仓库保留页及关键交互完成态，含开玩引导 01c，共 31 张 H5 截图。
 const PAGES = [
   { name: '00-host-index', route: 'pages/index/index' },
   { name: '01-cover', route: 'plate21/module/pages/cover/cover' },
@@ -38,6 +38,13 @@ const PAGES = [
     drive: async (inst) => {
       inst.setData({ hasRecord: true })
       inst.onRestart()
+    }
+  },
+  {
+    name: '01c-cover-guide',
+    route: 'plate21/module/pages/cover/cover',
+    drive: async (inst) => {
+      inst.onCoachNext()
     }
   },
   { name: '02-prologue', route: 'plate21/module/pages/prologue/prologue' },

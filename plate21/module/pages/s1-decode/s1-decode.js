@@ -4,12 +4,15 @@
 // 判定：拼出「黄花阵」即过，不拍照、不提交；卡住才出提示。
 const session = require('../../store/session')
 const audioSrc = require('../../utils/audio-src')
+const playGuide = require('../../capabilities/play-guide/guide')
+const coachHost = require('../../capabilities/play-guide/coach-host')
 
 const ANSWER = '黄花阵'
 
 // 信全文见 docs/剧情可用稿-主线走一遍.md §第一站【信·可直接用】，印在实体信纸正面，此处不再复制。
 
 Page({
+  behaviors: [coachHost],
   data: {
     narrSrc: audioSrc.clip('narr-s1-decode'),
     stage: 'sealed', // sealed → reading → puzzle
@@ -20,6 +23,10 @@ Page({
     wrongTip: '',
     solved: false,
     advancing: false
+  },
+
+  onReady() {
+    if (this.data.stage === 'sealed') this.scheduleCoach([playGuide.SPOTS.listen])
   },
 
   onLoad() {

@@ -41,6 +41,7 @@ function makeWx(overrides) {
       _cb: null,
       select() { return q },
       selectAll() { return q },
+      selectViewport() { return q },
       in() { return q },
       fields(opts, cb) { if (cb) q._cb = cb; return q },
       boundingClientRect(cb) { if (cb) q._cb = cb; return q },
@@ -167,10 +168,21 @@ function createContext(consoleSink, wxOverrides) {
 // ---------------- 实例 ----------------
 
 function createInstance(config, isComponent, wxRef, registry) {
-  const inst = { data: clone(config.data) || {} }
+  const inst = { data: {} }
+  ;(config.behaviors || []).forEach((b) => {
+    if (!b) return
+    if (b.data) Object.assign(inst.data, clone(b.data))
+    const src = b.methods || {}
+    Object.keys(src).forEach((key) => {
+      if (typeof src[key] === 'function') {
+        inst[key] = function (...args) { return src[key].apply(inst, args) }
+      }
+    })
+  })
+  Object.assign(inst.data, clone(config.data) || {})
   const methodSrc = isComponent ? (config.methods || {}) : config
   for (const key of Object.keys(methodSrc)) {
-    if (key === 'data' || key === 'properties' || key === 'methods' || key === 'lifetimes' || key === 'observers') continue
+    if (key === 'data' || key === 'properties' || key === 'methods' || key === 'lifetimes' || key === 'observers' || key === 'behaviors') continue
     if (typeof methodSrc[key] === 'function') {
       inst[key] = function (...args) { return methodSrc[key].apply(inst, args) }
     } else if (!isComponent) {
@@ -178,9 +190,11 @@ function createInstance(config, isComponent, wxRef, registry) {
       inst[key] = methodSrc[key]
     }
   }
-  inst.setData = (updates) => {
-    if (!updates) return
-    for (const k of Object.keys(updates)) setPath(inst.data, k, updates[k])
+  inst.setData = (updates, cb) => {
+    if (updates) {
+      for (const k of Object.keys(updates)) setPath(inst.data, k, updates[k])
+    }
+    if (typeof cb === 'function') cb()
   }
   inst.selectComponent = (sel) => registry[sel] || STUB_COMPONENT
   inst.selectAllComponents = () => []

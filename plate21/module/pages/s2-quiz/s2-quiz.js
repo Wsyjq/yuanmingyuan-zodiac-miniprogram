@@ -6,10 +6,13 @@
 const session = require('../../store/session')
 const audioSrc = require('../../utils/audio-src')
 const audioBus = require('../../utils/audio-bus')
+const playGuide = require('../../capabilities/play-guide/guide')
+const coachHost = require('../../capabilities/play-guide/coach-host')
 
 const KEYWORDS = ['中秋', '灯', '宫女', '玩', '赏']
 
 Page({
+  behaviors: [coachHost],
   data: {
     answer: '',
     attempts: 0,
@@ -66,11 +69,13 @@ Page({
 
   // 可跳过：跳过不发该卡（V2.1 对读规则），直接进下一拍
   onSkip() {
-    if (this.data.solved || this.data.skipped) return
-    this.setData({ skipped: true, solved: true, showHistory: false, followup: true })
-    session.attemptPuzzle('s2-purpose', this.data.attempts, true, 'skip')
-    session.completePuzzle('s2-purpose', { action: 'skipped', attempts: this.data.attempts })
-      .catch(function () { /* 进度失败不阻断浏览 */ })
+    this.runAfterCoach(function () {
+      if (this.data.solved || this.data.skipped) return
+      this.setData({ skipped: true, solved: true, showHistory: false, followup: true })
+      session.attemptPuzzle('s2-purpose', this.data.attempts, true, 'skip')
+      session.completePuzzle('s2-purpose', { action: 'skipped', attempts: this.data.attempts })
+        .catch(function () { /* 进度失败不阻断浏览 */ })
+    })
   },
 
   onCloseHistory() {
@@ -89,6 +94,10 @@ Page({
       this.setData({ advancing: false })
       wx.showToast({ title: '进度保存失败，请重试', icon: 'none' })
     })
+  },
+
+  onReady() {
+    if (!this.data.solved) this.scheduleCoach([playGuide.SPOTS.skip])
   },
 
   onLoad() {

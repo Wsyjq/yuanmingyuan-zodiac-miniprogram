@@ -26,7 +26,9 @@
       bindconfirm="onSubmit"
     />
     <button class="btn-seal ans-btn" bindtap="onSubmit">提 交</button>
-    <button class="skip-btn note-hand olive" bindtap="onSkip">先不猜，往下走</button>
+    <view id="coachSkip" class="coach-hit">
+      <button class="skip-btn note-hand olive" bindtap="onSkip">先不猜，往下走</button>
+    </view>
   </view>
   <view wx:if="{{hint}}" class="hint">{{hint}}</view>
 
@@ -50,3 +52,16 @@
     bind:close="onCloseHistory"
   />
 </view>
+<coach-spot
+  class="coach-host"
+  style="top: {{coachWin.top}}px; left: {{coachWin.left}}px; width: {{coachWin.windowWidth}}px; height: {{coachWin.windowHeight}}px;"
+  visible="{{showCoach}}"
+  closing="{{coachClosing}}"
+  index="{{coachIndex}}"
+  total="{{coachSteps.length}}"
+  step="{{coachStep}}"
+  hole="{{coachHole}}"
+  win="{{coachWin}}"
+  bind:next="onCoachNext"
+  bind:skip="onCoachSkip"
+/>

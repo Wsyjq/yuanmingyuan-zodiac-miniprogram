@@ -22,9 +22,22 @@
         <view wx:for="{{props}}" wx:key="*this" class="pack-item">{{item}}</view>
       </view>
       <button class="btn-seal pack-btn record-action" bindtap="onTakeArchive">档案已收好，信先封着</button>
-      <button class="btn-seal pack-btn record-action" bindtap="onGoS1" disabled="{{advancing}}">{{advancing ? '正在保存档案……' : '前 往 西 洋 楼 入 口'}}</button>
+      <button id="coachGo" class="btn-seal pack-btn record-action" bindtap="onGoS1" disabled="{{advancing}}">{{advancing ? '正在保存档案……' : '前 往 西 洋 楼 入 口'}}</button>
     </view>
   </view>
 
   <stamp-toast id="stamp" />
 </view>
+<coach-spot
+  class="coach-host"
+  style="top: {{coachWin.top}}px; left: {{coachWin.left}}px; width: {{coachWin.windowWidth}}px; height: {{coachWin.windowHeight}}px;"
+  visible="{{showCoach}}"
+  closing="{{coachClosing}}"
+  index="{{coachIndex}}"
+  total="{{coachSteps.length}}"
+  step="{{coachStep}}"
+  hole="{{coachHole}}"
+  win="{{coachWin}}"
+  bind:next="onCoachNext"
+  bind:skip="onCoachSkip"
+/>

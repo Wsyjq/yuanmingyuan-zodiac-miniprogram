@@ -6,6 +6,7 @@
     "stamp-toast": "../../components/stamp-toast/stamp-toast",
     "audio-clip": "../../components/audio-clip/audio-clip",
     "dialogue-block": "../../components/dialogue-block/dialogue-block",
-    "bgm-ambience": "../../components/bgm-ambience/bgm-ambience"
+    "bgm-ambience": "../../components/bgm-ambience/bgm-ambience",
+    "coach-spot": "../../components/coach-spot/coach-spot"
   }
 }
