@@ -85,7 +85,11 @@ const POINTS = [
   { name: '雨果雕像', x: 615, y: 65 }
 ]
 
+const playGuide = require('../../capabilities/play-guide/guide')
+const coachHost = require('../../capabilities/play-guide/coach-host')
+
 Page({
+  behaviors: [coachHost],
   data: {
     leg: null,
     sides: [],
@@ -122,6 +126,10 @@ Page({
     this.refreshSideVisited()
   },
 
+  onReady() {
+    this.scheduleCoach([playGuide.SPOTS.side, playGuide.SPOTS.go])
+  },
+
   onShow() {
     // 从支线返回本页时刷新「已走过」标记
     this.refreshSideVisited()
@@ -143,20 +151,24 @@ Page({
 
   // v2 顺路散页：可选进入，不影响主线推进
   onOpenSide(e) {
-    if (this.data.advancing) return
     const url = e.currentTarget.dataset.url
-    if (url) wx.navigateTo({ url: url })
+    this.runAfterCoach(function () {
+      if (this.data.advancing) return
+      if (url) wx.navigateTo({ url: url })
+    })
   },
 
   onNext() {
-    if (this.data.advancing) return
-    this.setData({ advancing: true })
-    wx.redirectTo({
-      url: this.data.leg.next,
-      fail: () => {
-        this.setData({ advancing: false })
-        wx.showToast({ title: '页面跳转失败，请重试', icon: 'none' })
-      }
+    this.runAfterCoach(function () {
+      if (this.data.advancing) return
+      this.setData({ advancing: true })
+      wx.redirectTo({
+        url: this.data.leg.next,
+        fail: () => {
+          this.setData({ advancing: false })
+          wx.showToast({ title: '页面跳转失败，请重试', icon: 'none' })
+        }
+      })
     })
   }
 })

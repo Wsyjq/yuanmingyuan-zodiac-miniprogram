@@ -8,6 +8,8 @@
 const session = require('../../store/session')
 const answers = require('../../utils/puzzle-answers')
 const audioSrc = require('../../utils/audio-src')
+const playGuide = require('../../capabilities/play-guide/guide')
+const coachHost = require('../../capabilities/play-guide/coach-host')
 
 const HISTORY_LINES = [
   '黄花阵名字由来：',
@@ -16,6 +18,7 @@ const HISTORY_LINES = [
 ]
 
 Page({
+  behaviors: [coachHost],
   data: {
     answer: '',
     attempts: 0,
@@ -78,6 +81,10 @@ Page({
     })
   },
 
+  onReady() {
+    if (!this.data.solved) this.scheduleCoach([playGuide.SPOTS.skip])
+  },
+
   onHistoryNext() {
     this.setData({ showHistory: false })
   },
@@ -88,11 +95,13 @@ Page({
 
   // V2.1 对读二可跳：跳过不发该卡，揭晓照常给（下一拍在亭下）。
   onSkip() {
-    if (this.data.solved) return
-    this.setData({ solved: true, skipped: true, showHistory: false })
-    session.attemptPuzzle('s2-name', this.data.attempts, true, 'skip')
-    session.completePuzzle('s2-name', { action: 'skipped', attempts: this.data.attempts })
-      .catch(function () { /* 进度失败不阻断浏览 */ })
+    this.runAfterCoach(function () {
+      if (this.data.solved) return
+      this.setData({ solved: true, skipped: true, showHistory: false })
+      session.attemptPuzzle('s2-name', this.data.attempts, true, 'skip')
+      session.completePuzzle('s2-name', { action: 'skipped', attempts: this.data.attempts })
+        .catch(function () { /* 进度失败不阻断浏览 */ })
+    })
   },
 
   onNext() {

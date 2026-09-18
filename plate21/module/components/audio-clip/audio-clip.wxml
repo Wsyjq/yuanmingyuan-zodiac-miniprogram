@@ -11,7 +11,7 @@
     <image wx:if="{{!playing}}" class="ac-iconbtn-img" src="/plate21/module/assets/img/icons/ic-play-ink.png" mode="aspectFit" />
     <view wx:else class="ac-iconbtn-pause"><view class="ac-iconbtn-bar"></view><view class="ac-iconbtn-bar"></view></view>
   </view>
-  <view wx:else class="ac-wrap {{compact ? 'ac-compact' : ''}}">
+  <view wx:else id="coachListen" class="ac-wrap {{compact ? 'ac-compact' : ''}}">
     <button class="ac-btn" bindtap="onToggle" aria-label="{{label}}">
       <image class="ac-icon" src="/plate21/module/assets/img/icons/ic-play-ink.png" mode="aspectFit" />
       <text class="ac-label">{{playing ? '暂停' : label}}</text>

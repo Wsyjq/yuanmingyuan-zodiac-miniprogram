@@ -19,3 +19,9 @@
 }
 .ov-fab:active { transform: scale(0.94); }
 .ov-map { bottom: calc(272rpx + env(safe-area-inset-bottom)); }
+.coach-host {
+  position: fixed !important;
+  z-index: 140;
+  pointer-events: none;
+  overflow: hidden;
+}

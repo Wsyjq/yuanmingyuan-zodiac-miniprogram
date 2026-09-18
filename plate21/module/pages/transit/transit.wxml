@@ -51,6 +51,7 @@
   <view
     wx:for="{{sides}}"
     wx:key="key"
+    id="{{index === 0 ? 'coachSide' : ''}}"
     class="side-entry"
     data-url="{{item.url}}"
     bindtap="onOpenSide"
@@ -64,5 +65,18 @@
     <view class="side-arrow">›</view>
   </view>
 
-  <button class="btn-seal next-btn" bindtap="onNext" disabled="{{advancing}}">{{advancing ? '正在前往……' : '继 续 前 往'}}</button>
+  <button id="coachGo" class="btn-seal next-btn" bindtap="onNext" disabled="{{advancing}}">{{advancing ? '正在前往……' : '继 续 前 往'}}</button>
 </view>
+<coach-spot
+  class="coach-host"
+  style="top: {{coachWin.top}}px; left: {{coachWin.left}}px; width: {{coachWin.windowWidth}}px; height: {{coachWin.windowHeight}}px;"
+  visible="{{showCoach}}"
+  closing="{{coachClosing}}"
+  index="{{coachIndex}}"
+  total="{{coachSteps.length}}"
+  step="{{coachStep}}"
+  hole="{{coachHole}}"
+  win="{{coachWin}}"
+  bind:next="onCoachNext"
+  bind:skip="onCoachSkip"
+/>

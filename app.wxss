@@ -155,6 +155,16 @@ button.skip-btn {
 /* ---------- 弹层离场动画（INT-301，v1.4.0-b3） ---------- */
 /* wx:if 弹层关闭时先加此类播放离场动画，再延迟卸载，避免瞬间消失。
  * 遮罩用淡出，卡片/抽屉各自定义方向（见各组件 wxss）。closing 期间忽略二次操作。 */
+.coach-hit {
+  display: inline-block;
+}
+.coach-host {
+  position: fixed !important;
+  z-index: 140;
+  pointer-events: none;
+  overflow: hidden;
+}
+
 .overlay-out {
   animation: overlay-out 0.25s ease forwards;
 }

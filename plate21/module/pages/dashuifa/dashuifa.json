@@ -1,6 +1,7 @@
 {
   "usingComponents": {
-    "nav-back": "../../components/nav-back/nav-back"
+    "nav-back": "../../components/nav-back/nav-back",
+    "coach-spot": "../../components/coach-spot/coach-spot"
   },
   "navigationBarTitleText": "大水法 · 留白",
   "disableScroll": true

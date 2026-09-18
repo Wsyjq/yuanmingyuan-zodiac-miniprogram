@@ -202,6 +202,17 @@
 .restart {
   margin-top: 24rpx;
 }
+.coach-hit {
+  display: inline-flex;
+  align-self: center;
+}
+/* 宿主铺满本次量到的可视区域，组件内 absolute 与按钮同一套 px */
+.coach-host {
+  position: fixed !important;
+  z-index: 140;
+  pointer-events: none;
+  overflow: hidden;
+}
 
 /* ---------- 底部小字入口 ---------- */
 .foot-links {
@@ -229,41 +240,6 @@
   height: 6rpx;
   border-radius: 50%;
   background: var(--dash);
-}
-
-/* ---------- 玩法说明浮层 ---------- */
-.mask {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(70, 56, 42, 0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-}
-.help-card {
-  width: 600rpx;
-  padding: 40rpx 44rpx 36rpx;
-}
-.help-title {
-  font-size: 36rpx;
-  font-weight: 700;
-  letter-spacing: 6rpx;
-  color: var(--ink);
-  margin: 20rpx 0 24rpx;
-}
-.help-body {
-  font-size: 26rpx;
-  line-height: 1.9;
-  color: var(--ink);
-  margin-bottom: 20rpx;
-}
-.help-close {
-  margin: 12rpx auto 0;
-  width: 200rpx;
 }
 
 /* ---------- 重新考察确认 ---------- */

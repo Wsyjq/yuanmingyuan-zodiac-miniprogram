@@ -20,6 +20,7 @@ test/screen*.png
 test/shots/
 test/shots-test/
 test/shots-h5/
+test/shots-play-guide/
 test/harness/out/
 test/shots-v2/
 test/_archived/

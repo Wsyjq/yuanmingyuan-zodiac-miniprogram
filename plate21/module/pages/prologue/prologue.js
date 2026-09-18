@@ -3,8 +3,11 @@
 // → 档案交接面板（信不拆，到门口再拆）→ 前往西洋楼入口（s1-decode 拆信读信）。
 const session = require('../../store/session')
 const audioSrc = require('../../utils/audio-src')
+const playGuide = require('../../capabilities/play-guide/guide')
+const coachHost = require('../../capabilities/play-guide/coach-host')
 
 Page({
+  behaviors: [coachHost],
   data: {
     // 序章叙事（docs/剧情可用稿-人物对话版-V2.3.md §序章：段落收短、删「这些都是常识」「照这行字说」「愿意看的话」）
     paragraphs: [
@@ -41,6 +44,7 @@ Page({
   onNovelFinish() {
     // 叙事结束：清点交到手上的档案。信不拆——到遗址门口再拆。
     this.setData({ showHandover: true })
+    this.scheduleCoach([playGuide.SPOTS.go])
   },
 
   // 确认收好档案（信仍封着）。拆信读信在入口站 s1-decode 完成。
@@ -56,17 +60,25 @@ Page({
   },
 
   onGoS1() {
-    if (this.data.advancing) return
-    this.setData({ advancing: true })
-    session.completePuzzle('prologue-envelope', { action: 'archive-received' }, { checkpoint: 's1-decode' }).then(() => {
-      wx.navigateTo({
-        url: '/plate21/module/pages/s1-decode/s1-decode',
-        fail: () => this.setData({ advancing: false })
+    this.runAfterCoach(function () {
+      if (this.data.advancing) return
+      this.setData({ advancing: true })
+      session.completePuzzle('prologue-envelope', { action: 'archive-received' }, { checkpoint: 's1-decode' }).then(() => {
+        wx.navigateTo({
+          url: '/plate21/module/pages/s1-decode/s1-decode',
+          fail: () => this.setData({ advancing: false })
+        })
+      }).catch(() => {
+        this.setData({ advancing: false })
+        wx.showToast({ title: '进度保存失败，请重试', icon: 'none' })
       })
-    }).catch(() => {
-      this.setData({ advancing: false })
-      wx.showToast({ title: '进度保存失败，请重试', icon: 'none' })
     })
+  },
+
+  onReady() {
+    const spots = [playGuide.SPOTS.listen]
+    if (this.data.showHandover) spots.push(playGuide.SPOTS.go)
+    this.scheduleCoach(spots)
   },
 
   onLoad() {
