@@ -417,6 +417,49 @@ function setFlag(key, value) {
   })
 }
 
+// —— 留言簿（UGC，契约 v1.3.0）：写走 adapter（宿主机检+人工审），读走 adapter 展示池 ——
+
+function submitBoardMessage(text) {
+  const value = String(text || '').trim().slice(0, contract.BOARD_MESSAGE_MAX_LEN)
+  if (!value) return Promise.reject(new Error('留言为空'))
+  if (!snapshot) return init({}).then(function () { return submitBoardMessage(text) })
+  return Promise.resolve()
+    .then(function () {
+      return adapter.submitBoardMessage({ sessionId: snapshot.sessionId, text: value })
+    })
+    .catch(function (err) {
+      console.warn('[plate21] submitBoardMessage 不可用，回落本地保存（不公开展示）', err)
+      capabilityFallback('submitBoardMessage', 'adapter_failed')
+      return { status: 'pending_review', fallback: true }
+    })
+    .then(function (res) {
+      return setFlag('boardDraft', value)
+        .then(function () { return setFlag('boardSubmittedAt', Date.now()) })
+        .then(function () {
+          emit({ name: 'board_message_submitted', moderation: res.status })
+          return res
+        })
+    })
+}
+
+function listBoardMessages(options) {
+  const limit = (options && options.limit) || 6
+  return Promise.resolve()
+    .then(function () {
+      return adapter.listBoardMessages({ sessionId: snapshot && snapshot.sessionId, limit: limit })
+    })
+    .catch(function (err) {
+      console.warn('[plate21] listBoardMessages 不可用，回落官方种子池', err)
+      capabilityFallback('listBoardMessages', 'adapter_failed')
+      const seeds = require('../capabilities/board/seeds')
+      return {
+        messages: seeds.pickBoardMessages(snapshot && snapshot.sessionId, limit).map(function (m) {
+          return { text: m.text, from: m.from, date: m.date, source: 'official_seed' }
+        })
+      }
+    })
+}
+
 function claimEdition() {
   if (!snapshot) return Promise.resolve(null)
   return adapter.claimEdition({
@@ -547,6 +590,8 @@ module.exports = {
   getCardDigit: getCardDigit,
   getCardDigits: getCardDigits,
   setFlag: setFlag,
+  submitBoardMessage: submitBoardMessage,
+  listBoardMessages: listBoardMessages,
   sign: sign,
   claimEdition: claimEdition,
   recognizeScene: recognizeScene,

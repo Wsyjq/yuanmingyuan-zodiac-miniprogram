@@ -100,6 +100,16 @@
       <button class="btn-line echo-edit" bindtap="onEditMessage">重写这张明信片</button>
     </view>
 
+    <!-- 留言簿入口：写发生在通关当天剧情末尾（用户 2026-09-18 拍板）；次日回访只负责读 -->
+    <view class="letter-entry board-entry" bindtap="onOpenBoard" role="button" aria-label="留言簿入口">
+      <view class="letter-entry-wax board-entry-wax">留</view>
+      <view class="letter-entry-main">
+        <view class="letter-entry-title serif">留言簿 · 给后来的人</view>
+        <view class="letter-entry-sub kaiti">{{boardSubmitted ? '你的那句话已在档案里，去看看大家的话' : '走完了，给下一个来的人留一句话'}}</view>
+      </view>
+      <view class="letter-entry-arrow">›</view>
+    </view>
+
     <view class="letter-entry {{letterReady ? '' : 'sealed'}}" bindtap="onOpenLetter" role="button" aria-label="次日之信入口">
       <view class="letter-entry-wax">封</view>
       <view class="letter-entry-main">

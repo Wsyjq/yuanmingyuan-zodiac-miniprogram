@@ -1,0 +1,206 @@
+/* 考察者留言簿：便签墙 + 留言编辑区 */
+.board-page {
+  min-height: 100vh;
+  padding: 56rpx 48rpx 64rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.board-state {
+  margin-top: 220rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30rpx;
+  padding: 0 80rpx;
+  text-align: center;
+}
+.board-wax {
+  width: 124rpx;
+  height: 124rpx;
+  border-radius: 50%;
+  background: var(--cinnabar);
+  color: var(--paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 46rpx;
+  font-family: "STKaiti", "KaiTi", serif;
+  box-shadow: inset 0 0 14rpx rgba(0, 0, 0, 0.22), 0 8rpx 20rpx rgba(166, 58, 46, 0.28);
+}
+.board-state-text {
+  font-size: 28rpx;
+  line-height: 2;
+  color: var(--ink);
+}
+.board-back {
+  margin-top: 10rpx;
+}
+
+/* ---------- 头部 ---------- */
+.board-head {
+  width: 100%;
+  max-width: 620rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.board-eyebrow {
+  font-size: 20rpx;
+  letter-spacing: 6rpx;
+  color: var(--patina);
+}
+.board-title {
+  margin-top: 14rpx;
+  font-size: 44rpx;
+  font-weight: 700;
+  letter-spacing: 10rpx;
+  color: var(--ink);
+}
+.board-sub {
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  letter-spacing: 6rpx;
+  color: var(--ink60);
+}
+.board-divider {
+  width: 240rpx;
+  margin: 24rpx 0;
+}
+.board-intro {
+  font-size: 28rpx;
+  line-height: 1.9;
+  color: var(--ink);
+}
+
+/* ---------- 留言便签（自己的 + 前人） ---------- */
+.board-note {
+  position: relative;
+  width: 100%;
+  max-width: 620rpx;
+  box-sizing: border-box;
+  padding: 30rpx 32rpx 26rpx;
+  background: rgba(244, 237, 220, 0.72);
+}
+.board-mine {
+  margin-top: 40rpx;
+  border: 2rpx solid rgba(166, 58, 46, 0.55);
+}
+.board-note-text {
+  font-size: 30rpx;
+  line-height: 1.8;
+  color: var(--ink);
+  word-break: break-all;
+}
+.board-note-foot {
+  margin-top: 16rpx;
+  font-size: 20rpx;
+  letter-spacing: 2rpx;
+  color: var(--ink60);
+  text-align: right;
+}
+.board-mine .board-note-foot {
+  color: var(--cinnabar);
+}
+.board-note-edit {
+  position: absolute;
+  top: -16rpx;
+  right: 24rpx;
+  padding: 4rpx 16rpx;
+  font-size: 20rpx;
+  letter-spacing: 2rpx;
+  color: var(--cinnabar);
+  background: var(--paper);
+  border: 2rpx solid var(--cinnabar);
+  border-radius: 999rpx;
+}
+
+/* ---------- 留言编辑区 ---------- */
+.board-write {
+  width: 100%;
+  max-width: 620rpx;
+  box-sizing: border-box;
+  margin-top: 40rpx;
+  padding: 30rpx 32rpx;
+}
+.board-write-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  letter-spacing: 4rpx;
+  color: var(--ink);
+}
+.board-input {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 160rpx;
+  margin-top: 20rpx;
+  padding: 20rpx 24rpx;
+  font-size: 30rpx;
+  line-height: 1.8;
+  color: var(--ink);
+  background: rgba(255, 252, 244, 0.85);
+  border: 2rpx dashed var(--dash);
+  border-radius: 6rpx;
+}
+.board-placeholder {
+  color: var(--ink60);
+}
+.board-count {
+  margin-top: 12rpx;
+  font-size: 20rpx;
+  color: var(--ink60);
+  text-align: right;
+}
+.board-submit {
+  margin-top: 24rpx;
+}
+.board-legal {
+  margin-top: 16rpx;
+  font-size: 20rpx;
+  letter-spacing: 1rpx;
+  color: var(--ink60);
+  text-align: center;
+}
+
+/* ---------- 前人留言墙 ---------- */
+.board-wall-title {
+  margin-top: 56rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+  letter-spacing: 6rpx;
+  color: var(--ink);
+}
+.board-wall {
+  width: 100%;
+  max-width: 620rpx;
+  margin-top: 28rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 34rpx;
+}
+
+/* ---------- 回访次级入口 ---------- */
+.board-links {
+  margin-top: 56rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.board-link {
+  padding: 14rpx 34rpx;
+  font-size: 24rpx;
+  letter-spacing: 2rpx;
+  color: var(--patina);
+  border: 2rpx solid var(--dash);
+  border-radius: 999rpx;
+  background: rgba(244, 237, 220, 0.55);
+}
+.board-link:active {
+  color: var(--ink);
+  border-color: var(--patina);
+}

@@ -14,6 +14,24 @@
   <view class="host-sub">西洋楼铜版图 · 实景解谜系列</view>
   <view class="hatch-divider host-divider"></view>
 
+  <!-- 次日回访卡：通关次日起出现，直达留言簿（通关当日与未通关不显示） -->
+  <view wx:if="{{revisitReady}}" class="revisit-card clip-card tilt-r double-frame" bindtap="goRevisit">
+    <view class="corner tl"></view>
+    <view class="corner tr"></view>
+    <view class="corner bl"></view>
+    <view class="corner br"></view>
+    <view class="revisit-stamp">回访</view>
+    <view class="revisit-info">
+      <view class="revisit-name serif">档案 · 新增一页</view>
+      <view class="revisit-desc">昨天走完的路，今天多了一页留言。</view>
+      <view class="revisit-meta">{{revisitDone ? '你的那句话已经在档案里。' : '去读走完这条路的人，留下的话。'}}</view>
+    </view>
+    <view class="module-enter">
+      <text class="enter-text">去看</text>
+      <text class="enter-arrow">→</text>
+    </view>
+  </view>
+
   <!-- 入口卡：第二十一图 -->
   <view class="module-card clip-card tilt-l double-frame" bindtap="goPlate21">
     <view class="corner tl"></view>

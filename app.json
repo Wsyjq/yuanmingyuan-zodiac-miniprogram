@@ -27,7 +27,8 @@
         "pages/finale/finale",
         "pages/report/report",
         "pages/handbook/handbook",
-        "pages/letter/letter"
+        "pages/letter/letter",
+        "pages/board/board"
       ]
     }
   ],

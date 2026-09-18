@@ -2,7 +2,7 @@
  * Plate21 Host Adapter 接口契约（JS / JSDoc 版）
  * 正式定义见 docs/宿主接入方案.md §3，本文件为该契约的原样 JS 转写。
  *
- * 模块（plate21/module）只认识这里定义的 8 个方法；
+ * 模块（plate21/module）只认识这里定义的 10 个方法；
  * 开发期由 adapters/local-adapter.js 实现，接入期由宿主按同一契约实现。
  * 两种实现必须返回完全相同的数据结构，模块内部不写两套流程。
  */
@@ -166,6 +166,47 @@
  * @property {boolean} [pass]     photo_check 时携带
  */
 
+/* ============================== 留言簿（UGC）============================== */
+
+/**
+ * 留言提交入参（通关当天 report 末尾「写」动作）
+ * @typedef {Object} BoardMessageSubmitInput
+ * @property {string} sessionId
+ * @property {string} text            玩家留言，trim 后 1–50 字
+ */
+
+/**
+ * 留言提交结果：宿主侧必须先检后收。
+ * @typedef {Object} BoardMessageSubmitResult
+ * @property {'accepted'|'pending_review'|'rejected'} status
+ *   accepted=过审入库并进入展示池；pending_review=已收待人工审（先审后发模式下玩家看不到自己的话上墙）；
+ *   rejected=内容安全接口或人工拒绝（附 reason，模块原样 toast）
+ * @property {string} [reason]        rejected 时的可展示原因（如「内容不适宜展示」）
+ * @property {string} [messageId]     宿主侧留言 ID，供后台管理与下架定位
+ */
+
+/**
+ * 展示池单条留言（次日回访/信末「读」动作）
+ * @typedef {Object} BoardMessage
+ * @property {string} text            过审后的留言文本
+ * @property {string} from            展示署名，固定「一位考察者」（宿主不得透出真实昵称/头像）
+ * @property {string} date            展示日期 YYYY.MM.DD（宿主按过审时间或考察日期给）
+ * @property {'official_seed'|'user_generated'} source
+ *   official_seed=官方预置内容（冷启动/降级）；user_generated=真实玩家过审留言
+ */
+
+/**
+ * 留言展示池拉取入参
+ * @typedef {Object} BoardMessageListInput
+ * @property {string} [sessionId]     可选，宿主可据此做同会话固定排序（重看不换）
+ * @property {number} [limit]         默认 6，宿主按冷启动策略返回
+ */
+
+/**
+ * @typedef {Object} BoardMessageListResult
+ * @property {BoardMessage[]} messages 只允许包含过审内容；空池时返回官方预置种子
+ */
+
 /* ============================== 主接口（§3.1） ============================== */
 
 /**
@@ -203,13 +244,29 @@
  *
  * emitEvent(event: ModuleEvent): void
  *   埋点事件。同步、不返回；宿主可批量上报。模块保证事件枚举稳定。
+ *
+ * submitBoardMessage(input: BoardMessageSubmitInput): Promise<BoardMessageSubmitResult>
+ *   留言簿提交（通关当天 report 末尾）。UGC 硬合规通道：宿主实现必须
+ *   ①调微信内容安全接口 msgSecCheck（含 2.0 版 user 平台昵称场景）做机检，
+ *   ②进入宿主审核后台的人工队列（或先审后发），
+ *   ③留存提交记录（谁/何时/原文/机检结果）供监管追溯与下架。
+ *   机检不过或人工拒绝 → status:'rejected' 并给可展示 reason；模块 toast 原样提示，不重试。
+ *   失败/降级（resolve null 或 reject 不适用）：宿主不可用时模块回落本地 flags 保存（不公开展示）。
+ *
+ * listBoardMessages(input: BoardMessageListInput): Promise<BoardMessageListResult>
+ *   留言展示池（次日回访 / 信末「读」）。只允许返回过审内容，署名一律「一位考察者」，
+ *   不得透出可识别个人信息的字段。空池/冷启动返回 official_seed 官方预置。
+ *   宿主不可用时模块回落本地种子池（capabilities/board/seeds.js，确定性取张）。
  */
 
-/** 契约版本，供 adapter 实现与契约测试引用 */
-const CONTRACT_VERSION = '1.2.0'
+/** 契约版本，供 adapter 实现与契约测试引用（1.3.0：新增留言簿 submitBoardMessage / listBoardMessages） */
+const CONTRACT_VERSION = '1.3.0'
 
 /** 当前快照结构版本 */
 const SESSION_SCHEMA_VERSION = 2
+
+/** 留言簿单条字数上限（report 明信片同口径） */
+const BOARD_MESSAGE_MAX_LEN = 50
 
 /** 八张日期卡的剧情顺序，数字从 SessionSnapshot.sessionDate 对应位置读取 */
 const CARD_ORDER = [
@@ -238,7 +295,8 @@ const EVENT_NAMES = [
   'photo_check',
   'finale_viewed',
   'report_saved',
-  'side_visited'
+  'side_visited',
+  'board_message_submitted'
 ]
 
 /** 站点 → 考察记录类型映射（四站结构：s1 西洋楼入口 / s2 黄花阵 / s3 海晏堂·大水法 / s4 雨果雕像） */
@@ -252,6 +310,7 @@ const STATION_RECORD_TYPE = {
 module.exports = {
   CONTRACT_VERSION,
   SESSION_SCHEMA_VERSION,
+  BOARD_MESSAGE_MAX_LEN,
   CARD_ORDER,
   EVENT_NAMES,
   STATION_RECORD_TYPE

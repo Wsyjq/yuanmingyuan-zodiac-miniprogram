@@ -24,4 +24,9 @@
       >{{item.text}}</view>
     </view>
   </scroll-view>
+  <!-- 信末脚注（不在信正文内，V2.1 信稿一字不动）：读完信去读大家的留言 -->
+  <view wx:if="{{state === 'open'}}" class="letter-footnote" bindtap="onOpenBoard" role="button" aria-label="去读大家的留言">
+    <text class="letter-footnote-text">档案的最后一页，是大家的话</text>
+    <text class="letter-footnote-arrow">›</text>
+  </view>
 </view>

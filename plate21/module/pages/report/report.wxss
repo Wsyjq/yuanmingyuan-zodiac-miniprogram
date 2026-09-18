@@ -449,3 +449,11 @@
   font-size: 40rpx;
   color: var(--cinnabar);
 }
+
+/* 留言簿入口：墨绿封蜡区别于次日之信的朱砂封蜡 */
+.board-entry-wax {
+  background: var(--patina);
+}
+.board-entry .letter-entry-arrow {
+  color: var(--patina);
+}
