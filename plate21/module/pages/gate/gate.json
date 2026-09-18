@@ -1,4 +1,5 @@
 {
   "usingComponents": {},
-  "navigationBarTitleText": "门票 · 第二十一图"
+  "navigationBarTitleText": "门票 · 第二十一图",
+  "disableScroll": true
 }

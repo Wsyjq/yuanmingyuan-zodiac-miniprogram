@@ -1,4 +1,5 @@
 {
   "usingComponents": {},
-  "navigationBarTitleText": "留言簿"
+  "navigationBarTitleText": "留言簿",
+  "disableScroll": true
 }

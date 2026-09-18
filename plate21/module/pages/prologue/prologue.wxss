@@ -4,8 +4,15 @@
 /* v1.3.1 手账根容器：旧纸纹底 + 真纸纹叠加 + 活页装订孔让位 */
 .page {
   position: relative;
-  min-height: 100vh;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   padding-left: 52rpx;
+}
+.page-audio-dock {
+  flex: none;
+  padding: 0 0 8rpx 0;
 }
 
 /* 实体道具引导层：底部滑出，小程序只展示操作步骤与剧情结果。 */

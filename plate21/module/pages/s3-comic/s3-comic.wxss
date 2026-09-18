@@ -1,8 +1,9 @@
 /* P07 时辰漫画推理 */
 .page {
   position: relative;
-  min-height: 100vh;
-  padding: 220rpx 48rpx 120rpx 100rpx; /* 左 100rpx = 48 + 52 让位 .binder */
+  height: 100%;
+  overflow: hidden;
+  padding: 140rpx 48rpx 40rpx 100rpx; /* 左 100rpx = 48 + 52 让位 .binder */
   box-sizing: border-box;
 }
 
@@ -41,6 +42,8 @@
   display: block;
   width: 100%;
   height: auto;
+  max-height: 360rpx;
+  object-fit: contain;
   filter: sepia(.18) saturate(.82) contrast(1.03);
   mix-blend-mode: multiply;
 }

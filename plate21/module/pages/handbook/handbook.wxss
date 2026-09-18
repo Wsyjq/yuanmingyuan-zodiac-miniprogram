@@ -4,11 +4,12 @@
 
 .page {
   position: relative;
-  min-height: 100vh;
+  height: 100%;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 200rpx 0 100rpx 52rpx; /* 左侧 52rpx 让位 .binder */
+  padding: 200rpx 0 24rpx 52rpx; /* 左侧 52rpx 让位 .binder */
   box-sizing: border-box;
 }
 

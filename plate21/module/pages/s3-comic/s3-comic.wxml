@@ -3,6 +3,7 @@
 <page-overlays />
 <bgm-ambience />
 <view class="page page-shell paper-grain paper-real">
+<scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
   <!-- v1.3.1 手账：左侧活页装订孔列（全站统一） -->
   <view class="binder"></view>
   <!-- v1.3.1 手账：干花标本贴纸压在页右上角（页边，不扰漫画推理） -->
@@ -81,6 +82,7 @@
     <view class="q-sub">第二件事，抬头看那排石座：座是空的，座身上的花纹倒还清楚，这一页配了一只转盘，转盘上也是这些纹。</view>
     <button class="btn-seal" bindtap="onNext" disabled="{{advancing}}">我已取出转盘，继续</button>
   </view>
+</scroll-view>
 </view>
 
 <history-card

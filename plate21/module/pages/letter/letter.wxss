@@ -1,6 +1,7 @@
 /* v2 回响（次日之信）：竖排信纸 */
 .letter-page {
-  min-height: 100vh;
+  height: 100%;
+  overflow: hidden;
   padding: 56rpx 0 44rpx;
   box-sizing: border-box;
   display: flex;
@@ -9,10 +10,12 @@
 }
 
 .letter-state {
-  margin-top: 220rpx;
+  margin-top: 0;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 30rpx;
   padding: 0 80rpx;
   text-align: center;

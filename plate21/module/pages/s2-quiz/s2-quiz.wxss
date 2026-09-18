@@ -1,8 +1,9 @@
 /* P04 黄花阵选择题 */
 .page {
   position: relative;
-  min-height: 100vh;
-  padding: 220rpx 48rpx 120rpx 100rpx; /* 左 100rpx = 48 + 52 让位 .binder */
+  height: 100%;
+  overflow: hidden;
+  padding: 120rpx 48rpx 32rpx 100rpx; /* 左 100rpx = 48 + 52 让位 .binder */
   box-sizing: border-box;
 }
 
@@ -30,8 +31,8 @@
   justify-content: center;
 }
 .img-s2a {
-  height: 360rpx;
-  margin-top: 40rpx;
+  height: 200rpx;
+  margin-top: 16rpx;
   overflow: hidden;
 }
 /* 线描示意铺满档案框。 */
@@ -69,7 +70,7 @@
   flex-direction: column;
   gap: 24rpx;
   /* 底部留白，让最后一项可完整滚动 */
-  padding-bottom: 160rpx;
+  padding-bottom: 24rpx;
 }
 .opt {
   position: relative;

@@ -1,5 +1,5 @@
 page{background:var(--paper)}
-.page{min-height:100vh;box-sizing:border-box;padding:calc(72px + env(safe-area-inset-top)) 22px 42px 30px;position:relative}
+.page{height:100%;overflow:hidden;box-sizing:border-box;padding:calc(72px + env(safe-area-inset-top)) 22px 42px 30px;position:relative}
 .title{color:var(--ink-deep);font-size:27px;font-weight:700;letter-spacing:.05em}
 .title-div{margin:10px 0 14px}
 .lead{font-size:16px;line-height:1.8;color:var(--ink);margin-bottom:18px}

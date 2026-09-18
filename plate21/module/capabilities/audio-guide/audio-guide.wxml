@@ -1,12 +1,13 @@
 <block wx:if="{{guide}}">
-  <button class="ag-fab" bindtap="onFab" aria-label="语音导览">
+  <button wx:if="{{!open}}" class="ag-fab" bindtap="onFab" aria-label="语音导览">
     <image src="/plate21/module/assets/img/icons/ic-play-ink.png" mode="aspectFit" />
   </button>
 
   <view wx:if="{{open}}" class="ag-panel {{closing ? 'overlay-out' : ''}}">
     <view class="ag-head">
-      <view>
-        <view class="ag-kicker">AUDIO GUIDE · 本站讲解（覆盖本站各页）</view>
+      <view class="ag-head-copy">
+        <view class="ag-kicker">AUDIO GUIDE</view>
+        <view class="ag-kicker-sub">本站讲解 · 覆盖本站各页</view>
         <view class="ag-title serif">{{guide.title}}</view>
       </view>
       <button class="ag-close" bindtap="close" aria-label="关闭语音导览">×</button>

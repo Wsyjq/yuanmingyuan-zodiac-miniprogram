@@ -6,5 +6,6 @@
     "dialogue-block": "../../components/dialogue-block/dialogue-block",
     "bgm-ambience": "../../components/bgm-ambience/bgm-ambience"
   },
-  "navigationBarTitleText": "顺路"
+  "navigationBarTitleText": "顺路",
+  "disableScroll": true
 }

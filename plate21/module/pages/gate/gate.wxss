@@ -1,6 +1,7 @@
 /* 门票门页：票根风（虚线撕票线 + 两侧票孔 + 朱砂检票章） */
 .gate-page {
-  min-height: 100vh;
+  height: 100%;
+  overflow: hidden;
   padding: 88rpx 48rpx 64rpx;
   box-sizing: border-box;
   display: flex;
@@ -119,18 +120,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 26rpx 0;
-  border: 2rpx solid var(--cinnabar);
-  border-radius: 8rpx;
-  background: rgba(166, 58, 46, 0.08);
-  font-size: 30rpx;
+  padding: 26rpx 12rpx;
+  border: 0;
+  background-color: transparent;
+  background-image: url("/plate21/module/assets/img/ui/btn-label-seal.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+  font-size: 28rpx;
   letter-spacing: 4rpx;
   color: var(--cinnabar);
+  min-height: 88rpx;
 }
 .gate-buy:active,
 .gate-buy.busy {
   transform: scale(0.97);
-  background: rgba(166, 58, 46, 0.16);
+  opacity: 0.88;
 }
 
 .gate-paid {
@@ -183,10 +188,15 @@
   margin-top: 26rpx;
   font-size: 24rpx;
   letter-spacing: 2rpx;
-  color: var(--patina);
-  padding: 8rpx 28rpx;
-  border: 2rpx solid var(--dash);
-  border-radius: 999rpx;
+  color: var(--ink);
+  padding: 16rpx 36rpx 16rpx 72rpx;
+  border: 0;
+  background-image: url("/plate21/module/assets/img/ui/btn-label-ink.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+  min-height: 72rpx;
+  filter: drop-shadow(0 3rpx 6rpx rgba(70, 56, 42, 0.14));
 }
 .gate-back:active {
   color: var(--ink);

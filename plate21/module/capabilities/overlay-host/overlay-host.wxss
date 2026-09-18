@@ -18,4 +18,4 @@
   height: 44rpx;
 }
 .ov-fab:active { transform: scale(0.94); }
-.ov-map { bottom: 224rpx; }
+.ov-map { bottom: calc(272rpx + env(safe-area-inset-bottom)); }

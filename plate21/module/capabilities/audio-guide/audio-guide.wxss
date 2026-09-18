@@ -2,7 +2,7 @@
 .ag-fab {
   position: fixed;
   right: 26rpx;
-  bottom: 336rpx;
+  bottom: calc(168rpx + env(safe-area-inset-bottom));
   z-index: 96;
   width: 88rpx;
   height: 88rpx;
@@ -45,6 +45,11 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  gap: 16rpx;
+}
+.ag-head-copy {
+  min-width: 0;
+  flex: 1;
 }
 .ag-kicker {
   font-family: "Courier New", monospace;
@@ -52,11 +57,19 @@
   letter-spacing: 3rpx;
   color: var(--coffee);
 }
+.ag-kicker-sub {
+  margin-top: 4rpx;
+  font-size: 20rpx;
+  letter-spacing: 2rpx;
+  color: var(--ink60);
+  line-height: 1.5;
+}
 .ag-title {
-  margin-top: 6rpx;
+  margin-top: 8rpx;
   font-size: 30rpx;
   letter-spacing: 2rpx;
   color: var(--ink-deep);
+  word-break: break-word;
 }
 .ag-close {
   width: 52rpx;
@@ -160,11 +173,13 @@
 /* 全局音频开关行（BGM/人声，与手册页同状态源） */
 .ag-switches {
   display: flex;
+  flex-wrap: wrap;
   gap: 16rpx;
   margin-top: 20rpx;
 }
 .ag-switch {
   flex: 1;
+  min-width: 240rpx;
   display: flex;
   align-items: center;
   justify-content: space-between;

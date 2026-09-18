@@ -25,12 +25,13 @@ test('every production page uses the shared responsive shell', () => {
   assert.match(appStyles, /--safe-bottom:\s*env\(safe-area-inset-bottom\)/)
 })
 
-test('short-screen containers do not clip their whole page', () => {
+test('story pages lock to one screen instead of page-level scrolling', () => {
   const reader = read('plate21/module/components/novel-view/novel-view.wxss')
-  const timeline = read('plate21/module/pages/s4-timeline/s4-timeline.wxss')
-  assert.doesNotMatch(reader, /\.novel-view\s*\{[^}]*height:\s*100vh[^}]*overflow:\s*hidden/s)
-  assert.doesNotMatch(timeline, /\.page\s*\{[^}]*height:\s*100vh[^}]*overflow:\s*hidden/s)
+  const shell = read('app.wxss')
+  assert.match(reader, /overflow:\s*hidden/)
   assert.match(reader, /env\(safe-area-inset-bottom\)/)
+  assert.match(shell, /\.page-shell\s*\{[^}]*overflow:\s*hidden/s)
+  assert.match(read('plate21/module/pages/prologue/prologue.json'), /"disableScroll": true/)
 })
 
 test('novel pages use one natural-flow text block while turning', () => {

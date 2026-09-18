@@ -17,15 +17,17 @@
   </view>
 
   <view class="answer" wx:if="{{!solved}}">
-    <input
-      class="ans-input"
-      placeholder="你觉得「黄花」二字从何而来？"
-      placeholder-class="ans-ph"
-      value="{{answer}}"
-      bindinput="onInput"
-      bindconfirm="onSubmit"
-    />
-    <button class="btn-seal ans-btn" bindtap="onSubmit">提 交</button>
+    <view class="ans-row">
+      <input
+        class="ans-input"
+        placeholder="你觉得「黄花」二字从何而来？"
+        placeholder-class="ans-ph"
+        value="{{answer}}"
+        bindinput="onInput"
+        bindconfirm="onSubmit"
+      />
+      <button class="btn-seal ans-btn" bindtap="onSubmit">提 交</button>
+    </view>
     <button class="skip-btn note-hand olive" bindtap="onSkip">先不猜，往下走</button>
   </view>
   <view wx:if="{{hint}}" class="hint">{{hint}}</view>

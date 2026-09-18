@@ -1,7 +1,8 @@
 /* 第二站 · 谜题2 名字由来（采风修订版：文字输入） */
 .page {
   position: relative;
-  min-height: 100vh;
+  height: 100%;
+  overflow: hidden;
   padding: 130rpx 48rpx 80rpx 100rpx;
   box-sizing: border-box;
 }
@@ -14,18 +15,43 @@
 .ref-pic { width: 480rpx; height: 360rpx; border: 1rpx solid #A98F5F; border-radius: 10rpx; background: #EFE4C8; }
 .ref-note { margin-top: 12rpx; font-size: 24rpx; color: var(--ink60, #8A7A60); transform: rotate(-1deg); }
 
-.answer { display: flex; align-items: center; margin-top: 40rpx; }
+.answer {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  margin-top: 40rpx;
+  gap: 12rpx;
+}
+.ans-row {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 16rpx;
+}
 .ans-input {
-  flex: 1; height: 88rpx; box-sizing: border-box;
-  border: 1rpx solid var(--ink, #46382A); border-radius: 4rpx;
-  background: var(--paper2, #EFE4C8); padding: 0 24rpx;
-  font-size: 28rpx; color: var(--ink, #46382A);
+  flex: 1;
+  min-width: 0;
+  height: 88rpx;
+  box-sizing: border-box;
+  border: 1rpx solid var(--ink, #46382A);
+  border-radius: 4rpx;
+  background: var(--paper2, #EFE4C8);
+  padding: 0 24rpx;
+  font-size: 28rpx;
+  color: var(--ink, #46382A);
 }
 .ans-ph { color: var(--ink60, #8A7A60); font-size: 26rpx; }
-.ans-btn { margin-left: 24rpx; padding: 0 32rpx; height: 88rpx; letter-spacing: 4rpx; font-size: 28rpx; }
+.ans-btn {
+  flex-shrink: 0;
+  margin-left: 0;
+  padding: 0 28rpx;
+  height: 88rpx;
+  letter-spacing: 4rpx;
+  font-size: 28rpx;
+}
 
 .hint { margin-top: 16rpx; font-size: 24rpx; color: var(--ink60, #8A7A60); letter-spacing: 2rpx; text-align: center; }
 
 /* V2.1 可跳通道 */
-.skip-btn { display: block; width: 100%; min-height: 0; line-height: 1.6; margin-top: 14rpx; padding: 6rpx 10rpx; border: 0; border-radius: 0; background: transparent; font-size: 26rpx; text-decoration: underline dotted; }
+.skip-btn { display: block; width: 100%; min-height: 0; line-height: 1.6; margin-top: 4rpx; padding: 6rpx 10rpx; border: 0; border-radius: 0; background: transparent; font-size: 26rpx; text-align: center; text-decoration: underline dotted; }
 .skip-btn::after { border: 0; }

@@ -1,6 +1,7 @@
 /* 第二站 · 谜题3 现场四图考察 */
 .page {
-  min-height: 100vh;
+  height: 100%;
+  overflow: hidden;
   box-sizing: border-box;
   padding: 0 30rpx 90rpx 60rpx;
 }

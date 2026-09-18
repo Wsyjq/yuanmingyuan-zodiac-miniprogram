@@ -1,5 +1,6 @@
 {
   "navigationBarTitleText": "宿主小程序演示",
   "navigationStyle": "default",
-  "usingComponents": {}
+  "usingComponents": {},
+  "disableScroll": true
 }

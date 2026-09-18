@@ -2,6 +2,7 @@
 <!-- v1.3.1 手账：左侧活页装订孔列（移到 .page 外，避免 flex 影响 fixed） -->
 <view class="binder"></view>
 <view class="page page-shell paper-grain paper-real">
+<scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
 
   <!-- v1.3.1 手账：票根贴纸压在标题右上角，像手册的装订凭证 -->
   <image class="hb-ticket" src="/plate21/module/assets/img/stickers/st-ticket-02.png" mode="aspectFit" />
@@ -164,6 +165,7 @@
     <view wx:if="{{letterReady}}" class="hb-letter-arrow">›</view>
   </view>
 
+</scroll-view>
 </view>
 
 <history-card

@@ -1,6 +1,7 @@
 <!-- v1.3.1 手账：左侧活页装订孔列（移到 .page 外，避免 flex 影响 fixed） -->
 <view class="binder"></view>
 <view class="page page-shell paper-grain paper-real">
+<scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
   <view class="tag-no page-no">No.015</view>
   <view class="title serif">西洋楼铜版图 · 第二十一图</view>
   <view class="subtitle">考察报告 · {{editionLabel}} · 非馆藏原件</view>
@@ -147,6 +148,7 @@
     <view class="ticket-edge"></view>
   </view>
 
+</scroll-view>
   <!-- 离屏导出画布（不参与布局，尺寸为导出分辨率基准像素） -->
   <canvas type="2d" id="reportCanvas" class="offscreen" style="width: 700px; height: 1120px;"></canvas>
 </view>

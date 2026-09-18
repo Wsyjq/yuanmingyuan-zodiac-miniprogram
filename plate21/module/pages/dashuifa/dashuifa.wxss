@@ -1,11 +1,13 @@
 /* v2 大水法留白站：静默页刻意接近空白 */
 .page-no {
   position: absolute;
-  top: 56rpx;
-  right: 40rpx;
+  top: 48rpx;
+  right: 32rpx;
+  z-index: 2;
 }
 .dsf-page {
-  justify-content: center;
+  justify-content: flex-start;
+  padding-top: 200rpx;
 }
 .dsf-stage {
   width: 100%;

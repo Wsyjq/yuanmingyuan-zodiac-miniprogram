@@ -1,6 +1,7 @@
 /* 考察者留言簿：便签墙 + 留言编辑区 */
 .board-page {
-  min-height: 100vh;
+  height: 100%;
+  overflow: hidden;
   padding: 56rpx 48rpx 64rpx;
   box-sizing: border-box;
   display: flex;
