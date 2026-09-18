@@ -46,11 +46,12 @@ cloudfunctions/
   plate21-adapter/          # 单函数多 action（推荐，省冷启动）；依赖 wx-server-sdk
 小程序端
   plate21/module/adapters/cloud-adapter.js   # Host Adapter 云版实现
-数据库集合（云开发控制台建）
+数据库集合（云开发控制台建，字段级结构见 §1.3）
   plate21_session           # 一条/用户，存 SessionSnapshot 原样 JSON
   plate21_events            # emitEvent 落库（或先只打日志）
   plate21_order             # 门票订单与权益（refund 置 unlocked=false 收回）
   plate21_board             # 留言：reviewing|accepted|rejected 状态列区分待审与过审池
+  plate21_applied           # updateSession 幂等键（operationId → 首次结果）
 ```
 
 **② 云函数要点**（单函数 action 路由：`start` / `update` / `reset` / `identity` / `event` / `entitlement` / `pay` / `board_submit` / `board_list` / 可选 `media`）：
@@ -73,7 +74,113 @@ cloudfunctions/
 
 **⑥ 上线**：云函数发布正式版（云函数支持版本与灰度流量）；隐私保护指引补两条声明——**位置信息**（原有）+ **考察进度数据（含 OpenID）收集**。
 
-### 1.3 A2 细节与坑清单
+### 1.3 A2 实现参考（骨架与集合结构；交付包内为完整实现）
+
+**集合字段级结构**（5 个，均建索引于 `_openid`）：
+
+```
+plate21_session   { _openid, session: SessionSnapshot整包JSON, revision, updated_at }
+plate21_events    { _openid, event: ModuleEvent原样(name/ts/…), created_at }
+plate21_order     { _openid, order_id(唯一), sku:'plate21_full', status:'paid'|'refunded',
+                    entitlement_id, created_at, refunded_at }
+plate21_board     { _openid, text(≤50字), status:'reviewing'|'accepted'|'rejected',
+                    machine_check(msgSecCheck结果留存), display(过审后:{text,from,date,source}),
+                    created_at, reviewed_at }
+plate21_applied   { _id=operationId, result(首次结果原样), at }
+```
+
+安全规则：五个集合全部设为**禁止客户端读写**（自定义规则 `{"read": false, "write": false}`）——云函数以管理权限访问，不受安全规则限制；客户端一律走函数，不直连数据库。
+
+**云函数骨架**（单函数 action 路由；`config.json` 需声明云调用权限 `"openapi": ["security.msgSecCheck"]`）：
+
+```js
+// cloudfunctions/plate21-adapter/index.js
+const cloud = require('wx-server-sdk')
+cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
+const db = cloud.database()
+
+exports.main = async (event) => {
+  const { OPENID } = cloud.getWXContext()          // A2 最大红利：鉴权到此为止
+  switch (event.action) {
+    case 'identity':     return { userId: OPENID }
+    case 'start':        return startOrResume(OPENID)
+    case 'update':       return update(OPENID, event.input)
+    case 'reset':        return reset(OPENID)
+    case 'entitlement':  return entitlement(OPENID)
+    case 'pay':          return pay(OPENID, event.input)
+    case 'board_submit': return boardSubmit(OPENID, event.input)
+    case 'board_list':   return boardList(event.input)
+    case 'event':        return saveEvent(OPENID, event.input)
+  }
+}
+
+// updateSession 的两个硬语义：幂等 + 乐观锁
+async function update(openid, input) {
+  const first = await db.collection('plate21_applied').doc(input.operationId)
+    .get().then(r => r.data).catch(() => null)
+  if (first) return first.result                          // 幂等重放：返回首次结果
+  const row = (await db.collection('plate21_session')
+    .where({ _openid: openid }).get()).data[0]
+  if (!row || row.session.revision !== input.expectedRevision)
+    return { snapshot: row.session, applied: false, conflict: true }   // 乐观锁
+  const next = applyCommand(row.session, input.command)   // 8 种命令统一"改快照"，不解析业务
+  next.revision += 1
+  await db.collection('plate21_session').doc(row._id)
+    .update({ data: { session: next, revision: next.revision, updated_at: Date.now() } })
+  const result = { snapshot: next, applied: true, conflict: false }
+  await db.collection('plate21_applied').add({ data: { _id: input.operationId, result, at: Date.now() } })
+  return result
+}
+```
+
+**留言机检**（board_submit 核心，云调用免 access_token）：
+
+```js
+const check = await cloud.openapi.security.msgSecCheck(
+  { version: 2, openid, scene: 2, content: input.text })
+if (check.result.suggest !== 'pass')
+  return { status: 'rejected', reason: '这条话不能展示，改一句再投' }
+// → 入 plate21_board（status:'reviewing'，留存 machine_check）→ 返回 { status:'pending_review' }
+// 人工过审：status→'accepted' 并填 display{from:'一位考察者', date:'YYYY.MM.DD', source:'user_generated'}
+```
+
+**审核后台最小方案（零开发起步）**：云开发控制台 → 数据库 → `plate21_board` → 筛选 `status=reviewing` → 人工核对 `text` 与 `machine_check` → 改 `status` 并填 `display`。后续如量级上来，再用云开发静态托管做一个简单审核页。
+
+**小程序端 cloud-adapter 骨架**（结构与 local-adapter 逐字段一致）：
+
+```js
+// plate21/module/adapters/cloud-adapter.js
+let inited = false
+function call(action, input) {
+  if (!inited) { wx.cloud.init({ env: '<环境ID>' }); inited = true }   // 惰性初始化，不污染宿主 app.js
+  return wx.cloud.callFunction({ name: 'plate21-adapter', data: { action, input } })
+    .then(r => r.result)
+}
+module.exports = {
+  getIdentity:           () => call('identity'),
+  startOrResumeSession: (i) => call('start', i),
+  updateSession:        (i) => call('update', i),
+  resetSession:          () => call('reset'),
+  checkEntitlement:     (i) => call('entitlement', i),
+  requestPayment:       (i) => call('pay', i),
+  submitBoardMessage:   (i) => call('board_submit', i),
+  listBoardMessages:    (i) => call('board_list', i),
+  emitEvent: (e) => { call('event', e).catch(() => {}) },               // 不抛错
+  saveMedia: () => Promise.resolve(null)
+}
+```
+
+**部署核对清单**（我方执行，宿主可逐条核对）：
+
+1. 宿主侧：开通云开发 → 记录环境 ID → 我方人员加为开发者（§1.1）；
+2. 我方在开发者工具（宿主 AppID 交付工程）上传 `cloudfunctions/plate21-adapter`；
+3. 控制台建 5 个集合（§1.3 结构）＋ 安全规则全锁；
+4. （启用门票）云开发控制台 → 微信支付 → 关联宿主商户号，`pay` 走统一下单；
+5. BGM 13 首上传云存储 `plate21/bgm/`，AUDIO_BASE 切临时链接缓存层（§1.2-④）；
+6. 测试环境跑 CT-01~23（重点 CT-02/05/06/07/13/14/17/22）；
+7. 云函数发布正式版（支持版本与灰度流量），隐私指引补「考察进度数据（含 OpenID）」声明。
+
+### 1.4 A2 细节与坑清单
 
 | # | 事项 | 处理 |
 |---|---|---|
@@ -119,6 +226,8 @@ cloudfunctions/
 | 3 | UGC 义务独立承担 | 与 A2（宿主义务+现成审核）形成最尖锐对比 |
 | 4 | 运维人力 | 7×24 故障响应、证书/备份/扩容——"完全不承担运维"在这条路彻底失效 |
 | 5 | 迁移成本 | 若日后想迁回云开发：接口语义已按契约对齐，迁的是部署形态不是业务逻辑，成本可控（当初按 action 路由设计的好处） |
+
+> 本方案保持决策与风险层；若双方选定走 B-并入，我方再提供详细设计（接口清单、表结构、部署拓扑、鉴权验签方案），深度对齐 A2 的实现参考级。
 
 ---
 
