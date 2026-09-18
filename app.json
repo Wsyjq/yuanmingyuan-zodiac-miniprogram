@@ -179,6 +179,7 @@
     "navigationBarBackgroundColor": "#F4EFE3",
     "navigationBarTextStyle": "black"
   },
+  "requiredPrivateInfos": ["getLocation"],
   "permission": {
     "scope.userLocation": {
       "desc": "查看你在圆明园西洋楼景区的位置并导航前往下一站"

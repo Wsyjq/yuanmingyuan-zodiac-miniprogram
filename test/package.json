@@ -11,7 +11,7 @@
     "build:runtime-images": "node build-runtime-images.js",
     "optimize:assets": "node optimize-assets.js",
     "report:package": "node package-report.js",
-    "test": "node --test session.test.js session-date.test.js puzzle-answers.test.js photo-pipeline.test.js layout-contract.test.js page-flow.test.js smoke.test.js regression.test.js capabilities.test.js novel-pages.test.js audio-controls.test.js",
+    "test": "node --test",
     "test:all": "npm run check && npm run check:licenses && npm test && npm run report:package"
   },
   "keywords": [],

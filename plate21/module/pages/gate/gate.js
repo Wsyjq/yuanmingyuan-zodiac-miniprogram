@@ -59,6 +59,8 @@ Page({
   },
 
   onBackHome() {
-    wx.reLaunch({ url: '/pages/index/index' })
+    wx.navigateBack({
+      fail: function () { wx.reLaunch({ url: '/pages/index/index' }) }
+    })
   }
 })

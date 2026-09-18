@@ -1,6 +1,6 @@
 /**
  * Plate21 Host Adapter 接口契约（JS / JSDoc 版）
- * 正式定义见 docs/宿主接入方案.md §3，本文件为该契约的原样 JS 转写。
+ * 契约正式定义见《完全接入对接文档-V2.2.md》§4（宿主接入方案.md v1.2.1 已被取代），本文件为该契约的原样 JS 转写。
  *
  * 模块（plate21/module）只认识这里定义的 12 个方法；
  * 开发期由 adapters/local-adapter.js 实现，接入期由宿主按同一契约实现。
@@ -228,7 +228,10 @@
  */
 
 /**
- * 权益查询结果（门页放行判定 + 冷启动刷新本地缓存；退款后由宿主置 unlocked=false 自动收回）
+ * 权益查询结果（门页放行判定 + 冷启动刷新本地缓存）。
+ * 放行口径：本地 flags.premiumUnlockedAt 命中即放行（离线友好，gate.test.js 固化）；
+ * 缓存未命中时以宿主订单为准——换设备自动恢复；宿主置 unlocked=false（如退款）
+ * 在下一次真实查询（缓存未命中/本地清空）时生效收回。
  * @typedef {Object} EntitlementResult
  * @property {boolean} unlocked
  * @property {string} [entitlementId]
@@ -241,7 +244,7 @@
  * @interface Plate21HostAdapter
  *
  * 宿主适配层：模块与宿主系统之间的唯一通道。
- * 任何适配器实现（local-adapter / 宿主 adapter）都必须满足以下 8 个方法。
+ * 任何适配器实现（local-adapter / 宿主 adapter）都必须满足以下 12 个方法。
  *
  * getIdentity(): Promise<{userId: string, accessToken?: string}>
  *   取当前用户标识。模块进入时调用（P00 封面）。
@@ -293,8 +296,9 @@
  *   unavailable（宿主未开通付费/iOS 差异）时门页隐藏购买入口，不得出现死按钮。
  *
  * checkEntitlement(input: {sessionId: string}): Promise<EntitlementResult>
- *   权益查询。门页放行与冷启动刷新的唯一权威来源：本地 flags.premiumUnlockedAt 只是缓存，
- *   已解锁以宿主订单状态为准（退款自动收回、换设备自动恢复）。
+ *   权益查询。门页放行判定 + 缓存未命中时的权威来源：本地 flags.premiumUnlockedAt
+ *   命中即放行（离线友好）；缓存未命中以宿主订单状态为准（换设备自动恢复；
+ *   宿主置 unlocked=false 的收回在下一次真实查询时生效）。
  */
 
 /** 契约版本，供 adapter 实现与契约测试引用（1.4.0：新增门票 requestPayment / checkEntitlement） */

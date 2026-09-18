@@ -71,6 +71,26 @@ const ignoredPackageFiles = new Set(((projectConfig.packOptions && projectConfig
 for (const file of REQUIRED_PACKAGE_IGNORES) {
   if (!ignoredPackageFiles.has(file)) fail(file + ': 仅开发/审计使用，必须从生产包排除')
 }
+
+const modulePkg = (app.subpackages || []).find((pkg) => pkg.root === 'plate21/module')
+if (!modulePkg) {
+  fail('app.json: 缺少 plate21/module 分包')
+} else if ((modulePkg.pages || [])[0] !== 'pages/gate/gate') {
+  fail('app.json: 模块正门必须是 pages/gate/gate，当前=' + ((modulePkg.pages || [])[0] || '(empty)'))
+}
+const privateInfos = app.requiredPrivateInfos || []
+if (!privateInfos.includes('getLocation')) {
+  fail('app.json: requiredPrivateInfos 必须包含 getLocation（真机定位/提审硬门槛）')
+}
+const permKeys = Object.keys(app.permission || {})
+const illegalPerm = permKeys.filter((key) => key !== 'scope.userLocation')
+if (illegalPerm.length) {
+  fail('app.json permission 仅支持 scope.userLocation，非法键: ' + illegalPerm.join(','))
+}
+if (!permKeys.includes('scope.userLocation')) {
+  fail('app.json: 缺少 permission.scope.userLocation')
+}
+
 const routes = (app.pages || []).slice()
 for (const subpackage of app.subpackages || []) {
   for (const page of subpackage.pages || []) routes.push(subpackage.root + '/' + page)
