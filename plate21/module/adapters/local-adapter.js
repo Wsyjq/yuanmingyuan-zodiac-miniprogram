@@ -236,6 +236,42 @@ const localAdapter = {
 
   emitEvent(event) {
     console.log('[plate21:event]', event)
+  },
+
+  // —— 门票付费（gate）本地演示 ——
+  // 本地无支付工程：requestPayment 模拟支付成功（演示门页放行全流程）；
+  // 权益以 storage envelope 的 flags 为准（模拟宿主订单库）。
+  // 真实宿主对接已有付费工程（接口级/页面级）见 contracts/adapter-api.js v1.4.0。
+  requestPayment(input) {
+    const sku = input && input.sku || 'plate21_full'
+    // 模拟宿主权益落库：写入 envelope flags，checkEntitlement 据此返回
+    const env = readEnvelope()
+    if (env.snapshot) {
+      env.snapshot.flags = env.snapshot.flags || {}
+      env.snapshot.flags.premiumEntitlement = {
+        sku: sku,
+        entitlementId: 'local-ent-' + now().toString(36),
+        unlockedAt: now()
+      }
+      writeEnvelope(env)
+    }
+    return Promise.resolve({
+      status: 'paid',
+      orderId: 'local-order-' + now().toString(36),
+      entitlementId: env.snapshot && env.snapshot.flags.premiumEntitlement.entitlementId
+    })
+  },
+
+  checkEntitlement() {
+    const env = readEnvelope()
+    const snap = env.snapshot
+    const ent = snap && snap.flags && snap.flags.premiumEntitlement
+    if (!ent) return Promise.resolve({ unlocked: false })
+    return Promise.resolve({
+      unlocked: true,
+      entitlementId: ent.entitlementId,
+      unlockedAt: ent.unlockedAt
+    })
   }
 }
 

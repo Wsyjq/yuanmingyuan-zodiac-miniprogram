@@ -2,7 +2,7 @@
  * Plate21 Host Adapter 接口契约（JS / JSDoc 版）
  * 正式定义见 docs/宿主接入方案.md §3，本文件为该契约的原样 JS 转写。
  *
- * 模块（plate21/module）只认识这里定义的 10 个方法；
+ * 模块（plate21/module）只认识这里定义的 12 个方法；
  * 开发期由 adapters/local-adapter.js 实现，接入期由宿主按同一契约实现。
  * 两种实现必须返回完全相同的数据结构，模块内部不写两套流程。
  */
@@ -207,6 +207,34 @@
  * @property {BoardMessage[]} messages 只允许包含过审内容；空池时返回官方预置种子
  */
 
+/* ============================== 门票付费（gate）============================== */
+
+/**
+ * 购买/解锁入参（门页「解锁完整考察」按钮）
+ * @typedef {Object} PaymentRequestInput
+ * @property {string} sessionId
+ * @property {'plate21_full'} sku 商品 SKU；商品与价格在宿主商品库维护，前端零金额逻辑
+ */
+
+/**
+ * 支付结果。宿主对接已有付费工程的两种形态（接口级统单 / 页面级收银台）对模块完全透明。
+ * @typedef {Object} PaymentRequestResult
+ * @property {'paid'|'cancelled'|'failed'|'unavailable'} status
+ *   paid=支付成功（权益已落宿主库）；cancelled=用户取消；failed=支付失败（附 reason）；
+ *   unavailable=宿主未提供付费能力（iOS 差异/类目受限等），门页隐藏购买入口
+ * @property {string} [reason]        failed 时的可展示原因
+ * @property {string} [orderId]       宿主订单号（对账/客服）
+ * @property {string} [entitlementId] 宿主权益号（跨设备恢复购买）
+ */
+
+/**
+ * 权益查询结果（门页放行判定 + 冷启动刷新本地缓存；退款后由宿主置 unlocked=false 自动收回）
+ * @typedef {Object} EntitlementResult
+ * @property {boolean} unlocked
+ * @property {string} [entitlementId]
+ * @property {number} [unlockedAt]    宿主落库时间戳
+ */
+
 /* ============================== 主接口（§3.1） ============================== */
 
 /**
@@ -257,10 +285,20 @@
  *   留言展示池（次日回访 / 信末「读」）。只允许返回过审内容，署名一律「一位考察者」，
  *   不得透出可识别个人信息的字段。空池/冷启动返回 official_seed 官方预置。
  *   宿主不可用时模块回落本地种子池（capabilities/board/seeds.js，确定性取张）。
+ *
+ * requestPayment(input: PaymentRequestInput): Promise<PaymentRequestResult>
+ *   门票购买（gate 门页「解锁完整考察」）。对接宿主已有付费工程的两种形态对模块透明：
+ *   形态A=接口级（宿主 Adapter 内统单→wx.requestPayment）；形态B=页面级（跳宿主收银台页，
+ *   回来后查单确认）。金额/商品全部在宿主商品库，模块前端零金额逻辑。
+ *   unavailable（宿主未开通付费/iOS 差异）时门页隐藏购买入口，不得出现死按钮。
+ *
+ * checkEntitlement(input: {sessionId: string}): Promise<EntitlementResult>
+ *   权益查询。门页放行与冷启动刷新的唯一权威来源：本地 flags.premiumUnlockedAt 只是缓存，
+ *   已解锁以宿主订单状态为准（退款自动收回、换设备自动恢复）。
  */
 
-/** 契约版本，供 adapter 实现与契约测试引用（1.3.0：新增留言簿 submitBoardMessage / listBoardMessages） */
-const CONTRACT_VERSION = '1.3.0'
+/** 契约版本，供 adapter 实现与契约测试引用（1.4.0：新增门票 requestPayment / checkEntitlement） */
+const CONTRACT_VERSION = '1.4.0'
 
 /** 当前快照结构版本 */
 const SESSION_SCHEMA_VERSION = 2
@@ -296,7 +334,9 @@ const EVENT_NAMES = [
   'finale_viewed',
   'report_saved',
   'side_visited',
-  'board_message_submitted'
+  'board_message_submitted',
+  'purchase_initiated',
+  'purchase_completed'
 ]
 
 /** 站点 → 考察记录类型映射（四站结构：s1 西洋楼入口 / s2 黄花阵 / s3 海晏堂·大水法 / s4 雨果雕像） */

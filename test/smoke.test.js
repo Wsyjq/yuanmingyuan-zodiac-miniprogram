@@ -5,6 +5,7 @@ const { renderPage } = require('./harness/runtime')
 
 const PAGES = [
   { route: 'pages/index/index' },
+  { route: 'plate21/module/pages/gate/gate' },
   { route: 'plate21/module/pages/cover/cover' },
   { route: 'plate21/module/pages/prologue/prologue' },
   { route: 'plate21/module/pages/s1-decode/s1-decode' },

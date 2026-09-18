@@ -46,8 +46,9 @@ Page({
   },
 
   goPlate21() {
+    // 门票制（2026-09-18）：入口先过 gate 门页（已解锁自动放行 cover）
     wx.navigateTo({
-      url: '/plate21/module/pages/cover/cover'
+      url: '/plate21/module/pages/gate/gate'
     })
   },
 
