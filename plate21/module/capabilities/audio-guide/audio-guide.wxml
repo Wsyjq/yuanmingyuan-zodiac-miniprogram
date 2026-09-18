@@ -12,6 +12,18 @@
       <button class="ag-close" bindtap="close" aria-label="关闭语音导览">×</button>
     </view>
 
+    <!-- 全局音频开关：背景音乐 / 人声讲述（与手册页同一状态，即关即停） -->
+    <view class="ag-switches">
+      <view class="ag-switch {{bgmOn ? 'on' : ''}}" bindtap="onToggleBgm" role="button" aria-label="切换背景音乐">
+        <text class="ag-switch-name">背景音乐</text>
+        <text class="ag-switch-state">{{bgmOn ? '开' : '关'}}</text>
+      </view>
+      <view class="ag-switch {{voiceOn ? 'on' : ''}}" bindtap="onToggleVoice" role="button" aria-label="切换人声讲述">
+        <text class="ag-switch-name">人声讲述</text>
+        <text class="ag-switch-state">{{voiceOn ? '开' : '关'}}</text>
+      </view>
+    </view>
+
     <view wx:if="{{hasAudio}}" class="ag-player">
       <button class="ag-play" bindtap="onTogglePlay">{{playing ? '暂停' : '播放'}}</button>
       <view class="ag-track"><view class="ag-track-fill" style="width: {{progress}}%;"></view></view>

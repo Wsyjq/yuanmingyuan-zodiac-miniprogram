@@ -31,6 +31,7 @@ Component({
     deepOpen: false,
     deepPlaying: false,
     voiceOn: true,
+    bgmOn: true,
     guest: null,
     progress: 0
   },
@@ -57,6 +58,7 @@ Component({
         const guide = this.data.guide
         this.setData({
           voiceOn: settings.voice,
+          bgmOn: settings.bgm,
           hasAudio: !!(guide && guide.audio && settings.voice)
         })
         if (!settings.voice) {
@@ -65,10 +67,12 @@ Component({
         }
       }
       audioSettings.subscribe(this._onSettings)
-      const voiceOn = audioSettings.get().voice
+      const settings = audioSettings.get()
+      const voiceOn = settings.voice
       const guide = GUIDES[this.data.station] || null
       this.setData({
         voiceOn: voiceOn,
+        bgmOn: settings.bgm,
         guide: guide,
         hasAudio: !!(guide && guide.audio && voiceOn),
         hasDeep: !!(guide && guide.deepScript && guide.deepScript.length)
@@ -82,6 +86,16 @@ Component({
   },
 
   methods: {
+    // 全局音频开关（与手册页「音频·独立开关」同一状态源）：导览面板即关即停，
+    // 不用再回手册找——2026-09-18 用户反馈「BGM 没有关闭按钮」。
+    onToggleBgm() {
+      audioSettings.set('bgm', !this.data.bgmOn)
+    },
+
+    onToggleVoice() {
+      audioSettings.set('voice', !this.data.voiceOn)
+    },
+
     onFab() {
       if (!this.data.guide) return
       if (this.data.open) this.close()
