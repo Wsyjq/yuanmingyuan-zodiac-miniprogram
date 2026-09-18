@@ -72,5 +72,10 @@ Page({
     wx.navigateBack({
       fail: function () { wx.reLaunch({ url: '/pages/index/index' }) }
     })
+  },
+
+  // 信末脚注：去读大家的留言（写发生在通关当天 report，回访链路只读）
+  onOpenBoard() {
+    wx.navigateTo({ url: '/plate21/module/pages/board/board' })
   }
 })

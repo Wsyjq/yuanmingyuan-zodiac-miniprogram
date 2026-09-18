@@ -212,6 +212,28 @@ const localAdapter = {
     return Promise.resolve({ editionNo: counter })
   },
 
+  // —— 留言簿（UGC）本地降级 ——
+  // 本地无审核后台：提交一律收件待审（pending_review），永不进公池；
+  // 展示池恒为官方种子（official_seed）。真实宿主实现见 contracts/adapter-api.js v1.3.0。
+  submitBoardMessage(input) {
+    const text = String(input && input.text || '').trim()
+    if (!text) return Promise.reject(new Error('留言为空'))
+    return Promise.resolve({
+      status: 'pending_review',
+      messageId: 'local-' + now().toString(36)
+    })
+  },
+
+  listBoardMessages(input) {
+    const seeds = require('../capabilities/board/seeds')
+    const limit = Math.min(Number(input && input.limit) || 6, seeds.SEED_MESSAGES.length)
+    return Promise.resolve({
+      messages: seeds.pickBoardMessages(input && input.sessionId, limit).map(function (m) {
+        return { text: m.text, from: m.from, date: m.date, source: 'official_seed' }
+      })
+    })
+  },
+
   emitEvent(event) {
     console.log('[plate21:event]', event)
   }

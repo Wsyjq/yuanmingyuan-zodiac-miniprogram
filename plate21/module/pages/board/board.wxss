@@ -157,6 +157,13 @@
 .board-submit {
   margin-top: 24rpx;
 }
+.board-legal {
+  margin-top: 16rpx;
+  font-size: 20rpx;
+  letter-spacing: 1rpx;
+  color: var(--ink60);
+  text-align: center;
+}
 
 /* ---------- 前人留言墙 ---------- */
 .board-wall-title {

@@ -1,10 +1,9 @@
-// 考察者留言簿：通关后的「档案 · 新增一页」。走完那条路的人留一句话，下一个来的人读到它。
+// 考察者留言簿：「写」发生在通关当天 report 末尾，「读」在次日回访与信末。
 // 状态机与 letter 同口径：notFinished（未完成考察）→ open（通关即可留言，不设日期门）。
-// 数据：自己的话落 flags.boardDraft / boardSubmittedAt（与 report 明信片 messageDraft 语义分离——
-// 明信片是写给整理档案的人的问题，留言簿是写给后来者的公开页）。
+// 数据：提交走 session.submitBoardMessage（宿主机检+人工审，rejected 不同意上墙不落已投递态）；
+// 自己的话同时落 flags.boardDraft/boardSubmittedAt（本地卡片与 report 入口态）。
 const session = require('../../store/session')
 const sessionDate = require('../../utils/session-date')
-const boardSeeds = require('../../capabilities/board/seeds')
 
 const WALL_COUNT = 6
 
@@ -34,20 +33,25 @@ Page({
     }
     const todayKey = sessionDate.dateKeyFromTimestamp(Date.now())
     const sessionDay = sessionDate.isValidDateKey(snap.sessionDate) ? snap.sessionDate : todayKey
-    // 留言墙确定性取张：同一会话固定看到同一面墙。
-    const wall = boardSeeds.pickBoardMessages(snap.sessionId, WALL_COUNT).map((item, index) => ({
-      text: item.text,
-      from: item.from,
-      date: item.date,
-      tilt: index % 2 === 0 ? 'tilt-l' : 'tilt-r'
-    }))
     this.setData({
       state: 'open',
-      wall: wall,
+      wall: [],
       mine: flags.boardSubmittedAt ? { text: flags.boardDraft || '' } : null,
       editing: !flags.boardSubmittedAt,
       draftText: flags.boardDraft || '',
       letterReady: todayKey > sessionDay
+    })
+    // 留言墙走 adapter 展示池（过审内容；宿主不可用回落官方种子池）
+    session.listBoardMessages({ limit: WALL_COUNT }).then((res) => {
+      const wall = (res && res.messages || []).map((item, index) => ({
+        text: item.text,
+        from: item.from,
+        date: item.date,
+        tilt: index % 2 === 0 ? 'tilt-l' : 'tilt-r'
+      }))
+      this.setData({ wall: wall })
+    }).catch(() => {
+      this.setData({ wall: [] })
     })
   },
 
@@ -63,11 +67,18 @@ Page({
     }
     if (this.data.submitting) return
     this.setData({ submitting: true })
-    session.setFlag('boardDraft', text)
-      .then(() => session.setFlag('boardSubmittedAt', Date.now()))
-      .then(() => {
+    session.submitBoardMessage(text)
+      .then((res) => {
+        if (res && res.status === 'rejected') {
+          this.setData({ submitting: false })
+          wx.showToast({ title: res.reason || '这条话不能展示，改一句再投', icon: 'none' })
+          return
+        }
         this.setData({ submitting: false, mine: { text: text }, editing: false })
-        wx.showToast({ title: '已在档案里了', icon: 'none' })
+        wx.showToast({
+          title: res && res.status === 'accepted' ? '已在档案里了' : '已收到，审核后会展示给后来的人',
+          icon: 'none'
+        })
       })
       .catch(() => {
         this.setData({ submitting: false })

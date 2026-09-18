@@ -73,3 +73,26 @@
 .letter-sign {
   color: var(--cinnabar);
 }
+
+/* 信末脚注入口（信正文之外）：去读大家的留言 */
+.letter-footnote {
+  margin-top: 28rpx;
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  padding: 12rpx 32rpx;
+  border: 2rpx solid var(--dash);
+  border-radius: 999rpx;
+}
+.letter-footnote:active {
+  border-color: var(--patina);
+}
+.letter-footnote-text {
+  font-size: 24rpx;
+  letter-spacing: 2rpx;
+  color: var(--patina);
+}
+.letter-footnote-arrow {
+  font-size: 28rpx;
+  color: var(--patina);
+}

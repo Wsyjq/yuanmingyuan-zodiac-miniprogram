@@ -27,6 +27,7 @@ Page({
     completing: false,
     finale: false,
     letterReady: false,
+    boardSubmitted: false,
     messageText: '',
     messageConsent: true,
     messageSubmitted: false,
@@ -64,6 +65,7 @@ Page({
       photoCount: fieldPhotos.filter(function (photo) { return !!photo.photoPath }).length,
       finale: finale,
       letterReady: (finale || !!flags.experienceCompletedAt) && todayKey > sessionDay,
+      boardSubmitted: !!flags.boardSubmittedAt,
       messageSubmitted: !!flags.messageSubmittedAt,
       submittedText: flags.messageDraft || '',
       messageText: flags.messageDraft || ''
@@ -417,6 +419,11 @@ Page({
       return
     }
     wx.navigateTo({ url: '/plate21/module/pages/letter/letter' })
+  },
+
+  // 留言簿：通关当天剧情末尾的「写」入口（次日回访链路只负责读）
+  onOpenBoard() {
+    wx.navigateTo({ url: '/plate21/module/pages/board/board' })
   },
 
   onFinish() {

@@ -14,7 +14,7 @@
       <view class="board-title serif">留言簿</view>
       <view class="board-sub">给后来的人</view>
       <view class="hatch-divider board-divider"></view>
-      <view class="board-intro kaiti">走完那条路的人，在这里留一句话。下一个来的人，会读到它。</view>
+      <view class="board-intro kaiti">走完那条路的人，在这里留一句话。后来的人，会读到它。</view>
     </view>
 
     <!-- 我的话：已投递展示卡片，可换一句 -->
@@ -45,6 +45,7 @@
       ></textarea>
       <view class="board-count">{{draftText.length}}/50</view>
       <button class="btn-line board-submit" bindtap="onSubmit" disabled="{{submitting}}">投进档案</button>
+      <view class="board-legal">留言经审核后，才会展示给后来的人。</view>
     </view>
 
     <!-- 前人留言墙 -->

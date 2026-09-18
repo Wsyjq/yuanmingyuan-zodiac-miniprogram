@@ -113,7 +113,7 @@ test('index: 通关次日起显示回访卡，直达留言簿', async () => {
   assert.deepEqual(result.errors, [])
   assert.equal(result.data.revisitReady, true)
   assert.ok(result.html.includes('档案 · 新增一页'))
-  assert.ok(result.html.includes('去留言簿'))
+  assert.ok(result.html.includes('去读走完这条路的人'))
 })
 
 test('index: 已留言后回访卡文案切换为“已经在档案里”', async () => {
@@ -145,7 +145,7 @@ test('board: 通关即开放（不设日期门），通关次日信可读入口�
   const result = await renderPage({
     route: 'plate21/module/pages/board/board',
     wxOverrides: storageOverrides(finishedEnvelope({ sessionDate: dateKey(Date.now() - 86400000) })),
-    settleMs: 200
+    settleMs: 300
   })
   assert.deepEqual(result.errors, [])
   assert.equal(result.data.state, 'open')
@@ -154,6 +154,59 @@ test('board: 通关即开放（不设日期门），通关次日信可读入口�
   assert.equal(result.data.editing, true)
   assert.ok(result.html.includes('留言簿'))
   assert.ok(result.html.includes('先来的人'))
+  // UGC 合规提示常显在编辑区
+  assert.ok(result.html.includes('留言经审核后'))
+})
+
+// —— 写入口前移：通关当天 report 末尾出现留言簿入口（2026-09-18 用户拍板）——
+
+test('report: 通关当天回响区出现留言簿入口，未留言文案为「留一句话」', async () => {
+  const result = await renderPage({
+    route: 'plate21/module/pages/report/report',
+    wxOverrides: storageOverrides(finishedEnvelope({ sessionDate: dateKey(Date.now()) })),
+    settleMs: 300
+  })
+  assert.deepEqual(result.errors, [])
+  assert.equal(result.data.finale, true)
+  assert.equal(result.data.boardSubmitted, false)
+  assert.ok(result.html.includes('留言簿 · 给后来的人'))
+  assert.ok(result.html.includes('走完了，给下一个来的人留一句话'))
+})
+
+test('report: 已留言后入口文案切换为「去看看大家的话」', async () => {
+  const result = await renderPage({
+    route: 'plate21/module/pages/report/report',
+    wxOverrides: storageOverrides(finishedEnvelope({
+      sessionDate: dateKey(Date.now()),
+      flags: { experienceCompletedAt: 1, boardSubmittedAt: 2, boardDraft: '留过的话' }
+    })),
+    settleMs: 300
+  })
+  assert.equal(result.data.boardSubmitted, true)
+  assert.ok(result.html.includes('去看看大家的话'))
+})
+
+// —— 读入口：次日之信信末脚注（信正文零改动，脚注在信纸外）——
+
+test('letter: 信开封后信末出现「大家的话」脚注入口', async () => {
+  const result = await renderPage({
+    route: 'plate21/module/pages/letter/letter',
+    wxOverrides: storageOverrides(finishedEnvelope({ sessionDate: dateKey(Date.now() - 86400000) })),
+    settleMs: 300
+  })
+  assert.deepEqual(result.errors, [])
+  assert.equal(result.data.state, 'open')
+  assert.ok(result.html.includes('档案的最后一页，是大家的话'))
+})
+
+test('letter: 未通关引导态不出现脚注入口', async () => {
+  const result = await renderPage({
+    route: 'plate21/module/pages/letter/letter',
+    settleMs: 200
+  })
+  assert.deepEqual(result.errors, [])
+  assert.equal(result.data.state, 'notFinished')
+  assert.ok(!result.html.includes('档案的最后一页'))
 })
 
 test('board: 通关当日 letterReady 为假（信未启封）', async () => {
