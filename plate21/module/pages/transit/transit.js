@@ -100,6 +100,9 @@ Page({
   },
 
   onLoad(options) {
+    if (playGuide.enterTourPage('pages/transit/transit', options)) {
+      this.setData({ touring: true })
+    }
     const leg = LEGS[options.leg] || LEGS['s1-s2']
     // 计算各段连线的位置 / 长度 / 角度，当前段用铜绿加粗示意
     const lines = []
@@ -127,6 +130,10 @@ Page({
   },
 
   onReady() {
+    if (playGuide.isTouring()) {
+      playGuide.runPageStop(this)
+      return
+    }
     this.scheduleCoach([playGuide.SPOTS.side, playGuide.SPOTS.go])
   },
 

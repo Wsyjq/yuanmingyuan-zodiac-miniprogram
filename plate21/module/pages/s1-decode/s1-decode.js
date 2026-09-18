@@ -26,10 +26,18 @@ Page({
   },
 
   onReady() {
+    if (playGuide.isTouring()) {
+      playGuide.runPageStop(this)
+      return
+    }
     if (this.data.stage === 'sealed') this.scheduleCoach([playGuide.SPOTS.listen])
   },
 
-  onLoad() {
+  onLoad(options) {
+    if (playGuide.enterTourPage('pages/s1-decode/s1-decode', options)) {
+      this.setData({ touring: true, stage: 'sealed' })
+      return
+    }
     session.viewPuzzle('s1-decode')
     const puzzle = session.getPuzzle('s1-decode')
     if (puzzle) {

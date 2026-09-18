@@ -1,7 +1,7 @@
 // P00 封面 / 入口（设计文档 §5-P00）
 // 进入时 init 会话恢复进度；按快照决定「开始考察」或「继续考察 + 重新考察」。
 // 门票守卫（2026-09-18）：深链直达 cover 时自查权益，未解锁 redirect 回 gate 门页。
-// 开玩引导（2026-09-18）：首次镂空三步指真按钮；玩法说明=标签目录，不拦截开始考察。路上钮到当页再指。
+// 开玩引导：封面短标签两步，再短暂跳后页分别指听/导览/地图/提示/翻页。玩法说明仅事后查阅。
 const session = require('../../store/session')
 const progressFlow = require('../../store/progress-flow')
 const sessionDate = require('../../utils/session-date')
@@ -46,8 +46,9 @@ Page({
         loading: false
       })
       if (showCoach) {
+        playGuide.resetTour()
         const self = this
-        const kick = function () { self.beginCoach(steps, playGuide.FLAG) }
+        const kick = function () { self.beginCoach(steps, null) }
         if (wx.nextTick) wx.nextTick(kick)
         else setTimeout(kick, 0)
       }
@@ -81,6 +82,8 @@ Page({
   onStart() {
     if (this.data.navigating || this.data.showGuide) return
     if (this.data.showCoach) {
+      playGuide.abortTour()
+      this._coachFlag = playGuide.FLAG
       this.finishCoach(() => this.goPrologue())
       return
     }
@@ -141,6 +144,32 @@ Page({
       return
     }
     go()
+  },
+
+  onCoachNext() {
+    if (this.data.coachClosing) return
+    this.persistCoachStep()
+    const last = (this.data.coachSteps || []).length - 1
+    if (this.data.coachIndex < last) {
+      const next = this.data.coachIndex + 1
+      this.setData({
+        coachIndex: next,
+        coachStep: this.data.coachSteps[next],
+        coachHole: null
+      })
+      this.measureCoach()
+      return
+    }
+    this.finishCoach(() => {
+      const stop = playGuide.startTour()
+      if (stop && stop.url) wx.redirectTo({ url: stop.url })
+    })
+  },
+
+  onCoachSkip() {
+    playGuide.abortTour()
+    this._coachFlag = playGuide.FLAG
+    this.finishCoach()
   },
 
   onShowHelp() {

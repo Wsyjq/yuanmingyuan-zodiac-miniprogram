@@ -10,25 +10,7 @@ const OUT_HTML = path.join(__dirname, 'harness', 'out')
 const OUT_SHOTS = path.join(__dirname, 'shots-play-guide')
 const PLAYWRIGHT = path.join('D:', 'kc', 'ymy', 'test', 'node_modules', 'playwright')
 
-const PAGES = [
-  { name: '01-cover', route: 'plate21/module/pages/cover/cover' },
-  {
-    name: '01c-cover-guide',
-    route: 'plate21/module/pages/cover/cover',
-    drive: async (inst) => {
-      inst.onCoachNext()
-    }
-  },
-  {
-    name: '01d-cover-help',
-    route: 'plate21/module/pages/cover/cover',
-    drive: async (inst, sleep) => {
-      inst.onCoachSkip()
-      await sleep(400)
-      inst.onShowHelp()
-    }
-  }
-]
+const guide = require('../plate21/module/capabilities/play-guide/guide')
 
 const RESET_CSS = [
   '@font-face{font-family:"Plate21WenKai";src:url("/plate21/module/assets/fonts/Plate21WenKai-Subset.ttf") format("truetype");font-display:swap}',
@@ -197,21 +179,113 @@ function box(r) {
 
   await shotWithHole('01-cover', layout375.start, layout375.win, 0, { width: 375, height: 812 })
   await shotWithHole('01c-cover-guide', layout375.handbook, layout375.win, 1, { width: 375, height: 812 })
-  await shotWithHole('01e-cover-help', layout375.help, layout375.win, 2, { width: 375, height: 812 })
   await shotWithHole('01-cover-320', layout320.start, layout320.win, 0, { width: 320, height: 568 })
 
-  const help = await writeCover('01d-cover-help', async (inst, sleep) => {
-    inst.onCoachSkip()
-    await sleep(400)
-    inst.onShowHelp()
-  })
-  const helpCtx = await browser.newContext({ viewport: { width: 375, height: 812 }, deviceScaleFactor: 2 })
-  const helpPage = await helpCtx.newPage()
-  await helpPage.goto('http://127.0.0.1:' + port + '/test/harness/out/01d-cover-help.html', { waitUntil: 'load' })
-  await helpPage.waitForTimeout(300)
-  await helpPage.screenshot({ path: path.join(OUT_SHOTS, '01d-cover-help.png') })
-  await helpCtx.close()
-  console.log('help catalog', !!(help.data && help.data.showGuide))
+  async function writeRoute(name, spec) {
+    const r = await renderPage(spec)
+    if (r.errors.length) {
+      console.error(name, r.errors)
+      process.exitCode = 1
+    }
+    const pageCss = readWxssWithImports(path.join(ROOT, spec.route + '.wxss'))
+    const doc = buildDoc(r.html, [appCss].concat(r.compCssList, [pageCss]))
+    fs.writeFileSync(path.join(OUT_HTML, name + '.html'), doc)
+    return r
+  }
+
+  async function shotPage(name, spec, selector, step) {
+    guide.resetTour()
+    if (spec.before) spec.before()
+    await writeRoute(name + '-probe', {
+      route: spec.route,
+      query: spec.query,
+      settleMs: spec.settleMs || 700,
+      drive: spec.drive
+    })
+    const context = await browser.newContext({
+      viewport: { width: 375, height: 812 },
+      deviceScaleFactor: 2
+    })
+    const page = await context.newPage()
+    await page.goto('http://127.0.0.1:' + port + '/test/harness/out/' + name + '-probe.html', { waitUntil: 'load' })
+    await page.waitForTimeout(300)
+    const layout = await page.evaluate((sel) => {
+      const el = document.querySelector(sel)
+      const r = el ? el.getBoundingClientRect() : null
+      return {
+        win: { top: 0, left: 0, windowWidth: window.innerWidth, windowHeight: window.innerHeight },
+        hole: r ? { top: r.top, left: r.left, width: r.width, height: r.height } : null
+      }
+    }, selector)
+    await context.close()
+    if (!layout.hole || layout.hole.width < 8) {
+      console.warn('no hole', name, selector)
+    }
+    guide.resetTour()
+    if (spec.before) spec.before()
+    await writeRoute(name, {
+      route: spec.route,
+      query: spec.query,
+      settleMs: spec.settleMs || 700,
+      drive: async (inst) => {
+        if (spec.drive) await spec.drive(inst)
+        inst.setData({
+          showCoach: true,
+          touring: true,
+          coachIndex: 0,
+          coachSteps: [step],
+          coachStep: step,
+          coachHole: layout.hole,
+          coachWin: layout.win
+        })
+      }
+    })
+    const ctx2 = await browser.newContext({
+      viewport: { width: 375, height: 812 },
+      deviceScaleFactor: 2
+    })
+    const page2 = await ctx2.newPage()
+    await page2.goto('http://127.0.0.1:' + port + '/test/harness/out/' + name + '.html', { waitUntil: 'load' })
+    await page2.waitForTimeout(300)
+    await page2.screenshot({ path: path.join(OUT_SHOTS, name + '.png') })
+    await ctx2.close()
+    console.log('shot', name, box(layout.hole))
+  }
+
+  await shotPage('02-listen', {
+    route: 'plate21/module/pages/s1-decode/s1-decode',
+    query: { tour: '1' },
+    before: () => { guide.startTour() }
+  }, '#coachListen', guide.SPOTS.listen)
+
+  await shotPage('03-guide', {
+    route: 'plate21/module/pages/s2-quiz/s2-quiz',
+    query: { tour: '1' },
+    before: () => { guide.startTour(); guide.advanceTour() }
+  }, '#coachGuide', guide.SPOTS.guide)
+
+  await shotPage('04-map', {
+    route: 'plate21/module/pages/s2-quiz/s2-quiz',
+    query: { tour: '1' },
+    before: () => { guide.startTour(); guide.advanceTour() }
+  }, '#coachMap', guide.SPOTS.map)
+
+  await shotPage('05-hint', {
+    route: 'plate21/module/pages/s2-quiz/s2-quiz',
+    query: { tour: '1' },
+    before: () => { guide.startTour(); guide.advanceTour(); guide.advanceTour() }
+  }, '#coachHint', guide.SPOTS.hint)
+
+  await shotPage('06-turn', {
+    route: 'plate21/module/pages/transit/transit',
+    query: { tour: '1', leg: 's1-s2' },
+    before: () => {
+      guide.startTour()
+      guide.advanceTour()
+      guide.advanceTour()
+      guide.advanceTour()
+    }
+  }, '#coachGo', guide.SPOTS.go)
 
   await browser.close()
   server.close()

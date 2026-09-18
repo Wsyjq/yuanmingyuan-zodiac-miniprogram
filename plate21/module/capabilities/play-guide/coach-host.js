@@ -138,6 +138,14 @@ module.exports = Behavior({
     },
 
     onCoachSkip() {
+      if (playGuide.isTouring()) {
+        playGuide.abortTour()
+        this._coachFlag = playGuide.FLAG
+        this.finishCoach(function () {
+          wx.redirectTo({ url: playGuide.COVER_URL })
+        })
+        return
+      }
       this.finishCoach()
     },
 
@@ -151,6 +159,7 @@ module.exports = Behavior({
         busy = false
         self.setData({ showCoach: false, coachClosing: false, coachHole: null })
         if (typeof after === 'function') after()
+        else if (playGuide.isTouring()) playGuide.continueTour()
       }
       const flag = this._coachFlag
       this._coachTimer = setTimeout(function () {

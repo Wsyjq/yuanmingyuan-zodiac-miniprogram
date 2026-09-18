@@ -9,6 +9,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
   border: 2rpx solid var(--brass);
   border-radius: 50%;
   background: rgba(244, 237, 220, 0.94);
@@ -17,6 +18,7 @@
 .ag-fab image {
   width: 44rpx;
   height: 44rpx;
+  flex-shrink: 0;
 }
 .ag-fab:active { transform: scale(0.94); }
 

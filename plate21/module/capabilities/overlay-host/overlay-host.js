@@ -29,13 +29,27 @@ Component({
         route = (current && current.route) || ''
       } catch (e) {}
       // registry 键为 'pages/xxx' 短路由；真机 route 形如 'plate21/module/pages/xxx'
-      const short = route.replace(/^\/?plate21\/module\//, '')
-      const caps = registry.capabilitiesFor(short)
+      let short = route.replace(/^\/?plate21\/module\//, '')
+      if (playGuide.isTouring()) {
+        const stop = playGuide.currentStop()
+        if (stop && stop.route) short = stop.route
+      }
+      let caps = registry.capabilitiesFor(short)
+      if (playGuide.isTouring()) {
+        const stop = playGuide.currentStop()
+        const spots = (stop && stop.spots) || []
+        caps = {
+          map: spots.indexOf('map') >= 0,
+          audio: spots.indexOf('guide') >= 0 ? (caps.audio || 's2') : null
+        }
+      }
       this.setData({ caps: caps })
       achievements.onUnlock((rule) => {
         const stamp = this.selectComponent('#achStamp')
         if (stamp && stamp.show) stamp.show('成就 · ' + rule.title)
       })
+      if (playGuide.runOverlayStop(this)) return
+      if (playGuide.isTouring()) return
       if (caps.map) this.scheduleCoach([playGuide.SPOTS.map], 700)
     }
   },

@@ -27,6 +27,7 @@ function makeEnv(flags) {
 }
 
 function harness(flags) {
+  guide.resetTour()
   const store = { plate21_session: makeEnv(flags) }
   const nav = []
   return {
@@ -48,24 +49,27 @@ function harness(flags) {
   }
 }
 
-test('play-guide copy: 封面三步 + 目录，无游客侧谜题 / 贴墙', () => {
+test('play-guide copy: 封面两步短标签 + 后页分别指，无游客侧谜题 / 贴墙', () => {
   assert.equal(guide.FLAG, 'playGuideSeenAt')
-  assert.equal(guide.coverSteps(false, false).length, 3)
+  assert.equal(guide.coverSteps(false, false).length, 2)
   assert.equal(guide.coverSteps(false, false)[0].tag, '从这里开始')
-  assert.equal(guide.coverSteps(false, false)[2].tag, '再看玩法')
+  assert.equal(guide.coverSteps(false, false)[1].tag, '翻考察手册')
   assert.equal(guide.coverSteps(true, false)[0].tag, '从上次接着')
   assert.equal(guide.coverSteps(true, true)[0].tag, '去看报告')
   assert.equal(guide.GROUPS.length, 4)
-  assert.equal(Object.keys(guide.SPOTS).sort().join(','), 'dashuifa,go,listen,map,side,skip')
+  assert.equal(Object.keys(guide.SPOTS).sort().join(','), 'dashuifa,go,guide,hint,listen,map,side,skip')
+  assert.equal(guide.TOUR_STOPS.length, 4)
   const blob = guide.copyBlob()
   assert.equal(/谜题/.test(blob), false)
   assert.equal(/贴墙/.test(blob), false)
   assert.equal(/摸墙/.test(blob), false)
+  assert.equal(blob.indexOf('怎么走这一趟'), -1)
   assert.ok(blob.indexOf('从这里开始') >= 0)
-  assert.ok(blob.indexOf('听两分钟现场') >= 0)
-  assert.ok(blob.indexOf('可以不猜') >= 0)
-  assert.ok(blob.indexOf('档案里还夹着一页') >= 0)
-  assert.ok(blob.indexOf('听 · 本页讲述') >= 0)
+  assert.ok(blob.indexOf('听这一页') >= 0)
+  assert.ok(blob.indexOf('语音导览') >= 0)
+  assert.ok(blob.indexOf('打开地图') >= 0)
+  assert.ok(blob.indexOf('看提示') >= 0)
+  assert.ok(blob.indexOf('翻到下一页') >= 0)
 })
 
 test('shouldShow: unseen → true; flag set → false', () => {
@@ -139,7 +143,7 @@ test('cover: 跳过镂空 → 落 flag，不进序章', async () => {
   assert.equal(h.nav.some((url) => String(url).indexOf('prologue') >= 0), false)
 })
 
-test('cover: 三步走完 → 落 flag，不进序章', async () => {
+test('cover: 两步走完 → 跳到后页短标签指听，不进序章、不落 flag', async () => {
   const h = harness()
   const result = await renderPage({
     route: 'plate21/module/pages/cover/cover',
@@ -150,14 +154,13 @@ test('cover: 三步走完 → 落 flag，不进序章', async () => {
       assert.equal(inst.data.coachIndex, 1)
       assert.equal(inst.data.coachStep.tag, '翻考察手册')
       inst.onCoachNext()
-      assert.equal(inst.data.coachIndex, 2)
-      inst.onCoachNext()
       await sleep(400)
     }
   })
   assert.deepEqual(result.errors, [])
   assert.equal(result.data.showCoach, false)
-  assert.ok(h.store.plate21_session.snapshot.flags.playGuideSeenAt)
+  assert.equal(!!h.store.plate21_session.snapshot.flags.playGuideSeenAt, false)
+  assert.ok(h.nav.some((url) => String(url).indexOf('s1-decode') >= 0 && String(url).indexOf('tour=1') >= 0))
   assert.equal(h.nav.some((url) => String(url).indexOf('prologue') >= 0), false)
 })
 
@@ -287,6 +290,57 @@ test('layoutBubble: 量不到钮时靠下沿钉住', () => {
   const box = measure.layoutBubble(vp, null, true)
   assert.equal(box.above, true)
   assert.equal(box.bottom, 88)
+})
+
+test('tour: 四站顺序是听、导览+地图、提示、翻页', () => {
+  guide.resetTour()
+  const first = guide.startTour()
+  assert.match(first.url, /s1-decode/)
+  assert.deepEqual(first.spots, ['listen'])
+  const two = guide.advanceTour()
+  assert.match(two.url, /s2-quiz/)
+  assert.equal(two.host, 'overlay')
+  assert.deepEqual(two.spots, ['guide', 'map'])
+  const three = guide.advanceTour()
+  assert.deepEqual(three.spots, ['hint'])
+  const four = guide.advanceTour()
+  assert.match(four.url, /transit/)
+  assert.deepEqual(four.spots, ['go'])
+  const done = guide.advanceTour()
+  assert.equal(done.done, true)
+  assert.match(done.url, /cover/)
+  assert.equal(guide.isTouring(), false)
+})
+
+test('s1-decode: 跳页引导镂空「听这一页」', async () => {
+  const h = harness()
+  guide.startTour()
+  const q = {
+    in() { return q },
+    select() { return q },
+    selectViewport() { return q },
+    boundingClientRect() { return q },
+    exec(cb) {
+      if (cb) {
+        cb([
+          { top: 220, left: 24, width: 280, height: 36 },
+          { top: 0, left: 0, width: 375, height: 812 }
+        ])
+      }
+    }
+  }
+  h.wxOverrides.createSelectorQuery = () => q
+  const result = await renderPage({
+    route: 'plate21/module/pages/s1-decode/s1-decode',
+    query: { tour: '1' },
+    wxOverrides: h.wxOverrides,
+    settleMs: 700
+  })
+  assert.deepEqual(result.errors, [])
+  assert.equal(result.data.touring, true)
+  assert.equal(result.data.showCoach, true)
+  assert.equal(result.data.coachStep.tag, '听这一页')
+  assert.ok(result.html.includes('听 · 本页讲述'))
 })
 
 test('s2-quiz: 第一次见到「先不猜」镂空指一次', async () => {

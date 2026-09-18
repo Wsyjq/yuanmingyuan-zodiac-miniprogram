@@ -13,6 +13,8 @@ function convert(css) {
   })
   // page 选择器 → body（只替换作为独立选择器出现的 page）
   css = css.replace(/(^|[}\r\n,])\s*page(?=[\s,{])/gm, '$1\nbody')
+  // WXML 的 image 在台架里渲染成 img；不要动 background-image 这类属性
+  css = css.replace(/(^|[\s,{>+~])image(?=[\s,{.[:#[>+~]|$])/gm, '$1img')
   return css
 }
 

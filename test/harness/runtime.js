@@ -229,6 +229,8 @@ function resolveComponentPath(baseDir, configuredPath) {
 
 /** 加载组件四件套 + 求值组件 js，返回 compDef（可递归其 usingComponents） */
 function loadComponent(compPathNoExt, env, errors, cssCollector) {
+  env.compCache = env.compCache || new Map()
+  if (env.compCache.has(compPathNoExt)) return env.compCache.get(compPathNoExt)
   const jsFile = compPathNoExt + '.js'
   const json = readJson(compPathNoExt + '.json')
   const tpl = readText(compPathNoExt + '.wxml')
@@ -252,6 +254,7 @@ function loadComponent(compPathNoExt, env, errors, cssCollector) {
     ast: wxml.parse(tpl),
     components: new Map()
   }
+  env.compCache.set(compPathNoExt, compDef)
   const using = json.usingComponents || {}
   for (const [tag, rel] of Object.entries(using)) {
     const sub = resolveComponentPath(path.dirname(compPathNoExt), rel)

@@ -97,11 +97,26 @@ Page({
   },
 
   onReady() {
+    if (playGuide.isTouring()) {
+      playGuide.runPageStop(this)
+      return
+    }
     if (!this.data.solved) this.scheduleCoach([playGuide.SPOTS.skip])
   },
 
-  onLoad() {
+  onLoad(options) {
     this._timers = []
+    if (playGuide.enterTourPage('pages/s2-quiz/s2-quiz', options)) {
+      this.setData({
+        touring: true,
+        solved: false,
+        skipped: false,
+        followup: false,
+        showHistory: false,
+        attempts: 1
+      })
+      return
+    }
     session.viewPuzzle('s2-purpose')
     const puzzle = session.getPuzzle('s2-purpose')
     this.setData({
