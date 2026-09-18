@@ -49,6 +49,53 @@ function storageOverrides(env) {
   }
 }
 
+// 昨日之路预览：四站 records + 八卡 + 六支线 + 大水法选择/明信片/留言（次日回访态）
+function walkedEnvelope(day) {
+  const base = 1758000000000
+  const cards = {}
+  const cardIds = ['s2-purpose', 's2-name', 's2-blend', 's2-pattern', 's3-hour', 's3-zodiac', 's3-water', 's4-timeline']
+  cardIds.forEach(function (cardId, i) {
+    cards[cardId] = { cardId: cardId, position: i, digit: day.charAt(i), collectedAt: base + 3100 + i * 100 }
+  })
+  const flags = {
+    experienceCompletedAt: base + 9000,
+    dashuifaChoice: '风声',
+    messageSubmittedAt: base + 7500,
+    boardSubmittedAt: base + 9500,
+    boardDraft: '下一个来的人，抬头看。',
+    sideVisited_xieqiqu: base + 2000,
+    sideVisited_yangquelong: base + 4000,
+    sideVisited_fangwaiguan: base + 4100,
+    sideVisited_xushuilou: base + 6000,
+    sideVisited_guanshuifa: base + 7000,
+    sideVisited_xianfahua: base + 7100
+  }
+  return {
+    snapshot: {
+      schemaVersion: 2,
+      sessionId: 'preview-session',
+      revision: 0,
+      sessionDate: day,
+      checkpoint: 'report',
+      stations: { s1: true, s2: true, s3: true, s4: true },
+      puzzles: { 's4-password': { completedAt: 1, payload: {} } },
+      cards: cards,
+      records: [
+        { station: 's1', recordType: 'photo', completedAt: base + 1000 },
+        { station: 's2', recordType: 'photo', completedAt: base + 3000 },
+        { station: 's3', recordType: 'photo', completedAt: base + 5000 },
+        { station: 's4', recordType: 'photo', completedAt: base + 8000 }
+      ],
+      flags: flags,
+      finale: true,
+      name: '预览者',
+      editionNo: 1,
+      createdAt: base,
+      updatedAt: base + 9500
+    }
+  }
+}
+
 const yesterday = dateKey(Date.now() - 86400000)
 const today = dateKey(Date.now())
 
@@ -94,6 +141,12 @@ const VIEWS = [
     name: 'pv-6-board-notfinished',
     label: '留言簿 · 未通关（引导态）',
     route: 'plate21/module/pages/board/board'
+  },
+  {
+    name: 'pv-7-board-journey',
+    label: '留言簿 · 次日全走（昨日之路长卷 13 节点）',
+    route: 'plate21/module/pages/board/board',
+    wxOverrides: storageOverrides(walkedEnvelope(yesterday))
   }
 ]
 
@@ -165,8 +218,8 @@ figure{margin:0;text-align:center}
 .phone iframe{width:375px;height:812px;border:0;transform:scale(.905);transform-origin:top left}
 figcaption{padding:8px 2px 0;font-size:12px;letter-spacing:1px}
 </style></head><body>
-<header><h1>留言板 · 次日回访 —— 6 个视图</h1>
-<p>worktree feat/board-revisit · 通关当日入口无卡 → 次日出现回访卡 → 直达留言簿（留一句话 / 前人留言墙 / 再读那封信）</p></header>
+<header><h1>留言板 · 次日回访 —— 7 个视图</h1>
+<p>board-journey 轮 · 通关当日入口无卡 → 次日出现回访卡 → 直达留言簿（昨日之路长卷 / 留一句话 / 前人留言墙 / 再读那封信）</p></header>
 <div class="row">${cards}</div></body></html>`
   fs.writeFileSync(path.join(OUT_HTML, 'board-preview.html'), overview)
 
