@@ -1,8 +1,21 @@
-<!-- 语音播放条：src 为空/出错/对应开关关闭即整体隐藏（文稿阅读态不受影响） -->
-<view wx:if="{{src && !failed && enabled}}" class="ac-wrap {{compact ? 'ac-compact' : ''}}">
-  <button class="ac-btn" bindtap="onToggle" aria-label="{{label}}">
-    <image class="ac-icon" src="/plate21/module/assets/img/icons/ic-play-ink.png" mode="aspectFit" />
-    <text class="ac-label">{{playing ? '暂停' : label}}</text>
-  </button>
-  <view class="ac-track"><view class="ac-track-fill" style="width: {{progress}}%;"></view></view>
-</view>
+<!-- 语音播放条：src 为空/出错/对应开关关闭即整体隐藏（文稿阅读态不受影响）。
+     icon=true 为名牌行小圆钮（台词逐句播放用），条状为页面级「听·本页讲述」用。 -->
+<block wx:if="{{src && !failed && enabled}}">
+  <view
+    wx:if="{{icon}}"
+    class="ac-iconbtn {{playing ? 'on' : ''}}"
+    bindtap="onToggle"
+    role="button"
+    aria-label="{{playing ? '暂停' : label}}"
+  >
+    <image wx:if="{{!playing}}" class="ac-iconbtn-img" src="/plate21/module/assets/img/icons/ic-play-ink.png" mode="aspectFit" />
+    <view wx:else class="ac-iconbtn-pause"><view class="ac-iconbtn-bar"></view><view class="ac-iconbtn-bar"></view></view>
+  </view>
+  <view wx:else class="ac-wrap {{compact ? 'ac-compact' : ''}}">
+    <button class="ac-btn" bindtap="onToggle" aria-label="{{label}}">
+      <image class="ac-icon" src="/plate21/module/assets/img/icons/ic-play-ink.png" mode="aspectFit" />
+      <text class="ac-label">{{playing ? '暂停' : label}}</text>
+    </button>
+    <view class="ac-track"><view class="ac-track-fill" style="width: {{progress}}%;"></view></view>
+  </view>
+</block>

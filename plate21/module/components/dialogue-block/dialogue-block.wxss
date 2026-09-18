@@ -9,7 +9,7 @@
 
 .db-head {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 16rpx;
   margin-bottom: 12rpx;
 }
@@ -30,9 +30,9 @@
   text-align: justify;
 }
 
-.db-foot {
-  margin-top: 8rpx;
-  min-height: 0;
+/* 逐句播放小圆钮靠右，与名牌同行（V2.2 分页轮：去条状按钮） */
+.db-play {
+  margin-left: auto;
 }
 
 .db-note {

@@ -45,3 +45,41 @@
   background: rgba(74, 64, 46, 0.6);
   border-radius: 2rpx;
 }
+
+/* icon 模式：名牌行内小圆钮（dialogue-block 逐句播放），不占正文宽度 */
+.ac-iconbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 52rpx;
+  height: 52rpx;
+  border: 2rpx solid rgba(74, 64, 46, 0.5);
+  border-radius: 50%;
+  background: rgba(244, 237, 220, 0.75);
+  box-sizing: border-box;
+}
+.ac-iconbtn:active {
+  transform: scale(0.92);
+  opacity: 0.85;
+}
+.ac-iconbtn.on {
+  background: rgba(74, 64, 46, 0.14);
+  border-color: rgba(74, 64, 46, 0.8);
+}
+.ac-iconbtn-img {
+  width: 24rpx;
+  height: 24rpx;
+  margin-left: 3rpx;
+  opacity: 0.78;
+}
+.ac-iconbtn-pause {
+  display: flex;
+  gap: 7rpx;
+}
+.ac-iconbtn-bar {
+  width: 6rpx;
+  height: 20rpx;
+  background: #4a402e;
+  border-radius: 2rpx;
+}

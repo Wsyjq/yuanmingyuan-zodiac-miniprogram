@@ -13,6 +13,7 @@ Component({
     src: { type: String, value: '' },
     label: { type: String, value: '播放' },
     compact: { type: Boolean, value: false },
+    icon: { type: Boolean, value: false },
     kind: { type: String, value: 'voice' }
   },
 

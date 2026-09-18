@@ -325,6 +325,10 @@
         "type": "folder"
       },
       {
+        "value": "audio",
+        "type": "folder"
+      },
+      {
         "value": ".projectmem",
         "type": "folder"
       },

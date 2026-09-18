@@ -281,14 +281,41 @@ Page({
     const site = SITES[key]
     this._key = key
     this._next = site.next
+    // 步进分页（2026-09-17 分页轮，issue #0029）：开场一屏 → 每拍一屏 → 尾屏。
+    // 隐藏步仍在 DOM（display:none），保持「整页可检索 + 支线随时可跳」语义。
+    const steps = [{ type: 'intro' }].concat(
+      site.beats.map(function (b) { return { type: 'beat', beat: b } })
+    )
+    if (site.bgmFile) steps.push({ type: 'dual' })
+    steps.push({ type: 'end' })
     this.setData({
       site: site,
+      steps: steps,
+      step: 0,
       confirmed: false,
       revealLines: [],
       narrSrc: site.narrClip ? audioSrc.clip(site.narrClip) : '',
       bgmSrc: site.bgmFile ? audioSrc.bgm(site.bgmFile) : ''
     })
     this.recordVisit(key)
+  },
+
+  onStepNext() {
+    if (this.data.step < this.data.steps.length - 1) {
+      this.setData({ step: this.data.step + 1 })
+      this.resetScroll()
+    }
+  },
+
+  onStepPrev() {
+    if (this.data.step > 0) {
+      this.setData({ step: this.data.step - 1 })
+      this.resetScroll()
+    }
+  },
+
+  resetScroll() {
+    if (wx.pageScrollTo) wx.pageScrollTo({ scrollTop: 0, duration: 0 })
   },
 
   // 支线记账：走过即记（幂等一次），供 transit「已走过」与手册统计使用。
