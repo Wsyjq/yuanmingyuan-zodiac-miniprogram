@@ -11,8 +11,7 @@
 /* v1.3 手账元素：编号标签（右上，避让胶囊） */
 .page-tag {
   position: absolute;
-  top: 40rpx;
-  right: 32rpx;
+  top: 88rpx; right: 210rpx;
   z-index: 4;
 }
 /* v1.3 手账元素：手写批注 */
@@ -289,5 +288,5 @@
 .mono-question-note { margin-top: 8rpx; font-size: 24rpx; line-height: 1.7; color: var(--ink60); }
 
 /* V2.1 可跳通道 */
-.skip-btn { display: block; width: auto; min-height: 0; line-height: 1.6; margin: 20rpx auto 0; padding: 6rpx 10rpx; border: 0; border-radius: 0; background: transparent; font-size: 26rpx; text-decoration: underline dotted; }
+.skip-btn { display: block; width: auto; min-height: 0; line-height: 1.6; margin: 20rpx auto 0; padding: 6rpx 10rpx; border: 0; border-bottom: 2rpx dotted currentColor; border-radius: 0; background: transparent; font-size: 26rpx; }
 .skip-btn::after { border: 0; }

@@ -6,7 +6,7 @@
   padding: 0 30rpx 90rpx 60rpx;
 }
 
-.tag-no-fixed { position: absolute; top: 32rpx; right: 32rpx; }
+.tag-no-fixed { position: absolute; top: 88rpx; right: 210rpx; }
 .page-tag-sticker {
   position: absolute;
   top: 84rpx;

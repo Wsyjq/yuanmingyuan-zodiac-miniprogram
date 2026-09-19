@@ -10,6 +10,7 @@
   <image class="sticker-hangtag" src="/plate21/module/assets/img/stickers/st-hang-tag-01.png" mode="aspectFit" />
   <image class="sticker-stamp" src="/plate21/module/assets/img/stickers/st-stamp-02.png" mode="aspectFit" />
 
+  <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
   <!-- ============ 标题区 ============ -->
   <view class="title serif">纹样举纸对照</view>
   <view class="hatch-divider title-div"></view>
@@ -76,6 +77,7 @@
     <view class="novel-p">从迷宫出来往东，地势塌下去一块，露出一口干池子。画上的喷泉还在喷，池子是干的——那是下一页的事。</view>
     <button class="btn-seal" bindtap="onGoS3" disabled="{{advancing}}">{{advancing ? '正在保存……' : '出迷宫，往东'}}</button>
   </view>
+  </scroll-view>
 
   <history-card
     wx:if="{{showHistory}}"

@@ -5,6 +5,7 @@
   <view class="binder"></view>
   <view class="tag-no tag-no-fixed">No.S3-2</view>
 
+  <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
   <view class="title serif">有哪些兽首归来了</view>
   <view class="hatch-divider title-div"></view>
   <view class="lead kaiti">第二步，认座位：座是空的，座身上的花纹倒还清楚，纹会告诉你，哪一尊坐哪一座。这一页配了一只转盘，转盘上也是这些纹。</view>
@@ -46,6 +47,7 @@
     </view>
     <button class="btn-seal confirm-btn record-action" bindtap="onNext" disabled="{{advancing}}">水显纸已准备好</button>
   </view>
+  </scroll-view>
 
   <history-card
     wx:if="{{showHistory}}"

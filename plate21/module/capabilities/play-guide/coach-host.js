@@ -42,10 +42,7 @@ module.exports = Behavior({
 
     beginCoach(steps, doneFlag) {
       if (!steps || !steps.length) return false
-      if (busy) {
-        if (this.data.showCoach) return false
-        busy = false
-      }
+      if (busy) return false
       busy = true
       this._coachFlag = doneFlag || null
       this.setData({

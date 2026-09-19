@@ -30,8 +30,7 @@
 /* 归档编号标签（右上角，避让返回按钮与胶囊） */
 .page-no {
   position: absolute;
-  top: 40rpx;
-  right: 32rpx;
+  top: 88rpx; right: 210rpx;
 }
 
 /* ---------- 路线标题 ---------- */

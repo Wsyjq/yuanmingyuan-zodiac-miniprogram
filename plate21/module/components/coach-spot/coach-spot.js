@@ -55,9 +55,18 @@ Component({
 
     viewport() {
       const win = this.data.win || {}
+      let w = win.windowWidth
+      let h = win.windowHeight
+      if ((!w || !h) && typeof wx !== 'undefined' && wx.getWindowInfo) {
+        try {
+          const info = wx.getWindowInfo()
+          w = w || info.windowWidth
+          h = h || info.windowHeight
+        } catch (e) {}
+      }
       return {
-        w: win.windowWidth || 375,
-        h: win.windowHeight || 812
+        w: w || 375,
+        h: h || 812
       }
     },
 

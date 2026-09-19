@@ -6,7 +6,7 @@
 <view class="page page-shell paper-grain paper-real" wx:if="{{phase === 'novel'}}">
   <!-- v1.3.1 手账：左侧活页装订孔列（全站统一） -->
   <view class="binder"></view>
-  <view class="tag-no page-tag">No.013</view>
+  <view class="tag-no page-tag">No.S4-1</view>
   <view class="navi-title serif">第四站 · 雨果雕像</view>
   <view class="hatch-divider navi-line"></view>
   <scroll-view class="navi-body" scroll-y>
@@ -34,7 +34,7 @@
 <view class="page page-shell paper-grain paper-real {{timelineComplete ? 'timeline-complete' : ''}}" wx:if="{{phase === 'puzzle'}}">
   <!-- v1.3.1 手账：左侧活页装订孔列（全站统一） -->
   <view class="binder"></view>
-  <view class="tag-no page-tag">No.013</view>
+  <view class="tag-no page-tag">No.S4-1</view>
   <view class="title serif">时间轴排序</view>
   <view class="subtitle">把事件卡拖回它发生的那一年（可左右拖动时间轴）</view>
   <!-- v1.3.1 手账：邮戳贴纸压在编号签下方页边（不扰时间轴拖拽） -->

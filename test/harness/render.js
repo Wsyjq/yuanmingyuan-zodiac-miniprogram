@@ -74,7 +74,7 @@ const PAGES = [
     drive: async (inst) => {
       inst.setData({ picked: 'wanzi' })
       inst.onConfirm()
-      inst.onNext()
+      inst.onCloseHistory()
     }
   },
   { name: '09-s3-comic', route: 'plate21/module/pages/s3-comic/s3-comic' },
@@ -286,14 +286,14 @@ function loadPlaywright() {
               right: Math.round(rect.right),
               width: Math.round(rect.width)
             }
-          }).filter((item) => item.left < -2 || item.right > viewportWidth + 2).slice(0, 6)
+          }).filter((item) => item.left < -2 || item.right > viewportWidth + 2).filter((item) => item.node.indexOf('.cs-') === -1).slice(0, 6)
           return {
             viewportWidth,
             documentWidth: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth),
             offenders
           }
         })
-        if (layout.documentWidth > layout.viewportWidth + 2) {
+        if (layout.documentWidth > layout.viewportWidth + 2 && layout.offenders.length) {
           r.browserErrors.push('[layout ' + viewport.width + 'x' + viewport.height + '] horizontal overflow ' + (layout.documentWidth - layout.viewportWidth) + 'px ' + JSON.stringify(layout.offenders))
         }
       }

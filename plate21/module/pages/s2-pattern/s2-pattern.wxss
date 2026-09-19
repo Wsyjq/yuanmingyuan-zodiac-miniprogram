@@ -2,7 +2,7 @@
 .page { padding: 0 36rpx 48rpx; height: 100%; overflow: hidden; }
 
 /* 编号签 */
-.tag-no-fixed { position: absolute; top: 32rpx; right: 32rpx; }
+.tag-no-fixed { position: absolute; top: 88rpx; right: 210rpx; }
 
 /* 经历感贴纸：吊牌（右上）+ 邮票（左上页边）+ 票根（右下页边）*/
 .sticker-hangtag {
@@ -69,7 +69,7 @@
 /* V2.1 对读四：收尾叙事与跳过按钮 */
 .reveal-block { margin-top: 36rpx; }
 .novel-p { font-size: 30rpx; line-height: 1.9; color: var(--ink); margin-bottom: 22rpx; text-align: justify; }
-.skip-btn { width: 100%; min-height: 0; line-height: 1.6; margin-top: 16rpx; padding: 6rpx 10rpx; border: 0; border-radius: 0; background: transparent; font-size: 26rpx; text-decoration: underline dotted; }
+.skip-btn { display: block; width: auto; min-height: 0; line-height: 1.6; margin: 16rpx auto 0; padding: 6rpx 10rpx; border: 0; border-bottom: 2rpx dotted currentColor; border-radius: 0; background: transparent; font-size: 26rpx; }
 .skip-btn::after { border: 0; }
 
 /* V2.3 【记】证据句 */

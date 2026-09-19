@@ -64,6 +64,7 @@
     <view class="note-hand olive progress-note">四图考察结论已经收入手册，可继续辨认墙体纹样。</view>
     <button class="btn-seal complete-btn record-action" bindtap="onNext">继续观察墙体纹样</button>
   </view>
+</scroll-view>
 </view>
 
 <!-- 四张现场照片合成的考察卡，不进行虚假场景识别。 -->
@@ -84,7 +85,6 @@
     </view>
     <button class="btn-seal record-confirm" bindtap="onAcceptRecord">查看考察结论</button>
   </view>
-</scroll-view>
 </view>
 
 <history-card

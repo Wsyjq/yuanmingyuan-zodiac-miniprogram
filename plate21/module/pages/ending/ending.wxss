@@ -12,8 +12,7 @@
 /* v1.3 手账：归档编号签（右上角，避让胶囊） */
 .page-tag {
   position: absolute;
-  top: 32rpx;
-  right: 32rpx;
+  top: 88rpx; right: 210rpx;
   z-index: 3;
 }
 /* v1.3.1：邮戳贴纸压在编号签左下方，归档封缄感 */

@@ -3,15 +3,14 @@
   position: relative;
   height: 100%;
   overflow: hidden;
-  padding: 120rpx 48rpx 32rpx 100rpx; /* 左 100rpx = 48 + 52 让位 .binder */
+  padding: 140rpx 48rpx 32rpx 100rpx; /* 左 100rpx = 48 + 52 让位 .binder */
   box-sizing: border-box;
 }
 
 /* v1.3 档案编号标签：右上角，避让返回钮与胶囊 */
 .page .tag-no {
   position: absolute;
-  top: 36rpx;
-  right: 32rpx;
+  top: 88rpx; right: 210rpx;
 }
 
 /* 顶部短叙事（novel 风格直接写） */
@@ -193,5 +192,5 @@
 .q-actions { margin-top: 28rpx; display: flex; flex-direction: column; gap: 18rpx; align-items: center; }
 .hint-btn-inline { width: auto; min-height: 0; line-height: 1.4; margin: 0; padding: 12rpx 22rpx; border: 2rpx dashed var(--olive); border-radius: 0; background: rgba(111, 114, 72, 0.04); color: var(--olive); font-size: 26rpx; }
 .hint-btn-inline::after { border: 0; }
-.skip-btn { width: auto; min-height: 0; line-height: 1.4; margin: 0; padding: 6rpx 10rpx; border: 0; border-radius: 0; background: transparent; font-size: 26rpx; text-decoration: underline dotted; }
+.skip-btn { width: auto; min-height: 0; line-height: 1.4; margin: 0; padding: 6rpx 10rpx; border: 0; border-bottom: 2rpx dotted currentColor; border-radius: 0; background: transparent; font-size: 26rpx; }
 .skip-btn::after { border: 0; }
