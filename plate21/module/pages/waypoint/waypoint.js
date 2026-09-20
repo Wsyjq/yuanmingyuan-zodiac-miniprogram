@@ -375,6 +375,18 @@ const SITES = {
   }
 }
 
+function withOn(site, selected) {
+  if (!site || !site.quiz) return site
+  const sel = selected || []
+  return Object.assign({}, site, {
+    quiz: Object.assign({}, site.quiz, {
+      options: site.quiz.options.map(function (opt) {
+        return Object.assign({}, opt, { on: sel.indexOf(opt.key) >= 0 })
+      })
+    })
+  })
+}
+
 Page({
   data: {
     site: null,
@@ -405,8 +417,9 @@ Page({
     )
     if (site.bgmFile) steps.push({ type: 'dual' })
     steps.push({ type: 'end' })
+    const selected = puzzle && quiz ? quiz.correct.slice() : []
     this.setData({
-      site: site,
+      site: withOn(site, selected),
       steps: steps,
       step: 0,
       confirmed: false,
@@ -414,7 +427,7 @@ Page({
       narrSrc: site.narrClip ? audioSrc.clip(site.narrClip) : '',
       bgmSrc: site.bgmFile ? audioSrc.bgm(site.bgmFile) : '',
       listenSrc: quiz && quiz.listenFile ? audioSrc.bgm(quiz.listenFile) : '',
-      selected: puzzle && quiz ? quiz.correct.slice() : [],
+      selected: selected,
       solved: !!puzzle,
       followup: !!puzzle,
       attempts: Number(puzzle && puzzle.payload && puzzle.payload.attempts) || 0,
@@ -427,15 +440,16 @@ Page({
     if (this.data.solved) return
     const quiz = this.data.site.quiz
     const key = e.currentTarget.dataset.key
+    let selected
     if (!quiz.multi) {
-      this.setData({ selected: [key] })
-      return
+      selected = [key]
+    } else {
+      selected = this.data.selected.slice()
+      const i = selected.indexOf(key)
+      if (i >= 0) selected.splice(i, 1)
+      else selected.push(key)
     }
-    const selected = this.data.selected.slice()
-    const i = selected.indexOf(key)
-    if (i >= 0) selected.splice(i, 1)
-    else selected.push(key)
-    this.setData({ selected: selected })
+    this.setData({ selected: selected, site: withOn(this.data.site, selected) })
   },
 
   onListen() {

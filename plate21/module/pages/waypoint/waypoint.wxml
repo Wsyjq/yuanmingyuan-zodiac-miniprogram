@@ -21,7 +21,7 @@
         <view
           wx:for="{{site.quiz.options}}"
           wx:key="key"
-          class="wp-opt {{selected.indexOf(item.key) >= 0 ? 'on' : ''}}"
+          class="wp-opt {{item.on ? 'on' : ''}}"
           data-key="{{item.key}}"
           bindtap="onToggle"
         >{{item.key}}　{{item.text}}</view>
