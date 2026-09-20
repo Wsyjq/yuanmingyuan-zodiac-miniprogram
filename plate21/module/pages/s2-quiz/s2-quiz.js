@@ -1,81 +1,80 @@
-// 第二站 · 黄花阵 对读一：灯戏图对空墙（V2.2 讲述版，骨架沿用 V2.1）
-// 玩法：先对墙（画上墙的走向和眼前对得上）→ 再对人（画上有人、地上没有）。
-// 开放作答，命中「中秋／灯／宫女／玩／赏」任一即过；可跳过（跳过不发该卡）。
-// 答对弹史料卡（卡片角落数字 2，年1=2）。本页不是 S2 末题，不调 completeStation（由 s2-pattern 收口）。
-// V2.2 新增：揭晓后画里传来宫女台词（dlg-huanghuazhen-1）。
+// 黄花阵 · 修建目的。飞书 v3 原文选项。三次揭晓仍发卡。
 const session = require('../../store/session')
 const audioSrc = require('../../utils/audio-src')
 const audioBus = require('../../utils/audio-bus')
+const ladder = require('../../utils/attempt-ladder')
 const playGuide = require('../../capabilities/play-guide/guide')
 const coachHost = require('../../capabilities/play-guide/coach-host')
 
-const KEYWORDS = ['中秋', '灯', '宫女', '玩', '赏']
+const OPTIONS = [
+  { key: 'A', text: '作为军事防御工事，用于迷惑和阻挡入侵的敌人。' },
+  { key: 'B', text: '作为皇家藏书楼，利用复杂路径保护珍贵书籍。' },
+  { key: 'C', text: '作为中秋节的皇家娱乐场所，举办“迷宫灯会”游戏。' },
+  { key: 'D', text: '作为皇子们的秘密议事厅，以防外人窃听。' }
+]
+const CORRECT = 'C'
+const HINTS = [
+  '再看看这座阵夜里会不会亮起来。',
+  '中秋之夜，有人提着灯往中心亭跑。'
+]
+const REVEAL = '每逢中秋之夜，皇帝会坐在阵中心的凉亭里，观赏宫女们在迷宫路径中奔跑嬉戏。最先到达中心的人会得到皇帝的赏赐。'
 
 Page({
   behaviors: [coachHost],
   data: {
-    answer: '',
+    options: OPTIONS,
+    selected: '',
     attempts: 0,
-    wrongTip: '',
     hint: '',
     solved: false,
-    skipped: false,
+    revealed: false,
     showHistory: false,
     cardNumber: 2,
     followup: false,
     advancing: false,
     narrSrc: audioSrc.clip('narr-s2-quiz'),
     historyLines: [
-      '中秋夜，皇帝坐阵心凉亭，宫女跑阵，先到有赏。',
-      '画上提灯往中心亭跑的人群，就是灯会本身。'
+      '黄花阵的作用：每逢中秋之夜，皇帝会坐在阵中心的凉亭里，观赏宫女们在迷宫路径中奔跑嬉戏。最先到达中心的人会得到皇帝的赏赐。'
     ]
   },
 
-  onInput(e) {
-    this.setData({ answer: e.detail.value, wrongTip: '' })
+  onSelect(e) {
+    if (this.data.solved) return
+    this.setData({ selected: e.currentTarget.dataset.key })
   },
 
   onConfirm() {
-    // V2.3：答题交互起，压停正在播的人声（做题与听讲不打架）
     audioBus.stopKind('voice')
-    if (this.data.solved) return
-    const value = String(this.data.answer || '').trim()
-    if (!value) {
-      wx.showToast({ title: '先写一句你的猜法', icon: 'none' })
+    if (this.data.solved || !this.data.selected) return
+    const ok = this.data.selected === CORRECT
+    const result = ladder.submit({
+      ok: ok,
+      attempts: this.data.attempts,
+      hints: HINTS,
+      revealText: REVEAL
+    })
+    session.attemptPuzzle('s2-purpose', result.attempts, ok, 'tap')
+    if (result.solved) {
+      if (result.revealed) session.viewHint('s2-purpose', 3)
+      this.setData({
+        attempts: result.attempts,
+        solved: true,
+        revealed: result.revealed,
+        hint: result.hint,
+        selected: CORRECT,
+        showHistory: true
+      })
+      session.completePuzzle('s2-purpose', {
+        answer: CORRECT,
+        attempts: result.attempts,
+        revealed: result.revealed
+      }, { collectCard: true }).catch(function () {
+        wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' })
+      })
       return
     }
-    const hit = KEYWORDS.some(function (word) { return value.includes(word) })
-    const attempts = this.data.attempts + 1
-    if (hit) {
-      session.attemptPuzzle('s2-purpose', attempts, true, 'text')
-      this.setData({ solved: true, wrongTip: '', hint: '', showHistory: true })
-      session.completePuzzle('s2-purpose', { answer: value, attempts: attempts }, { collectCard: true })
-        .catch(function () { wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' }) })
-      return
-    }
-    session.attemptPuzzle('s2-purpose', attempts, false, 'text')
-    if (attempts === 2) session.viewHint('s2-purpose', 1)
-    this.setData({
-      attempts: attempts,
-      wrongTip: attempts >= 2 ? '再看看画里人手里都拿着什么。' : '先说说画上的人在干什么——猜错不扣什么。'
-    })
-  },
-
-  // 卡住才出提示（V2.1：提示只在卡住时出现）
-  onShowHint() {
-    session.viewHint('s2-purpose', 1)
-    this.setData({ hint: '夜里的阵、提灯的人、往中心亭跑——这是个节庆的场面。' })
-  },
-
-  // 可跳过：跳过不发该卡（V2.1 对读规则），直接进下一拍
-  onSkip() {
-    this.runAfterCoach(function () {
-      if (this.data.solved || this.data.skipped) return
-      this.setData({ skipped: true, solved: true, showHistory: false, followup: true })
-      session.attemptPuzzle('s2-purpose', this.data.attempts, true, 'skip')
-      session.completePuzzle('s2-purpose', { action: 'skipped', attempts: this.data.attempts })
-        .catch(function () { /* 进度失败不阻断浏览 */ })
-    })
+    session.viewHint('s2-purpose', result.attempts)
+    this.setData({ attempts: result.attempts, hint: result.hint })
   },
 
   onCloseHistory() {
@@ -85,8 +84,8 @@ Page({
   onNext() {
     if (this.data.advancing) return
     this.setData({ advancing: true, showHistory: false })
-    session.completePuzzle('s2-purpose', { attempts: this.data.attempts || 1 }, {
-      collectCard: !this.data.skipped,
+    session.completePuzzle('s2-purpose', { attempts: this.data.attempts || 1, answer: CORRECT }, {
+      collectCard: true,
       checkpoint: 's2-name'
     }).then(function () {
       wx.redirectTo({ url: '/plate21/module/pages/s2-reveal/s2-reveal' })
@@ -96,25 +95,10 @@ Page({
     })
   },
 
-  onReady() {
-    if (playGuide.isTouring()) {
-      playGuide.runPageStop(this)
-      return
-    }
-    if (!this.data.solved) this.scheduleCoach([playGuide.SPOTS.skip])
-  },
-
   onLoad(options) {
     this._timers = []
     if (playGuide.enterTourPage('pages/s2-quiz/s2-quiz', options)) {
-      this.setData({
-        touring: true,
-        solved: false,
-        skipped: false,
-        followup: false,
-        showHistory: false,
-        attempts: 1
-      })
+      this.setData({ touring: true, solved: false, followup: false, showHistory: false })
       return
     }
     session.viewPuzzle('s2-purpose')
@@ -122,9 +106,9 @@ Page({
     this.setData({
       cardNumber: Number(session.getCardDigit('s2-purpose')) || 2,
       solved: !!puzzle,
-      skipped: !!(puzzle && puzzle.payload && puzzle.payload.action === 'skipped'),
-      showHistory: !!puzzle && !!(puzzle.payload && puzzle.payload.answer),
-      followup: !!puzzle && !!(puzzle.payload && puzzle.payload.action === 'skipped'),
+      selected: puzzle ? CORRECT : '',
+      showHistory: !!puzzle,
+      followup: false,
       attempts: Number(puzzle && puzzle.payload && puzzle.payload.attempts) || 0
     })
   },

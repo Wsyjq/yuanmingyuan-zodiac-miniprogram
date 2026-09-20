@@ -1,98 +1,66 @@
-<!-- P07 第三站 · 时辰漫画推理 -->
 <nav-back />
 <page-overlays />
 <bgm-ambience />
 <view class="page page-shell paper-grain paper-real">
 <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
-  <!-- v1.3.1 手账：左侧活页装订孔列（全站统一） -->
   <view class="binder"></view>
-  <!-- v1.3.1 手账：干花标本贴纸压在页右上角（页边，不扰漫画推理） -->
   <image class="comic-botanical" src="/plate21/module/assets/img/stickers/st-botanical-01.png" mode="aspectFit" />
-  <!-- 页眉：档案编号 -->
   <view class="page-head">
-    <view class="tag-no">No.S3-1</view>
+    <view class="tag-no">No.S3</view>
   </view>
 
   <view class="novel">
-    <view class="novel-p">海晏堂到了。入口抄的那半句乾隆的话，说的就是眼前这片东西：废墟摊在低洼地里一路铺开，扇形水池干着，池底积着落叶；两侧本来各有一列兽首的石座，一侧还认得出一排，另一侧几乎平了。档案翻到这一页，画上十二个兽首一齐对着池子喷水。纸和地一比，差就出来了——画上喷，地上干；画上有兽首，地上只剩座。这一页的人声，是当年造水法的人。这一页要办的是一件事：把这座停了的钟，校回正午。分三步。</view>
+    <view class="novel-p">沿着地图走，我来到了海晏堂遗址。眼前已经很难看出当年建筑完整的样子了，但把档案里的《海晏堂西面》铜版图和现场对照起来，还是能找到一些对应的位置。</view>
+    <view class="novel-p">铜版图里，这里原本排列着十二尊人身兽首像，分别对应十二生肖，也对应一天里的十二个时辰。看到这里，我忽然想起来，调查日记中好像有一句话：</view>
   </view>
-  <dialogue-block speaker="蒋友仁" text="我叫蒋友仁，法兰西人。万岁爷要西洋的水法，我们就把西洋的水，搬进了这座园子。这园子里的水法，经我的手。水法水法，人人都当它是看的。要我说，这一片，是一座钟。" clip-id="dlg-haiyantang-1" note="历史人物 · 台词为艺术演绎" />
-  <view class="novel"><view class="novel-p">钟？画上这十二尊，不像光为了好看，倒像在轮着值班。第一步，先认钟面，看明白它怎么报时。</view></view>
-  <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">看画上的十二尊：它们在轮什么班？十二尊齐喷，是什么时辰？</text></view>
+  <view class="paper-quote">“十二兽各守一时，至午而全见。”</view>
+  <view class="novel"><view class="novel-p">“各守一时”应该很好理解，可“至午而全见”又是什么意思？</view></view>
+  <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">根据铜版图和现场遗迹，判断正午喷泉会是什么样子</text></view>
   <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" />
 
-  <!-- 已授权 AI 四格漫画；下方文字编号保留非颜色线索。 -->
-  <view class="comic-plate double-frame" role="img" aria-label="十二兽首按时辰喷水的四格推理漫画">
+  <view class="comic-plate double-frame" role="img" aria-label="十二兽首按时辰喷水的四格漫画">
     <view class="tape" style="top:-20rpx; left:50%; margin-left:-90rpx;"></view>
     <image class="comic-image" src="/plate21/module/assets/img/IMG-RUNTIME-COMIC.jpg" mode="widthFix" />
   </view>
   <view class="comic-captions">
-    <view class="comic-caption {{clue && index < 2 ? 'cell-clue' : ''}}" wx:for="{{cells}}" wx:key="id" wx:for-index="index">
+    <view class="comic-caption" wx:for="{{cells}}" wx:key="id" wx:for-index="index">
       <view class="panel-no serif">第 {{index + 1}} 格 · {{item.time}}</view>
       <view class="cell-desc">{{item.desc}}</view>
     </view>
   </view>
-  <view class="note-hand olive note-comic" style="transform: rotate(-1.5deg);">日晷影短，午正将至——记于池畔。</view>
 
-  <!-- 小问一 -->
-  <view class="q" wx:if="{{!q1Done}}">
-    <view class="q-title serif">午时将至，哪尊兽首即将喷水？</view>
-    <view class="heads">
-      <view
-        wx:for="{{heads}}"
-        wx:key="*this"
-        class="head {{q1Selected === item ? 'head-sel' : ''}} {{q1Correct && q1Selected === item ? 'head-correct' : ''}} {{shakeKey === item ? 'shake' : ''}}"
-        data-v="{{item}}"
-        bindtap="onQ1"
-        role="button"
-        aria-pressed="{{q1Selected === item}}"
-        aria-label="选择{{item}}首"
-      >{{item}}</view>
-    </view>
-    <view class="note-hand note-q" style="transform: rotate(1deg);">兽首各按时辰当值，如更鼓然。</view>
-    <view class="hint" wx:if="{{q1Attempts >= 2}}">提示：看漫画前两格——子时鼠首，丑时牛首，各按时辰当值。</view>
-    <button class="skip-btn note-hand olive" bindtap="onSkip">两问都先不答，继续</button>
+  <view class="q" wx:if="{{!followup}}">
+    <view class="q-title serif">如果在正午来到海晏堂，当年的十二生肖喷泉会是什么样子？</view>
+    <view
+      wx:for="{{options}}"
+      wx:key="key"
+      class="hour {{selected === item.key ? 'hour-sel' : ''}}"
+      data-key="{{item.key}}"
+      bindtap="onSelect"
+      role="button"
+      aria-pressed="{{selected === item.key}}"
+    >{{item.key}}　{{item.text}}</view>
+    <view class="hint" wx:if="{{hint}}">{{hint}}</view>
+    <button class="btn-seal" bindtap="onConfirm" disabled="{{!selected || solved}}">{{revealed ? '记 下 了' : '就 是 这 样'}}</button>
   </view>
 
-  <!-- 小问二 -->
-  <view class="q" wx:if="{{q1Done && !q2Done}}">
-    <view class="q-title serif">十二兽首齐喷，此时是什么时辰？</view>
-    <view class="q-sub">从前两格的规律往后推。</view>
-    <view class="hours">
-      <view
-        wx:for="{{hours}}"
-        wx:key="*this"
-        class="hour {{q2Selected === item ? 'hour-sel' : ''}} {{shakeKey === item ? 'shake' : ''}}"
-        data-v="{{item}}"
-        bindtap="onQ2"
-        role="button"
-        aria-pressed="{{q2Selected === item}}"
-        aria-label="选择{{item}}"
-      >{{item}}</view>
-    </view>
-    <view class="hint" wx:if="{{q2Attempts >= 2}}">提示：正午十二兽首齐喷——正午对应的，正是马首当值的时辰。</view>
-  </view>
-
-  <view class="followup prop-card archive-sheet" wx:if="{{q2Done && !showHistory}}">
-    <dialogue-block speaker="蒋友仁" text="十二尊，一尊管一个时辰。子时鼠，丑时牛，照生肖往下排，哪一尊在喷，就是几时。正午轮到马，其余十一尊，陪它一齐喷一回。皇帝要的是准，我们给的是水。水，有时候不听话。" clip-id="dlg-haiyantang-2" note="历史人物 · 台词为艺术演绎" />
-    <view class="novel-p">原来是报时：喷泉就是钟面，看谁在喷，就知道现在几时。只是这座钟如今停了——池子干着，没有谁在等那一响。第二步，认座位：座是空的，座身上的花纹倒还清楚，纹会告诉你，哪一尊坐哪一座。</view>
-    <view class="physical-label archive-tab">下一件道具 · 七纹样转盘</view>
-    <view class="q-title serif">取出实体七纹样转盘</view>
-    <view class="archive-rule"></view>
-    <view class="q-sub">第二件事，抬头看那排石座：座是空的，座身上的花纹倒还清楚，这一页配了一只转盘，转盘上也是这些纹。</view>
-    <button class="btn-seal" bindtap="onNext" disabled="{{advancing}}">我已取出转盘，继续</button>
+  <view class="followup" wx:if="{{followup}}">
+    <view class="novel-p">原来所谓的“水力钟”，真的就是用水来表示时间。这样一来，调查日记里的那句话也说得通了。可是这些喷泉怎么喷出的水呢？</view>
+    <view class="novel-p">水力钟在眼前，水源却不在水池里。路线图在海晏堂北面另标了一处高台——蓄水楼。</view>
+    <view class="novel-p">西洋楼里的喷泉不是电泵。要先弄清水是怎么被抬高的，再往东去看大水法把水做成了什么。</view>
+    <button class="btn-seal" bindtap="onNext" disabled="{{advancing}}">请前往蓄水楼</button>
   </view>
 </scroll-view>
 </view>
 
 <history-card
   visible="{{showHistory}}"
-  title="海晏堂 · 大水法营造史料"
-  source="《西洋楼铜版图·海晏堂》；圆明园水利史料"
+  title="海晏堂 · 水力钟"
+  source="《西洋楼铜版图·海晏堂西面》"
   lines="{{historyLines}}"
   corner-number="{{cardNumber}}"
   show-corner="{{showHistory}}"
-  btn-text="取出七纹样转盘"
+  btn-text="继 续"
   bind:next="onHistoryNext"
   bind:close="onCloseHistory"
 />

@@ -97,6 +97,13 @@ Page({
     }
     const attempts = this.data.attempts + 1
     session.attemptPuzzle('s1-decode', attempts, false, 'text')
+    if (attempts >= 3) {
+      this.setData({ solved: true, attempts, answerInput: ANSWER, wrongTip: '两半合上，是三个字：黄花阵。' })
+      session.completePuzzle('s1-decode', { answer: ANSWER, attempts: attempts, revealed: true }).catch(function () {
+        wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' })
+      })
+      return
+    }
     this.setData({
       attempts,
       wrongTip: attempts > 1
@@ -111,10 +118,10 @@ Page({
     session.completePuzzle('s1-decode', { answer: ANSWER, attempts: this.data.attempts }, {
       station: 's1',
       record: { payload: { answer: ANSWER, attempts: this.data.attempts } },
-      checkpoint: 's2-purpose'
+      checkpoint: 'xq-sound'
     })
       .then(function () {
-        wx.redirectTo({ url: '/plate21/module/pages/transit/transit?leg=s1-s2' })
+        wx.redirectTo({ url: '/plate21/module/pages/transit/transit?leg=s1-xq' })
       })
       .catch(() => {
         this.setData({ advancing: false })

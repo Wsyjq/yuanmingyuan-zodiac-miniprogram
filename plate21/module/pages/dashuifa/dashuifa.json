@@ -1,8 +1,9 @@
 {
   "usingComponents": {
     "nav-back": "../../components/nav-back/nav-back",
+    "page-overlays": "../../capabilities/overlay-host/overlay-host",
     "coach-spot": "../../components/coach-spot/coach-spot"
   },
-  "navigationBarTitleText": "大水法 · 留白",
+  "navigationBarTitleText": "大水法",
   "disableScroll": true
 }

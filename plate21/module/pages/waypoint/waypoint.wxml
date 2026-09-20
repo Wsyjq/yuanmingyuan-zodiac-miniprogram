@@ -7,7 +7,45 @@
   <view class="binder"></view>
   <view class="tag-no page-no">{{site.no}}</view>
 
+  <block wx:if="{{site.scored}}">
+    <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
+      <view class="title serif">{{site.title}}</view>
+      <view class="wp-intro kaiti">{{site.intro}}</view>
+      <view class="act-strip" wx:if="{{site.quiz.action}}"><text class="act-strip-tag">做</text><text class="act-strip-text">{{site.quiz.action}}</text></view>
+      <view wx:if="{{site.quiz.listenFile && !followup}}" class="wp-listen">
+        <button class="btn-seal" bindtap="onListen">听 · 约三十秒</button>
+        <view class="note-hand olive">{{site.quiz.listenNote}}</view>
+      </view>
+      <view wx:if="{{!followup}}" class="quiz">
+        <view class="q-title serif">{{site.quiz.prompt}}</view>
+        <view
+          wx:for="{{site.quiz.options}}"
+          wx:key="key"
+          class="wp-opt {{selected.indexOf(item.key) >= 0 ? 'on' : ''}}"
+          data-key="{{item.key}}"
+          bindtap="onToggle"
+        >{{item.key}}　{{item.text}}</view>
+        <view wx:if="{{hint}}" class="hint">{{hint}}</view>
+        <button class="btn-seal" bindtap="onQuizConfirm" disabled="{{!selected.length || solved}}">{{revealed ? '记 下 了' : '就 是 这 些'}}</button>
+      </view>
+      <view wx:if="{{followup}}" class="followup">
+        <view class="wp-line kaiti" wx:for="{{site.quiz.followup}}" wx:key="*this">{{item}}</view>
+        <button class="btn-seal wp-next" bindtap="onNext">{{site.nextLabel}}</button>
+      </view>
+    </scroll-view>
+    <history-card
+      visible="{{showHistory}}"
+      title="{{site.quiz.historyTitle}}"
+      source="圆明园西洋楼景区史料"
+      lines="{{site.quiz.historyLines}}"
+      btn-text="继 续"
+      bind:next="onCloseHistory"
+      bind:close="onCloseHistory"
+    />
+  </block>
+
   <!-- 步 0：到站开场 -->
+  <block wx:else>
   <view class="wp-step {{step === 0 ? '' : 'wp-step-off'}}">
     <view class="title serif">{{site.title}}</view>
     <view class="wp-intro kaiti">{{site.intro}}</view>
@@ -81,4 +119,5 @@
       <button wx:if="{{step < steps.length - 1}}" class="btn-seal wp-step-next" bindtap="onStepNext">继 续</button>
     </view>
   </view>
+  </block>
 </view>

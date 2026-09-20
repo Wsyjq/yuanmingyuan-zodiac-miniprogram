@@ -96,22 +96,27 @@ Page({
       this.setData({ solved: true, showHistory: true, showCardNumber: true, attempts: attempts, nudge: '' })
       session.completePuzzle('s2-pattern', { answer: 'wanzi', attempts: attempts }, { collectCard: true })
         .catch(function () { wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' }) })
+    } else if (attempts >= 3) {
+      session.attemptPuzzle('s2-pattern', attempts, false, 'tap')
+      this.setData({
+        picked: 'wanzi',
+        solved: true,
+        showHistory: true,
+        showCardNumber: true,
+        attempts: attempts,
+        nudge: '迷宫墙体刻满万字回纹，寓意福寿绵长。'
+      })
+      session.completePuzzle('s2-pattern', { answer: 'wanzi', attempts: attempts, revealed: true }, { collectCard: true })
+        .catch(function () { wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' }) })
     } else {
       session.attemptPuzzle('s2-pattern', attempts, false, 'tap')
       this.setData({
         attempts: attempts,
-        nudge: '纹的走向好像不是这张。把纸举起来再比一比——另几种，墙上没有。'
+        nudge: attempts === 1
+          ? '墙上反复出现的那种。'
+          : '回转连绵的那一种。'
       })
     }
-  },
-
-  // 可跳过：跳过不发该卡（V2.1 对读规则），收尾照常
-  onSkip() {
-    if (this.data.solved || this.data.skipped) return
-    this.setData({ skipped: true, showFinale: true })
-    session.attemptPuzzle('s2-pattern', this.data.attempts, true, 'skip')
-    session.completePuzzle('s2-pattern', { action: 'skipped', attempts: this.data.attempts })
-      .catch(function () { /* 进度失败不阻断浏览 */ })
   },
 
   onCloseHistory() {
@@ -122,11 +127,11 @@ Page({
     if (this.data.advancing) return
     this.setData({ advancing: true })
     session.completePuzzle('s2-pattern', { attempts: this.data.attempts || 1 }, {
-      collectCard: !this.data.skipped,
+      collectCard: true,
       station: 's2',
-      checkpoint: 's3-hour'
+      checkpoint: 'fw-three'
     }).then(() => {
-      wx.redirectTo({ url: '/plate21/module/pages/transit/transit?leg=s2-s3' })
+      wx.redirectTo({ url: '/plate21/module/pages/transit/transit?leg=s2-fw' })
     }).catch(() => {
       this.setData({ advancing: false })
       wx.showToast({ title: '进度保存失败，请重试', icon: 'none' })

@@ -1,4 +1,4 @@
-<!-- 第二站 · 黄花阵 对读二：黄花从灯上来（V2.2 讲述版，文字输入可跳） -->
+<!-- 第二站 · 黄花阵 对读二：黄花从灯上来（语音/文字作答，每次提示，第三次揭晓） -->
 <nav-back />
 <page-overlays />
 <bgm-ambience />
@@ -11,35 +11,51 @@
   <view class="lead kaiti">画上跑阵的人手里都提着一盏灯，灯是黄的。这地方又叫黄花阵——「黄花」两个字，是不是打灯上来的？</view>
   <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" />
 
-  <!-- 已授权 AI 参考图：宫女手持黄色彩绸莲花灯 -->
+  <!-- DJ-09 黄花阵图：屏上弹出宫女游玩图，手里对照迷宫平面 -->
   <view class="ref-img">
     <image class="ref-pic" src="/plate21/module/assets/img/IMG-RUNTIME-LANTERN.jpg" mode="aspectFill" />
-    <view class="ref-note note-hand">参考图：手持莲花灯的宫女</view>
+    <view class="ref-note note-hand">对照手里的图：迷宫平面，和宫女提灯跑阵那一幕。</view>
   </view>
 
   <view class="answer" wx:if="{{!solved}}">
-    <view class="ans-row">
-      <input
-        class="ans-input"
-        placeholder="你觉得「黄花」二字从何而来？"
-        placeholder-class="ans-ph"
-        value="{{answer}}"
-        bindinput="onInput"
-        bindconfirm="onSubmit"
-      />
-      <button class="btn-seal ans-btn" bindtap="onSubmit">提 交</button>
+    <view class="ans-label kaiti">一句话写下或说出来。不超过 {{maxChars}} 字。</view>
+    <textarea
+      class="ans-input"
+      placeholder="你觉得「黄花」二字从何而来？"
+      placeholder-class="ans-ph"
+      value="{{answer}}"
+      maxlength="{{maxChars}}"
+      auto-height
+      disable-default-padding
+      confirm-type="done"
+      bindinput="onInput"
+      bindconfirm="onSubmit"
+    />
+    <view class="ans-meta">
+      <text class="char-count {{charCount >= maxChars ? 'char-full' : ''}}">{{charCount}}/{{maxChars}}</text>
+      <text class="try-count">还可答 {{maxAttempts - attempts}} 次</text>
     </view>
-    <view id="coachSkip" class="coach-hit">
-      <button class="skip-btn note-hand olive" bindtap="onSkip">先不猜，往下走</button>
+    <view class="ans-actions">
+      <button
+        class="voice-btn {{recording ? 'voice-on' : ''}}"
+        bindtap="onVoiceTap"
+        disabled="{{checking}}"
+      >{{recording ? '停' : '语音'}}</button>
+      <button
+        class="btn-seal ans-btn"
+        bindtap="onSubmit"
+        disabled="{{!answer || checking}}"
+      >{{checking ? '核 对 中' : '提 交'}}</button>
     </view>
+    <view wx:if="{{recording}}" class="rec-tip note-hand">正在听，最多八秒。说完再点停。</view>
+    <button wx:if="{{showMicSetting}}" class="hint-btn-inline" bindtap="onOpenMicSetting">去开启麦克风</button>
+    <view wx:if="{{hint}}" class="hint">{{hint}}</view>
   </view>
-  <view wx:if="{{hint}}" class="hint">{{hint}}</view>
 
   <view wx:if="{{solved && !showHistory}}" class="followup double-frame">
-    <dialogue-block speaker="宫女" text="今年的灯，黄绸扎的莲花，一人一盏。点亮了，满阵都是黄的。管事的说，这阵就叫黄花阵。" clip-id="dlg-huanghuazhen-2" />
-    <view class="kaiti">名字就是从灯上来的。画上看不出迷宫难不难走，中心亭就在那边，路得自己用脚找。</view>
-    <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">拿俯视卡进阵：墙印上了，路是空的；走错了退回来，站到中心亭就算完。</text></view>
-    <button class="btn-seal" bindtap="onNext">拿俯视卡，进阵</button>
+    <view class="kaiti">由于宫女们手持黄色彩绸扎成的莲花灯，所以这个迷宫也得名黄花阵。</view>
+    <view class="novel-p">这迷宫看上去很难走，究竟会有多难走呢？我也要试试看，也许黄花阵的中央，还有什么我值得考察的东西呢。</view>
+    <button class="btn-seal" bindtap="onNext">进 阵</button>
   </view>
   </scroll-view>
 
@@ -52,7 +68,7 @@
     corner-number="{{cardNumber}}"
     show-corner="{{showCardNumber}}"
     btn-text="继续"
-    bind:next="onNext"
+    bind:next="onCloseHistory"
     bind:close="onCloseHistory"
   />
 </view>

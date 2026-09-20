@@ -6,15 +6,50 @@
 // dialogues[].clipId 对应 tools/gen_voice.py 产物（audio/v22/dlg-*.mp3），无服务时自动退回纯文稿。
 const session = require('../../store/session')
 const audioSrc = require('../../utils/audio-src')
+const ladder = require('../../utils/attempt-ladder')
 
 const SITES = {
   xieqiqu: {
     no: 'S·A',
-    title: '顺路 · 谐奇趣',
+    title: '谐奇趣',
+    scored: true,
     audioStation: 't-xieqiqu',
     narrClip: 'narr-waypoint-xieqiqu',
-    bgmFile: 'bgm-07x-xieqiqu-dual.mp3',
-    intro: '还没到迷宫，先撞见一处废墟。绕过一道土坡，一片汉白玉的残基横在眼前，台基上还立着几根柱子，柱头的卷草纹让风磨圆了，花瓣的层数还数得清。档案里多出来的这一页，写着这里叫谐奇趣：西洋楼里第一座盖起来的欧式水法大殿，乾隆十六年秋天建成；主楼三层，楼前两侧各有一排琉璃厅。',
+    intro: '按照路线图走进入口，就来到了谐奇趣。我记得这是西洋楼景区建成的第一座欧式建筑，也是中国皇家园林史上首座西洋建筑。主楼前后都曾设有水法，这里还曾用于演奏中西音乐。怪不得叫“谐奇趣”，要是能听听当时的音乐就好了。',
+    quiz: {
+      puzzleId: 'xq-sound',
+      action: '戴上耳机，听完再勾你听见的',
+      listenFile: 'xieqiqu-soundscape/dj06-xieqiqu-soundscape-30s.mp3',
+      listenNote: '依据史料重构，不是当年的谱',
+      prompt: '刚才的谐奇趣里，你听见了哪些声音？',
+      multi: true,
+      options: [
+        { key: 'A', text: '小拉琴' },
+        { key: 'B', text: '西洋箫' },
+        { key: 'C', text: '琵琶' },
+        { key: 'D', text: '笙' },
+        { key: 'E', text: '班竹板' },
+        { key: 'F', text: '水声' }
+      ],
+      correct: ['A', 'B', 'C', 'F'],
+      hints: [
+        '再听一次，注意声音进入的先后顺序。',
+        '拨弦、拉弦、吹管，还有水。笙和竹板没有。'
+      ],
+      revealText: '琵琶、小拉琴、西洋箫，和水。',
+      passMinCorrect: 3,
+      passMaxWrong: 1,
+      historyTitle: '谐奇趣 · 声景',
+      historyLines: [
+        '乾隆时期，宫廷中已经出现小拉琴、西洋箫等中西乐器。谐奇趣建成后，也成为演奏中西音乐、观赏水法的场所。'
+      ],
+      followup: [
+        '原来当年的谐奇趣，不只是“看”的地方，也是“听”的地方。',
+        '继续看路线图，谐奇趣后面还有一个被重重圈出来的地方。旁边只写着一句：',
+        '“灯行阵中，路藏墙间。”',
+        '我顺着地图上的路线继续往前。圈出来的下一处，就是黄花阵。'
+      ]
+    },
     beats: [
       {
         kicker: '现场 · 听',
@@ -52,9 +87,10 @@ const SITES = {
         ]
       }
     ],
-    motif: '他要什么，就往园子里搬什么。',
-    next: '/plate21/module/pages/s2-quiz/s2-quiz',
-    nextLabel: '收好夹页 · 前往黄花阵'
+    motif: '原来当年的谐奇趣，不只是“看”的地方，也是“听”的地方。',
+    next: '/plate21/module/pages/transit/transit?leg=xq-s2',
+    nextLabel: '继续前往黄花阵',
+    checkpoint: 's2-purpose'
   },
   yangquelong: {
     no: 'S·B',
@@ -95,10 +131,44 @@ const SITES = {
   },
   fangwaiguan: {
     no: 'S·C',
-    title: '顺路 · 方外观',
+    title: '方外观',
+    scored: true,
     audioStation: 't-fangwaiguan',
     narrClip: 'narr-waypoint-fangwaiguan',
-    intro: '再往前几十步，是一座三开间的台基，方方正正。剩得不多：柱础，几级石阶，半截墙；可地方选得讲究，前面有池子，后面正对一片开阔地。档案里关于这座殿，只有一行字——',
+    intro: '站在方外观的正面看现在的方外观只剩下部分台基和石构，不过档案中的《方外观正面》铜版图还保存着它原本的样子让我能够了解原来的精美建筑：两层西式楼体、半环形石阶，上面却盖着中国传统样式的重檐屋顶。继续往下看还能发现，方外观内部曾设置阿拉伯文碑刻。可是西式楼体、中式屋顶、阿拉伯文碑刻，为什么会同时出现在一座建筑里？',
+    quiz: {
+      puzzleId: 'fw-three',
+      cardPuzzleId: 's3-zodiac',
+      action: '根据《方外观正面》铜版图，选出真正属于方外观的三项',
+      prompt: '这座楼身上叠了哪三样？',
+      multi: true,
+      pickN: 3,
+      options: [
+        { key: 'A', text: '西式两层楼体' },
+        { key: 'B', text: '中式重檐屋顶' },
+        { key: 'C', text: '阿拉伯文碑刻' },
+        { key: 'D', text: '十二生肖兽首' },
+        { key: 'E', text: '黄花阵迷宫墙' },
+        { key: 'F', text: '猎狗逐鹿喷泉' }
+      ],
+      correct: ['A', 'B', 'C'],
+      hints: [
+        '对照铜版，哪些是这座楼自己的。',
+        '楼体、屋顶、碑。不是喷泉，也不是迷宫。'
+      ],
+      revealText: '西式建筑形式 + 中国传统屋顶 + 伊斯兰文化元素 = 方外观',
+      historyTitle: '方外观 · 三种文化',
+      historyLines: [
+        '西式建筑形式 + 中国传统屋顶 + 伊斯兰文化元素 = 方外观',
+        '档案页边写着一个名字：容妃。'
+      ],
+      followup: [
+        '原来这里根本就不是一座纯粹的西式建筑呀。',
+        '再往下翻，档案页边写着一个名字：容妃。',
+        '这里怎么还有一张《竹亭北面》的铜版图？图上是五座彼此相连的亭子，档案标注为“五竹亭”，原本就在方外观对面，与这里隔水相望。传说旁边还记着一条流传下来的说法：容妃在方外观礼拜时，乾隆曾在五竹亭等候。这件事情是真是假我们不得而知。看来这件事只能先记作——“传说，待证。”',
+        '我把卡片夹回档案，继续翻看路线图。五竹亭之后，还有一条线一直往前延伸，最后停在了一座很大的水池旁。旁边写着三个字：海晏堂。'
+      ]
+    },
     beats: [
       {
         action: '第一件，纹样：卡上六种纹样，墙上的花样见着一个划一道，有几个算几个；数出来的和档案上的多半对不上，两个数都记下，不用纠哪个对。',
@@ -131,16 +201,45 @@ const SITES = {
         ]
       }
     ],
-    motif: '这一站没有对读，也没解开什么。她每次来，他陪着来，然后站在门外。',
-    next: '/plate21/module/pages/s3-comic/s3-comic',
-    nextLabel: '收好夹页 · 前往海晏堂'
+    motif: '原来这里根本就不是一座纯粹的西式建筑呀。',
+    next: '/plate21/module/pages/transit/transit?leg=fw-s3',
+    nextLabel: '前往海晏堂',
+    checkpoint: 's3-hour'
   },
   xushuilou: {
     no: 'S·D',
-    title: '顺路 · 蓄水楼',
+    title: '蓄水楼',
+    scored: true,
     audioStation: 't-xushuilou',
     narrClip: 'narr-waypoint-xushuilou',
-    intro: '走到这儿，海晏堂留下的问题还在：喷泉没有电泵，水从哪儿来？绕到它后面，是一座土台子，工字形，很高，答案就在这台子上。这一页攒了三个声音，各说各的。',
+    intro: '原来喷泉的水，靠的就是这座蓄水楼。这里是海晏堂北面的高台蓄水，不是谐奇趣西北那座。刚才在海晏堂看见兽首喷水，水源在这里。可是为什么能把水提高呢？特刊里似乎有线索',
+    quiz: {
+      puzzleId: 'xs-height',
+      cardPuzzleId: 's3-water',
+      action: '翻特刊，选蓄水楼为了方便供水通常会建得比较',
+      prompt: '蓄水楼为了方便供水，通常会建得比较',
+      multi: false,
+      options: [
+        { key: 'A', text: '高' },
+        { key: 'B', text: '低' }
+      ],
+      correct: ['A'],
+      hints: [
+        '没有电泵。',
+        '要高过喷口。'
+      ],
+      revealText: '抬高蓄水，用高度差换成水压，再从喷嘴喷出。',
+      historyTitle: '蓄水楼 · 喷泉原理',
+      historyLines: [
+        '抬高蓄水，用高度差换成水压，再从喷嘴喷出。'
+      ],
+      followup: [
+        '还好仅存的物理知识没忘光。原来喷泉里面的物理原理是这样的：抬高蓄水，用高度差换成水压，再从喷嘴喷出。',
+        '水源查清了。日记里那行淡字这才接得上：',
+        '「海晏以水记时，大水法以水成戏。」',
+        '海晏堂用水来报时。再往东，大水法又把水做成了什么？我把特刊收进档案袋，按地图往东走。'
+      ]
+    },
     beats: [
       {
         action: '站到台子底下，仰头看：得摞几个你，才够得着池沿。',
@@ -199,9 +298,10 @@ const SITES = {
       '拼到最后一段你会发现：它能接回第一段——这不是一条线，是一个圈。',
       '石头还在，土台还在，据说地下的铜管也还在；没了的，是让水上去的那个办法，连记录都对不上。在台子底下坐一会儿，不用给自己下结论。'
     ],
-    motif: '连它当年怎么转的，我们都不确定了。',
-    next: '/plate21/module/pages/dashuifa/dashuifa',
-    nextLabel: '收好夹页 · 前往大水法'
+    motif: '海晏堂用水来报时。再往东，大水法又把水做成了什么？',
+    next: '/plate21/module/pages/transit/transit?leg=xs-ds',
+    nextLabel: '前往大水法',
+    checkpoint: 'ds-hunt'
   },
   guanshuifa: {
     no: 'S·F',
@@ -279,7 +379,16 @@ Page({
   data: {
     site: null,
     confirmed: false,
-    revealLines: []
+    revealLines: [],
+    selected: [],
+    attempts: 0,
+    hint: '',
+    solved: false,
+    revealed: false,
+    followup: false,
+    showHistory: false,
+    listened: false,
+    listenSrc: ''
   },
 
   onLoad(options) {
@@ -287,10 +396,12 @@ Page({
     const site = SITES[key]
     this._key = key
     this._next = site.next
-    // 步进分页（2026-09-17 分页轮，issue #0029）：开场一屏 → 每拍一屏 → 尾屏。
-    // 隐藏步仍在 DOM（display:none），保持「整页可检索 + 支线随时可跳」语义。
+    const quiz = site.quiz
+    const puzzleId = quiz && quiz.puzzleId
+    if (puzzleId) session.viewPuzzle(puzzleId)
+    const puzzle = puzzleId ? session.getPuzzle(puzzleId) : null
     const steps = [{ type: 'intro' }].concat(
-      site.beats.map(function (b) { return { type: 'beat', beat: b } })
+      (site.beats || []).map(function (b) { return { type: 'beat', beat: b } })
     )
     if (site.bgmFile) steps.push({ type: 'dual' })
     steps.push({ type: 'end' })
@@ -301,9 +412,94 @@ Page({
       confirmed: false,
       revealLines: [],
       narrSrc: site.narrClip ? audioSrc.clip(site.narrClip) : '',
-      bgmSrc: site.bgmFile ? audioSrc.bgm(site.bgmFile) : ''
+      bgmSrc: site.bgmFile ? audioSrc.bgm(site.bgmFile) : '',
+      listenSrc: quiz && quiz.listenFile ? audioSrc.bgm(quiz.listenFile) : '',
+      selected: puzzle && quiz ? quiz.correct.slice() : [],
+      solved: !!puzzle,
+      followup: !!puzzle,
+      attempts: Number(puzzle && puzzle.payload && puzzle.payload.attempts) || 0,
+      listened: !!puzzle || !(quiz && quiz.listenFile)
     })
     this.recordVisit(key)
+  },
+
+  onToggle(e) {
+    if (this.data.solved) return
+    const quiz = this.data.site.quiz
+    const key = e.currentTarget.dataset.key
+    if (!quiz.multi) {
+      this.setData({ selected: [key] })
+      return
+    }
+    const selected = this.data.selected.slice()
+    const i = selected.indexOf(key)
+    if (i >= 0) selected.splice(i, 1)
+    else selected.push(key)
+    this.setData({ selected: selected })
+  },
+
+  onListen() {
+    this.setData({ listened: true })
+    const src = this.data.listenSrc
+    if (!src || typeof wx === 'undefined' || !wx.createInnerAudioContext) return
+    if (this._audio) {
+      try { this._audio.stop(); this._audio.destroy() } catch (e) { /* ignore */ }
+    }
+    const audio = wx.createInnerAudioContext()
+    audio.src = src
+    audio.play()
+    this._audio = audio
+  },
+
+  onQuizConfirm() {
+    const site = this.data.site
+    const quiz = site.quiz
+    if (!quiz || this.data.solved) return
+    if (quiz.listenFile && !this.data.listened) {
+      wx.showToast({ title: '先听完再勾', icon: 'none' })
+      return
+    }
+    if (!this.data.selected.length) return
+    const ok = quiz.multi
+      ? ladder.judgeMulti(this.data.selected, quiz.correct, {
+        minCorrect: quiz.passMinCorrect,
+        maxWrong: quiz.passMaxWrong
+      })
+      : this.data.selected[0] === quiz.correct[0]
+    const result = ladder.submit({
+      ok: ok,
+      attempts: this.data.attempts,
+      hints: quiz.hints,
+      revealText: quiz.revealText
+    })
+    session.attemptPuzzle(quiz.puzzleId, result.attempts, ok, 'tap')
+    if (result.solved) {
+      this.setData({
+        attempts: result.attempts,
+        solved: true,
+        revealed: result.revealed,
+        hint: result.hint,
+        selected: quiz.correct.slice(),
+        showHistory: true
+      })
+      const payload = { answer: quiz.correct.slice(), attempts: result.attempts, revealed: result.revealed }
+      const finish = function () {
+        return session.completePuzzle(quiz.puzzleId, payload, { checkpoint: site.checkpoint })
+      }
+      const cardId = quiz.cardPuzzleId
+      const run = cardId
+        ? session.completePuzzle(cardId, payload, { collectCard: true }).then(finish)
+        : finish()
+      run.catch(function () {
+        wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' })
+      })
+      return
+    }
+    this.setData({ attempts: result.attempts, hint: result.hint })
+  },
+
+  onCloseHistory() {
+    this.setData({ showHistory: false, followup: true })
   },
 
   onStepNext() {
@@ -353,5 +549,12 @@ Page({
       url: this._next,
       fail: () => wx.showToast({ title: '页面跳转失败，请重试', icon: 'none' })
     })
+  },
+
+  onUnload() {
+    if (this._audio) {
+      try { this._audio.stop(); this._audio.destroy() } catch (e) { /* ignore */ }
+      this._audio = null
+    }
   }
 })

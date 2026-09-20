@@ -4,8 +4,9 @@
     "page-overlays": "../../capabilities/overlay-host/overlay-host",
     "audio-clip": "../../components/audio-clip/audio-clip",
     "dialogue-block": "../../components/dialogue-block/dialogue-block",
-    "bgm-ambience": "../../components/bgm-ambience/bgm-ambience"
+    "bgm-ambience": "../../components/bgm-ambience/bgm-ambience",
+    "history-card": "../../components/history-card/history-card"
   },
-  "navigationBarTitleText": "顺路",
+  "navigationBarTitleText": "考察",
   "disableScroll": true
 }

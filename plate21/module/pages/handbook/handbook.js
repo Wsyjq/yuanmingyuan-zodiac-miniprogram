@@ -53,10 +53,7 @@ const HISTORY_ITEMS = [
 // 反结算红线：不显示 X/N 完成度——散页只让档案变厚，不做计数催促（V2.1 拍板建议）。
 // 大水法已转主线站，散页六处 = 谐奇趣/养雀笼/方外观/蓄水楼/观水法/线法画。
 const SIDE_SITES = [
-  { key: 'xieqiqu', title: '谐奇趣', url: '/plate21/module/pages/waypoint/waypoint?site=xieqiqu' },
   { key: 'yangquelong', title: '养雀笼', url: '/plate21/module/pages/waypoint/waypoint?site=yangquelong' },
-  { key: 'fangwaiguan', title: '方外观', url: '/plate21/module/pages/waypoint/waypoint?site=fangwaiguan' },
-  { key: 'xushuilou', title: '蓄水楼', url: '/plate21/module/pages/waypoint/waypoint?site=xushuilou' },
   { key: 'guanshuifa', title: '观水法', url: '/plate21/module/pages/waypoint/waypoint?site=guanshuifa' },
   { key: 'xianfahua', title: '线法画', url: '/plate21/module/pages/waypoint/waypoint?site=xianfahua' }
 ]

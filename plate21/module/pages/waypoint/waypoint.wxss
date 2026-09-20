@@ -24,6 +24,19 @@
   line-height: 1.95;
   color: var(--ink);
 }
+.wp-opt {
+  margin-top: 16rpx;
+  padding: 22rpx 24rpx;
+  background: var(--paper2);
+  border: 1rpx solid var(--dash);
+  font-size: 28rpx;
+}
+.wp-opt.on {
+  border: 3rpx solid var(--patina);
+  background: rgba(74, 107, 100, 0.12);
+}
+.wp-listen { margin: 24rpx 0; }
+.q-title { font-size: 34rpx; letter-spacing: 4rpx; margin: 24rpx 0 12rpx; }
 .wp-rule {
   width: 100%;
   max-width: var(--content-max);

@@ -1,13 +1,12 @@
-// 第二站 · 黄花阵 对读二：黄花从灯上来（V2.2 讲述版，骨架沿用 V2.1）
-// 玩法：小程序弹图（宫女手持黄色彩绸莲花灯），用户语音或文字回答名字由来，
-//      本地关键词匹配（莲花灯 / 黄色彩绸 / 宫女），命中即过。
+// 第二站 · 黄花阵 对读二：黄花从灯上来（V2.2 讲述版）
+// 玩法：对照 DJ-09 黄花阵图（地图＋宫女游玩图）与屏上参考图，语音或文字作答；
+//      调 answer-judge 检验意思。字数 40；每次答错给提示，第三次揭晓标准答案。
 // 史料：宫女手持黄色彩绸扎成的莲花灯，迷宫因此得名黄花阵。卡片角落数字 0。
-// V2.2 新增：揭晓后宫女台词（dlg-huanghuazhen-2）＋俯视卡进阵转场。
-//
-// TODO（下轮迭代）：接入语音输入 + API 语义校验；当前为文字输入 + 本地关键词匹配。
 const session = require('../../store/session')
-const answers = require('../../utils/puzzle-answers')
 const audioSrc = require('../../utils/audio-src')
+const audioBus = require('../../utils/audio-bus')
+const judge = require('../../utils/answer-judge')
+const voiceInput = require('../../utils/voice-input')
 const playGuide = require('../../capabilities/play-guide/guide')
 const coachHost = require('../../capabilities/play-guide/coach-host')
 
@@ -21,68 +20,168 @@ Page({
   behaviors: [coachHost],
   data: {
     answer: '',
+    charCount: 0,
+    maxChars: judge.MAX_INPUT_CHARS,
+    maxAttempts: judge.MAX_FREEFORM_ATTEMPTS,
     attempts: 0,
+    recording: false,
+    checking: false,
+    showMicSetting: false,
+    hint: '',
     showHistory: false,
     historyLines: HISTORY_LINES,
     cardNumber: 0,
     showCardNumber: false,
-    hint: '',
     solved: false,
     skipped: false,
     advancing: false,
     narrSrc: audioSrc.clip('narr-s2-reveal')
   },
 
-  onInput(e) {
-    this.setData({ answer: e.detail.value, hint: '' })
-  },
-
-  onSubmit() {
-    if (this.data.showHistory) return
-    const ans = (this.data.answer || '').trim()
-    const attempts = this.data.attempts + 1
-    if (ans.length === 0) {
-      this.setData({ hint: '请输入你的猜测' })
-      return
-    }
-    const result = answers.classifyHuanghuaName(ans)
-    session.attemptPuzzle('s2-name', attempts, result === 'correct', 'text')
-    if (result === 'correct') {
-      this.setData({ showHistory: true, showCardNumber: true, solved: true, attempts: attempts })
-      session.completePuzzle('s2-name', { answer: ans, attempts: attempts }, { collectCard: true })
-        .catch(function () { wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' }) })
-    } else {
-      let hint = result === 'partial'
-        ? '方向对了，再说清楚：那是什么灯，或是用什么材料扎成的？'
-        : '再想想，这个迷宫和「黄花」有什么关系？'
-      if (attempts === 2 && result !== 'partial') {
-        hint = '看看参考图——宫女们手里举着什么东西？'
-        session.viewHint('s2-name', 1)
-      } else if (attempts >= 3) {
-        hint = '提示：是「莲花灯」——用黄色彩绸扎成的莲花灯。试试输入「莲花灯」。'
-        if (attempts === 3) session.viewHint('s2-name', 2)
-      }
-      this.setData({ attempts: attempts, hint: hint })
-    }
-  },
-
   onLoad() {
     session.viewPuzzle('s2-name')
     const puzzle = session.getPuzzle('s2-name')
     const skipped = !!(puzzle && puzzle.payload && puzzle.payload.action === 'skipped')
+    const savedAnswer = puzzle && puzzle.payload && puzzle.payload.answer || ''
     this.setData({
       cardNumber: Number(session.getCardDigit('s2-name')),
       solved: !!puzzle,
       skipped: skipped,
       showHistory: !!puzzle && !skipped,
       showCardNumber: !!puzzle && !skipped,
-      answer: puzzle && puzzle.payload && puzzle.payload.answer || '',
+      answer: savedAnswer,
+      charCount: judge.countChars(savedAnswer),
       attempts: Number(puzzle && puzzle.payload && puzzle.payload.attempts) || 0
     })
   },
 
-  onReady() {
-    if (!this.data.solved) this.scheduleCoach([playGuide.SPOTS.skip])
+  onReady() {},
+
+  onUnload() {
+    if (this._voice) {
+      this._voice.destroy()
+      this._voice = null
+    }
+  },
+
+  onInput(e) {
+    const clipped = judge.clipInput(e.detail.value || '')
+    this.setData({
+      answer: clipped,
+      charCount: judge.countChars(clipped)
+    })
+  },
+
+  onSubmit() {
+    if (this.data.showHistory || this.data.solved || this.data.checking) return Promise.resolve()
+    audioBus.stopKind('voice')
+    const check = judge.validateInput(this.data.answer)
+    if (!check.ok) {
+      this.setData({ hint: check.hint })
+      return Promise.resolve()
+    }
+    this.setData({ checking: true, hint: '' })
+    const self = this
+    return judge.judge({ puzzleId: 's2-name', text: check.text }).then(function (result) {
+      self._applyFreeformResult(result)
+    }).catch(function () {
+      self._applyFreeformResult({
+        ok: true,
+        verdict: 'wrong',
+        hint: judge.WRONG_HINT,
+        source: 'unavailable',
+        text: check.text
+      })
+    })
+  },
+
+  _applyFreeformResult(result) {
+    if (this.data.solved) {
+      this.setData({ checking: false })
+      return
+    }
+    if (!result.ok) {
+      this.setData({ checking: false, hint: result.hint || '请重新回答' })
+      return
+    }
+    const attempts = this.data.attempts + 1
+    const correct = result.verdict === 'correct'
+    session.attemptPuzzle('s2-name', attempts, correct, this._inputMode || 'text')
+    if (correct) {
+      this.setData({
+        checking: false,
+        showHistory: true,
+        showCardNumber: true,
+        solved: true,
+        attempts: attempts,
+        hint: ''
+      })
+      session.completePuzzle('s2-name', { answer: result.text, attempts: attempts }, { collectCard: true })
+        .catch(function () { wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' }) })
+      return
+    }
+    session.viewHint('s2-name', attempts)
+    if (judge.shouldRevealAnswer(attempts)) {
+      this.setData({
+        checking: false,
+        attempts: attempts,
+        hint: '',
+        solved: true,
+        showHistory: true,
+        showCardNumber: true,
+        answer: judge.GOLD_ANSWER
+      })
+      session.completePuzzle('s2-name', {
+        answer: judge.GOLD_ANSWER,
+        attempts: attempts,
+        revealed: true
+      }, { collectCard: true })
+        .catch(function () { wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' }) })
+      return
+    }
+    this.setData({
+      checking: false,
+      attempts: attempts,
+      hint: judge.hintForAttempt(attempts)
+    })
+  },
+
+  onVoiceTap() {
+    if (this.data.solved || this.data.checking) return
+    audioBus.stopKind('voice')
+    if (!this._voice) {
+      const self = this
+      this._voice = voiceInput.createVoiceInput({
+        onText: function (text) {
+          const clipped = judge.clipInput(text)
+          self._inputMode = 'voice'
+          self.setData({
+            answer: clipped,
+            charCount: judge.countChars(clipped),
+            recording: false,
+            hint: clipped ? '' : '没听清，再说一遍或改用文字'
+          })
+        },
+        onState: function (state) {
+          self.setData({ recording: state === 'recording' })
+        },
+        onError: function (err) {
+          const denied = err && err.code === 'denied'
+          self.setData({
+            recording: false,
+            hint: err && err.message || '语音转写暂不可用，请改用文字',
+            showMicSetting: !!denied
+          })
+        }
+      })
+    }
+    if (this.data.recording) this._voice.stop()
+    else this._voice.start()
+  },
+
+  onOpenMicSetting() {
+    if (!wx.openSetting) return
+    wx.openSetting({})
   },
 
   onHistoryNext() {
@@ -93,24 +192,13 @@ Page({
     this.setData({ showHistory: false })
   },
 
-  // V2.1 对读二可跳：跳过不发该卡，揭晓照常给（下一拍在亭下）。
-  onSkip() {
-    this.runAfterCoach(function () {
-      if (this.data.solved) return
-      this.setData({ solved: true, skipped: true, showHistory: false })
-      session.attemptPuzzle('s2-name', this.data.attempts, true, 'skip')
-      session.completePuzzle('s2-name', { action: 'skipped', attempts: this.data.attempts })
-        .catch(function () { /* 进度失败不阻断浏览 */ })
-    })
-  },
-
   onNext() {
     if (this.data.advancing) return
     this.setData({ advancing: true, showHistory: false })
     session.completePuzzle('s2-name', {
       answer: this.data.answer,
       attempts: this.data.attempts || 1
-    }, { collectCard: !this.data.skipped, checkpoint: 's2-blend' }).then(() => {
+    }, { collectCard: true, checkpoint: 's2-blend' }).then(() => {
       wx.redirectTo({
         url: '/plate21/module/pages/s2-blend/s2-blend',
         fail: () => {

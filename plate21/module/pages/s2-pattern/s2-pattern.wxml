@@ -61,7 +61,7 @@
       bindtap="onConfirm"
       disabled="{{!picked}}"
     >我 认 出 了</button>
-    <button class="skip-btn note-hand olive" bindtap="onSkip">先不认，往下走</button>
+
   </block>
 
   <!-- ============ 收尾：翻照片背面（V2.2：看砖＋砌墙师傅，不可跳）============ -->
@@ -74,8 +74,9 @@
     <dialogue-block speaker="砌墙师傅" text="我八七年进的场。那会儿这儿就是一片土坡子。图？图就你们夹子里那张，我们对着它放的线。砖是新的，砖缝也新，你别嫌。不照图砌回来，你今天都进不来。八九年，又收了一回尾。画这阵的，就占两号，四号、五号，我们砌回来的，也就这两号。再往下，没派给我们。" clip-id="dlg-huanghuazhen-6" />
     <view class="novel-p" wx:for="{{finaleTail}}" wx:key="index">{{item}}</view>
     <view class="result-evidence note-hand olive">【记】空栏 · 黄花阵：对得上，但不是要找的那一页。砌墙的人是在干活；要不是这道墙，今天谁也走不进这座迷宫。</view>
-    <view class="novel-p">从迷宫出来往东，地势塌下去一块，露出一口干池子。画上的喷泉还在喷，池子是干的——那是下一页的事。</view>
-    <button class="btn-seal" bindtap="onGoS3" disabled="{{advancing}}">{{advancing ? '正在保存……' : '出迷宫，往东'}}</button>
+    <view class="novel-p">走出迷宫，档案里有一行后来补上的记录：眼前能走进去的墙，并不是乾隆年间留下的原墙。</view>
+    <view class="novel-p">我按照地图继续走，下一站是方外观。</view>
+    <button class="btn-seal" bindtap="onGoS3" disabled="{{advancing}}">{{advancing ? '正在保存……' : '前往方外观'}}</button>
   </view>
   </scroll-view>
 

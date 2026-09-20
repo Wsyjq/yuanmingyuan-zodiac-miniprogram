@@ -10,11 +10,8 @@
 
   <view class="title serif">亭子线稿对眼前这座亭</view>
   <view class="hatch-divider title-div"></view>
-  <view class="lead kaiti">走到中心，是一座八角亭，档案另一页画着这座亭的线稿。第三件事，举线稿抬头对。这一页起了个人声，是当年造办处的匠人。</view>
-  <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">举起线稿，抬头对亭子；找着一处，拍下来。</text></view>
-  <view class="stage-note note-hand">（阵中偶尔远远一句——）</view>
-  <dialogue-block speaker="宫女" aside="远远地" text="退回来再走——" clip-id="dlg-huanghuazhen-3" />
-  <dialogue-block speaker="造办处匠人" text="到亭子底下才好说话。这亭子，难就难在两边都得要：顶子，圆的，洋式；檐，翘的，中式。少一样，上头不点头。给你指几处：檐角上立的那几个，是咱们添的，真洋亭子的檐口是光的；座子是莲座，上头坐个宝瓶，顶上开花苞；还有个乐子，双天鹅翅膀底下，我藏了只蝙蝠，福字那个蝠。" clip-id="dlg-huanghuazhen-4" />
+  <view class="lead kaiti">终于到了中心亭了，好别致的亭子啊，之前上学的时候我就听老师说过西洋楼的建筑是中西结合的典范，不过一直没机会来，今日一见果然如此</view>
+  <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">对照小册子，找到中西结合的具体体现，拍下来</text></view>
   <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" />
 
   <view class="capture-grid">

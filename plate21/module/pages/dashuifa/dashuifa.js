@@ -1,100 +1,143 @@
-// v2 大水法 · 主线站（零对读，V2.1 可用稿）：不给道具、不设谜题、不要求任何输入。
-// 结构按 v2 逐秒规格：一句话 → 两分钟完全静默（无旁白无配乐，只留现场声音）
-// → 一句话三选一（可跳过，全程唯一一次操作）→ 玩家自行离开。
-// 主线链路：transit(s3-s4) → 本页 → transit(s4-s5 → 雨果)。
+// 大水法 · 猎狗逐鹿 + 北望远瀛观。飞书 v3 原文。静默不再当主路径。
 const session = require('../../store/session')
+const ladder = require('../../utils/attempt-ladder')
 const playGuide = require('../../capabilities/play-guide/guide')
 const coachHost = require('../../capabilities/play-guide/coach-host')
 
-const SILENCE_SECONDS = 120
-const CHOICES = ['风声', '人声与鸟鸣', '几乎什么都听不到']
-
-function fmt(sec) {
-  const m = Math.floor(sec / 60)
-  const s = sec % 60
-  return m + ':' + (s < 10 ? '0' + s : s)
-}
+const PIECES = [
+  { key: 'deer', label: '梅花鹿', zone: 'pool' },
+  { key: 'dogs', label: '猎狗', zone: 'ring' },
+  { key: 'beasts', label: '卷尾铜兽', zone: 'ends' }
+]
+const ZONES = [
+  { key: 'pool', label: '喷水池中央' },
+  { key: 'ring', label: '环绕梅花鹿' },
+  { key: 'ends', label: '水池东西两端' }
+]
+const YUAN_OPTS = [
+  { key: 'A', text: '海晏堂' },
+  { key: 'B', text: '远瀛观' },
+  { key: 'C', text: '观水法' },
+  { key: 'D', text: '谐奇趣' }
+]
 
 Page({
   behaviors: [coachHost],
   data: {
-    stage: 'intro', // intro → silence → question → done
-    remain: SILENCE_SECONDS,
-    remainLabel: fmt(SILENCE_SECONDS),
-    progress: 0,
-    choices: CHOICES,
-    choice: ''
+    stage: 'hunt',
+    pieces: PIECES,
+    zones: ZONES,
+    placed: {},
+    holding: '',
+    huntAttempts: 0,
+    huntHint: '',
+    yuanOpts: YUAN_OPTS,
+    yuanSelected: '',
+    yuanAttempts: 0,
+    yuanHint: '',
+    yuanSolved: false,
+    yuanRevealed: false,
+    followup: false
   },
 
-  onReady() {
-    if (this.data.stage === 'intro') this.scheduleCoach([playGuide.SPOTS.dashuifa])
+  onHold(e) {
+    if (this.data.stage !== 'hunt') return
+    this.setData({ holding: e.currentTarget.dataset.key })
   },
 
-  onStart() {
-    this.runAfterCoach(function () {
-      if (this.data.stage !== 'intro') return
-      this._startSilence()
+  onDrop(e) {
+    if (this.data.stage !== 'hunt' || !this.data.holding) return
+    const zone = e.currentTarget.dataset.zone
+    const placed = Object.assign({}, this.data.placed)
+    placed[this.data.holding] = zone
+    this.setData({ placed: placed, holding: '' })
+  },
+
+  onHuntConfirm() {
+    if (this.data.stage !== 'hunt') return
+    const placed = this.data.placed
+    const ok = PIECES.every(function (p) { return placed[p.key] === p.zone })
+    const result = ladder.submit({
+      ok: ok,
+      attempts: this.data.huntAttempts,
+      hints: ['鹿在水池中间。', '狗围着鹿，两端还有铜兽。'],
+      revealText: '梅花鹿在喷水池中央，十只猎狗环绕，两只大型卷尾铜兽在水池东西两端。'
     })
-  },
-
-  _startSilence() {
-    this.setData({ stage: 'silence', remain: SILENCE_SECONDS, remainLabel: fmt(SILENCE_SECONDS), progress: 0 })
-    this._timer = setInterval(() => {
-      const remain = this.data.remain - 1
-      if (remain <= 0) {
-        this.finishSilence()
-        return
-      }
+    session.attemptPuzzle('ds-hunt', result.attempts, ok, 'tap')
+    if (result.solved) {
+      const auto = {}
+      PIECES.forEach(function (p) { auto[p.key] = p.zone })
       this.setData({
-        remain: remain,
-        remainLabel: fmt(remain),
-        progress: Math.round(((SILENCE_SECONDS - remain) / SILENCE_SECONDS) * 100)
+        huntAttempts: result.attempts,
+        huntHint: result.hint,
+        placed: auto,
+        stage: 'after'
       })
-    }, 1000)
-  },
-
-  // 静默可提前结束（轻推），不强迫滞留——正式落地前需与园方确认现场秩序（v2 待确认项）。
-  onEndSilenceEarly() {
-    this.finishSilence()
-  },
-
-  finishSilence() {
-    if (this._timer) {
-      clearInterval(this._timer)
-      this._timer = null
+      session.completePuzzle('ds-hunt', { attempts: result.attempts, revealed: result.revealed })
+        .catch(function () {})
+      return
     }
-    this.setData({ stage: 'question', remain: 0, progress: 100 })
+    this.setData({ huntAttempts: result.attempts, huntHint: result.hint })
   },
 
-  onChoose(e) {
-    if (this.data.stage !== 'question') return
-    const choice = e.currentTarget.dataset.choice
-    this.setData({ stage: 'done', choice: choice })
-    this.recordChoice(choice)
+  onAfterNext() {
+    this.setData({ stage: 'yuan' })
+    session.viewPuzzle('ds-yuan')
+  },
+
+  onYuanSelect(e) {
+    if (this.data.yuanSolved) return
+    this.setData({ yuanSelected: e.currentTarget.dataset.key })
+  },
+
+  onYuanConfirm() {
+    if (this.data.yuanSolved || !this.data.yuanSelected) return
+    const ok = this.data.yuanSelected === 'B'
+    const result = ladder.submit({
+      ok: ok,
+      attempts: this.data.yuanAttempts,
+      hints: ['往北看高台。', '南对面才是观水法。'],
+      revealText: '远瀛观位于大水法北侧。'
+    })
+    session.attemptPuzzle('ds-yuan', result.attempts, ok, 'tap')
+    if (result.solved) {
+      this.setData({
+        yuanAttempts: result.attempts,
+        yuanSolved: true,
+        yuanRevealed: result.revealed,
+        yuanSelected: 'B',
+        yuanHint: result.hint,
+        followup: true
+      })
+      session.completePuzzle('ds-yuan', { answer: 'B', attempts: result.attempts, revealed: result.revealed }, {
+        checkpoint: 's4-timeline'
+      }).catch(function () {
+        wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' })
+      })
+      return
+    }
+    this.setData({ yuanAttempts: result.attempts, yuanHint: result.hint })
   },
 
   onSkipQuestion() {
-    if (this.data.stage !== 'question') return
-    this.setData({ stage: 'done', choice: '' })
-    this.recordChoice('skipped')
-  },
-
-  // 三选一不评判、不统计展示；只落一份记录。
-  recordChoice(value) {
-    try {
-      const snap = session.getSnapshot()
-      if (snap) session.setFlag('dashuifaChoice', value).catch(() => {})
-    } catch (e) { /* 忽略 */ }
+    this.onNext()
   },
 
   onNext() {
     wx.redirectTo({
-      url: '/plate21/module/pages/transit/transit?leg=s4-s5',
+      url: '/plate21/module/pages/transit/transit?leg=ds-s4',
       fail: () => wx.showToast({ title: '页面跳转失败，请重试', icon: 'none' })
     })
   },
 
-  onUnload() {
-    if (this._timer) clearInterval(this._timer)
+  onLoad() {
+    session.viewPuzzle('ds-hunt')
+    const hunt = session.getPuzzle('ds-hunt')
+    const yuan = session.getPuzzle('ds-yuan')
+    if (yuan) {
+      this.setData({ stage: 'yuan', yuanSolved: true, yuanSelected: 'B', followup: true, placed: { deer: 'pool', dogs: 'ring', beasts: 'ends' } })
+    } else if (hunt) {
+      this.setData({ stage: 'after', placed: { deer: 'pool', dogs: 'ring', beasts: 'ends' } })
+    }
   }
 })

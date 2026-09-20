@@ -332,20 +332,16 @@ test('timeline puzzle does not reveal the ordered answer card before solving', a
   assert.doesNotMatch(result.html, /history-card-mask/)
 })
 
-test('finale uses the V2.1 ending narrative', async () => {
+test('finale uses the v3 ending narrative from the plot', async () => {
   const result = await renderPage({
     route: 'plate21/module/pages/finale/finale',
     settleMs: 10
   })
   const text = result.data.novel.map((item) => item.text).join('')
-  // V2.1：三张正页残片拼合 + 此处待绘 + 空白=你站着的位置；宣言段/顿悟段/第N版全部退场
   assert.match(text, /此处待绘/)
-  assert.match(text, /就是你站着的位置/)
-  assert.doesNotMatch(text, /记录毁灭，也记录重生/)
+  assert.match(text, /屏幕上的残片/)
+  assert.doesNotMatch(text, /养雀笼/)
   assert.doesNotMatch(text, /第N个版本/)
-  assert.doesNotMatch(text, /一个人画不完的那一幅/)
-  assert.doesNotMatch(text, /等待被后来者完成的新画/)
-  assert.doesNotMatch(text, /百分之二/)
 })
 
 test('finale skip completes the CSS reveal without a per-frame veil object', async () => {
@@ -722,33 +718,29 @@ test('report distinguishes album permission denial and exposes settings recovery
 
 // ===== V2.2 讲述版：人物对话层（旁白＋人声＋屏＋纸） =====
 
-test('waypoint xieqiqu renders the dual-channel musician dialogue (V2.2)', async () => {
+test('waypoint xieqiqu presents the v3 soundscape quiz from the plot', async () => {
   const result = await renderPage({
     route: 'plate21/module/pages/waypoint/waypoint',
     query: { site: 'xieqiqu' },
     settleMs: 10
   })
   assert.deepEqual(result.errors, [])
-  assert.match(result.html, /东厅乐师/)
-  assert.match(result.html, /西厅乐师/)
-  assert.match(result.html, /左声道/)
-  assert.match(result.html, /右声道/)
-  assert.match(result.html, /他要什么，就往园子里搬什么/)
-  assert.match(result.html, /听 · 本页讲述/)
+  assert.match(result.html, /皇家园林史上首座西洋建筑/)
+  assert.match(result.html, /刚才的谐奇趣里，你听见了哪些声音/)
+  assert.match(result.html, /小拉琴/)
+  assert.doesNotMatch(result.html, /东厅乐师/)
 })
 
-test('waypoint xushuilou renders three voices without picking a side (V2.2)', async () => {
+test('waypoint xushuilou presents the v3 height question from the plot', async () => {
   const result = await renderPage({
     route: 'plate21/module/pages/waypoint/waypoint',
     query: { site: 'xushuilou' },
     settleMs: 10
   })
   assert.deepEqual(result.errors, [])
-  assert.match(result.html, /亲历当差/)
-  assert.match(result.html, /当地老人/)
-  assert.match(result.html, /念册子的/)
-  assert.match(result.html, /停两秒/)
-  assert.match(result.html, /没个准数/)
+  assert.match(result.html, /原来喷泉的水，靠的就是这座蓄水楼/)
+  assert.match(result.html, /通常会建得比较/)
+  assert.doesNotMatch(result.html, /亲历当差/)
 })
 
 test('waypoint guanshuifa marks the Qianlong dialogue as artistic interpretation', async () => {
@@ -763,30 +755,31 @@ test('waypoint guanshuifa marks the Qianlong dialogue as artistic interpretation
   assert.match(result.html, /中国之大，何奇不有/)
 })
 
-test('s2-quiz followup plays the palace maid line from the painting (V2.2)', async () => {
+test('s2-quiz followup uses the v3 lantern plot, not palace-maid dialogue', async () => {
   const result = await renderPage({
     route: 'plate21/module/pages/s2-quiz/s2-quiz',
     settleMs: 10,
     drive(instance) {
-      instance.onInput({ detail: { value: '中秋灯会' } })
+      instance.onSelect({ currentTarget: { dataset: { key: 'C' } } })
       instance.onConfirm()
       instance.onCloseHistory()
     }
   })
   assert.deepEqual(result.errors, [])
-  assert.match(result.html, /宫女/)
-  assert.match(result.html, /跑起来跑起来/)
+  assert.match(result.html, /游乐场/)
+  assert.match(result.html, /黄花/)
+  assert.doesNotMatch(result.html, /跑起来跑起来/)
 })
 
-test('s3-comic opens with Benoist framing the site as a clock, marked as interpretation', async () => {
+test('s3-comic opens with the v3 noon clock question from the plot', async () => {
   const result = await renderPage({
     route: 'plate21/module/pages/s3-comic/s3-comic',
     settleMs: 10
   })
   assert.deepEqual(result.errors, [])
-  assert.match(result.html, /蒋友仁/)
-  assert.match(result.html, /这一片，是一座钟/)
-  assert.match(result.html, /台词为艺术演绎/)
+  assert.match(result.html, /十二兽各守一时/)
+  assert.match(result.html, /至午而全见/)
+  assert.match(result.html, /十二生肖同时喷水/)
 })
 
 test('s4-timeline lets the archivist speak for the first time (V2.2)', async () => {
@@ -795,16 +788,15 @@ test('s4-timeline lets the archivist speak for the first time (V2.2)', async () 
     settleMs: 10
   })
   assert.deepEqual(result.errors, [])
-  assert.match(result.html, /守档人/)
-  assert.match(result.html, /到这儿，才轮到我说话/)
+  assert.match(result.html, /致巴特勒上尉的信/)
+  assert.match(result.html, /公开信/)
   // V2.2 红线：不再替游客编感受（旧稿「愣了一下」句已删）
   assert.doesNotMatch(result.html, /愣了/)
   assert.doesNotMatch(result.html, /还在水里/)
 })
 
 // V2.2 支线可跳过（用户口径）：散页随时进出、无判定门；大水法静默可提前结束、三选一可跳
-test('side quests stay fully skippable (no gating, exit always available)', async () => {
-  // 散页：进入即有返回与推进，无任何需要先完成的判定
+test('v3 mainline scored sites keep a back button and original plot copy', async () => {
   const wp = await renderPage({
     route: 'plate21/module/pages/waypoint/waypoint',
     query: { site: 'xieqiqu' },
@@ -812,40 +804,36 @@ test('side quests stay fully skippable (no gating, exit always available)', asyn
   })
   assert.deepEqual(wp.errors, [])
   assert.match(wp.html, /nav-back/)
-  assert.match(wp.html, /wp-next/)
-  assert.ok(!/wp-next[^>]*disabled/.test(wp.html), '推进按钮不得被任何前置交互禁用')
+  assert.match(wp.html, /刚才的谐奇趣里，你听见了哪些声音/)
+  assert.doesNotMatch(wp.html, /谜题/)
 
-  // 蓄水楼：拼卡确认只是可选展开，推进不受其钳制
   const xs = await renderPage({
     route: 'plate21/module/pages/waypoint/waypoint',
     query: { site: 'xushuilou' },
     settleMs: 10
   })
   assert.deepEqual(xs.errors, [])
-  assert.match(xs.html, /wp-next/)
-  assert.ok(!/wp-next[^>]*disabled/.test(xs.html))
+  assert.match(xs.html, /原来喷泉的水，靠的就是这座蓄水楼/)
 
-  // transit：主线「继续前往」独立于散页卡存在，不等散页
   const tr = await renderPage({
     route: 'plate21/module/pages/transit/transit',
-    query: { leg: 's1-s2' },
+    query: { leg: 's1-xq' },
     settleMs: 10
   })
   assert.deepEqual(tr.errors, [])
   assert.match(tr.html, /继 续 前 往/)
-  assert.match(tr.html, /不翻也行/)
+  assert.match(tr.html, /谐奇趣/)
+  assert.doesNotMatch(tr.html, /不翻也行/)
 
-  // 大水法：静默可提前结束、三选一可跳过（跳完即 done，不欠任何东西）
   const dsf = await renderPage({
     route: 'plate21/module/pages/dashuifa/dashuifa',
     settleMs: 10,
     drive(instance) {
-      instance.onStart()
-      instance.onEndSilenceEarly()
-      instance.onSkipQuestion()
+      instance.setData({ placed: { deer: 'pool', dogs: 'ring', beasts: 'ends' } })
+      instance.onHuntConfirm()
     }
   })
   assert.deepEqual(dsf.errors, [])
-  assert.equal(dsf.data.stage, 'done')
-  assert.equal(dsf.data.choice, '')
+  assert.equal(dsf.data.stage, 'after')
+  assert.match(dsf.html, /以水成戏/)
 })

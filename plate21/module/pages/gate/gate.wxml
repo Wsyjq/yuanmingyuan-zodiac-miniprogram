@@ -16,9 +16,9 @@
       </view>
 
       <view class="gate-includes">
-        <view class="gate-line kaiti">沿四站走一遍：入口破译 · 黄花阵 · 海晏堂 · 大水法 · 雨果</view>
-        <view class="gate-line kaiti">集齐八张日期卡，绘制并保存属于你的「第二十一图」</view>
-        <view class="gate-line kaiti">次日之信 · 考察者留言簿 · 六处顺路支线</view>
+        <view class="gate-line kaiti">沿路走一遍：入口 · 谐奇趣 · 黄花阵 · 方外观 · 海晏堂 · 蓄水楼 · 大水法 · 雨果</view>
+        <view class="gate-line kaiti">集齐日期卡，绘制并保存属于你的「第二十一图」</view>
+        <view class="gate-line kaiti">次日之信 · 考察者留言簿</view>
       </view>
 
       <!-- 撕票线 -->

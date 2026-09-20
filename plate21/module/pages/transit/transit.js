@@ -1,88 +1,82 @@
-// P03 站间过渡（通用页，设计文档 §4.6 / §5-P03；剧情文案对齐 V2.1 可用稿）
-// query: leg = s1-s2 / s2-s3 / s3-s4 / s4-s5
-// 三段式：墨晕转场进入 → 路线推进图（黄铜点位 + 当前段铜绿加粗线）→ 该段环境叙事 → 继续前往。
-//
-// 主线五点（V2.1）：入口 → 黄花阵 → 海晏堂 → 大水法（主线站，无对读）→ 雨果雕像。
-// sides：v2 顺路散页的可选入口（数组，一段可挂多张；不进主线，停不停由玩家决定）。
-// 转场红线（总设定 §5）：现场先发生，台词后跟上——不预告雨果、不发明象征、导航退页脚。
+// 站间过渡。v3 主线：入口→谐奇趣→黄花阵→方外观→海晏堂→蓄水楼→大水法→雨果。
+// 旧 leg 名仍可打开，落到新的下一段，避免旧存档卡死。
+// 转场正文取飞书 v3「剧情内容」离站句。散页不再挂主链。
 
-// 四段过渡配置
+const WP = '/plate21/module/pages/waypoint/waypoint'
+
 const LEGS = {
-  's1-s2': {
+  's1-xq': {
     from: '西洋楼入口',
-    to: '黄花阵',
+    to: '谐奇趣',
     seg: 0,
-    text: '两半合上，是三个字：黄花阵。正是夹着那张照片的一页。往东，墙齐腰高，是一座迷宫。',
-    sides: [
-      {
-        key: 'xieqiqu',
-        title: '谐奇趣',
-        hook: '去迷宫的路上会先经过西洋楼的第一座殿。档案里最早的那页图，就是从那儿起稿的。路过能翻就翻。不翻也行。',
-        url: '/plate21/module/pages/waypoint/waypoint?site=xieqiqu'
-      }
-    ],
+    text: '按照路线图走进入口，就来到了谐奇趣。',
+    sides: [],
+    next: WP + '?site=xieqiqu'
+  },
+  'xq-s2': {
+    from: '谐奇趣',
+    to: '黄花阵',
+    seg: 1,
+    text: '我顺着地图上的路线继续往前。圈出来的下一处，就是黄花阵。',
+    sides: [],
     next: '/plate21/module/pages/s2-quiz/s2-quiz'
   },
-  's2-s3': {
+  's2-fw': {
     from: '黄花阵',
+    to: '方外观',
+    seg: 2,
+    text: '我按照地图继续走，下一站是方外观。',
+    sides: [],
+    next: WP + '?site=fangwaiguan'
+  },
+  'fw-s3': {
+    from: '方外观',
     to: '海晏堂',
-    seg: 1,
-    text: '从迷宫出来往东，地势塌下去一块，露出一口干池子。画上的喷泉还在喷，池子是干的。往东，路上第一座水法大殿，档案的下一页就是它。',
-    sides: [
-      {
-        key: 'yangquelong',
-        title: '养雀笼 · 方外观',
-        hook: '甬道右手有一座门，东面还完整，西面什么都没有。再往前几十步，还有一页，档案上只有一行字。',
-        url: '/plate21/module/pages/waypoint/waypoint?site=yangquelong'
-      }
-    ],
+    seg: 3,
+    text: '五竹亭之后，还有一条线一直往前延伸，最后停在了一座很大的水池旁。旁边写着三个字：海晏堂。',
+    sides: [],
     next: '/plate21/module/pages/s3-comic/s3-comic'
   },
-  's3-s4': {
+  's3-xs': {
     from: '海晏堂',
+    to: '蓄水楼',
+    seg: 4,
+    text: '水力钟在眼前，水源却不在水池里。路线图在海晏堂北面另标了一处高台——蓄水楼。',
+    sides: [],
+    next: WP + '?site=xushuilou'
+  },
+  'xs-ds': {
+    from: '蓄水楼',
     to: '大水法',
-    seg: 2,
-    text: '把水显纸晾干收好，往东看——几根残柱已经戳在视线尽头。档案的下一页就在那儿，画上水花翻得很凶。',
-    sides: [
-      {
-        key: 'xushuilou',
-        title: '蓄水楼',
-        hook: '路过一座土台。喷泉没有电泵，水是从那儿来的。路过能翻就翻，不翻也行。',
-        url: '/plate21/module/pages/waypoint/waypoint?site=xushuilou'
-      }
-    ],
+    seg: 5,
+    text: '海晏堂用水来报时。再往东，大水法又把水做成了什么？我把特刊收进档案袋，按地图往东走。',
+    sides: [],
     next: '/plate21/module/pages/dashuifa/dashuifa'
   },
-  's4-s5': {
+  'ds-s4': {
     from: '大水法',
     to: '雨果雕像',
-    seg: 3,
-    text: '往东本就是出路。草地当中立着一尊铜像——先看见人，再翻档案。夹里最后一份封套上写着：到像下拆。',
-    sides: [
-      {
-        key: 'guanshuifa',
-        title: '观水法',
-        hook: '皇帝看喷泉坐在南面。档案里夹着这一页。路过能翻就翻。',
-        url: '/plate21/module/pages/waypoint/waypoint?site=guanshuifa'
-      },
-      {
-        key: 'xianfahua',
-        title: '线法画',
-        hook: '往东还有几道空墙。档案上说那里曾经有一条假的街。能翻就翻，不翻也行。',
-        url: '/plate21/module/pages/waypoint/waypoint?site=xianfahua'
-      }
-    ],
+    seg: 6,
+    text: '档案下一处标记是一个名字，和一张纸：维克多·雨果，《致巴特勒上尉的信》。',
+    sides: [],
     next: '/plate21/module/pages/s4-timeline/s4-timeline'
   }
 }
 
-// 五站在地图占位块上的点位（rpx，容器 670×480；从西往东）
+LEGS['s1-s2'] = LEGS['s1-xq']
+LEGS['s2-s3'] = LEGS['s2-fw']
+LEGS['s3-s4'] = LEGS['s3-xs']
+LEGS['s4-s5'] = LEGS['ds-s4']
+
 const POINTS = [
-  { name: '西洋楼入口', x: 85, y: 400 },
-  { name: '黄花阵', x: 240, y: 305 },
-  { name: '海晏堂', x: 385, y: 220 },
-  { name: '大水法', x: 515, y: 145 },
-  { name: '雨果雕像', x: 615, y: 65 }
+  { name: '入口', x: 55, y: 430 },
+  { name: '谐奇趣', x: 140, y: 370 },
+  { name: '黄花阵', x: 225, y: 315 },
+  { name: '方外观', x: 310, y: 260 },
+  { name: '海晏堂', x: 395, y: 210 },
+  { name: '蓄水楼', x: 470, y: 165 },
+  { name: '大水法', x: 545, y: 115 },
+  { name: '雨果', x: 620, y: 65 }
 ]
 
 const playGuide = require('../../capabilities/play-guide/guide')
@@ -134,7 +128,10 @@ Page({
       playGuide.runPageStop(this)
       return
     }
-    this.scheduleCoach([playGuide.SPOTS.side, playGuide.SPOTS.go])
+    const spots = (this.data.sides || []).length
+      ? [playGuide.SPOTS.side, playGuide.SPOTS.go]
+      : [playGuide.SPOTS.go]
+    this.scheduleCoach(spots)
   },
 
   onShow() {
