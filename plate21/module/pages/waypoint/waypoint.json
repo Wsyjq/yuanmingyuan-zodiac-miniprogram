@@ -1,4 +1,5 @@
 {
+  "navigationStyle": "custom",
   "usingComponents": {
     "nav-back": "../../components/nav-back/nav-back",
     "page-overlays": "../../capabilities/overlay-host/overlay-host",
