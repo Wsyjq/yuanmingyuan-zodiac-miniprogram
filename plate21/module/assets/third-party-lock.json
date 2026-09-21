@@ -318,6 +318,29 @@
       ],
       "reviewedAt": "2026-08-11",
       "status": "approved"
+    },
+    {
+      "id": "PLATE-PD-21",
+      "name": "Xiyanglou copper-plate engravings (1783)",
+      "version": "Palace Museum digital scan, 1024px capture",
+      "license": "Public Domain",
+      "licenseFile": "plate21/module/assets/NOTICE.md",
+      "evidenceUrl": "https://www.dpm.org.cn/collection/paint/228650.html",
+      "usage": "《西洋楼铜版图》铜版画（1783 年刻，原作公有领域）扫描件，作计分站主图：谐奇趣南面/方外观正面/蓄水楼东面/大水法正面",
+      "bundled": true,
+      "files": [
+      "plate21/module/assets/img/plate-xieqiqu.jpg",
+      "plate21/module/assets/img/plate-fangwaiguan.jpg",
+      "plate21/module/assets/img/plate-xushuilou.jpg",
+      "plate21/module/assets/img/plate-dashuifa.jpg"
+      ],
+      "hashes": {
+      "plate21/module/assets/img/plate-xieqiqu.jpg": "d48d4cbc4f5c99ceb8266504f413091b44538127a0cedd4f095bac33a25924e1",
+      "plate21/module/assets/img/plate-fangwaiguan.jpg": "66945e54322778328d5770f935c22037b2009d600710bfdb33ef41fe6a558cbc",
+      "plate21/module/assets/img/plate-xushuilou.jpg": "165248f064cfd32485f502e0205f4d4b38894f20a706ad2b815bf66ae5592b1e",
+      "plate21/module/assets/img/plate-dashuifa.jpg": "01047ad03401dca3412d71d9b0607354d6dbd7fa6134e9bc97895177749cdb65"
+      },
+      "status": "approved"
     }
   ]
 }

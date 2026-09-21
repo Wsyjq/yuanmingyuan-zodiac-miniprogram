@@ -20,20 +20,85 @@
 }
 .wp-intro {
   margin-top: 22rpx;
-  font-size: 28rpx;
+  font-size: 31rpx;
   line-height: 1.95;
   color: var(--ink);
 }
+/* 计分站主图：铜版画双框 + 胶带 + 手写批注（与 s3-comic 的 .comic-plate 同一语言） */
+.wp-plate {
+  position: relative;
+  margin-top: 28rpx;
+  padding: 14rpx;
+  background: var(--paper2);
+}
+.wp-plate-img {
+  display: block;
+  width: 100%;
+}
+.wp-plate-note {
+  margin-top: 14rpx;
+  font-size: 26rpx;
+}
+.wp-hatch {
+  width: 140rpx;
+  margin: 40rpx auto 8rpx;
+}
+/* 选项：与 s2-quiz .opt 同一语言——浅棕底虚线边，选中铜绿描边+左侧铜绿条 */
 .wp-opt {
+  position: relative;
+  display: flex;
+  align-items: center;
   margin-top: 16rpx;
-  padding: 22rpx 24rpx;
+  padding: 26rpx 32rpx;
   background: var(--paper2);
   border: 1rpx solid var(--dash);
+  min-height: 96rpx;
+  box-sizing: border-box;
+  overflow: hidden;
   font-size: 28rpx;
 }
 .wp-opt.on {
   border: 3rpx solid var(--patina);
   background: rgba(74, 107, 100, 0.12);
+  box-shadow: inset 8rpx 0 0 rgba(74, 107, 100, 0.22);
+}
+.wp-opt-key {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: var(--patina);
+  margin-right: 24rpx;
+}
+.wp-opt-text {
+  flex: 1;
+  font-size: 30rpx;
+  color: var(--ink);
+}
+/* 三次揭晓后：非正确项变淡 + 斜线碎纹 */
+.wp-opt-dim {
+  opacity: 0.55;
+}
+.wp-opt-dim::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent 0rpx,
+    transparent 14rpx,
+    rgba(70, 56, 42, 0.2) 14rpx,
+    rgba(70, 56, 42, 0.2) 16rpx
+  );
+  pointer-events: none;
+}
+/* 答错提示：铜绿手写 */
+.hint {
+  margin-top: 28rpx;
+  font-size: 28rpx;
+  line-height: 1.7;
+  color: var(--patina);
+}
+.wp-confirm-btn {
+  margin-top: 32rpx;
 }
 .wp-listen { margin: 24rpx 0; }
 .q-title { font-size: 34rpx; letter-spacing: 4rpx; margin: 24rpx 0 12rpx; }
@@ -72,7 +137,7 @@
 }
 .wp-line {
   margin-top: 12rpx;
-  font-size: 27rpx;
+  font-size: 30rpx;
   line-height: 1.9;
   color: var(--ink);
 }
@@ -80,7 +145,7 @@
 .wp-quote {
   margin: 14rpx 18rpx 6rpx;
   padding: 12rpx 20rpx;
-  font-size: 26rpx;
+  font-size: 29rpx;
   line-height: 1.85;
   color: var(--ink);
   border-left: 4rpx solid rgba(70, 56, 42, 0.35);
@@ -89,7 +154,7 @@
 /* 舞台与操作指示（括号小字）：看得见，不进音频 */
 .wp-stage {
   margin: 6rpx 4rpx 0 18rpx;
-  font-size: 22rpx;
+  font-size: 24rpx;
   color: rgba(70, 56, 42, 0.66);
 }
 .wp-confirm {
@@ -99,7 +164,7 @@
 .wp-motif {
   margin-top: 34rpx;
   padding: 4rpx 0;
-  font-size: 30rpx;
+  font-size: 31rpx;
   line-height: 1.8;
   color: var(--ink-deep);
   border-top: 1rpx solid rgba(70, 56, 42, 0.3);
@@ -107,7 +172,7 @@
 }
 .wp-note {
   margin-top: 30rpx;
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 .wp-next {
   margin-top: 26rpx;
@@ -136,7 +201,7 @@
   gap: 18rpx;
 }
 .wp-pager-pos {
-  font-size: 22rpx;
+  font-size: 24rpx;
   letter-spacing: 4rpx;
 }
 .wp-pager-btns {

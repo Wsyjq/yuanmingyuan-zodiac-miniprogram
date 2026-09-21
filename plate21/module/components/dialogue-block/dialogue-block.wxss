@@ -15,16 +15,16 @@
 }
 
 .db-speaker {
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
   color: #4a402e;
   letter-spacing: 4rpx;
 }
 
-.db-aside { font-size: 22rpx; }
+.db-aside { font-size: 24rpx; }
 
 .db-text {
-  font-size: 29rpx;
+  font-size: 31rpx;
   line-height: 1.9;
   color: #3d3627;
   text-align: justify;
@@ -37,6 +37,6 @@
 
 .db-note {
   margin-top: 10rpx;
-  font-size: 21rpx;
+  font-size: 23rpx;
   color: rgba(74, 64, 46, 0.62);
 }

@@ -8,14 +8,18 @@
     <view class="dsf-quote kaiti">顺着档案上的路线继续往前，大水法遗址逐渐出现在眼前。和海晏堂相比，这里的遗迹看起来更直观一些。高大的石构还留在原地，但只看现在的样子，还是很难想象它当年到底是什么样的。</view>
     <view class="dsf-quote kaiti">我翻了翻档案，正好找到了一幅《大水法南面》的铜版图。图中的石构轮廓和眼前能够对得上。但真正吸引我注意的，反而是前面的喷水池。不过水池中间怎么还有一只鹿？周围那些动物又是在做什么？</view>
     <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">根据铜版图，把三件放回原本的位置</text></view>
-    <image class="dsf-plate" src="/plate21/module/assets/img/IMG-RUNTIME-PLATE.jpg" mode="widthFix" />
+    <view class="dsf-plate double-frame">
+      <view class="tape" style="top:-20rpx; left:50%; margin-left:-90rpx;"></view>
+      <image class="dsf-plate-img" src="/plate21/module/assets/img/plate-dashuifa.jpg" mode="widthFix" />
+    </view>
+    <view class="note-hand olive dsf-plate-note tilt-r">档案里的《大水法南面》——画上的热闹，地上都没有了。</view>
     <view class="dsf-zones">
       <view wx:for="{{zones}}" wx:key="key" class="dsf-zone" data-zone="{{item.key}}" bindtap="onDrop">{{item.label}}</view>
     </view>
     <view class="dsf-pieces">
       <view wx:for="{{pieces}}" wx:key="key" class="dsf-piece {{holding === item.key ? 'on' : ''}}" data-key="{{item.key}}" bindtap="onHold">{{item.label}}{{placed[item.key] ? ' · 已放' : ''}}</view>
     </view>
-    <view class="hint" wx:if="{{huntHint}}">{{huntHint}}</view>
+    <view class="hint note-hand" wx:if="{{huntHint}}">{{huntHint}}</view>
     <button class="btn-seal" bindtap="onHuntConfirm">放 好 了</button>
   </block>
 
@@ -27,8 +31,19 @@
 
   <block wx:else>
     <view class="q-title serif">大水法北侧、位于高台上的建筑是什么？</view>
-    <view wx:for="{{yuanOpts}}" wx:key="key" class="dsf-choice {{yuanSelected === item.key ? 'on' : ''}}" data-key="{{item.key}}" bindtap="onYuanSelect">{{item.key}}　{{item.text}}</view>
-    <view class="hint" wx:if="{{yuanHint}}">{{yuanHint}}</view>
+    <view
+      wx:for="{{yuanOpts}}"
+      wx:key="key"
+      class="dsf-choice {{yuanSelected === item.key ? 'on' : ''}} {{yuanSolved && item.key !== 'B' ? 'dsf-dim' : ''}}"
+      data-key="{{item.key}}"
+      bindtap="onYuanSelect"
+      role="button"
+      aria-pressed="{{yuanSelected === item.key}}"
+    >
+      <text class="dsf-key">{{item.key}}</text>
+      <text class="dsf-text">{{item.text}}</text>
+    </view>
+    <view class="hint note-hand" wx:if="{{yuanHint}}">{{yuanHint}}</view>
     <button wx:if="{{!followup}}" class="btn-seal" bindtap="onYuanConfirm" disabled="{{!yuanSelected || yuanSolved}}">{{yuanRevealed ? '记 下 了' : '就 是 这 座'}}</button>
     <view wx:if="{{followup}}">
       <view class="dsf-quote kaiti">我抬起头。大水法北侧高台上，就是它。再转身往南，石屏风所在的观水法也在同一条轴上。从北到南：远瀛观、大水法、观水法。它们是一组南北相对的景观，不是三个要依次走进去的下一站。我们走的路却是东西向：西边刚离开海晏堂和蓄水楼，眼前是大水法，再往东才是雨果雕像。</view>

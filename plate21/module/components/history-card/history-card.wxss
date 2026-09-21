@@ -102,10 +102,21 @@
 }
 
 .hc-line {
-  font-size: 27rpx;
+  font-size: 29rpx;
   line-height: 1.8;
   color: var(--ink);
   margin-bottom: 16rpx;
+}
+
+/* 卡内术语超链接：铜绿 + 虚线下划线，点开对应术语史料卡（bind:glossary） */
+.hc-link {
+  color: var(--patina);
+  font-weight: 700;
+  border-bottom: 2rpx dashed var(--patina);
+  padding-bottom: 2rpx;
+}
+.hc-link:active {
+  opacity: 0.65;
 }
 
 .hc-foot {

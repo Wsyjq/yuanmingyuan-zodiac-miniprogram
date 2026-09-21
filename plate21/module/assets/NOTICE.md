@@ -65,6 +65,21 @@ SVG 源文件经 `test/stickers-src/build.js` 渲染/缩放为 PNG。
 | st-stamp-02.png | 美国 1861 年 2 分 Jackson 邮票（带齿孔） | https://commons.wikimedia.org/wiki/File:US_stamp_1861_2c_Jackson_sc0073.jpg | https://upload.wikimedia.org/wikipedia/commons/3/34/US_stamp_1861_2c_Jackson_sc0073.jpg | 扫描：R. A. Nonenmacher（1861 年发行，版权早已过期） |
 | st-paper-texture-01.jpg | 暖黄旧纸纹理（污渍/纤维/边缘晕影） | https://commons.wikimedia.org/wiki/File:Old_Paper_texture.jpg | https://upload.wikimedia.org/wikipedia/commons/9/9b/Old_Paper_texture.jpg | leonardoai（上传者以 Public Domain 发布） |
 
+### 《西洋楼铜版图》铜版画（许可证：Public Domain）
+
+`img/plate-*.jpg` 四张为 1783 年（乾隆四十八年）清宫铜版画《西洋楼铜版图》册页扫描，
+原作出自宫廷画师/刻工，著作权保护期早已届满，属公有领域；
+扫描件为平面原作的忠实数字化复制，不产生新的著作权。
+扫描来源：故宫博物院数字文物库（藏品页 https://www.dpm.org.cn/collection/paint/228650.html ），
+经 `tools/fetch-plates-20.py` 获取 1024px 图档，本项目压缩为 800px 生产尺寸。
+
+| 文件 | 内容 |
+| --- | --- |
+| plate-xieqiqu.jpg | 谐奇趣南面 |
+| plate-fangwaiguan.jpg | 方外观正面 |
+| plate-xushuilou.jpg | 蓄水楼东面 |
+| plate-dashuifa.jpg | 大水法正面 |
+
 ### 项目自制素材
 
 - `st-postmark-01.png`：经典圆形邮政戳（外圈字 "YUANMINGYUAN · PEKING" + 中间日期行

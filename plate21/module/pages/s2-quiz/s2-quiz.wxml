@@ -9,13 +9,14 @@
     <view class="novel-p">到了黄花阵的入口处，眼前景观让我有些震惊——一个皇家宫苑中竟有一座迷宫！不过皇家宫苑中为什么会有一座迷宫呢？</view>
     <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">对照画和地，选出这座阵是做什么用的</text></view>
   </view>
-  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" />
+  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
 
   <view class="img-ph img-s2a double-frame">
     <view class="tape" style="top:-20rpx; left:50%; margin-left:-90rpx;"></view>
     <image class="s2a-stamp" src="/plate21/module/assets/img/stickers/st-stamp-02.png" mode="aspectFit" />
     <image class="s2a-img" src="/plate21/module/assets/img/IMG-RUNTIME-MAZE.jpg" mode="aspectFill" />
   </view>
+  <view class="note-hand olive" style="transform: rotate(-1.5deg); margin-top: 16rpx;">夜里提灯往中心亭跑——他们在干什么？</view>
 
   <view class="hatch-divider" style="width: 140rpx; margin: 44rpx auto;"></view>
 

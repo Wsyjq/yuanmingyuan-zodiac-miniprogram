@@ -10,9 +10,21 @@
   flex-direction: column;
   padding-left: 52rpx;
 }
-.page-audio-dock {
-  flex: none;
-  padding: 0 0 8rpx 0;
+/* 交接面板里的路线图：档案卡纸底 + 细框，与 pack-sheet 同一语言 */
+.pack-map {
+  margin: 4rpx 0 14rpx;
+  padding: 10rpx;
+  background: var(--paper);
+  border: 1rpx solid rgba(70, 56, 42, 0.35);
+}
+.pack-map-img {
+  display: block;
+  width: 100%;
+}
+.pack-route {
+  margin: 0 0 18rpx;
+  font-size: 26rpx;
+  line-height: 1.7;
 }
 
 /* 实体道具引导层：底部滑出，小程序只展示操作步骤与剧情结果。 */

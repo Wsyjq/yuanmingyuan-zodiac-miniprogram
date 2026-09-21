@@ -11,7 +11,7 @@
   <view class="lead kaiti">第三步，校到正午。这座钟报时靠水，正午该当班的是马；档案里夹的那张纸，恰好也认水。</view>
   <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">蘸点水，涂在那张纸上（只涂自家道具纸），看它显出谁来。</text></view>
   <dialogue-block speaker="蒋友仁" text="我们这里，样样都认水，钟认水，纸也认。你那张纸也认。蘸点水，看它显出谁来。" clip-id="dlg-haiyantang-4" note="历史人物 · 台词为艺术演绎 · 水只涂在自家道具纸上" />
-  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" />
+  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
 
   <view class="prop-card archive-sheet">
     <view class="prop-label archive-tab">线下道具 · 实体水显纸</view>

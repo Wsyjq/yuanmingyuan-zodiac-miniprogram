@@ -10,9 +10,7 @@
     finish-text="翻完这一册档案"
     bind:finish="onNovelFinish"
   />
-  <view class="page-audio-dock">
-    <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 序章讲述" />
-  </view>
+  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 序章讲述" dock="{{true}}" />
 
   <!-- 叙事结束：档案交接清点。信不拆——到遗址门口再拆（V2.1）。 -->
   <view wx:if="{{showHandover}}" class="pack">
@@ -21,6 +19,10 @@
       <view class="pack-title serif">清点交到你手上的东西</view>
       <view class="archive-rule"></view>
       <view class="pack-note">这册档案跟着你走完全程。信先别拆——到了遗址门口再拆。</view>
+      <view class="pack-map">
+        <image class="pack-map-img" src="/plate21/module/assets/img/IMG-RUNTIME-MAP.jpg" mode="widthFix" />
+      </view>
+      <view class="pack-route note-hand olive">路线：入口 · 谐奇趣 · 黄花阵 · 方外观 · 海晏堂 · 蓄水楼 · 大水法 · 雨果雕像</view>
       <view class="pack-items">
         <view wx:for="{{props}}" wx:key="*this" class="pack-item">{{item}}</view>
       </view>

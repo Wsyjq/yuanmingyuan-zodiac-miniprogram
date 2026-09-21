@@ -17,7 +17,7 @@
   <view class="lead kaiti">出亭子顺墙走。这一路的墙上都是同一种花纹，手里那页正好印着四种纹样图样。第四件事，举纸对照。</view>
   <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">举起纹样页，对照墙上的纹：哪种对得上，就是这一路看到的纹。</text></view>
   <dialogue-block speaker="造办处匠人" text="四种花样，举到墙跟前比，别贴着。哪个的走向和墙上的对得上，就是它。" clip-id="dlg-huanghuazhen-5" />
-  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" />
+  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
 
   <!-- ============ 主图区（4 花纹格子）============ -->
   <view class="grid" wx:if="{{!solved && !skipped}}">

@@ -69,7 +69,7 @@
     finish-text="署名"
     bind:finish="onNovelFinish"
   />
-    <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 结局讲述" />
+    <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 结局讲述" dock="{{true}}" />
 
   <!-- 幕5 署名 -->
   <view wx:if="{{act === 5}}" class="act5">

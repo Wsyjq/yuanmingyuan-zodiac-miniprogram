@@ -16,7 +16,7 @@
   <view class="paper-quote">“十二兽各守一时，至午而全见。”</view>
   <view class="novel"><view class="novel-p">“各守一时”应该很好理解，可“至午而全见”又是什么意思？</view></view>
   <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">根据铜版图和现场遗迹，判断正午喷泉会是什么样子</text></view>
-  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" />
+  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
 
   <view class="comic-plate double-frame" role="img" aria-label="十二兽首按时辰喷水的四格漫画">
     <view class="tape" style="top:-20rpx; left:50%; margin-left:-90rpx;"></view>

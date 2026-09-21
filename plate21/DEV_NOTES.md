@@ -1,9 +1,9 @@
 # 第二十一图 · 页面开发者手册（DEV_NOTES）
 
 > 面向页面模块开发者。本手册只描述**已落地的代码事实**。
-> 当前维护基线：`README.md`、`docs/小程序维护优化技术方案-v2.0.md`；视觉语言参考 `docs/UI-UX设计文档.md`，但其中旧五站路由仅作历史记录。
+> 当前维护基线：`README.md`、`docs/完全接入对接文档-V2.2.md`；视觉语言参考 `docs/UI-UX设计文档.md`，其中旧五站路由仅作历史记录。
 >
-> 当前是四站结构。生产路由共 17 条：宿主首页 1 条、业务分包 16 条。旧拆字线已删除；八张史料卡按顺序组成会话锁定日期 `SessionSnapshot.sessionDate`（`YYYYMMDD`）。`ending` 源码保留，但不注册生产路由并从包中排除。
+> 当前是四站 + 可选散页。生产路由 **32** 条：宿主首页 1 + 业务分包 21（含 `gate` / `board`）+ `voice-a`…`voice-j` 占位页 10。权威清单在根目录 `app.json`。八张日期卡组成会话锁定日期 `SessionSnapshot.sessionDate`（`YYYYMMDD`）。`ending` 源码保留，不注册生产路由。
 
 ---
 
@@ -11,38 +11,45 @@
 
 ```
 D:/kc/ymy
-├─ app.json                  # 主包 1 页；分包 root = plate21/module，16 页已注册
+├─ app.json                  # 主包 1 页；plate21/module 21 页；voice-a…j 各 1 占位页
 ├─ app.wxss                  # 全局设计 token + 通用类（见 §2）
 ├─ pages/index/              # 演示宿主主页（不要动）
 ├─ components/archive-illustration/ # 全局项目自制档案图形降级组件
+├─ voice-a … voice-j         # 人声音频分包（pages/hold 占位）
 └─ plate21/
    └─ module/
-      ├─ contracts/adapter-api.js   # Host Adapter 契约（JSDoc 类型 + 常量）
+      ├─ contracts/adapter-api.js   # Host Adapter 契约 v1.4.0
       ├─ adapters/local-adapter.js  # 开发期 Adapter（wx.Storage 实现）
       ├─ store/session.js           # 模块侧唯一数据入口（见 §4）
-      ├─ components/                # 5 个分包通用组件（见 §3）
-      └─ pages/<页面名>/            # 16 个生产页；ending 为仓库保留页
+      ├─ capabilities/              # 导引地图、语音导览等
+      ├─ components/                # 分包通用组件（见 §3）
+      └─ pages/<页面名>/            # 21 个生产页；ending 为仓库保留页
 ```
 
-16 个业务分包生产路由（跳转时前缀 `/plate21/module/`）：
+业务分包生产路由（跳转时前缀 `/plate21/module/`）：
 
 ```
+pages/gate/gate                门票门页
 pages/cover/cover              封面
-pages/prologue/prologue        序章（拆信封）
-pages/s1-decode/s1-decode      第一站 西洋楼入口（拆信封拼半字）
-pages/transit/transit          站间过渡（实例化 3 次：s1-s2 / s2-s3 / s3-s4）
-pages/s2-quiz/s2-quiz          第二站 黄花阵 · 谜题1 作用选择题
-pages/s2-reveal/s2-reveal      第二站 · 谜题2 名字由来（文字输入）
-pages/s2-blend/s2-blend        第二站 · 谜题3 四图现场考察卡
-pages/s2-pattern/s2-pattern    第二站 · 谜题4 万字纹（手绘路线图收口 s2）
-pages/s3-comic/s3-comic        第三站 海晏堂·大水法 · 谜题1 时辰漫画推理
-pages/s3-zodiac/s3-zodiac      第三站 · 谜题2 兽首回归选择
-pages/s3-water/s3-water        第三站 · 谜题3 水显纸马首（收口 s3）
-pages/s4-timeline/s4-timeline  第四站 雨果雕像 · 时间轴排序（5 事件）
-pages/s4-password/s4-password  第四站 · 密码输入（收口 s4，答案=会话日期 YYYYMMDD）
+pages/prologue/prologue        序章
+pages/s1-decode/s1-decode      第一站 西洋楼入口（拆信读信）
+pages/transit/transit          站间过渡（含大水法→雨果段）
+pages/waypoint/waypoint        可选顺路散页
+pages/dashuifa/dashuifa        大水法主线站（120s 静默三选一）
+pages/s2-quiz/s2-quiz          黄花阵 · 对读
+pages/s2-reveal/s2-reveal      黄花阵 · 名字由来
+pages/s2-blend/s2-blend        黄花阵 · 现场考察卡
+pages/s2-pattern/s2-pattern    黄花阵 · 万字纹
+pages/s3-comic/s3-comic        海晏堂 · 时辰
+pages/s3-zodiac/s3-zodiac      海晏堂 · 兽首
+pages/s3-water/s3-water        海晏堂 · 水显纸
+pages/s4-timeline/s4-timeline  雨果 · 时间轴
+pages/s4-password/s4-password  雨果 · 密码（缺卡可跳过）
 pages/finale/finale            反转揭示
-pages/report/report            考察报告
+pages/report/report            考察报告（通关当天留言入口）
 pages/handbook/handbook        考察手册
+pages/letter/letter            次日之信
+pages/board/board              留言簿 / 昨日之路
 ```
 
 `pages/ending/ending` 仅为未来视频能力保留源码；当前主线在报告页完成并返回宿主。
@@ -285,6 +292,7 @@ session.completePuzzle('s3-water', { answer: '马首', attempts: 1 }, {
 - 41 个 `IMG-AI-SOURCES` 源 JPEG 继续从包中排除，禁止页面直接引用；使用 `npm run build:runtime-images` 重建生产衍生图。
 - 源到目标的尺寸、quality 和 SHA-256 记录在 `docs/compliance/ai-runtime-manifest.json`，项目方商业使用确认见 `assets/licenses/PROJECT-AI-ASSET-AUTHORIZATION-2026-08-11.txt`。
 - 素材未就位时使用项目自制排线/几何占位，不引外链图，也不以未授权生成图临时顶替。
+- 计分站主图用 `img/plate-*.jpg`（1783 年《西洋楼铜版图》公有领域扫描件，PLATE-PD-21）：非 AI 素材，不走 `IMG-*` 受控命名与运行时衍生管线，SHA-256 同样在 lock 里固定；新增同类图沿用 `plate-` 前缀并登记 NOTICE。
 - 未来大图或视频只有在 URL、许可、隐私和失败路径全部审批后才可走 CDN；当前生产代码不依赖 CDN。
 
 ### 6.1 图标库（Lucide，ISC License）
@@ -352,4 +360,4 @@ wx.navigateTo({ url: '/plate21/module/pages/transit/transit?leg=s1-s2' })
 
 ## 8. 页面变更约定
 
-当前 17 条生产路由均已实现。新增或调整玩法时同步更新 `app.json`、`progress-flow.js`、页面恢复逻辑、`test/page-flow.test.js`、H5 关键状态和剧情验收矩阵；不要只改页面跳转而遗漏 checkpoint。
+当前 32 条生产路由均已实现（权威清单 `app.json`）。新增或调整玩法时同步更新 `app.json`、`progress-flow.js`、页面恢复逻辑、`test/page-flow.test.js` 和 H5 关键状态；不要只改页面跳转而遗漏 checkpoint。

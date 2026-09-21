@@ -83,3 +83,62 @@
   background: #4a402e;
   border-radius: 2rpx;
 }
+
+/* dock 形态：右下悬浮、可伸缩。展开=胶囊播放条（播放/暂停+进度+收起），
+   收起=小圆钮（在播时描边变铜绿）。底距 150rpx：避开 novel 翻页条与各页底栏；
+   层级低于底部弹层/史料卡/导览面板。 */
+.ac-dock-bar {
+  position: fixed;
+  right: 26rpx;
+  bottom: calc(150rpx + env(safe-area-inset-bottom));
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  padding: 12rpx 16rpx;
+  background: rgba(244, 237, 220, 0.96);
+  border: 2rpx solid rgba(74, 64, 46, 0.55);
+  border-radius: 999rpx;
+  box-shadow: 0 8rpx 22rpx rgba(70, 56, 42, 0.24);
+  box-sizing: border-box;
+}
+.ac-dock-track {
+  width: 140rpx;
+}
+.ac-dock-fold {
+  flex-shrink: 0;
+  width: 44rpx;
+  height: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(74, 64, 46, 0.6);
+  font-size: 30rpx;
+  line-height: 1;
+}
+.ac-dock-fold:active {
+  opacity: 0.6;
+}
+.ac-dock-dot {
+  position: fixed;
+  right: 26rpx;
+  bottom: calc(150rpx + env(safe-area-inset-bottom));
+  z-index: 70;
+  width: 76rpx;
+  height: 76rpx;
+  border: 2rpx solid rgba(74, 64, 46, 0.55);
+  border-radius: 50%;
+  background: rgba(244, 237, 220, 0.94);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  box-shadow: 0 6rpx 18rpx rgba(70, 56, 42, 0.22);
+}
+.ac-dock-dot:active {
+  transform: scale(0.93);
+}
+.ac-dock-dot.on {
+  border-color: rgba(74, 107, 100, 0.85);
+  background: rgba(74, 107, 100, 0.12);
+}

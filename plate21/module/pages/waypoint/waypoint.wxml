@@ -11,22 +11,33 @@
     <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
       <view class="title serif">{{site.title}}</view>
       <view class="wp-intro kaiti">{{site.intro}}</view>
+      <view wx:if="{{site.image}}" class="wp-plate double-frame">
+        <view class="tape" style="top:-20rpx; left:50%; margin-left:-90rpx;"></view>
+        <image class="wp-plate-img" src="{{site.image}}" mode="widthFix" />
+      </view>
+      <view wx:if="{{site.imageNote}}" class="note-hand olive wp-plate-note tilt-l">{{site.imageNote}}</view>
       <view class="act-strip" wx:if="{{site.quiz.action}}"><text class="act-strip-tag">做</text><text class="act-strip-text">{{site.quiz.action}}</text></view>
       <view wx:if="{{site.quiz.listenFile && !followup}}" class="wp-listen">
-        <button class="btn-seal" bindtap="onListen">听 · 约三十秒</button>
+        <audio-clip src="{{listenSrc}}" label="听 · 约三十秒" kind="clip" bind:play="onListenPlay" />
         <view class="note-hand olive">{{site.quiz.listenNote}}</view>
       </view>
       <view wx:if="{{!followup}}" class="quiz">
+        <view class="hatch-divider wp-hatch"></view>
         <view class="q-title serif">{{site.quiz.prompt}}</view>
         <view
           wx:for="{{site.quiz.options}}"
           wx:key="key"
-          class="wp-opt {{item.on ? 'on' : ''}}"
+          class="wp-opt {{item.on ? 'on' : ''}} {{solved && !item.on ? 'wp-opt-dim' : ''}}"
           data-key="{{item.key}}"
           bindtap="onToggle"
-        >{{item.key}}　{{item.text}}</view>
-        <view wx:if="{{hint}}" class="hint">{{hint}}</view>
-        <button class="btn-seal" bindtap="onQuizConfirm" disabled="{{!selected.length || solved}}">{{revealed ? '记 下 了' : '就 是 这 些'}}</button>
+          role="button"
+          aria-pressed="{{item.on}}"
+        >
+          <text class="wp-opt-key">{{item.key}}</text>
+          <text class="wp-opt-text">{{item.text}}</text>
+        </view>
+        <view wx:if="{{hint}}" class="hint note-hand">{{hint}}</view>
+        <button class="btn-seal wp-confirm-btn" bindtap="onQuizConfirm" disabled="{{!selected.length || solved}}">{{revealed ? '记 下 了' : '就 是 这 些'}}</button>
       </view>
       <view wx:if="{{followup}}" class="followup">
         <view class="wp-line kaiti" wx:for="{{site.quiz.followup}}" wx:key="*this">{{item}}</view>
@@ -41,6 +52,18 @@
       btn-text="继 续"
       bind:next="onCloseHistory"
       bind:close="onCloseHistory"
+      bind:glossary="onGlossary"
+    />
+    <!-- 术语史料卡（从主卡内的铜绿术语点入，返回即回主卡） -->
+    <history-card
+      wx:if="{{gloss}}"
+      visible="{{!!gloss}}"
+      title="{{gloss.title}}"
+      source="{{gloss.source}}"
+      lines="{{gloss.lines}}"
+      btn-text="返 回"
+      bind:next="onGlossClose"
+      bind:close="onGlossClose"
     />
   </block>
 
@@ -49,6 +72,7 @@
   <view class="wp-step {{step === 0 ? '' : 'wp-step-off'}}">
     <view class="title serif">{{site.title}}</view>
     <view class="wp-intro kaiti">{{site.intro}}</view>
+    <!-- 本页讲述保持行内：散页已有语音导览悬浮钮（audio-guide FAB），不再叠 dock -->
     <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" />
     <view class="archive-rule wp-rule"></view>
   </view>

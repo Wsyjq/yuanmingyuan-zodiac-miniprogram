@@ -112,6 +112,13 @@ button::after { border: none; }
   transform: scale(0.94);
   opacity: 0.85;
 }
+/* 禁用态：保留档案签底图，只压暗朱砂字——压住微信 UA 的灰底白盒默认样式 */
+button.btn-seal[disabled] {
+  background-color: transparent;
+  background-image: url("/plate21/module/assets/img/ui/btn-label-seal.png");
+  color: rgba(166, 58, 46, 0.45);
+  opacity: 0.6;
+}
 
 /* 次按钮：牛皮纸吊牌 */
 .btn-line {
@@ -136,6 +143,12 @@ button::after { border: none; }
 .btn-line:active {
   transform: scale(0.97);
   opacity: 0.86;
+}
+button.btn-line[disabled] {
+  background-color: transparent;
+  background-image: url("/plate21/module/assets/img/ui/btn-label-ink.png");
+  color: rgba(70, 56, 42, 0.45);
+  opacity: 0.6;
 }
 
 /* 跳过/轻操作：橄榄和纸胶带 */

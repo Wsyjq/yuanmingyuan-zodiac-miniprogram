@@ -15,7 +15,7 @@
 
 /* 顶部短叙事（novel 风格直接写） */
 .novel-p {
-  font-size: 30rpx;
+  font-size: 31rpx;
   line-height: 1.9;
   color: var(--ink);
   margin-bottom: 24rpx;
@@ -157,7 +157,7 @@
 
 .hint {
   margin-top: 28rpx;
-  font-size: 24rpx;
+  font-size: 27rpx;
   color: var(--patina);
 }
 

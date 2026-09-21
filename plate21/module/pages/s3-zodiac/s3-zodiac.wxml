@@ -12,7 +12,7 @@
   <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">用转盘对座上的纹，把回来的名字一个个读出来。</text></view>
   <dialogue-block speaker="蒋友仁" text="座子上还留着纹，一尊一个样，哪一尊坐哪一座，纹上写着。你手里那只转盘，转到对的那一圈，镂空里的记号就对上了。回来的名字，自己会出来。" clip-id="dlg-haiyantang-3" note="历史人物 · 台词为艺术演绎" />
   <view class="note-hand olive" style="margin: 8rpx 0 0;">七尊里正好有马。正午值班的那一尊，就是马。</view>
-  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" />
+  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
 
   <view class="prop-card archive-sheet">
     <view class="prop-label archive-tab">线下道具 · 实体转盘</view>

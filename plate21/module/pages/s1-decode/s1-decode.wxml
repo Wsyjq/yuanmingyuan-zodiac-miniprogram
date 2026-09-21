@@ -11,7 +11,7 @@
     <view class="title serif">西洋楼入口 · 拆信</view>
     <view class="hatch-divider title-div"></view>
     <view class="lead kaiti">到了西洋楼入口。门里一条路往东伸进去，两边残基一处接一处，看不出当年谁是谁。说好了到门口拆信，现在就是门口。</view>
-    <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" />
+    <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
 
     <view class="prop-card archive-sheet">
       <view class="prop-label archive-tab">线下道具 · 实体信封</view>

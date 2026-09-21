@@ -1,5 +1,6 @@
 <!-- 语音播放条：src 为空/出错/对应开关关闭即整体隐藏（文稿阅读态不受影响）。
-     icon=true 为名牌行小圆钮（台词逐句播放用），条状为页面级「听·本页讲述」用。 -->
+     icon=true 为名牌行小圆钮（台词逐句播放用）；条状为页内内容音频用；
+     dock=true 为页级讲述的悬浮可伸缩形态（右下胶囊条 ⇄ 小圆钮）。 -->
 <block wx:if="{{src && !failed && enabled}}">
   <view
     wx:if="{{icon}}"
@@ -11,6 +12,20 @@
     <image wx:if="{{!playing}}" class="ac-iconbtn-img" src="/plate21/module/assets/img/icons/ic-play-ink.png" mode="aspectFit" />
     <view wx:else class="ac-iconbtn-pause"><view class="ac-iconbtn-bar"></view><view class="ac-iconbtn-bar"></view></view>
   </view>
+  <block wx:elif="{{dock}}">
+    <view wx:if="{{dockOpen}}" id="coachListen" class="ac-dock-bar">
+      <button class="ac-btn" bindtap="onToggle" aria-label="{{label}}">
+        <image class="ac-icon" src="/plate21/module/assets/img/icons/ic-play-ink.png" mode="aspectFit" />
+        <text class="ac-label">{{playing ? '暂停' : label}}</text>
+      </button>
+      <view class="ac-track ac-dock-track"><view class="ac-track-fill" style="width: {{progress}}%;"></view></view>
+      <view class="ac-dock-fold" bindtap="onDockFold" role="button" aria-label="收起播放条">⌄</view>
+    </view>
+    <view wx:else class="ac-dock-dot {{playing ? 'on' : ''}}" bindtap="onDockOpen" role="button" aria-label="展开播放条">
+      <image wx:if="{{!playing}}" class="ac-iconbtn-img" src="/plate21/module/assets/img/icons/ic-play-ink.png" mode="aspectFit" />
+      <view wx:else class="ac-iconbtn-pause"><view class="ac-iconbtn-bar"></view><view class="ac-iconbtn-bar"></view></view>
+    </view>
+  </block>
   <view wx:else id="coachListen" class="ac-wrap {{compact ? 'ac-compact' : ''}}">
     <button class="ac-btn" bindtap="onToggle" aria-label="{{label}}">
       <image class="ac-icon" src="/plate21/module/assets/img/icons/ic-play-ink.png" mode="aspectFit" />

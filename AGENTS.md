@@ -53,25 +53,12 @@ subjects are auto-captured. Verify a capture with `search_events("<hash>")`
 — search matches the `git_commit` field. When in doubt, record explicitly.
 <!-- <<< pollux <<< -->
 
-## WorkBuddy 接入位置（2026-09-11 实测校正）
+## 客户端接入
 
-WorkBuddy 的 MCP 加载路径与 ZCode / Grok / Claude Code **不同**，曾经踩过的坑：
+当前主通道：Grok / ZCode / Claude Code / kimi-code CLI，一律走 pollux。项目已于 2026-09-19 脱离 WorkBuddy。
 
-- **唯一生效位置：用户级 `~/.workbuddy/mcp.json`**（即 `C:\Users\ASUS\.workbuddy\mcp.json`）。
-  客户端代码中该路径写作 `customMcpConfigPath = path.join(configDir, "mcp.json")`。
-- **项目级 `D:\kc\ymy\.workbuddy\mcp.json` 不会被读取**（已改名为 `mcp.json.disabled` 留档）。
-  WorkBuddy 的 `projectMcpCount` 指的是云侧项目连接器（`projectResourceManager`，
-  走 `gatewayUrl` 的 HTTP MCP）+ 内置 `wb-issues`，**不是**项目目录里的 mcp.json 文件。
-- 桌面端会话恒带 `--strict-mcp-config`，因此项目根 `.mcp.json`（Claude Code 约定）
-  与 CLI 的 project/local scope 同样被屏蔽。
-- **配置中不要写 `--root`**：pollux 的 `_resolve_mem_dir()` 在无 `--root`、无
-  `PROJECTMEM_ROOT` 时回落到 `discover_mem_dir()`，从进程**当前工作目录向上查找**
-  `.projectmem`。这样用户级配置对每个工作区自适应，不会让其它项目误连本项目记忆
-  （实测：cwd 为无记忆工作区时返回 "No .projectmem directory found"）。
-- 新增或改动用户级 mcp.json 后，需在**连接器管理页对该 server 点「信任」**，
-  且 **MCP 列表在会话启动时注入**——必须新开会话，当前会话拿不到工具。
-- 审批记录在 `~/.workbuddy/mcp-approvals.json`（当前为 `{}` 时会话启动日志打印
-  `[MCP Security] Loaded 0 approvals`）。
-
-在工具注入生效前，一律走上文 CLI 通道完成记忆读写（同一引擎、同一 `.projectmem`）。
+- ZCode → `.zcode/config.json`；Grok → `.grok/config.toml`（需 folder-trust）；Claude Code → `CLAUDE.md` bridge。
+- kimi-code → 项目级 `.kimi-code/mcp.json`（gitignore，路径本机专用；可写 `--root D:\kc\ymy`）。
+- WorkBuddy 若再开：只认用户级 `~/.workbuddy/mcp.json`，项目级文件不会被读；用户级配置**不要写 `--root`**，让 pollux 从 cwd 向上发现 `.projectmem`。详见 issue #0007。
+- MCP 工具未注入时，走上文 CLI 通道，不要跳过记忆读写。
 

@@ -16,6 +16,8 @@ const SITES = {
     audioStation: 't-xieqiqu',
     narrClip: 'narr-waypoint-xieqiqu',
     intro: '按照路线图走进入口，就来到了谐奇趣。我记得这是西洋楼景区建成的第一座欧式建筑，也是中国皇家园林史上首座西洋建筑。主楼前后都曾设有水法，这里还曾用于演奏中西音乐。怪不得叫“谐奇趣”，要是能听听当时的音乐就好了。',
+    image: '/plate21/module/assets/img/plate-xieqiqu.jpg',
+    imageNote: '档案里的《谐奇趣南面》——当年这里奏乐、看水。',
     quiz: {
       puzzleId: 'xq-sound',
       action: '戴上耳机，听完再勾你听见的',
@@ -41,7 +43,11 @@ const SITES = {
       passMaxWrong: 1,
       historyTitle: '谐奇趣 · 声景',
       historyLines: [
-        '乾隆时期，宫廷中已经出现小拉琴、西洋箫等中西乐器。谐奇趣建成后，也成为演奏中西音乐、观赏水法的场所。'
+        { parts: [
+          { t: '乾隆时期，宫廷中已经出现小拉琴、西洋箫等中西乐器。谐奇趣建成后，也成为演奏中西音乐、观赏' },
+          { t: '水法', g: 'sl06' },
+          { t: '的场所。' }
+        ] }
       ],
       followup: [
         '原来当年的谐奇趣，不只是“看”的地方，也是“听”的地方。',
@@ -136,6 +142,8 @@ const SITES = {
     audioStation: 't-fangwaiguan',
     narrClip: 'narr-waypoint-fangwaiguan',
     intro: '站在方外观的正面看现在的方外观只剩下部分台基和石构，不过档案中的《方外观正面》铜版图还保存着它原本的样子让我能够了解原来的精美建筑：两层西式楼体、半环形石阶，上面却盖着中国传统样式的重檐屋顶。继续往下看还能发现，方外观内部曾设置阿拉伯文碑刻。可是西式楼体、中式屋顶、阿拉伯文碑刻，为什么会同时出现在一座建筑里？',
+    image: '/plate21/module/assets/img/plate-fangwaiguan.jpg',
+    imageNote: '对照档案里这张《方外观正面》，看楼自己身上有什么。',
     quiz: {
       puzzleId: 'fw-three',
       cardPuzzleId: 's3-zodiac',
@@ -160,7 +168,11 @@ const SITES = {
       historyTitle: '方外观 · 三种文化',
       historyLines: [
         '西式建筑形式 + 中国传统屋顶 + 伊斯兰文化元素 = 方外观',
-        '档案页边写着一个名字：容妃。'
+        { parts: [
+          { t: '档案页边写着一个名字：' },
+          { t: '容妃', g: 'sl10' },
+          { t: '。' }
+        ] }
       ],
       followup: [
         '原来这里根本就不是一座纯粹的西式建筑呀。',
@@ -213,6 +225,8 @@ const SITES = {
     audioStation: 't-xushuilou',
     narrClip: 'narr-waypoint-xushuilou',
     intro: '原来喷泉的水，靠的就是这座蓄水楼。这里是海晏堂北面的高台蓄水，不是谐奇趣西北那座。刚才在海晏堂看见兽首喷水，水源在这里。可是为什么能把水提高呢？特刊里似乎有线索',
+    image: '/plate21/module/assets/img/plate-xushuilou.jpg',
+    imageNote: '档案里的《蓄水楼东面》——海晏堂北面那座。',
     quiz: {
       puzzleId: 'xs-height',
       cardPuzzleId: 's3-water',
@@ -375,6 +389,24 @@ const SITES = {
   }
 }
 
+// 术语史料卡（docs/SL史料卡.md）：主卡里的铜绿术语可点开小卡。
+// SL-06 挂在声景通关句（题后），SL-10 挂在「页边写着一个名字：容妃」句。
+const GLOSSARY = {
+  sl06: {
+    title: 'SL-06 · 水法',
+    source: '圆明园遗址公园官网 · 谐奇趣/大水法',
+    lines: ['水法——当时对喷泉的叫法。']
+  },
+  sl10: {
+    title: 'SL-10 · 容妃',
+    source: '圆明园遗址公园官网 · 方外观',
+    lines: [
+      '史上有容妃，维吾尔族，方外观是她在园中做礼拜的地方。',
+      '「香妃」「体有异香」是民间传说，无实证。'
+    ]
+  }
+}
+
 function withOn(site, selected) {
   if (!site || !site.quiz) return site
   const sel = selected || []
@@ -400,7 +432,8 @@ Page({
     followup: false,
     showHistory: false,
     listened: false,
-    listenSrc: ''
+    listenSrc: '',
+    gloss: null
   },
 
   onLoad(options) {
@@ -452,17 +485,9 @@ Page({
     this.setData({ selected: selected, site: withOn(this.data.site, selected) })
   },
 
-  onListen() {
+  // 听题：audio-clip kind=clip（可暂停/有进度，不受人声开关隐藏），起播即记已听。
+  onListenPlay() {
     this.setData({ listened: true })
-    const src = this.data.listenSrc
-    if (!src || typeof wx === 'undefined' || !wx.createInnerAudioContext) return
-    if (this._audio) {
-      try { this._audio.stop(); this._audio.destroy() } catch (e) { /* ignore */ }
-    }
-    const audio = wx.createInnerAudioContext()
-    audio.src = src
-    audio.play()
-    this._audio = audio
   },
 
   onQuizConfirm() {
@@ -494,6 +519,7 @@ Page({
         revealed: result.revealed,
         hint: result.hint,
         selected: quiz.correct.slice(),
+        site: withOn(this.data.site, quiz.correct),
         showHistory: true
       })
       const payload = { answer: quiz.correct.slice(), attempts: result.attempts, revealed: result.revealed }
@@ -514,6 +540,17 @@ Page({
 
   onCloseHistory() {
     this.setData({ showHistory: false, followup: true })
+  },
+
+  // 主史料卡内术语点入：弹出对应术语小卡；返回/关闭即回主卡。
+  onGlossary(e) {
+    const key = e.detail && e.detail.key
+    const g = key && GLOSSARY[key]
+    if (g) this.setData({ gloss: g })
+  },
+
+  onGlossClose() {
+    this.setData({ gloss: null })
   },
 
   onStepNext() {
@@ -563,12 +600,5 @@ Page({
       url: this._next,
       fail: () => wx.showToast({ title: '页面跳转失败，请重试', icon: 'none' })
     })
-  },
-
-  onUnload() {
-    if (this._audio) {
-      try { this._audio.stop(); this._audio.destroy() } catch (e) { /* ignore */ }
-      this._audio = null
-    }
   }
 })

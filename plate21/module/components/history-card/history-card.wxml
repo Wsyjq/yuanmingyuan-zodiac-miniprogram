@@ -17,7 +17,17 @@
     </view>
 
     <scroll-view class="hc-body" scroll-y>
-      <view wx:for="{{lines}}" wx:key="index" class="hc-line">{{item}}</view>
+      <view wx:for="{{lines}}" wx:key="index" class="hc-line">
+        <block wx:if="{{item.parts}}"><text
+          wx:for="{{item.parts}}"
+          wx:for-item="seg"
+          wx:key="index"
+          class="hc-seg {{seg.g ? 'hc-link' : ''}}"
+          data-g="{{seg.g || ''}}"
+          bindtap="onSeg"
+        >{{seg.t}}</text></block>
+        <block wx:else>{{item}}</block>
+      </view>
     </scroll-view>
 
     <view class="hc-foot">

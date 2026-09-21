@@ -135,7 +135,7 @@
   text-align: center;
   background: var(--paper2);
   border: 1rpx solid var(--dash);
-  font-size: 28rpx;
+  font-size: 30rpx;
   color: var(--ink);
   min-height: 88rpx;
   box-sizing: border-box;

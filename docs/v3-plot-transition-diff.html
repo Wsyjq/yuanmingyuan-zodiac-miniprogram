@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>v3 剧情过渡 · 改前 / 改后</title>
+<style>
+  :root {
+    --paper: #f4efe4;
+    --ink: #2a241c;
+    --muted: #6e6458;
+    --rule: #d8cbb8;
+    --del-bg: #f8d0c8;
+    --del-fg: #8a1f12;
+    --ins-bg: #d5ead2;
+    --ins-fg: #1b5c28;
+    --card: #fffaf2;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Iwanami Mincho", "Source Han Serif SC", "Songti SC", "Noto Serif SC", serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.65;
+  }
+  header.hero {
+    padding: 48px 28px 28px;
+    max-width: 1280px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--rule);
+  }
+  header.hero h1 {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    margin: 0 0 10px;
+  }
+  header.hero p {
+    margin: 0 0 8px;
+    color: var(--muted);
+    max-width: 46em;
+  }
+  nav.toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    margin-top: 22px;
+    font-size: 14px;
+  }
+  nav.toc a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+  }
+  nav.toc a:hover { border-bottom-color: var(--ink); }
+  .legend {
+    display: flex;
+    gap: 18px;
+    margin-top: 18px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .legend span { padding: 1px 6px; }
+  .legend .d { background: var(--del-bg); color: var(--del-fg); text-decoration: line-through; }
+  .legend .i { background: var(--ins-bg); color: var(--ins-fg); }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 12px 20px 72px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    margin: 28px 0;
+    padding: 0;
+  }
+  .card > header {
+    display: flex;
+    gap: 16px;
+    padding: 18px 22px 14px;
+    border-bottom: 1px solid var(--rule);
+    align-items: flex-start;
+  }
+  .num {
+    font-variant-numeric: tabular-nums;
+    color: var(--muted);
+    font-size: 13px;
+    padding-top: 6px;
+  }
+  .card h2 {
+    margin: 0 0 4px;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .why {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+    font-family: "Source Han Sans SC", "PingFang SC", sans-serif;
+  }
+  .cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .cols article {
+    padding: 16px 20px 22px;
+    min-width: 0;
+  }
+  .cols article:first-child {
+    border-right: 1px solid var(--rule);
+  }
+  .cols h3 {
+    margin: 0 0 12px;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-family: "Source Han Sans SC", "PingFang SC", sans-serif;
+    font-weight: 500;
+  }
+  .cols h3 small { letter-spacing: 0; text-transform: none; }
+  pre.diff {
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin: 0;
+    font-family: inherit;
+    font-size: 14.5px;
+  }
+  del {
+    background: var(--del-bg);
+    color: var(--del-fg);
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+  }
+  ins {
+    background: var(--ins-bg);
+    color: var(--ins-fg);
+    text-decoration: none;
+  }
+  footer.note {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 28px 48px;
+    color: var(--muted);
+    font-size: 13px;
+    font-family: "Source Han Sans SC", "PingFang SC", sans-serif;
+  }
+  @media (max-width: 860px) {
+    .cols { grid-template-columns: 1fr; }
+    .cols article:first-child { border-right: 0; border-bottom: 1px solid var(--rule); }
+  }
+</style>
+</head>
+<body>
+<header class="hero">
+  <h1>第廿一图 v3 · 剧情过渡改前 / 改后</h1>
+  <p>对照范围：飞书 Wiki《协作内容》<b>rev 3326 → 3338</b>。只列出我动过的段落。声景、水力钟、猎狗逐鹿、远瀛观观察题、文物卡、时间轴密码、次日回信均未改，不出现在本页。</p>
+  <p>红底删除线 = 改前有、改后没有。绿底 = 新写入。</p>
+  <div class="legend"><span class="d">删</span><span class="i">增</span></div>
+  <nav class="toc"><a href="#global">全局设定</a><a href="#xq-arrive">谐奇趣</a><a href="#xq-leave">谐奇趣</a><a href="#haiyan">海晏堂</a><a href="#xushui">蓄水楼</a><a href="#dashuifa">大水法</a><a href="#letter">雨果</a><a href="#finale">终局</a><a href="#ending">结局</a></nav>
+</header>
+<div class="wrap">
+
+<section class="card" id="global">
+  <header>
+    <span class="num">01</span>
+    <div>
+      <h2>全局设定</h2>
+      <p class="why">原先只有空标题。补上踏线、两封信、终局图样规则。</p>
+    </div>
+  </header>
+  <div class="cols">
+    <article>
+      <h3>改前 <small>rev 3326</small></h3>
+      <pre class="diff">## 全局设定
+
+全局设定：
+
+涉及点位：</pre>
+    </article>
+    <article>
+      <h3>改后 <small>rev 3338</small></h3>
+      <pre class="diff">## 全局设定
+
+全局设定：<ins>游客带着一份未完成的考察档案，沿西洋楼由西向东走，查清「第二十一图」不是失踪的第二十一幅铜版画，而是后来者把自己看见的东西补进画面。</ins>
+
+涉及点位<ins>（主线，由西向东）</ins>：<ins>
+
+谐奇趣 → 黄花阵 → 方外观 → 海晏堂 → 蓄水楼（海晏堂北面锡海，查喷泉水从哪来）→ 大水法区域（站在大水法：北望远瀛观、南望观水法，不单开下一站）→ 雨果雕像 → 终局。
+
+两封信要分开：序章档案袋里是前人未写完的考察日记；雨果站是《致巴特勒上尉的信》印刷件，公开信，不是写给玩家的。
+
+终局图样只在小程序里拼，不发开场就能拼上的实体残片。</ins></pre>
+    </article>
+  </div>
+</section>
+
+<section class="card" id="xq-arrive">
+  <header>
+    <span class="num">02</span>
+    <div>
+      <h2>谐奇趣 · 到站</h2>
+      <p class="why">删掉进门就问「喷泉水从哪来」和【DJ07】。声景谜题未改。</p>
+    </div>
+  </header>
+  <div class="cols">
+    <article>
+      <h3>改前 <small>rev 3326</small></h3>
+      <pre class="diff">**剧情内容｜**
+
+按照路线图走<del>一</del>进入<del>入</del>口就来到了谐奇趣【SL03】。<del>这里正</del>我记得这是西洋楼景区建成的第一座欧式建筑，也是中国皇家园林史上首座西洋建筑。主楼前后都曾设有水法，这里还曾用于演奏中西音乐。怪不得叫“谐奇趣”，要是能听听当时的音乐就好了。  
+【DJ06-nfc贴片播放音乐】如此悠扬动耳的音乐，真不愧“谐奇趣”三字之名。<del>可是为什么要修建西方建筑，为什么要喷泉，而喷泉水又从哪里来呢？【DJ07-圆明园特刊仅作为示意，需要优化，特别是文字稿，可以适当饮用原文，建议使用canva设计。在报纸上留下蓄水楼三个字】</del></pre>
+    </article>
+    <article>
+      <h3>改后 <small>rev 3338</small></h3>
+      <pre class="diff">**剧情内容｜**
+
+按照路线图走进入口<ins>，</ins>就来到了谐奇趣【SL03】。我记得这是西洋楼景区建成的第一座欧式建筑，也是中国皇家园林史上首座西洋建筑。主楼前后都曾设有水法，这里还曾用于演奏中西音乐。怪不得叫“谐奇趣”，要是能听听当时的音乐就好了。  
+【DJ06-nfc贴片播放音乐】如此悠扬动耳的音乐，真不愧“谐奇趣”三字之名。</pre>
+    </article>
+  </div>
+</section>
+
+<section class="card" id="xq-leave">
+  <header>
+    <span class="num">03</span>
+    <div>
+      <h2>谐奇趣 · 离站</h2>
+      <p class="why">保留「灯行阵中」。删「请前往蓄水楼」。下一处改成黄花阵，DJ-08 挂在这里。</p>
+    </div>
+  </header>
+  <div class="cols">
+    <article>
+      <h3>改前 <small>rev 3326</small></h3>
+      <pre class="diff">原来当年的谐奇趣，不只是“看”的地方，也是“听”的地方。
+
+继续看路线图，谐奇趣后面还有一个被重重圈出来的地方。旁边只写着一句：
+
+&gt; **“灯行阵中，路藏墙间。”**
+
+我顺着地图上的路线继续往前。
+
+**<del>剧情内容</del>**<del>
+
+原来</del>如<del>此！怪</del>不<del>得会</del>在这里<del>看到如此西洋风格的建筑，还看到</del>喷泉<del>。不过，谐奇趣会喷出来喷泉，那么喷泉中的</del>水从<del>何而</del>来<del>？
+
+【请前往蓄水楼】</del></pre>
+    </article>
+    <article>
+      <h3>改后 <small>rev 3338</small></h3>
+      <pre class="diff">原来当年的谐奇趣，不只是“看”的地方，也是“听”的地方。
+
+继续看路线图，谐奇趣后面还有一个被重重圈出来的地方。旁边只写着一句：
+
+&gt; **“灯行阵中，路藏墙间。”**
+
+我顺着地图上的路线继续往前。<ins>圈出来的下一处，就是黄花阵。</ins>
+
+<ins>&gt; </ins>**<ins>制作注：</ins>**<ins>半字信封【DJ-08】</ins>如<ins>果还做，只挂在这一段（谐奇趣 → 黄花阵）。蓄水楼在海晏堂之后，</ins>不<ins>能再用这封信去指向黄花阵。谐奇趣现场的喷泉声是声景的一部分，不要</ins>在这里<ins>把人带走蓄水楼；</ins>喷泉水从<ins>哪</ins>来<ins>，放到海晏堂之后再查。</ins></pre>
+    </article>
+  </div>
+</section>
+
+<section class="card" id="haiyan">
+  <header>
+    <span class="num">04</span>
+    <div>
+      <h2>海晏堂 · 水力钟之后</h2>
+      <p class="why">水力钟谜题未改。删粘过来的谐奇趣段和「不知道放哪」。水源改去北面蓄水楼。「以水成戏」挪到蓄水楼。</p>
+    </div>
+  </header>
+  <div class="cols">
+    <article>
+      <h3>改前 <small>rev 3326</small></h3>
+      <pre class="diff">这样一来，调查日记里的那句话也说得通了。  
+可是这些喷泉怎么喷出的水呢
+
+<del>我继续往下看</del>，在<del>“至午而全见”下面，还有一行很淡的小字：
+
+&gt; “海晏以水记时，大水法以水成戏。”
+
+“大水法以水成戏？”
+
+既然</del>海晏堂是<del>让十二生肖轮流喷</del>水<del>来显示时间</del>，<del>那么</del>大水法<del>又</del>把水<del>设计</del>成了什么<del>呢？</del>
+
+<del>可是为什么</del>要<del>修建西方建筑，为什么要喷泉，而喷泉水又从哪里来呢？【DJ07-圆明园特刊仅作为示意，需要优化，特别是文字稿，可以适当饮用原文，建议使用canva设计。在报纸上留下蓄水楼三个字】
+
+原来如此！怪不得会在</del>这里<del>看到如此西洋风格的建筑，还看到喷泉。</del>不<del>过，</del>谐奇趣<del>会喷出来喷泉</del>，那<del>么喷泉中的</del>水<del>从何而来？</del>
+
+【请前往蓄水楼】<del>
+
+（这段话不知道放哪，先放这再说）</del></pre>
+    </article>
+    <article>
+      <h3>改后 <small>rev 3338</small></h3>
+      <pre class="diff">这样一来，调查日记里的那句话也说得通了。  
+可是这些喷泉怎么喷出的水呢<ins>？</ins>
+
+<ins>水力钟在眼前</ins>，<ins>水源却不</ins>在<ins>水池里。路线图在</ins>海晏堂<ins>北面另标了一处高台——蓄水楼【SL13】。
+
+西洋楼里的喷泉不</ins>是<ins>电泵。要先弄清</ins>水<ins>是怎么被抬高的</ins>，<ins>再往东去看</ins>大水法把水<ins>做</ins>成了什么<ins>。</ins>
+
+<ins>&gt; **制作注：**【DJ07】圆明园特刊/物理题放在下一站蓄水楼使用。报纸上</ins>要<ins>能看见「蓄水楼」三个字。</ins>这里不<ins>要重复</ins>谐奇趣<ins>的声景段</ins>，<ins>也不要提前抛「大水法以水成戏」当下一站口号——</ins>那<ins>句留给蓄</ins>水<ins>楼查完水源之后。</ins>
+
+【请前往蓄水楼】</pre>
+    </article>
+  </div>
+</section>
+
+<section class="card" id="xushui">
+  <header>
+    <span class="num">05</span>
+    <div>
+      <h2>蓄水楼 · 整章</h2>
+      <p class="why">从「指向黄花阵」改成海晏堂锡海、查完水往东去大水法。DJ-08 半字谜整段拿掉。</p>
+    </div>
+  </header>
+  <div class="cols">
+    <article>
+      <h3>改前 <small>rev 3326</small></h3>
+      <pre class="diff"># 蓄水楼
+
+原来喷泉的水<del>都</del>是<del>靠着</del>这蓄水楼【SL13】<del>啊！</del>
+
+可是为什么能把水提高呢？<del>信封</del>里<del>面</del>似乎有线索【DJ07-物理题】
+
+问题：蓄水楼为了方便供水，通常会建<del>的</del>比较
+
+a高
+
+b低
+
+还好仅存的物理知识没忘光<del>，</del>原来喷泉里面的物理原理【SL04】是这样的<del>！</del>
+
+我<del>接着</del>按地图走<del>，但是下一</del>站<del>的位置上却写着让我打开那</del>封<del>信下一步要去哪呢？【DJ08-信封】
+
+
+【谜题1】——</del>指向<del>第一站
+【谜题说明】道具是一个信封，信封封口处有</del>黄花阵<del>文字的下半部分（把字从中间截开），信封外表面是西洋楼铜版画的图样
+【谜题提示1】：刚才你看到了信，现在观察一下信封的表面吧！看看有什么
+【谜题提示2】：信封的封口处和信的背面都有一半的字，拼接起来看一下！
+【谜题答案】：</del>黄花阵<del>
+
+
+原来线索在这里上！下一站第一站的去处很明确了：黄花阵</del>。</pre>
+    </article>
+    <article>
+      <h3>改后 <small>rev 3338</small></h3>
+      <pre class="diff"># 蓄水楼
+
+原来喷泉的水<ins>，靠的就</ins>是这<ins>座</ins>蓄水楼【SL13】<ins>。
+
+这里是海晏堂北面的高台蓄水，不是谐奇趣西北那座。刚才在海晏堂看见兽首喷水，水源在这里。</ins>
+
+可是为什么能把水提高呢？<ins>特刊</ins>里似乎有线索【DJ07-物理题】
+
+问题：蓄水楼为了方便供水，通常会建<ins>得</ins>比较
+
+a<ins> </ins>高
+
+b<ins> </ins>低
+
+还好仅存的物理知识没忘光<ins>。</ins>原来喷泉里面的物理原理【SL04】是这样的<ins>：抬高蓄水，用高度差换成水压，再从喷嘴喷出。
+
+水源查清了。日记里那行淡字这才接得上：
+
+&gt; 「海晏以水记时，大水法以水成戏。」
+
+海晏堂用水来报时。再往东，大水法又把水做成了什么？</ins>
+
+我<ins>把特刊收进档案袋，</ins>按地图<ins>往东</ins>走<ins>。
+
+&gt; **制作注：**本</ins>站<ins>不要再用【DJ-08】半字信</ins>封指向黄花阵<ins>——</ins>黄花阵<ins>已经走过</ins>。<ins>DJ-08 若保留，见谐奇趣章制作注。</ins></pre>
+    </article>
+  </div>
+</section>
+
+<section class="card" id="dashuifa">
+  <header>
+    <span class="num">06</span>
+    <div>
+      <h2>大水法 · 远瀛观 / 观水法</h2>
+      <p class="why">猎狗逐鹿、远瀛观观察题未改。把「下一站远瀛观」改成站在大水法看南北轴，再往东去雨果。</p>
+    </div>
+  </header>
+  <div class="cols">
+    <article>
+      <h3>改前 <small>rev 3326</small></h3>
+      <pre class="diff">远瀛观。
+
+我<del>重新打开那张调查路线图</del>。
+
+<del>海晏堂</del>、大水法、<del>远瀛</del>观。<del>
+
+原来看起来只</del>是三个<del>不同</del>的<del>遗址，现在却刚好顺着同</del>一<del>条路线连在了一起</del>。
+
+<del>更奇怪</del>的是，路线图<del>上的</del>远瀛观旁边<del>，被人用笔重重</del>圈了一下<del>。
+
+旁边没有解释。
+
+</del>只<del>留下了</del>四个字：
+
+&gt; **<del>“上观其形。”</del>**
+
+<del>~~看来，这个人真正想让我看的东西，还在远瀛观。~~
+
+~~下</del>一站<del>——远瀛观</del>。<del>~~
+
+经</del>过观水法<del>【SL15】和远瀛观</del>，<del>我按档案里的路线</del>继续往<del>前</del>。下一处标记<del>竟然</del>是一个名字和一张纸：<del>**</del>维克多·雨果，<del>纸上写着</del>《致巴特勒上尉的信》<del>**</del>
+
+不过雨果【SL17】从来没有来过圆明园。那<del>他的</del>信，为什么会被放<del>在</del>这份寻找<del>“第二十一图”</del>的档案里呢？</pre>
+    </article>
+    <article>
+      <h3>改后 <small>rev 3338</small></h3>
+      <pre class="diff">远瀛观。
+
+我<ins>抬起头。大水法北侧高台上，就是它</ins>。
+
+<ins>再转身往南，石屏风所在的观水法【SL15】也在同一条轴上。
+
+从北到南：远瀛观</ins>、大水法、观<ins>水法</ins>。<ins>它们是一组南北相对的景观，不</ins>是三个<ins>要依次走进去</ins>的<ins>下</ins>一<ins>站</ins>。
+
+<ins>我们走</ins>的<ins>路却</ins>是<ins>东西向：西边刚离开海晏堂和蓄水楼</ins>，<ins>眼前是大水法，再往东才是雨果雕像。
+
+</ins>路线图<ins>在</ins>远瀛观旁边圈了一下<ins>，</ins>只<ins>写</ins>四个字：
+
+&gt; **<ins>「上观其形。」</ins>**
+
+<ins>不用绕到北面再走</ins>一站。<ins>站在大水法，抬头看形，低头看水，侧</ins>过<ins>身能看见</ins>观水法<ins>的石屏。看完</ins>，继续往<ins>东</ins>。<ins>
+
+档案</ins>下一处标记是一个名字<ins>，</ins>和一张纸：维克多·雨果，《致巴特勒上尉的信》<ins>。</ins>
+
+不过雨果【SL17】从来没有来过圆明园。那<ins>封公开</ins>信，为什么会被放<ins>进</ins>这份寻找<ins>「第二十一图」</ins>的档案里呢？</pre>
+    </article>
+  </div>
+</section>
+
+<section class="card" id="letter">
+  <header>
+    <span class="num">07</span>
+    <div>
+      <h2>雨果 · 两封信</h2>
+      <p class="why">拆开：序章是考察日记，这里是公开信印刷件。四张文物卡未改。</p>
+    </div>
+  </header>
+  <div class="cols">
+    <article>
+      <h3>改前 <small>rev 3326</small></h3>
+      <pre class="diff"># 雨果雕像
+
+1861年，圆明园被焚毁后的第二年，雨果在法国写下《致巴特勒上尉的信》，公开谴责英法联军对圆明园的劫掠和焚毁。奇怪的是，他从来没有来过这里。如今，他的雕像就立在西洋楼遗址旁<del>，而</del>档案袋里<del>，也正好放</del>着一封同名的信。
+
+拆开信封，里面是一页仿旧信纸，上面印着<del>DJ</del>《致巴特勒上尉的信》节选。</pre>
+    </article>
+    <article>
+      <h3>改后 <small>rev 3338</small></h3>
+      <pre class="diff"># 雨果雕像
+
+1861年，圆明园被焚毁后的第二年，雨果在法国写下《致巴特勒上尉的信》，公开谴责英法联军对圆明园的劫掠和焚毁。奇怪的是，他从来没有来过这里。如今，他的雕像就立在西洋楼遗址旁<ins>。
+
+</ins>档案袋里<ins>另夹</ins>着一封同名的信<ins>。这不是序章里那本未写完的考察日记，也不是写给「后来者」的私人嘱托——是一份印好的公开信节选，放在档案里当物证</ins>。
+
+拆开信封，里面是一页仿旧信纸，上面印着《致巴特勒上尉的信》节选。<ins>【DJ-14】</ins></pre>
+    </article>
+  </div>
+</section>
+
+<section class="card" id="finale">
+  <header>
+    <span class="num">08</span>
+    <div>
+      <h2>终局 · 拼图</h2>
+      <p class="why">实体五残片（含养雀笼、线法画）改成小程序拼五站图样。时间轴/密码未改结构。</p>
+    </div>
+  </header>
+  <div class="cols">
+    <article>
+      <h3>改前 <small>rev 3326</small></h3>
+      <pre class="diff">打开<del>档案夹</del>，<del>拿出路上收下来的五张图样残片。</del>谐奇趣、<del>养雀笼</del>、方外观、<del>蓄</del>水<del>楼、线</del>法<del>画，每</del>一张<del>都是在不同地方拿到的，之前</del>一直<del>被分别夹在档案夹</del>的<del>五个格</del>子<del>里</del>。
+
+<del>可</del>把它们<del>全部</del>摊<del>开以后</del>，边缘<del>的形状居然能接</del>上。
+
+【终局谜题】——拼出<del>“第二十一图”</del>
+
+<del>将四</del>张图样<del>残片按照边缘的异形切口重新拼合</del>。拼错的地方接不上，只有一种排列<del>方式</del>能<del>够让五张纸完整</del>扣在一起。
+
+把最后一块推到中间，边缘正好合上。
+
+<del>四</del>张<del>原本</del>来自不同地点的残片，拼成<del>了</del>一幅铜版画风格的长卷。<del>一路经过的建筑和景观都出现在上面：</del>谐奇趣、<del>养雀笼</del>、方外观、水法<del>……</del>原本分散的线索，第一次出现在同一张画里。
+
+可画面中央偏偏空着一块。
+
+那块空白没有图案，只印着四个很浅的字：
+
+&gt; **此处待绘。**
+
+原来<del>一路收集</del>这些<del>残片，</del>并不是为了找到一张早就藏好的<del>“第二十一图”</del>。
+
+这幅画根本还没有完成。
+
+档案里的人只留下了四周，把中间的位置空了出来。</pre>
+    </article>
+    <article>
+      <h3>改后 <small>rev 3338</small></h3>
+      <pre class="diff">打开<ins>小程序。一路走过来</ins>，谐奇趣、<ins>黄花阵</ins>、方外观、<ins>海晏堂、大</ins>水法<ins>各自留下过</ins>一张<ins>图样。它们</ins>一直<ins>是屏幕上</ins>的<ins>残片，并不是开场就塞进袋</ins>子<ins>、可以提前拼上的纸片</ins>。
+
+把它们摊<ins>在同一屏上</ins>，边缘<ins>对得</ins>上。
+
+【终局谜题】——拼出<ins>「第二十一图」</ins>
+
+<ins>在屏幕上按走过的顺序拼合五</ins>张图样。拼错的地方接不上，只有一种排列能扣在一起。
+
+把最后一块推到中间，边缘正好合上。
+
+<ins>五</ins>张来自不同地点的残片，拼成一幅铜版画风格的长卷。谐奇趣、<ins>黄花阵</ins>、方外观、<ins>海晏堂、大</ins>水法<ins>都在上面。</ins>原本分散的线索，第一次出现在同一张画里。
+
+可画面中央偏偏空着一块。
+
+那块空白没有图案，只印着四个很浅的字：
+
+&gt; **此处待绘。**
+
+原来这些<ins>图样</ins>并不是为了找到一张早就藏好的<ins>「第二十一图」</ins>。
+
+这幅画根本还没有完成。
+
+档案里的人只留下了四周，把中间的位置空了出来。<ins>
+
+&gt; **制作注：**终局拼合只做小程序动画，不预制实体残片。实体残片开场就在袋子里，玩家会提前拼；也不要做养雀笼、线法画残片——这两站不在本路线上。日期数字只出现在屏幕卡片角落，不另做一套开场就能对上的纸卡。</ins></pre>
+    </article>
+  </div>
+</section>
+
+<section class="card" id="ending">
+  <header>
+    <span class="num">09</span>
+    <div>
+      <h2>结局 · 路线站名</h2>
+      <p class="why">画面路线和「各站留下什么」去掉线法画，对齐现走的站。</p>
+    </div>
+  </header>
+  <div class="cols">
+    <article>
+      <h3>改前 <small>rev 3326</small></h3>
+      <pre class="diff">密集的线条勾出建筑和遗址的轮廓，画面采用了《西洋楼铜版图》的铜版刻线风格，但里面记录的并不是乾隆时期完整的西洋楼，而是我刚刚走过的这条路线：黄花阵、方外观、海晏堂、大水法<del>、线法画</del>，还有今天仍然留在这里的人和遗迹。
+
+黄花阵留下的是<del>迷宫</del>，方外观留下的是不同文化交汇的建筑，海晏堂留下的是用水计时的机关，大水法留下的是已经停止的喷泉<del>，线法画留下的是一种已经消失的观看方式</del>。</pre>
+    </article>
+    <article>
+      <h3>改后 <small>rev 3338</small></h3>
+      <pre class="diff">密集的线条勾出建筑和遗址的轮廓，画面采用了《西洋楼铜版图》的铜版刻线风格，但里面记录的并不是乾隆时期完整的西洋楼，而是我刚刚走过的这条路线：<ins>谐奇趣、</ins>黄花阵、方外观、海晏堂、大水法，还有今天仍然留在这里的人和遗迹。
+
+<ins>谐奇趣留下的是能听见的水声和乐声，</ins>黄花阵留下的是<ins>后来照着铜版画补起来的墙</ins>，方外观留下的是不同文化交汇的建筑，海晏堂留下的是用水计时的机关，大水法留下的是已经停止的喷泉。</pre>
+    </article>
+  </div>
+</section>
+
+</div>
+<footer class="note">
+  文档：https://yixunwenhua.feishu.cn/wiki/WJuUwAHG7iSXDokzBtqcQqAmnae<br/>
+  说明：当前线上已到 rev 3346。大水法在 3338 之后又被改过——远瀛观后半（南北轴、去雨果）在最新稿里没有了。本对照用的是我改完时的 3338，方便看我动了什么，不是看此刻线上全文。
+</footer>
+</body>
+</html>

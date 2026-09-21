@@ -7,9 +7,9 @@ const HISTORY_CASES = [
   {
     name: 's2-reveal',
     route: 'plate21/module/pages/s2-reveal/s2-reveal',
-    drive(instance) {
+    async drive(instance) {
       instance.onInput({ detail: { value: '莲花灯' } })
-      instance.onSubmit()
+      await instance.onSubmit()
     }
   },
   {

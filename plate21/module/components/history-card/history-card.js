@@ -6,7 +6,8 @@
  *   visible       Boolean
  *   title         String        文物名 + 年代
  *   source        String        出处（底部"〔来源〕"小字）
- *   lines         Array<String> 正文各行
+ *   lines         Array<String|{parts:Array<{t:String,g?:String}>}>  正文各行；
+ *                 带 parts 的行按段渲染，g 段为可点术语（铜绿虚线下划线）
  *   cornerNumber  Number        卡片右下角数字（采风修订版主线：数字连成日期密码）
  *   showCorner    Boolean       是否显示角落数字
  *   btnText       String        底部按钮文案（缺省"收入考察手册"）
@@ -14,6 +15,7 @@
  *   bind:collect  点击"收入考察手册"（触发后组件自动关闭）
  *   bind:next     点击自定义按钮文案时触发（采风修订版：前往下一题）
  *   bind:close    点击右上关闭
+ *   bind:glossary 点击术语段（detail.key 为术语键，由页面决定开哪张小卡）
  */
 Component({
   properties: {
@@ -75,6 +77,12 @@ Component({
       }
     },
 
-    noop() {}
+    noop() {},
+
+    // 正文里的术语（铜绿虚线下划线）点按：抛给页面开对应术语史料卡
+    onSeg(e) {
+      const g = e.currentTarget.dataset.g
+      if (g) this.triggerEvent('glossary', { key: g })
+    }
   }
 })

@@ -1,4 +1,4 @@
-<!-- 第二站 · 黄花阵 对读二：黄花从灯上来（语音/文字作答，每次提示，第三次揭晓） -->
+<!-- 第二站 · 黄花阵 对读二：黄花从灯上来（文字作答，每次提示，第三次揭晓） -->
 <nav-back />
 <page-overlays />
 <bgm-ambience />
@@ -9,7 +9,7 @@
   <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
   <view class="title serif">黄花，从灯上来</view>
   <view class="lead kaiti">画上跑阵的人手里都提着一盏灯，灯是黄的。这地方又叫黄花阵——「黄花」两个字，是不是打灯上来的？</view>
-  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" />
+  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
 
   <!-- DJ-09 黄花阵图：屏上弹出宫女游玩图，手里对照迷宫平面 -->
   <view class="ref-img">
@@ -18,7 +18,7 @@
   </view>
 
   <view class="answer" wx:if="{{!solved}}">
-    <view class="ans-label kaiti">一句话写下或说出来。不超过 {{maxChars}} 字。</view>
+    <view class="ans-label kaiti">一句话写下来。不超过 {{maxChars}} 字。</view>
     <textarea
       class="ans-input"
       placeholder="你觉得「黄花」二字从何而来？"
@@ -37,18 +37,11 @@
     </view>
     <view class="ans-actions">
       <button
-        class="voice-btn {{recording ? 'voice-on' : ''}}"
-        bindtap="onVoiceTap"
-        disabled="{{checking}}"
-      >{{recording ? '停' : '语音'}}</button>
-      <button
         class="btn-seal ans-btn"
         bindtap="onSubmit"
         disabled="{{!answer || checking}}"
       >{{checking ? '核 对 中' : '提 交'}}</button>
     </view>
-    <view wx:if="{{recording}}" class="rec-tip note-hand">正在听，最多八秒。说完再点停。</view>
-    <button wx:if="{{showMicSetting}}" class="hint-btn-inline" bindtap="onOpenMicSetting">去开启麦克风</button>
     <view wx:if="{{hint}}" class="hint">{{hint}}</view>
   </view>
 

@@ -28,7 +28,7 @@
   letter-spacing: 4rpx;
 }
 .title-div { width: 42%; margin: 18rpx 0 0; }
-.lead { margin-top: 18rpx; font-size: 28rpx; line-height: 1.85; color: var(--ink); }
+.lead { margin-top: 18rpx; font-size: 31rpx; line-height: 1.85; color: var(--ink); }
 
 .capture-grid {
   margin-top: 42rpx;
@@ -52,7 +52,7 @@
   font-family: "Courier New", monospace;
   font-size: 20rpx;
 }
-.slot-title { color: var(--ink-deep); font-size: 27rpx; font-weight: 700; line-height: 1.4; }
+.slot-title { color: var(--ink-deep); font-size: 29rpx; font-weight: 700; line-height: 1.4; }
 .slot-state { margin-top: 3rpx; color: var(--ink60); font-size: 18rpx; letter-spacing: 2rpx; }
 .captured .slot-state { color: var(--patina); }
 
@@ -91,7 +91,7 @@
   font-size: 22rpx;
 }
 
-.slot-desc { min-height: 94rpx; margin-top: 12rpx; color: var(--ink60); font-size: 21rpx; line-height: 1.55; }
+.slot-desc { min-height: 94rpx; margin-top: 12rpx; color: var(--ink60); font-size: 23rpx; line-height: 1.55; }
 .slot-actions { display: flex; margin-top: 12rpx; gap: 10rpx; }
 .capture-btn {
   flex: 1;

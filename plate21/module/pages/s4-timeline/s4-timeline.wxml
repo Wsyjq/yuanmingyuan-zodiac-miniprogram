@@ -15,7 +15,7 @@
       <view class="navi-caption">雨果雕像 · 项目 AI 叙事图</view>
     </view>
     <view class="para" wx:for="{{paragraphs}}" wx:key="index">{{item}}</view>
-    <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" />
+    <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
     <dialogue-block speaker="守档人" text="到这儿，才轮到我说话，前面几站我没跟着你。拆封套之前，先听我两句。里头除了信，还有几张写着年份的条子，是我从各处抄回来的。抄的时候是齐的，你倒出来就乱了。先把它们捋回各自的位置。年不捋顺，这封信你不知道该站在哪一年读。" clip-id="dlg-yugao-1" />
     <view class="quote-card">
       <view class="hatch-divider quote-line"></view>

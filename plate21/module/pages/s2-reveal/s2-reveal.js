@@ -1,12 +1,11 @@
 // 第二站 · 黄花阵 对读二：黄花从灯上来（V2.2 讲述版）
-// 玩法：对照 DJ-09 黄花阵图（地图＋宫女游玩图）与屏上参考图，语音或文字作答；
+// 玩法：对照 DJ-09 黄花阵图（地图＋宫女游玩图）与屏上参考图，文字作答；
 //      调 answer-judge 检验意思。字数 40；每次答错给提示，第三次揭晓标准答案。
 // 史料：宫女手持黄色彩绸扎成的莲花灯，迷宫因此得名黄花阵。卡片角落数字 0。
 const session = require('../../store/session')
 const audioSrc = require('../../utils/audio-src')
 const audioBus = require('../../utils/audio-bus')
 const judge = require('../../utils/answer-judge')
-const voiceInput = require('../../utils/voice-input')
 const playGuide = require('../../capabilities/play-guide/guide')
 const coachHost = require('../../capabilities/play-guide/coach-host')
 
@@ -24,9 +23,7 @@ Page({
     maxChars: judge.MAX_INPUT_CHARS,
     maxAttempts: judge.MAX_FREEFORM_ATTEMPTS,
     attempts: 0,
-    recording: false,
     checking: false,
-    showMicSetting: false,
     hint: '',
     showHistory: false,
     historyLines: HISTORY_LINES,
@@ -56,13 +53,6 @@ Page({
   },
 
   onReady() {},
-
-  onUnload() {
-    if (this._voice) {
-      this._voice.destroy()
-      this._voice = null
-    }
-  },
 
   onInput(e) {
     const clipped = judge.clipInput(e.detail.value || '')
@@ -106,7 +96,7 @@ Page({
     }
     const attempts = this.data.attempts + 1
     const correct = result.verdict === 'correct'
-    session.attemptPuzzle('s2-name', attempts, correct, this._inputMode || 'text')
+    session.attemptPuzzle('s2-name', attempts, correct, 'text')
     if (correct) {
       this.setData({
         checking: false,
@@ -144,44 +134,6 @@ Page({
       attempts: attempts,
       hint: judge.hintForAttempt(attempts)
     })
-  },
-
-  onVoiceTap() {
-    if (this.data.solved || this.data.checking) return
-    audioBus.stopKind('voice')
-    if (!this._voice) {
-      const self = this
-      this._voice = voiceInput.createVoiceInput({
-        onText: function (text) {
-          const clipped = judge.clipInput(text)
-          self._inputMode = 'voice'
-          self.setData({
-            answer: clipped,
-            charCount: judge.countChars(clipped),
-            recording: false,
-            hint: clipped ? '' : '没听清，再说一遍或改用文字'
-          })
-        },
-        onState: function (state) {
-          self.setData({ recording: state === 'recording' })
-        },
-        onError: function (err) {
-          const denied = err && err.code === 'denied'
-          self.setData({
-            recording: false,
-            hint: err && err.message || '语音转写暂不可用，请改用文字',
-            showMicSetting: !!denied
-          })
-        }
-      })
-    }
-    if (this.data.recording) this._voice.stop()
-    else this._voice.start()
-  },
-
-  onOpenMicSetting() {
-    if (!wx.openSetting) return
-    wx.openSetting({})
   },
 
   onHistoryNext() {

@@ -4,10 +4,12 @@ node_modules/
 .zcode/
 .grok/
 .workbuddy/
+.kimi-code/
 .playwright-cli/
 .env
 .env.*
 !.env.example
+plate21/module/utils/judge-secrets.js
 project.private.config.json
 
 *.log
@@ -21,8 +23,19 @@ test/shots/
 test/shots-test/
 test/shots-h5/
 test/shots-play-guide/
-test/harness/out/
+test/shots-devtools/
+test/shots-fix/
+test/shots-real/
 test/shots-v2/
+test/shots-v22/
+test/shots-v3fix/
+test/shots-v3new/
+test/shots-review/
+test/shots-devtools-*.png
+test/sim-win*.png
+test/*.tap
+test/audit-flow-layout.report.json
+test/harness/out/
 test/_archived/
 test/gen-raw/
 test/gen-img-*.png
@@ -59,3 +72,7 @@ Thumbs.db
 # BGM 音频本地生成（ComfyUI），不入库
 /bgm/
 /audio/
+# 史料工作稿与配图（本地对照用，不入库）
+docs/plates-20/
+docs/sl-source-images/
+docs/SL史料卡-*.md
