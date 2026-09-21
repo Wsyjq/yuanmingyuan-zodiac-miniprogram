@@ -738,7 +738,7 @@ test('waypoint xushuilou presents the v3 height question from the plot', async (
     settleMs: 10
   })
   assert.deepEqual(result.errors, [])
-  assert.match(result.html, /原来喷泉的水，靠的就是这座蓄水楼/)
+  assert.match(result.html, /原来喷泉的水，靠的就是这座[\s\S]*?蓄水楼/)
   assert.match(result.html, /通常会建得比较/)
   assert.doesNotMatch(result.html, /亲历当差/)
 })
@@ -813,7 +813,7 @@ test('v3 mainline scored sites keep a back button and original plot copy', async
     settleMs: 10
   })
   assert.deepEqual(xs.errors, [])
-  assert.match(xs.html, /原来喷泉的水，靠的就是这座蓄水楼/)
+  assert.match(xs.html, /原来喷泉的水，靠的就是这座[\s\S]*?蓄水楼/)
 
   const tr = await renderPage({
     route: 'plate21/module/pages/transit/transit',

@@ -10,7 +10,8 @@
   <block wx:if="{{site.scored}}">
     <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
       <view class="title serif">{{site.title}}</view>
-      <view class="wp-intro kaiti">{{site.intro}}</view>
+      <view class="wp-intro kaiti"><gloss-text wx:if="{{site.introParts}}" parts="{{site.introParts}}" bind:glossary="onGlossary" /><block wx:else>{{site.intro}}</block></view>
+      <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
       <view wx:if="{{site.image}}" class="wp-plate double-frame">
         <view class="tape" style="top:-20rpx; left:50%; margin-left:-90rpx;"></view>
         <image class="wp-plate-img" src="{{site.image}}" mode="widthFix" />
@@ -40,7 +41,7 @@
         <button class="btn-seal wp-confirm-btn" bindtap="onQuizConfirm" disabled="{{!selected.length || solved}}">{{revealed ? '记 下 了' : '就 是 这 些'}}</button>
       </view>
       <view wx:if="{{followup}}" class="followup">
-        <view class="wp-line kaiti" wx:for="{{site.quiz.followup}}" wx:key="*this">{{item}}</view>
+        <view class="wp-line kaiti" wx:for="{{site.quiz.followup}}" wx:key="index"><gloss-text wx:if="{{item.parts}}" parts="{{item.parts}}" bind:glossary="onGlossary" /><block wx:else>{{item}}</block></view>
         <button class="btn-seal wp-next" bindtap="onNext">{{site.nextLabel}}</button>
       </view>
     </scroll-view>
@@ -71,7 +72,7 @@
   <block wx:else>
   <view class="wp-step {{step === 0 ? '' : 'wp-step-off'}}">
     <view class="title serif">{{site.title}}</view>
-    <view class="wp-intro kaiti">{{site.intro}}</view>
+    <view class="wp-intro kaiti"><gloss-text wx:if="{{site.introParts}}" parts="{{site.introParts}}" bind:glossary="onGlossary" /><block wx:else>{{site.intro}}</block></view>
     <!-- 本页讲述保持行内：散页已有语音导览悬浮钮（audio-guide FAB），不再叠 dock -->
     <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" />
     <view class="archive-rule wp-rule"></view>

@@ -117,7 +117,7 @@
   margin-top: 26rpx;
   padding: 24rpx 28rpx;
   border: 2rpx solid rgba(70, 56, 42, 0.4);
-  background: rgba(244, 237, 220, 0.55);
+  background: rgba(229, 213, 184, 0.55);
 }
 .wp-prop {
   border: 2rpx dashed rgba(74, 107, 100, 0.75);

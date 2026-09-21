@@ -9,6 +9,7 @@ const session = require('../../store/session')
 const sessionDate = require('../../utils/session-date')
 const audioSrc = require('../../utils/audio-src')
 const audioBus = require('../../utils/audio-bus')
+const glossHost = require('../../utils/gloss-host')
 
 // 四种候选纹样使用项目方确认可商用的 AI 图片衍生文件。
 const PATTERNS = [
@@ -34,6 +35,7 @@ const FINALE_TAIL = [
 ]
 
 Page({
+  behaviors: [glossHost],
   data: {
     patterns: PATTERNS,
     picked: null,       // 举纸对照后认出的 key
@@ -50,6 +52,12 @@ Page({
     finaleQuote: FINALE_QUOTE,
     finaleBridge: FINALE_BRIDGE,
     finaleTail: FINALE_TAIL,
+    // 「原墙」= SL-08 史料卡挂点（v3 rev 3346：四道题全完后才说今墙是重建）
+    wallParts: [
+      { t: '走出迷宫，档案里有一行后来补上的记录：眼前能走进去的墙，并不是乾隆年间留下的' },
+      { t: '原墙', g: 'sl08' },
+      { t: '。' }
+    ],
     masonClip: audioSrc.clip('dlg-huanghuazhen-5'),
     bricklayerClip: audioSrc.clip('dlg-huanghuazhen-6'),
     narrSrc: audioSrc.clip('narr-s2-pattern'),
@@ -75,6 +83,7 @@ Page({
       showHistory: done && !skipped,
       showCardNumber: done && !skipped,
       showFinale: skipped,
+      narrSrc: audioSrc.clip(skipped ? 'narr-s2-pattern-finale' : 'narr-s2-pattern'),
       attempts: Number(puzzle && puzzle.payload && puzzle.payload.attempts) || 0
     })
   },
@@ -120,7 +129,11 @@ Page({
   },
 
   onCloseHistory() {
-    this.setData({ showHistory: false, showFinale: true })
+    this.setData({
+      showHistory: false,
+      showFinale: true,
+      narrSrc: audioSrc.clip('narr-s2-pattern-finale')
+    })
   },
 
   onGoS3() {

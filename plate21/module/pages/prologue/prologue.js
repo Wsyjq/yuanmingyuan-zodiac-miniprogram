@@ -5,13 +5,18 @@ const session = require('../../store/session')
 const audioSrc = require('../../utils/audio-src')
 const playGuide = require('../../capabilities/play-guide/guide')
 const coachHost = require('../../capabilities/play-guide/coach-host')
+const glossHost = require('../../utils/gloss-host')
 
 Page({
-  behaviors: [coachHost],
+  behaviors: [coachHost, glossHost],
   data: {
     // 序章叙事（docs/剧情可用稿-人物对话版-V2.3.md §序章：段落收短、删「这些都是常识」「照这行字说」「愿意看的话」）
     paragraphs: [
-      { text: '我是一名从历史系毕业的研究助理，大多数时候，都是在图书馆整理馆藏档案、核对图录还有补录那些没人愿意细看的编号和出处。前几天一天下午，我整理到一批圆明园档案，顺手翻开了《西洋楼铜版图》的著录条目。' },
+      { text: '我是一名从历史系毕业的研究助理，大多数时候，都是在图书馆整理馆藏档案、核对图录还有补录那些没人愿意细看的编号和出处。前几天一天下午，我整理到一批圆明园档案，顺手翻开了《西洋楼铜版图》的著录条目。', parts: [
+        { t: '我是一名从历史系毕业的研究助理，大多数时候，都是在图书馆整理馆藏档案、核对图录还有补录那些没人愿意细看的编号和出处。前几天一天下午，我整理到一批圆明园档案，顺手翻开了' },
+        { t: '《西洋楼铜版图》', g: 'sl01' },
+        { t: '的著录条目。' }
+      ] },
       { text: '档案夹的封面印着「西洋楼铜版图」。翻开，二十幅，一幅一号。图录页写着：乾隆四十六年到五十一年，宫廷画家伊兰泰起稿，造办处刻版刷印，贺清泰、潘廷璋这些在宫里当差的西洋画家也搭过手。画的是刚建成的样子，喷泉、石柱、楼顶都在，一样不缺。' },
       { text: '翻到后面，是一张民国著录卡。「第二十图」的条目后面，有人用铅笔补了一行小字——' },
       { image: 'IMG-P02', src: '/plate21/module/assets/img/IMG-RUNTIME-PROLOGUE-CARD.jpg', caption: '民国著录卡片 · 铅笔补记' },
@@ -35,13 +40,19 @@ Page({
       '一份封套 · 写着「到像下拆」'
     ],
     showHandover: false,
-    narrSrc: audioSrc.clip('narr-prologue'),
+    narrSrc: audioSrc.clip('narr-prologue-p01'),
     advancing: false
+  },
+
+  onNovelPage(e) {
+    if (this.data.showHandover) return
+    const n = String((e.detail && e.detail.index || 0) + 1).padStart(2, '0')
+    this.setData({ narrSrc: audioSrc.clip('narr-prologue-p' + n) })
   },
 
   onNovelFinish() {
     // 叙事结束：清点交到手上的档案。信不拆——到遗址门口再拆。
-    this.setData({ showHandover: true })
+    this.setData({ showHandover: true, narrSrc: audioSrc.clip('narr-prologue-handover') })
     this.scheduleCoach([playGuide.SPOTS.go])
   },
 
@@ -83,7 +94,7 @@ Page({
     this._timers = []
     session.viewPuzzle('prologue-envelope')
     if (session.isPuzzleComplete('prologue-envelope')) {
-      this.setData({ showHandover: true })
+      this.setData({ showHandover: true, narrSrc: audioSrc.clip('narr-prologue-handover') })
     }
   },
 

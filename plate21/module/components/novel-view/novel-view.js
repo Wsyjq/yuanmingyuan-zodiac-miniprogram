@@ -73,6 +73,11 @@ Component({
   },
 
   methods: {
+    // 段落里的史料术语（gloss-text）点入：原样抛给宿主页面弹史料卡
+    onGlossary(e) {
+      this.triggerEvent('glossary', e.detail)
+    },
+
     _resetPages(value) {
       this._clearTimers()
       this._finished = false
@@ -122,6 +127,7 @@ Component({
       if (typing) {
         this._typeTimer = setTimeout(() => this._finishTyping(), revealDuration + staggerTotal)
       }
+      this.triggerEvent('pagechange', { index: index, count: this._pages.length })
     },
 
     _finishTyping() {

@@ -1,8 +1,10 @@
 // 大水法 · 猎狗逐鹿 + 北望远瀛观。飞书 v3 原文。静默不再当主路径。
 const session = require('../../store/session')
+const audioSrc = require('../../utils/audio-src')
 const ladder = require('../../utils/attempt-ladder')
 const playGuide = require('../../capabilities/play-guide/guide')
 const coachHost = require('../../capabilities/play-guide/coach-host')
+const glossHost = require('../../utils/gloss-host')
 
 const PIECES = [
   { key: 'deer', label: '梅花鹿', zone: 'pool' },
@@ -22,7 +24,7 @@ const YUAN_OPTS = [
 ]
 
 Page({
-  behaviors: [coachHost],
+  behaviors: [coachHost, glossHost],
   data: {
     stage: 'hunt',
     pieces: PIECES,
@@ -37,7 +39,25 @@ Page({
     yuanHint: '',
     yuanSolved: false,
     yuanRevealed: false,
-    followup: false
+    followup: false,
+    narrSrc: audioSrc.clip('narr-dashuifa-hunt'),
+    // 史料卡挂点（v3 rev 3346）：到站「大水法」SL-14（题前）；
+    // 题后「观水法」SL-15、「雨果从来没有来过」SL-17（遗物题前）
+    introParts: [
+      { t: '顺着档案上的路线继续往前，' },
+      { t: '大水法', g: 'sl14' },
+      { t: '遗址逐渐出现在眼前。和海晏堂相比，这里的遗迹看起来更直观一些。高大的石构还留在原地，但只看现在的样子，还是很难想象它当年到底是什么样的。' }
+    ],
+    axisParts: [
+      { t: '我抬起头。大水法北侧高台上，就是它。再转身往南，石屏风所在的' },
+      { t: '观水法', g: 'sl15' },
+      { t: '也在同一条轴上。从北到南：远瀛观、大水法、观水法。它们是一组南北相对的景观，不是三个要依次走进去的下一站。我们走的路却是东西向：西边刚离开海晏堂和蓄水楼，眼前是大水法，再往东才是雨果雕像。' }
+    ],
+    hugoParts: [
+      { t: '不用绕到北面再走一站。站在大水法，抬头看形，低头看水，侧过身能看见观水法的石屏。看完，继续往东。档案下一处标记是一个名字，和一张纸：维克多·雨果，《致巴特勒上尉的信》。不过' },
+      { t: '雨果', g: 'sl17' },
+      { t: '从来没有来过圆明园。那封公开信，为什么会被放进这份寻找「第二十一图」的档案里呢？' }
+    ]
   },
 
   onHold(e) {
@@ -71,7 +91,8 @@ Page({
         huntAttempts: result.attempts,
         huntHint: result.hint,
         placed: auto,
-        stage: 'after'
+        stage: 'after',
+        narrSrc: audioSrc.clip('narr-dashuifa-after')
       })
       session.completePuzzle('ds-hunt', { attempts: result.attempts, revealed: result.revealed })
         .catch(function () {})
@@ -81,7 +102,7 @@ Page({
   },
 
   onAfterNext() {
-    this.setData({ stage: 'yuan' })
+    this.setData({ stage: 'yuan', narrSrc: audioSrc.clip('narr-dashuifa-yuan') })
     session.viewPuzzle('ds-yuan')
   },
 
@@ -107,7 +128,8 @@ Page({
         yuanRevealed: result.revealed,
         yuanSelected: 'B',
         yuanHint: result.hint,
-        followup: true
+        followup: true,
+        narrSrc: audioSrc.clip('narr-dashuifa-followup')
       })
       session.completePuzzle('ds-yuan', { answer: 'B', attempts: result.attempts, revealed: result.revealed }, {
         checkpoint: 's4-timeline'
@@ -135,9 +157,20 @@ Page({
     const hunt = session.getPuzzle('ds-hunt')
     const yuan = session.getPuzzle('ds-yuan')
     if (yuan) {
-      this.setData({ stage: 'yuan', yuanSolved: true, yuanSelected: 'B', followup: true, placed: { deer: 'pool', dogs: 'ring', beasts: 'ends' } })
+      this.setData({
+        stage: 'yuan',
+        yuanSolved: true,
+        yuanSelected: 'B',
+        followup: true,
+        placed: { deer: 'pool', dogs: 'ring', beasts: 'ends' },
+        narrSrc: audioSrc.clip('narr-dashuifa-followup')
+      })
     } else if (hunt) {
-      this.setData({ stage: 'after', placed: { deer: 'pool', dogs: 'ring', beasts: 'ends' } })
+      this.setData({
+        stage: 'after',
+        placed: { deer: 'pool', dogs: 'ring', beasts: 'ends' },
+        narrSrc: audioSrc.clip('narr-dashuifa-after')
+      })
     }
   }
 })

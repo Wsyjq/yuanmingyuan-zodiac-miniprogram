@@ -8,9 +8,23 @@
     title="序章"
     paragraphs="{{paragraphs}}"
     finish-text="翻完这一册档案"
+    bind:pagechange="onNovelPage"
     bind:finish="onNovelFinish"
+    bind:glossary="onGlossary"
   />
   <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 序章讲述" dock="{{true}}" />
+
+  <!-- 术语史料卡（正文铜绿词点入，如《西洋楼铜版图》SL-01） -->
+  <history-card
+    wx:if="{{gloss}}"
+    visible="{{!!gloss}}"
+    title="{{gloss.title}}"
+    source="{{gloss.source}}"
+    lines="{{gloss.lines}}"
+    btn-text="返 回"
+    bind:next="onGlossClose"
+    bind:close="onGlossClose"
+  />
 
   <!-- 叙事结束：档案交接清点。信不拆——到遗址门口再拆（V2.1）。 -->
   <view wx:if="{{showHandover}}" class="pack">
@@ -20,7 +34,7 @@
       <view class="archive-rule"></view>
       <view class="pack-note">这册档案跟着你走完全程。信先别拆——到了遗址门口再拆。</view>
       <view class="pack-map">
-        <image class="pack-map-img" src="/plate21/module/assets/img/IMG-RUNTIME-MAP.jpg" mode="widthFix" />
+        <image class="pack-map-img img-aged" src="/plate21/module/assets/img/IMG-RUNTIME-MAP.jpg" mode="widthFix" />
       </view>
       <view class="pack-route note-hand olive">路线：入口 · 谐奇趣 · 黄花阵 · 方外观 · 海晏堂 · 蓄水楼 · 大水法 · 雨果雕像</view>
       <view class="pack-items">

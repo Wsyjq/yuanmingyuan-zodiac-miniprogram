@@ -12,7 +12,7 @@
 .lead { margin-top: 18rpx; font-size: 31rpx; line-height: 1.85; color: var(--ink, #46382A); }
 
 .ref-img { margin-top: 36rpx; display: flex; flex-direction: column; align-items: center; }
-.ref-pic { width: 480rpx; height: 360rpx; border: 1rpx solid var(--brass, #A98F5F); border-radius: 10rpx; background: var(--paper2, #EFE4C8); }
+.ref-pic { width: 480rpx; height: 360rpx; border: 1rpx solid var(--brass, #A98F5F); border-radius: 10rpx; background: var(--paper2, #D9C8A9); }
 .ref-note { margin-top: 12rpx; font-size: 26rpx; color: var(--ink60, #8A7A60); transform: rotate(-1deg); text-align: center; line-height: 1.6; }
 
 .answer,
@@ -67,7 +67,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  background: var(--paper2, #EFE4C8);
+  background: var(--paper2, #D9C8A9);
   border: 1rpx solid var(--dash, #C0B49A);
   padding: 24rpx 28rpx;
   min-height: 88rpx;

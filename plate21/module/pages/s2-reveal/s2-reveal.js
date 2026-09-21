@@ -137,11 +137,11 @@ Page({
   },
 
   onHistoryNext() {
-    this.setData({ showHistory: false })
+    this.setData({ showHistory: false, narrSrc: audioSrc.clip('narr-s2-reveal-followup') })
   },
 
   onCloseHistory() {
-    this.setData({ showHistory: false })
+    this.setData({ showHistory: false, narrSrc: audioSrc.clip('narr-s2-reveal-followup') })
   },
 
   onNext() {

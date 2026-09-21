@@ -117,7 +117,7 @@ Page({
     pointTip: '',
     attempts: 0,
     advancing: false,
-    narrSrc: audioSrc.clip('narr-s4-timeline'),
+    narrSrc: audioSrc.clip('narr-s4-timeline')
   },
 
   onLoad() {
@@ -128,6 +128,7 @@ Page({
     const skipped = !!(solved && session.getPuzzle('s4-timeline') && session.getPuzzle('s4-timeline').payload && session.getPuzzle('s4-timeline').payload.action === 'skipped')
     this.setData({
       phase: solved ? 'puzzle' : 'novel',
+      narrSrc: audioSrc.clip(solved ? 'narr-s4-timeline-mono' : 'narr-s4-timeline'),
       cardNumber: Number(session.getCardDigit('s4-timeline')),
       slots: buildSlots(solved),
       cards: buildCards(solved),
@@ -139,7 +140,7 @@ Page({
   },
 
   onNovelFinish() {
-    this.setData({ phase: 'puzzle', showHistory: false })
+    this.setData({ phase: 'puzzle', showHistory: false, narrSrc: '' })
   },
 
   onCloseHistory() {
@@ -286,7 +287,11 @@ Page({
     this.setData({ timelineComplete: true })
     const self = this
     this._timers.push(setTimeout(() => {
-      this.setData({ monologue: true, showHistory: true })
+      this.setData({
+        monologue: true,
+        showHistory: true,
+        narrSrc: audioSrc.clip('narr-s4-timeline-mono')
+      })
       // 收集时间轴卡片角落数字（日期第二位）——主线：卡片数字 → 日期密码
       session.completePuzzle('s4-timeline', {
         answer: SLOTS.map(function (slot) { return slot.label }),
@@ -300,7 +305,11 @@ Page({
   // V2.1：时间轴可跳——跳过不发该卡，直接进读信收尾（monologue）。
   onSkipTimeline() {
     if (this.data.monologue) return
-    this.setData({ monologue: true, skipped: true })
+    this.setData({
+      monologue: true,
+      skipped: true,
+      narrSrc: audioSrc.clip('narr-s4-timeline-mono')
+    })
     session.attemptPuzzle('s4-timeline', this.data.attempts, true, 'skip')
     session.completePuzzle('s4-timeline', { action: 'skipped', attempts: this.data.attempts })
       .catch(() => {

@@ -11,7 +11,7 @@
   <view class="hatch-divider navi-line"></view>
   <scroll-view class="navi-body" scroll-y>
     <view class="navi-figure double-frame">
-      <image class="navi-image" src="/plate21/module/assets/img/IMG-RUNTIME-HUGO.jpg" mode="aspectFill" />
+      <image class="navi-image img-aged" src="/plate21/module/assets/img/IMG-RUNTIME-HUGO.jpg" mode="aspectFill" />
       <view class="navi-caption">雨果雕像 · 项目 AI 叙事图</view>
     </view>
     <view class="para" wx:for="{{paragraphs}}" wx:key="index">{{item}}</view>
@@ -88,6 +88,7 @@
 
   <!-- 站尾：守档人串场——拆信读信；四件东西卡自排不评分；开放问不给选项（V2.2） -->
   <view class="mono" wx:if="{{monologue}}">
+    <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
     <view class="mono-text kaiti" wx:for="{{monologueParagraphs}}" wx:key="index">{{item}}</view>
     <dialogue-block speaker="守档人" text="对了。现在拆信。信我不念，他的字，你自己看。" clip-id="dlg-yugao-2" />
     <view class="mono-text kaiti">把信抽出来，站在像底下读。这封信本来就不是写给你的，把它读完。</view>

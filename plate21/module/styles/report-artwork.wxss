@@ -53,7 +53,7 @@
   padding: 12rpx 22rpx;
   box-sizing: border-box;
   border: 1rpx solid rgba(70, 56, 42, 0.4);
-  background: rgba(244, 237, 220, 0.94);
+  background: rgba(229, 213, 184, 0.94);
 }
 .report-artwork .l1-text {
   color: var(--ink);

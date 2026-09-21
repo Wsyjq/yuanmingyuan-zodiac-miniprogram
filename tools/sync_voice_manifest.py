@@ -77,30 +77,23 @@ def waypoint_narr(site_key):
             texts.append(t)
     return texts
 
+# 旁白已按屏拆条，由 tools/build_page_voice.js 维护。这里只保留仍单条的页，
+# 避免把旧的「整路由一条」规则写回 manifest。
 NARR_RULES = {
-    'narr-prologue': lambda: js_text_fields('prologue'),
-    'narr-s1-decode': lambda: wxml_texts('s1-decode', r'lead kaiti|tear-note|novel-p'),
-    'narr-s2-quiz': lambda: wxml_texts('s2-quiz', r'novel-p'),
-    'narr-s2-reveal': lambda: wxml_texts('s2-reveal', r'lead kaiti|(?<![\w-])kaiti(?![\w-])'),
     'narr-s2-blend': lambda: wxml_texts('s2-blend', r'lead kaiti'),
-    'narr-s2-pattern': lambda: (
-        wxml_texts('s2-pattern', r'lead kaiti')
-        + js_str_array('s2-pattern', 'FINALE_LEAD')
-        + js_const_str('s2-pattern', 'FINALE_QUOTE')
-        + js_const_str('s2-pattern', 'FINALE_BRIDGE')
-        + js_str_array('s2-pattern', 'FINALE_TAIL')),
-    'narr-s3-comic': lambda: wxml_texts('s3-comic', r'novel-p'),
-    'narr-s3-zodiac': lambda: wxml_texts('s3-zodiac', r'lead kaiti|note-hand olive'),
-    'narr-s3-water': lambda: wxml_texts('s3-water', r'lead kaiti|step-copy'),
+    'narr-s2-quiz': lambda: wxml_texts('s2-quiz', r'novel-p')[:1],
+    'narr-s2-reveal': lambda: wxml_texts('s2-reveal', r'lead kaiti'),
+    'narr-s2-pattern': lambda: wxml_texts('s2-pattern', r'lead kaiti'),
+    'narr-s3-zodiac': lambda: wxml_texts('s3-zodiac', r'lead kaiti'),
+    'narr-s3-water': lambda: wxml_texts('s3-water', r'lead kaiti'),
     'narr-s4-password': lambda: wxml_texts('s4-password', r'lead kaiti'),
-    'narr-s4-timeline': lambda: (
-        js_str_array('s4-timeline', 'PARAGRAPHS')
-        + js_str_array('s4-timeline', 'MONOLOGUE_PARAGRAPHS')
-        + wxml_texts('s4-timeline', r'mono-text')),
-    'narr-finale': lambda: js_text_fields('finale'),
+    'narr-waypoint-xieqiqu': lambda: [waypoint_narr('xieqiqu')[0]] if waypoint_narr('xieqiqu') else [],
+    'narr-waypoint-fangwaiguan': lambda: [waypoint_narr('fangwaiguan')[0]] if waypoint_narr('fangwaiguan') else [],
+    'narr-waypoint-xushuilou': lambda: [waypoint_narr('xushuilou')[0]] if waypoint_narr('xushuilou') else [],
+    'narr-waypoint-yangquelong': lambda: [waypoint_narr('yangquelong')[0]] if waypoint_narr('yangquelong') else [],
+    'narr-waypoint-guanshuifa': lambda: [waypoint_narr('guanshuifa')[0]] if waypoint_narr('guanshuifa') else [],
+    'narr-waypoint-xianfahua': lambda: [waypoint_narr('xianfahua')[0]] if waypoint_narr('xianfahua') else [],
 }
-for k in ['xieqiqu', 'yangquelong', 'fangwaiguan', 'xushuilou', 'guanshuifa', 'xianfahua']:
-    NARR_RULES['narr-waypoint-' + k] = (lambda key=k: waypoint_narr(key))
 
 def main():
     man = json.load(io.open(MAN, encoding='utf-8'))

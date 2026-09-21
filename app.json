@@ -163,7 +163,7 @@
     "plate21/module/pages/dashuifa/dashuifa": {
       "network": "all",
       "packages": [
-        "voice-j"
+        "voice-g"
       ]
     },
     "plate21/module/pages/handbook/handbook": {

@@ -45,7 +45,7 @@ Page({
     layerCount: 0,        // 幕3 已落下的层数（1~5）
     caption: '',          // 幕3 点题短文案
     novel: NOVEL_PARAGRAPHS,
-    narrSrc: audioSrc.clip('narr-finale'),
+    narrSrc: '',
     today: '',
     name: '',
     signing: false,
@@ -105,7 +105,7 @@ Page({
       this.setData({ act: 3, layerCount: 0, caption: '' })
       this.later(() => this.startWipe(), 500)
     } else if (n === 4) {
-      this.setData({ act: 4 })
+      this.setData({ act: 4, narrSrc: audioSrc.clip('narr-finale-p01') })
     } else if (n === 5) {
       this.setData({ act: 5, layerCount: 5, caption: FINAL_CAPTION })
     }
@@ -161,6 +161,11 @@ Page({
       }
     }
     // 幕4 长文叙事不可跳过；幕5 为表单交互，均不响应轻推
+  },
+
+  onNovelPage(e) {
+    const n = String((e.detail && e.detail.index || 0) + 1).padStart(2, '0')
+    this.setData({ narrSrc: audioSrc.clip('narr-finale-p' + n) })
   },
 
   onNovelFinish() {

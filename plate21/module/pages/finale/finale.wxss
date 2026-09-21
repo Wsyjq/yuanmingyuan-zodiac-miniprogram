@@ -360,7 +360,7 @@
   padding: 24rpx 28rpx;
   border: 2rpx dashed var(--dash);
   border-radius: 8rpx;
-  background: rgba(244, 237, 220, 0.6);
+  background: rgba(229, 213, 184, 0.6);
   text-align: center;
 }
 .echo-title {

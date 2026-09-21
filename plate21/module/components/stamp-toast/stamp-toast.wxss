@@ -26,7 +26,7 @@
   border: 5rpx solid var(--cinnabar);
   border-radius: 8rpx;
   color: var(--cinnabar);
-  background: rgba(244, 237, 220, 0.92);
+  background: rgba(229, 213, 184, 0.92);
   font-size: 34rpx;
   font-weight: 700;
   letter-spacing: 6rpx;

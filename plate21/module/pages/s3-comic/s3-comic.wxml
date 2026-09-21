@@ -10,7 +10,7 @@
   </view>
 
   <view class="novel">
-    <view class="novel-p">沿着地图走，我来到了海晏堂遗址。眼前已经很难看出当年建筑完整的样子了，但把档案里的《海晏堂西面》铜版图和现场对照起来，还是能找到一些对应的位置。</view>
+    <view class="novel-p"><gloss-text parts="{{introParts}}" bind:glossary="onGlossary" /></view>
     <view class="novel-p">铜版图里，这里原本排列着十二尊人身兽首像，分别对应十二生肖，也对应一天里的十二个时辰。看到这里，我忽然想起来，调查日记中好像有一句话：</view>
   </view>
   <view class="paper-quote">“十二兽各守一时，至午而全见。”</view>
@@ -20,7 +20,7 @@
 
   <view class="comic-plate double-frame" role="img" aria-label="十二兽首按时辰喷水的四格漫画">
     <view class="tape" style="top:-20rpx; left:50%; margin-left:-90rpx;"></view>
-    <image class="comic-image" src="/plate21/module/assets/img/IMG-RUNTIME-COMIC.jpg" mode="widthFix" />
+    <image class="comic-image img-aged" src="/plate21/module/assets/img/IMG-RUNTIME-COMIC.jpg" mode="widthFix" />
   </view>
   <view class="comic-captions">
     <view class="comic-caption" wx:for="{{cells}}" wx:key="id" wx:for-index="index">
@@ -46,7 +46,7 @@
 
   <view class="followup" wx:if="{{followup}}">
     <view class="novel-p">原来所谓的“水力钟”，真的就是用水来表示时间。这样一来，调查日记里的那句话也说得通了。可是这些喷泉怎么喷出的水呢？</view>
-    <view class="novel-p">水力钟在眼前，水源却不在水池里。路线图在海晏堂北面另标了一处高台——蓄水楼。</view>
+    <view class="novel-p"><gloss-text parts="{{followupWaterParts}}" bind:glossary="onGlossary" /></view>
     <view class="novel-p">西洋楼里的喷泉不是电泵。要先弄清水是怎么被抬高的，再往东去看大水法把水做成了什么。</view>
     <button class="btn-seal" bindtap="onNext" disabled="{{advancing}}">请前往蓄水楼</button>
   </view>
@@ -63,5 +63,16 @@
   btn-text="继 续"
   bind:next="onHistoryNext"
   bind:close="onCloseHistory"
+/>
+<!-- 术语史料卡（导语「海晏堂」SL-12 / 收尾「蓄水楼」SL-13 点入） -->
+<history-card
+  wx:if="{{gloss}}"
+  visible="{{!!gloss}}"
+  title="{{gloss.title}}"
+  source="{{gloss.source}}"
+  lines="{{gloss.lines}}"
+  btn-text="返 回"
+  bind:next="onGlossClose"
+  bind:close="onGlossClose"
 />
 <stamp-toast id="stamp" />

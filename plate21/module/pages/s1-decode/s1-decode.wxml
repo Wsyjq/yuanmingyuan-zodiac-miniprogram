@@ -4,14 +4,14 @@
 <view class="page page-shell paper-grain paper-real">
   <view class="binder"></view>
   <view class="tag-no tag-no-fixed">No.S1-1</view>
+  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
 
   <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
   <!-- 幕一：到门口，信还封着 -->
   <block wx:if="{{stage === 'sealed'}}">
     <view class="title serif">西洋楼入口 · 拆信</view>
     <view class="hatch-divider title-div"></view>
-    <view class="lead kaiti">到了西洋楼入口。门里一条路往东伸进去，两边残基一处接一处，看不出当年谁是谁。说好了到门口拆信，现在就是门口。</view>
-    <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
+    <view class="lead kaiti"><gloss-text parts="{{leadParts}}" bind:glossary="onGlossary" /></view>
 
     <view class="prop-card archive-sheet">
       <view class="prop-label archive-tab">线下道具 · 实体信封</view>
@@ -83,6 +83,18 @@
     </view>
   </block>
   </scroll-view>
+
+  <!-- 术语史料卡（导语「西洋楼」点入，SL-02） -->
+  <history-card
+    wx:if="{{gloss}}"
+    visible="{{!!gloss}}"
+    title="{{gloss.title}}"
+    source="{{gloss.source}}"
+    lines="{{gloss.lines}}"
+    btn-text="返 回"
+    bind:next="onGlossClose"
+    bind:close="onGlossClose"
+  />
 </view>
 <coach-spot
   class="coach-host"

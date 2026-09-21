@@ -6,7 +6,8 @@
     "page-overlays": "../../capabilities/overlay-host/overlay-host",
     "audio-clip": "../../components/audio-clip/audio-clip",
     "dialogue-block": "../../components/dialogue-block/dialogue-block",
-    "bgm-ambience": "../../components/bgm-ambience/bgm-ambience"
+    "bgm-ambience": "../../components/bgm-ambience/bgm-ambience",
+    "gloss-text": "../../components/gloss-text/gloss-text"
   },
   "disableScroll": true
 }

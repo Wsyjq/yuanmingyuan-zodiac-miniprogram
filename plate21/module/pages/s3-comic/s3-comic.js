@@ -3,6 +3,7 @@ const session = require('../../store/session')
 const audioSrc = require('../../utils/audio-src')
 const audioBus = require('../../utils/audio-bus')
 const ladder = require('../../utils/attempt-ladder')
+const glossHost = require('../../utils/gloss-host')
 
 const OPTIONS = [
   { key: 'A', text: '只有“午马”喷水' },
@@ -18,12 +19,24 @@ const HINTS = [
 const REVEAL = '海晏堂十二生肖喷水装置按照十二时辰依次喷水，到正午时，十二尊兽首会一同喷水，因此也被称作“水力钟”。'
 
 Page({
+  behaviors: [glossHost],
   data: {
     narrSrc: audioSrc.clip('narr-s3-comic'),
     showHistory: false,
     cardNumber: 0,
     historyLines: [
       '海晏堂十二生肖喷水装置按照十二时辰依次喷水，到正午时，十二尊兽首会一同喷水，因此也被称作“水力钟”。'
+    ],
+    // 「海晏堂」= SL-12 挂点（题前）；题后「蓄水楼」= SL-13 挂点（v3 rev 3346）
+    introParts: [
+      { t: '沿着地图走，我来到了' },
+      { t: '海晏堂', g: 'sl12' },
+      { t: '遗址。眼前已经很难看出当年建筑完整的样子了，但把档案里的《海晏堂西面》铜版图和现场对照起来，还是能找到一些对应的位置。' }
+    ],
+    followupWaterParts: [
+      { t: '水力钟在眼前，水源却不在水池里。路线图在海晏堂北面另标了一处高台——' },
+      { t: '蓄水楼', g: 'sl13' },
+      { t: '。' }
     ],
     cells: [
       { id: 'zi', time: '子', mark: '鼠', art: 'single', desc: '鼠首先报子时' },
@@ -82,11 +95,19 @@ Page({
   },
 
   onCloseHistory() {
-    this.setData({ showHistory: false, followup: true })
+    this.setData({
+      showHistory: false,
+      followup: true,
+      narrSrc: audioSrc.clip('narr-s3-comic-followup')
+    })
   },
 
   onHistoryNext() {
-    this.setData({ showHistory: false, followup: true })
+    this.setData({
+      showHistory: false,
+      followup: true,
+      narrSrc: audioSrc.clip('narr-s3-comic-followup')
+    })
   },
 
   onNext() {

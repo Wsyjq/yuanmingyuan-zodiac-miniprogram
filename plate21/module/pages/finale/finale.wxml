@@ -67,9 +67,10 @@
     title="尾声 · 第二十一图"
     paragraphs="{{novel}}"
     finish-text="署名"
+    bind:pagechange="onNovelPage"
     bind:finish="onNovelFinish"
   />
-    <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 结局讲述" dock="{{true}}" />
+    <audio-clip wx:if="{{act === 4 && narrSrc}}" src="{{narrSrc}}" label="听 · 结局讲述" dock="{{true}}" />
 
   <!-- 幕5 署名 -->
   <view wx:if="{{act === 5}}" class="act5">

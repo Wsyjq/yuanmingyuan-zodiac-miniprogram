@@ -5,6 +5,7 @@ const audioBus = require('../../utils/audio-bus')
 const ladder = require('../../utils/attempt-ladder')
 const playGuide = require('../../capabilities/play-guide/guide')
 const coachHost = require('../../capabilities/play-guide/coach-host')
+const glossHost = require('../../utils/gloss-host')
 
 const OPTIONS = [
   { key: 'A', text: '作为军事防御工事，用于迷惑和阻挡入侵的敌人。' },
@@ -20,7 +21,7 @@ const HINTS = [
 const REVEAL = '每逢中秋之夜，皇帝会坐在阵中心的凉亭里，观赏宫女们在迷宫路径中奔跑嬉戏。最先到达中心的人会得到皇帝的赏赐。'
 
 Page({
-  behaviors: [coachHost],
+  behaviors: [coachHost, glossHost],
   data: {
     options: OPTIONS,
     selected: '',
@@ -33,6 +34,12 @@ Page({
     followup: false,
     advancing: false,
     narrSrc: audioSrc.clip('narr-s2-quiz'),
+    // 「黄花阵」= SL-07 史料卡挂点（v3 rev 3346：四道题之前只说是迷宫）
+    introParts: [
+      { t: '到了' },
+      { t: '黄花阵', g: 'sl07' },
+      { t: '的入口处，眼前景观让我有些震惊——一个皇家宫苑中竟有一座迷宫！不过皇家宫苑中为什么会有一座迷宫呢？' }
+    ],
     historyLines: [
       '黄花阵的作用：每逢中秋之夜，皇帝会坐在阵中心的凉亭里，观赏宫女们在迷宫路径中奔跑嬉戏。最先到达中心的人会得到皇帝的赏赐。'
     ]
@@ -78,7 +85,11 @@ Page({
   },
 
   onCloseHistory() {
-    this.setData({ showHistory: false, followup: true })
+    this.setData({
+      showHistory: false,
+      followup: true,
+      narrSrc: audioSrc.clip('narr-s2-quiz-followup')
+    })
   },
 
   onNext() {

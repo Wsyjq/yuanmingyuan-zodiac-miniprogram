@@ -6,7 +6,8 @@
     "audio-clip": "../../components/audio-clip/audio-clip",
     "dialogue-block": "../../components/dialogue-block/dialogue-block",
     "bgm-ambience": "../../components/bgm-ambience/bgm-ambience",
-    "history-card": "../../components/history-card/history-card"
+    "history-card": "../../components/history-card/history-card",
+    "gloss-text": "../../components/gloss-text/gloss-text"
   },
   "navigationBarTitleText": "考察",
   "disableScroll": true

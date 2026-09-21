@@ -46,7 +46,7 @@
           <view wx:if="{{block.image}}" class="photo-sheet">
             <view class="photo-tape"></view>
             <archive-illustration wx:if="{{block.illustrationType}}" class="page-photo" type="{{block.illustrationType}}" label="{{block.caption}}" compact="{{true}}" style="display:block;" />
-            <image wx:elif="{{block.src}}" class="page-photo" src="{{block.src}}" mode="aspectFill" />
+            <image wx:elif="{{block.src}}" class="page-photo img-aged" src="{{block.src}}" mode="aspectFill" />
             <view wx:else class="photo-code">{{block.image}}</view>
             <view class="photo-caption">{{block.caption}}</view>
           </view>
@@ -60,7 +60,7 @@
           </view>
 
           <view wx:else class="narrative-copy {{index === leadIndex ? 'lead-copy' : ''}}">
-            <text class="reveal-copy {{showAll ? 'show-all' : ''}}" style="animation-duration: {{revealDuration}}ms; animation-delay: {{index * blockDelay}}ms;">{{block.text}}</text>
+            <text class="reveal-copy {{showAll ? 'show-all' : ''}}" style="animation-duration: {{revealDuration}}ms; animation-delay: {{index * blockDelay}}ms;"><gloss-text wx:if="{{block.parts}}" parts="{{block.parts}}" bind:glossary="onGlossary" /><block wx:else>{{block.text}}</block></text>
           </view>
         </block>
       </scroll-view>
@@ -106,7 +106,7 @@
           <view wx:if="{{block.image}}" class="photo-sheet">
             <view class="photo-tape"></view>
             <archive-illustration wx:if="{{block.illustrationType}}" class="page-photo" type="{{block.illustrationType}}" label="{{block.caption}}" compact="{{true}}" style="display:block;" />
-            <image wx:elif="{{block.src}}" class="page-photo" src="{{block.src}}" mode="aspectFill" />
+            <image wx:elif="{{block.src}}" class="page-photo img-aged" src="{{block.src}}" mode="aspectFill" />
             <view wx:else class="photo-code">{{block.image}}</view>
             <view class="photo-caption">{{block.caption}}</view>
           </view>
@@ -115,7 +115,7 @@
             <view class="quote-copy kaiti">{{block.text}}</view>
             <view class="quote-mark quote-end">”</view>
           </view>
-          <view wx:else class="narrative-copy {{index === turnLeadIndex ? 'lead-copy' : ''}}">{{block.text}}</view>
+          <view wx:else class="narrative-copy {{index === turnLeadIndex ? 'lead-copy' : ''}}"><gloss-text wx:if="{{block.parts}}" parts="{{block.parts}}" bind:glossary="onGlossary" /><block wx:else>{{block.text}}</block></view>
         </block>
       </view>
       <view class="turn-shine"></view>

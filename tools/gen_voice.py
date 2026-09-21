@@ -35,6 +35,22 @@ ROOT = os.path.dirname(HERE)
 MANIFEST = os.path.join(HERE, "voice_manifest.json")
 OUT_DIR = os.path.join(ROOT, "audio", "v22")
 
+
+def load_dotenv():
+    """把仓库根 .env 写进 os.environ（已有键不覆盖）。不打印值。"""
+    path = os.path.join(ROOT, ".env")
+    if not os.path.isfile(path):
+        return
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, val = line.split("=", 1)
+            key = key.strip()
+            if key and key not in os.environ:
+                os.environ[key] = val.strip()
+
 CONCURRENCY = 4
 RETRY = 3
 
@@ -94,7 +110,8 @@ async def synth_one(edge_tts, clip, cast_table, force=False, post=False, engine=
     if not force and os.path.exists(out_path) and os.path.getsize(out_path) > 1024:
         return {"id": clip["id"], "status": "skip"}
     cast = cast_table.get(clip.get("cast", "narrator")) or cast_table["narrator"]
-    text = " ".join(clip["text"]) if isinstance(clip["text"], list) else clip["text"]
+    raw = clip["text"]
+    text = "".join(raw) if isinstance(raw, list) else raw
     last_err = None
     for attempt in range(1, RETRY + 1):
         try:
@@ -160,9 +177,10 @@ async def run(args):
     data = load_manifest()
     cast_table = data["casts"]
     clips = data["clips"]
-    if args.only:
-        wanted = set(args.only)
-        clips = [c for c in clips if c["id"] in wanted]
+    if args.only or args.prefix:
+        wanted = set(args.only or [])
+        prefixes = args.prefix or []
+        clips = [c for c in clips if c["id"] in wanted or any(c["id"].startswith(p) for p in prefixes)]
     os.makedirs(OUT_DIR, exist_ok=True)
 
     sem = asyncio.Semaphore(CONCURRENCY)
@@ -213,14 +231,17 @@ def report(clips=None):
 
 
 def main():
+    load_dotenv()
     ap = argparse.ArgumentParser()
     ap.add_argument("--force", action="store_true")
     ap.add_argument("--post", action="store_true", help="ffmpeg mono+loudnorm")
     ap.add_argument("--only", action="append", help="only these clip ids")
+    ap.add_argument("--prefix", action="append", help="only clips whose id starts with this")
     ap.add_argument("--report", action="store_true", help="duration report only")
     ap.add_argument("--engine", default=os.environ.get("VOICE_ENGINE", "edge"),
                     choices=["edge", "minimax"], help="tts engine (default edge)")
     args = ap.parse_args()
+    load_dotenv()
     if args.report:
         report()
         return 0

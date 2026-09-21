@@ -42,7 +42,7 @@ Component({
               content: site.name,
               color: '#46382A',
               fontSize: 12,
-              bgColor: '#F4EDDC',
+              bgColor: '#E5D5B8',
               borderColor: '#A98F5F',
               borderWidth: 1,
               borderRadius: 4,

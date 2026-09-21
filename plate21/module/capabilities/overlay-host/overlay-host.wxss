@@ -11,7 +11,7 @@
   overflow: hidden;
   border: 2rpx solid var(--brass);
   border-radius: 50%;
-  background: rgba(244, 237, 220, 0.94);
+  background: rgba(229, 213, 184, 0.94);
   box-shadow: 0 6rpx 18rpx rgba(70, 56, 42, 0.22);
 }
 .ov-fab image {

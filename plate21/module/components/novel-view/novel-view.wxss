@@ -70,7 +70,7 @@
 
 .stack-mid {
   transform: translate(5rpx, 5rpx) rotate(-0.35deg);
-  background: #EFE5CE;
+  background: #D9C6A0;
 }
 
 .paper-leaf {
@@ -80,7 +80,7 @@
     radial-gradient(ellipse 300rpx 220rpx at 12% 18%, rgba(122, 92, 62, 0.07), transparent 72%),
     radial-gradient(ellipse 280rpx 340rpx at 92% 84%, rgba(111, 114, 72, 0.05), transparent 70%),
     repeating-linear-gradient(0deg, rgba(122, 92, 62, 0.025) 0, rgba(122, 92, 62, 0.025) 1rpx, transparent 1rpx, transparent 13rpx),
-    linear-gradient(155deg, #F8F1DF 0%, var(--paper) 58%, #EDE1C8 100%);
+    linear-gradient(155deg, #EBDDBF 0%, var(--paper) 58%, #DECFAB 100%);
   box-shadow: 0 10rpx 28rpx rgba(70, 56, 42, 0.2), inset -12rpx 0 18rpx rgba(122, 92, 62, 0.055);
   transform-style: preserve-3d;
   backface-visibility: hidden;
@@ -580,7 +580,7 @@
   padding: 0 15rpx;
   border: 1rpx solid rgba(70, 56, 42, 0.38);
   border-radius: 0;
-  background: rgba(244, 237, 220, 0.72);
+  background: rgba(229, 213, 184, 0.72);
   color: var(--ink);
   font-size: 22rpx;
   letter-spacing: 2rpx;

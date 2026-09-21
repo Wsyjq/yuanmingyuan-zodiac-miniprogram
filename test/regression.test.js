@@ -197,7 +197,8 @@ test('novel view reveals each leaf and turns it like a paper page', () => {
   instance.onPaperTap()
   instance.onPaperTap()
   instance.onPaperTap()
-  assert.deepEqual(events, ['finish'])
+  assert.ok(events.includes('pagechange'))
+  assert.deepEqual(events.filter((name) => name === 'finish'), ['finish'])
   detach()
 
   const componentRoot = path.resolve(__dirname, '..', 'plate21', 'module', 'components', 'novel-view', 'novel-view')

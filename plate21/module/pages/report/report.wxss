@@ -347,7 +347,7 @@
   margin-top: 44rpx;
   padding: 26rpx 28rpx;
   border: 2rpx solid rgba(70, 56, 42, 0.5);
-  background: rgba(244, 237, 220, 0.6);
+  background: rgba(229, 213, 184, 0.6);
 }
 .echo-question {
   margin-top: 16rpx;

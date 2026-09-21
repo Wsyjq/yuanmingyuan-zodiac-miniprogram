@@ -19,15 +19,16 @@ const MAX_MB = parseFloat(process.argv.includes('--max') ? process.argv[process.
 
 // 站点分组键：粒度到「站内用途」，供显式包映射（预下载链按页挂、单页 ≤2MB）
 function stationOf(id) {
-  if (id === 'narr-prologue') return 'prologue'
-  if (id === 'narr-s1-decode') return 's1'
+  if (/^narr-prologue/.test(id)) return 'prologue'
+  if (/^narr-s1/.test(id)) return 's1'
   if (/^dlg-huanghuazhen/.test(id)) return 's2-dlg'
   if (/^narr-s2/.test(id)) return 's2-narr'
   if (/^guide-s2/.test(id)) return 's2-guide'
   if (/^(dlg-haiyantang|narr-s3|guide-s3)/.test(id)) return 's3'
   if (/^(dlg-yugao|narr-s4|guide-s4)/.test(id)) return 's4'
-  if (id === 'narr-finale') return 'finale'
-  const m = id.match(/(?:dlg|narr-waypoint|guide-t)-([a-z]+)(?:-[0-9]+|-base|-deep)?$/)
+  if (/^narr-finale/.test(id)) return 'finale'
+  if (/^narr-dashuifa/.test(id)) return 'ds'
+  const m = id.match(/(?:dlg|narr-waypoint|guide-t)-([a-z]+)(?:-followup|-end|-b\d+|-[0-9]+|-base|-deep)?$/)
   if (m) return 'wp-' + m[1]
   return 'misc'
 }
@@ -45,7 +46,7 @@ const PKG_LAYOUT = [
   { name: 'voice-d', stations: ['s3'] },
   { name: 'voice-e', stations: ['s4'] },
   { name: 'voice-f', stations: ['wp-xieqiqu'] },
-  { name: 'voice-g', stations: ['wp-yangquelong'] },
+  { name: 'voice-g', stations: ['wp-yangquelong', 'ds'] },
   { name: 'voice-h', stations: ['wp-fangwaiguan'] },
   { name: 'voice-i', stations: ['wp-xushuilou'] },
   { name: 'voice-j', stations: ['wp-guanshuifa', 'wp-xianfahua'] }

@@ -6,15 +6,16 @@ const session = require('../../store/session')
 const audioSrc = require('../../utils/audio-src')
 const playGuide = require('../../capabilities/play-guide/guide')
 const coachHost = require('../../capabilities/play-guide/coach-host')
+const glossHost = require('../../utils/gloss-host')
 
 const ANSWER = '黄花阵'
 
 // 信全文见 docs/剧情可用稿-主线走一遍.md §第一站【信·可直接用】，印在实体信纸正面，此处不再复制。
 
 Page({
-  behaviors: [coachHost],
+  behaviors: [coachHost, glossHost],
   data: {
-    narrSrc: audioSrc.clip('narr-s1-decode'),
+    narrSrc: audioSrc.clip('narr-s1-decode-sealed'),
     stage: 'sealed', // sealed → reading → puzzle
     answerInput: '',
     attempts: 0,
@@ -22,7 +23,13 @@ Page({
     hintText: '',
     wrongTip: '',
     solved: false,
-    advancing: false
+    advancing: false,
+    // 到站导语里的「西洋楼」= SL-02 史料卡挂点（v3 rev 3346：到入口弹）
+    leadParts: [
+      { t: '到了' },
+      { t: '西洋楼', g: 'sl02' },
+      { t: '入口。门里一条路往东伸进去，两边残基一处接一处，看不出当年谁是谁。说好了到门口拆信，现在就是门口。' }
+    ]
   },
 
   onReady() {
@@ -44,6 +51,7 @@ Page({
       this.setData({
         stage: 'puzzle',
         solved: true,
+        narrSrc: audioSrc.clip('narr-s1-decode-solved'),
         answerInput: ANSWER,
         attempts: Number(puzzle.payload && puzzle.payload.attempts) || 1
       })
@@ -52,12 +60,12 @@ Page({
 
   // 撕开封口：转到「去读纸上的信」。信不在屏幕上，这里只给一句引导。
   onTear() {
-    this.setData({ stage: 'reading' })
+    this.setData({ stage: 'reading', narrSrc: audioSrc.clip('narr-s1-decode-reading') })
   },
 
   // 读完纸信，回头看封口上那半截字
   onReadDone() {
-    this.setData({ stage: 'puzzle' })
+    this.setData({ stage: 'puzzle', narrSrc: audioSrc.clip('narr-s1-decode-puzzle') })
   },
 
   onInput(e) {
@@ -89,7 +97,7 @@ Page({
     if (value.includes(ANSWER)) {
       const attempts = this.data.attempts + 1
       session.attemptPuzzle('s1-decode', attempts, true, 'text')
-      this.setData({ solved: true, attempts, wrongTip: '' })
+      this.setData({ solved: true, attempts, wrongTip: '', narrSrc: audioSrc.clip('narr-s1-decode-solved') })
       session.completePuzzle('s1-decode', { answer: ANSWER, attempts: attempts }).catch(function () {
         wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' })
       })
@@ -98,7 +106,13 @@ Page({
     const attempts = this.data.attempts + 1
     session.attemptPuzzle('s1-decode', attempts, false, 'text')
     if (attempts >= 3) {
-      this.setData({ solved: true, attempts, answerInput: ANSWER, wrongTip: '两半合上，是三个字：黄花阵。' })
+      this.setData({
+        solved: true,
+        attempts,
+        answerInput: ANSWER,
+        wrongTip: '两半合上，是三个字：黄花阵。',
+        narrSrc: audioSrc.clip('narr-s1-decode-solved')
+      })
       session.completePuzzle('s1-decode', { answer: ANSWER, attempts: attempts, revealed: true }).catch(function () {
         wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' })
       })

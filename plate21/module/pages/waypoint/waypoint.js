@@ -7,6 +7,7 @@
 const session = require('../../store/session')
 const audioSrc = require('../../utils/audio-src')
 const ladder = require('../../utils/attempt-ladder')
+const glossHost = require('../../utils/gloss-host')
 
 const SITES = {
   xieqiqu: {
@@ -16,6 +17,11 @@ const SITES = {
     audioStation: 't-xieqiqu',
     narrClip: 'narr-waypoint-xieqiqu',
     intro: '按照路线图走进入口，就来到了谐奇趣。我记得这是西洋楼景区建成的第一座欧式建筑，也是中国皇家园林史上首座西洋建筑。主楼前后都曾设有水法，这里还曾用于演奏中西音乐。怪不得叫“谐奇趣”，要是能听听当时的音乐就好了。',
+    introParts: [
+      { t: '按照路线图走进入口，就来到了' },
+      { t: '谐奇趣', g: 'sl03' },
+      { t: '。我记得这是西洋楼景区建成的第一座欧式建筑，也是中国皇家园林史上首座西洋建筑。主楼前后都曾设有水法，这里还曾用于演奏中西音乐。怪不得叫“谐奇趣”，要是能听听当时的音乐就好了。' }
+    ],
     image: '/plate21/module/assets/img/plate-xieqiqu.jpg',
     imageNote: '档案里的《谐奇趣南面》——当年这里奏乐、看水。',
     quiz: {
@@ -142,6 +148,11 @@ const SITES = {
     audioStation: 't-fangwaiguan',
     narrClip: 'narr-waypoint-fangwaiguan',
     intro: '站在方外观的正面看现在的方外观只剩下部分台基和石构，不过档案中的《方外观正面》铜版图还保存着它原本的样子让我能够了解原来的精美建筑：两层西式楼体、半环形石阶，上面却盖着中国传统样式的重檐屋顶。继续往下看还能发现，方外观内部曾设置阿拉伯文碑刻。可是西式楼体、中式屋顶、阿拉伯文碑刻，为什么会同时出现在一座建筑里？',
+    introParts: [
+      { t: '站在' },
+      { t: '方外观', g: 'sl09' },
+      { t: '的正面看现在的方外观只剩下部分台基和石构，不过档案中的《方外观正面》铜版图还保存着它原本的样子让我能够了解原来的精美建筑：两层西式楼体、半环形石阶，上面却盖着中国传统样式的重檐屋顶。继续往下看还能发现，方外观内部曾设置阿拉伯文碑刻。可是西式楼体、中式屋顶、阿拉伯文碑刻，为什么会同时出现在一座建筑里？' }
+    ],
     image: '/plate21/module/assets/img/plate-fangwaiguan.jpg',
     imageNote: '对照档案里这张《方外观正面》，看楼自己身上有什么。',
     quiz: {
@@ -177,7 +188,11 @@ const SITES = {
       followup: [
         '原来这里根本就不是一座纯粹的西式建筑呀。',
         '再往下翻，档案页边写着一个名字：容妃。',
-        '这里怎么还有一张《竹亭北面》的铜版图？图上是五座彼此相连的亭子，档案标注为“五竹亭”，原本就在方外观对面，与这里隔水相望。传说旁边还记着一条流传下来的说法：容妃在方外观礼拜时，乾隆曾在五竹亭等候。这件事情是真是假我们不得而知。看来这件事只能先记作——“传说，待证。”',
+        { parts: [
+          { t: '这里怎么还有一张《竹亭北面》的铜版图？图上是五座彼此相连的亭子，档案标注为“' },
+          { t: '五竹亭', g: 'sl11' },
+          { t: '”，原本就在方外观对面，与这里隔水相望。传说旁边还记着一条流传下来的说法：容妃在方外观礼拜时，乾隆曾在五竹亭等候。这件事情是真是假我们不得而知。看来这件事只能先记作——“传说，待证。”' }
+        ] },
         '我把卡片夹回档案，继续翻看路线图。五竹亭之后，还有一条线一直往前延伸，最后停在了一座很大的水池旁。旁边写着三个字：海晏堂。'
       ]
     },
@@ -225,6 +240,11 @@ const SITES = {
     audioStation: 't-xushuilou',
     narrClip: 'narr-waypoint-xushuilou',
     intro: '原来喷泉的水，靠的就是这座蓄水楼。这里是海晏堂北面的高台蓄水，不是谐奇趣西北那座。刚才在海晏堂看见兽首喷水，水源在这里。可是为什么能把水提高呢？特刊里似乎有线索',
+    introParts: [
+      { t: '原来喷泉的水，靠的就是这座' },
+      { t: '蓄水楼', g: 'sl13' },
+      { t: '。这里是海晏堂北面的高台蓄水，不是谐奇趣西北那座。刚才在海晏堂看见兽首喷水，水源在这里。可是为什么能把水提高呢？特刊里似乎有线索' }
+    ],
     image: '/plate21/module/assets/img/plate-xushuilou.jpg',
     imageNote: '档案里的《蓄水楼东面》——海晏堂北面那座。',
     quiz: {
@@ -248,7 +268,11 @@ const SITES = {
         '抬高蓄水，用高度差换成水压，再从喷嘴喷出。'
       ],
       followup: [
-        '还好仅存的物理知识没忘光。原来喷泉里面的物理原理是这样的：抬高蓄水，用高度差换成水压，再从喷嘴喷出。',
+        { parts: [
+          { t: '还好仅存的物理知识没忘光。原来喷泉里面的' },
+          { t: '物理原理', g: 'sl04' },
+          { t: '是这样的：抬高蓄水，用高度差换成水压，再从喷嘴喷出。' }
+        ] },
         '水源查清了。日记里那行淡字这才接得上：',
         '「海晏以水记时，大水法以水成戏。」',
         '海晏堂用水来报时。再往东，大水法又把水做成了什么？我把特刊收进档案袋，按地图往东走。'
@@ -389,22 +413,30 @@ const SITES = {
   }
 }
 
-// 术语史料卡（docs/SL史料卡.md）：主卡里的铜绿术语可点开小卡。
-// SL-06 挂在声景通关句（题后），SL-10 挂在「页边写着一个名字：容妃」句。
-const GLOSSARY = {
-  sl06: {
-    title: 'SL-06 · 水法',
-    source: '圆明园遗址公园官网 · 谐奇趣/大水法',
-    lines: ['水法——当时对喷泉的叫法。']
-  },
-  sl10: {
-    title: 'SL-10 · 容妃',
-    source: '圆明园遗址公园官网 · 方外观',
-    lines: [
-      '史上有容妃，维吾尔族，方外观是她在园中做礼拜的地方。',
-      '「香妃」「体有异香」是民间传说，无实证。'
-    ]
+// 术语史料卡：数据统一在 utils/sl-cards（v3 正文 rev 3346 的 16 张 SL 卡），
+// 主卡内术语与正文 gloss-text 关键词点开同一张小卡（gloss-host 行为），返回即回。
+function narrForSite(site, opts) {
+  opts = opts || {}
+  if (!site || !site.narrClip) return ''
+  if (site.scored) {
+    return audioSrc.clip(opts.followup ? site.narrClip + '-followup' : site.narrClip)
   }
+  const step = opts.step || 0
+  const steps = opts.steps || []
+  const st = steps[step]
+  if (!st || st.type === 'dual') return ''
+  if (st.type === 'intro') return audioSrc.clip(site.narrClip)
+  if (st.type === 'end') return audioSrc.clip(site.narrClip + '-end')
+  if (st.type === 'beat') {
+    const lines = (st.beat && st.beat.lines) || []
+    if (!lines.length) return ''
+    let bi = 0
+    for (let i = 0; i < step; i++) {
+      if (steps[i].type === 'beat') bi++
+    }
+    return audioSrc.clip(site.narrClip + '-b' + (bi + 1))
+  }
+  return ''
 }
 
 function withOn(site, selected) {
@@ -420,6 +452,7 @@ function withOn(site, selected) {
 }
 
 Page({
+  behaviors: [glossHost],
   data: {
     site: null,
     confirmed: false,
@@ -432,8 +465,7 @@ Page({
     followup: false,
     showHistory: false,
     listened: false,
-    listenSrc: '',
-    gloss: null
+    listenSrc: ''
   },
 
   onLoad(options) {
@@ -457,7 +489,7 @@ Page({
       step: 0,
       confirmed: false,
       revealLines: [],
-      narrSrc: site.narrClip ? audioSrc.clip(site.narrClip) : '',
+      narrSrc: narrForSite(site, { followup: !!puzzle, step: 0, steps: steps }),
       bgmSrc: site.bgmFile ? audioSrc.bgm(site.bgmFile) : '',
       listenSrc: quiz && quiz.listenFile ? audioSrc.bgm(quiz.listenFile) : '',
       selected: selected,
@@ -539,30 +571,32 @@ Page({
   },
 
   onCloseHistory() {
-    this.setData({ showHistory: false, followup: true })
+    this.setData({
+      showHistory: false,
+      followup: true,
+      narrSrc: narrForSite(this.data.site, { followup: true })
+    })
   },
 
-  // 主史料卡内术语点入：弹出对应术语小卡；返回/关闭即回主卡。
-  onGlossary(e) {
-    const key = e.detail && e.detail.key
-    const g = key && GLOSSARY[key]
-    if (g) this.setData({ gloss: g })
-  },
-
-  onGlossClose() {
-    this.setData({ gloss: null })
-  },
-
+  // 术语史料卡弹层：onGlossary/onGlossClose 与 gloss 状态由 gloss-host 行为提供。
   onStepNext() {
     if (this.data.step < this.data.steps.length - 1) {
-      this.setData({ step: this.data.step + 1 })
+      const step = this.data.step + 1
+      this.setData({
+        step: step,
+        narrSrc: narrForSite(this.data.site, { step: step, steps: this.data.steps })
+      })
       this.resetScroll()
     }
   },
 
   onStepPrev() {
     if (this.data.step > 0) {
-      this.setData({ step: this.data.step - 1 })
+      const step = this.data.step - 1
+      this.setData({
+        step: step,
+        narrSrc: narrForSite(this.data.site, { step: step, steps: this.data.steps })
+      })
       this.resetScroll()
     }
   },

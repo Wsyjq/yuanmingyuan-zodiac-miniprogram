@@ -30,6 +30,18 @@ Component({
     dockOpen: true
   },
 
+  observers: {
+    src(src) {
+      const wasPlaying = this.data.playing
+      this.destroyCtx()
+      this.setData({ playing: false, progress: 0, failed: false })
+      if (wasPlaying && src && this.data.enabled) {
+        const self = this
+        setTimeout(function () { self.onToggle() }, 0)
+      }
+    }
+  },
+
   lifetimes: {
     attached() {
       this.kind = this.data.kind
