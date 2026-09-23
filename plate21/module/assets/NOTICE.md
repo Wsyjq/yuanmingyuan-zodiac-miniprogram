@@ -81,7 +81,7 @@ SVG 源文件经 `test/stickers-src/build.js` 渲染/缩放为 PNG。
 | plate-haiyantang-north.jpg | 海晏堂北面（第11开，蓄水楼站主图） |
 | plate-zhuting.jpg | 竹亭北面（第9开，方外观站） |
 | plate-dashuifa.jpg | 大水法正面 |
-| assets/fig/letter-teacher.jpg | 次日彩蛋老师伏案图，取自飞书正文插图，压缩为 900px。放在主包，避开 plate21 分包 2MB 上限 |
+| assets/fig/letter-teacher.jpg | 次日彩蛋老师伏案图，取自飞书正文插图，压缩为 720px。放在主包，避开 plate21 分包 2MB 上限 |
 | assets/fig/rongfei.jpg | 方外观页渐显的容妃画像，也是史料卡 SL-10 配图。取自《第廿一图》史料表（飞书素材 FCupb5kogoqJPAx0a6GcVhQTnic），不是馆藏肖像原件 |
 | assets/sl/sl00-ganzhi.jpg | 史料卡 SL-00 配图，干支纪年表 |
 | assets/sl/sl01-dpm-catalog.png | 史料卡 SL-01 配图，故宫藏品页《圆明园铜版画》册著录截图 |
