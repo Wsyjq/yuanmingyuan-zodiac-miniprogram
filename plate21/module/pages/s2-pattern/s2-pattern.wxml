@@ -40,7 +40,7 @@
   </view>
 
   <!-- ============ 注释区（考察者手记）============ -->
-  <view class="note-hand olive annot">墙上的花纹，回转连绵，像是走不到头。</view>
+
 
   <view wx:if="{{nudge}}" class="hint kaiti">{{nudge}}</view>
 

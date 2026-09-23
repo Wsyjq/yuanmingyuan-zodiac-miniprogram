@@ -77,8 +77,11 @@ SVG 源文件经 `test/stickers-src/build.js` 渲染/缩放为 PNG。
 | --- | --- |
 | plate-xieqiqu.jpg | 谐奇趣南面 |
 | plate-fangwaiguan.jpg | 方外观正面 |
-| plate-xushuilou.jpg | 蓄水楼东面 |
+| plate-xushuilou.jpg | 蓄水楼东面（谐奇趣西北，第3开；蓄水楼站不再用它当主图） |
+| plate-haiyantang-north.jpg | 海晏堂北面（第11开，蓄水楼站主图） |
+| plate-zhuting.jpg | 竹亭北面（第9开，方外观站） |
 | plate-dashuifa.jpg | 大水法正面 |
+| letter-teacher.jpg | 次日彩蛋老师伏案图，取自飞书正文插图，压缩为 900px |
 
 ### 项目自制素材
 

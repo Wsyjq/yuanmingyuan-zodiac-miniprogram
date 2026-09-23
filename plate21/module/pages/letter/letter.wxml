@@ -18,11 +18,10 @@
   <scroll-view wx:else scroll-x class="letter-scroll" enhanced show-scrollbar="{{false}}">
     <view class="letter-body">
       <view class="letter-title serif">彩蛋 · 离园之后</view>
-      <view
-        wx:for="{{paragraphs}}"
-        wx:key="index"
-        class="letter-para kaiti {{item.cls ? 'letter-' + item.cls : ''}}"
-      >{{item.text}}</view>
+      <block wx:for="{{paragraphs}}" wx:key="index">
+        <image wx:if="{{item.image}}" class="letter-photo" src="{{item.image}}" mode="widthFix" />
+        <view wx:else class="letter-para kaiti {{item.cls ? 'letter-' + item.cls : ''}}">{{item.text}}</view>
+      </block>
       <!-- 飞书 v3 rev5614 彩蛋：点击按钮揭晓档案主人 -->
       <button wx:if="{{!revealed}}" class="btn-seal letter-reveal" bindtap="onReveal">揭 晓</button>
     </view>

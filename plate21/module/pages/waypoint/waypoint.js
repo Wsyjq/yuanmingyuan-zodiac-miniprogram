@@ -22,37 +22,24 @@ const SITES = {
       { t: '。我记得这是西洋楼景区建成的第一座欧式建筑，也是中国皇家园林史上首座西洋建筑。主楼前后都曾设有水法，这里还曾用于演奏中西音乐。怪不得叫“谐奇趣”，要是能听听当时的音乐就好了。' }
     ],
     image: '/plate21/module/assets/img/plate-xieqiqu.jpg',
-    imageNote: '档案里的《谐奇趣南面》——当年这里奏乐、看水。',
     quiz: {
       puzzleId: 'xq-sound',
-      action: '戴上耳机，听完再勾你听见的',
       listenFile: 'xieqiqu-soundscape/dj06-xieqiqu-soundscape-30s.mp3',
-      listenNote: '依据史料重构，不是当年的谱',
-      prompt: '刚才的谐奇趣里，你听见了哪些声音？',
+      prompt: '喷泉声、少数民族音乐和西洋音乐',
       multi: true,
       options: [
-        { key: 'A', text: '小拉琴' },
-        { key: 'B', text: '西洋箫' },
-        { key: 'C', text: '琵琶' },
-        { key: 'D', text: '笙' },
-        { key: 'E', text: '班竹板' },
-        { key: 'F', text: '水声' }
+        { key: 'A', text: '喷泉声' },
+        { key: 'B', text: '少数民族音乐' },
+        { key: 'C', text: '西洋音乐' }
       ],
-      correct: ['A', 'B', 'C', 'F'],
-      hints: [
-        '再听一次，注意声音进入的先后顺序。',
-        '拨弦、拉弦、吹管，还有水。笙和竹板没有。'
-      ],
-      revealText: '琵琶、小拉琴、西洋箫，和水。',
+      correct: ['A', 'B', 'C'],
+      hints: [],
+      revealText: '喷泉声、少数民族音乐和西洋音乐',
       passMinCorrect: 3,
-      passMaxWrong: 1,
-      historyTitle: '谐奇趣 · 声景',
+      passMaxWrong: 0,
+      historyTitle: '谐奇趣',
       historyLines: [
-        { parts: [
-          { t: '乾隆时期，宫廷中已经出现小拉琴、西洋箫等中西乐器。谐奇趣建成后，也成为演奏中西音乐、观赏' },
-          { t: '水法', g: 'sl06' },
-          { t: '的场所。' }
-        ] }
+        { parts: [{ t: '喷泉声、少数民族音乐和西洋音乐' }] }
       ],
       followup: [
         '如此悠扬动耳的音乐，真不愧“谐奇趣”三字之名。'
@@ -129,19 +116,20 @@ const SITES = {
         kicker: '档案 · 页边',
         lines: [],
         quotes: [],
+        fadeCard: true,
+        lines: [],
         parts: [
-          { t: '页面渐显出一张图片——' },
-          { t: '容妃', g: 'sl10' },
-          { t: '。点开看看她是谁。' }
+          { t: '容妃', g: 'sl10' }
         ]
       },
       {
         kicker: '对面',
         lines: [],
+        image: '/plate21/module/assets/img/plate-zhuting.jpg',
         parts: [
           { t: '方外观的对面便是“' },
           { t: '五竹亭', g: 'sl11' },
-          { t: '”。点它看看。' }
+          { t: '”' }
         ]
       },
       {
@@ -150,6 +138,10 @@ const SITES = {
           '传闻是真是假不得而知，但是与乾隆的爱情确实真真切切，方外观和五竹亭就是最好的见证。'
         ]
       }
+    ],
+    followup: [
+      '方外观的对面便是“五竹亭”',
+      '传闻是真是假不得而知，但是与乾隆的爱情确实真真切切，方外观和五竹亭就是最好的见证。'
     ],
     motif: '传闻是真是假不得而知，但是与乾隆的爱情确实真真切切，方外观和五竹亭就是最好的见证。',
     next: '/plate21/module/pages/transit/transit?leg=fw-s3',
@@ -168,8 +160,7 @@ const SITES = {
       { t: '蓄水楼', g: 'sl13' },
       { t: '。这里是海晏堂北面的高台蓄水，不是谐奇趣西北那座。刚才在海晏堂看见兽首喷水，水源在这里。可是为什么能把水提高呢？特刊里似乎有线索' }
     ],
-    image: '/plate21/module/assets/img/plate-xushuilou.jpg',
-    imageNote: '档案里的《蓄水楼东面》——海晏堂北面那座。',
+    image: '/plate21/module/assets/img/plate-haiyantang-north.jpg',
     quiz: {
       puzzleId: 'xs-height',
       cardPuzzleId: 's3-water',
@@ -292,7 +283,12 @@ function narrForSite(site, opts) {
   if (st.type === 'end') return audioSrc.clip(site.narrClip + '-end')
   if (st.type === 'beat') {
     const lines = (st.beat && st.beat.lines) || []
-    if (!lines.length) return ''
+    if (!lines.length) {
+      if (st.beat && st.beat.parts && st.beat.parts.length) {
+        return audioSrc.clip(site.narrClip + '-followup')
+      }
+      return ''
+    }
     let bi = 0
     for (let i = 0; i < step; i++) {
       if (steps[i].type === 'beat') bi++

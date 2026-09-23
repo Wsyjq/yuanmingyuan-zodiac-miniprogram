@@ -35,6 +35,22 @@
   display: block;
   width: 100%;
 }
+.wp-fade-card {
+  margin: 20rpx 0;
+  padding: 28rpx 24rpx;
+  border: 1rpx solid var(--dash);
+  background: var(--paper2);
+  animation: wp-fade-in 1.2s ease both;
+}
+.wp-fade-name {
+  font-size: 40rpx;
+  letter-spacing: 8rpx;
+  margin-bottom: 8rpx;
+}
+@keyframes wp-fade-in {
+  from { opacity: 0; transform: translateY(16rpx); }
+  to { opacity: 1; transform: none; }
+}
 .wp-plate-note {
   margin-top: 14rpx;
   font-size: 26rpx;

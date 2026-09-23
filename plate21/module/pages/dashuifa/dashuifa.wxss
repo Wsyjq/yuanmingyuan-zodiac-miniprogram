@@ -35,6 +35,13 @@
   display: block;
   width: 100%;
 }
+.dsf-break .dsf-plate-img {
+  animation: dsf-crack 1.2s ease both;
+}
+@keyframes dsf-crack {
+  from { opacity: 1; filter: none; }
+  to { opacity: 0.42; filter: grayscale(1); }
+}
 .dsf-plate-note {
   margin-top: 12rpx;
   font-size: 24rpx;

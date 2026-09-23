@@ -18,7 +18,7 @@ const OPTIONS = [
 Page({
   behaviors: [coachHost, glossHost],
   data: {
-    narrSrc: audioSrc.clip('narr-s1-decode-sealed'),
+    narrSrc: audioSrc.clip('narr-s1-arrive'),
     options: OPTIONS,
     selected: '',
     attempts: 0,

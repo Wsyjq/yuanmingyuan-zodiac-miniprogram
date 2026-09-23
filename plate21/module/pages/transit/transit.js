@@ -17,7 +17,7 @@ const LEGS = {
     from: '谐奇趣',
     to: '黄花阵',
     seg: 1,
-    text: '我按照地图继续走，下一站是黄花阵。',
+    text: '原来线索在这里上！下一站的去处很明确了：黄花阵。',
     sides: [],
     next: '/plate21/module/pages/s2-quiz/s2-quiz'
   },
@@ -41,7 +41,7 @@ const LEGS = {
     from: '海晏堂',
     to: '蓄水楼',
     seg: 4,
-    text: '水力钟在眼前，水源却不在水池里。地图上面我看到了蓄水楼，或许喷泉正是靠它喷水。',
+    text: '可是这些喷泉怎么喷出的水呢？水力钟在眼前，水源却不在水池里。地图上面我看到了蓄水楼，或许喷泉正是靠它喷水。',
     sides: [],
     next: WP + '?site=xushuilou'
   },
@@ -49,7 +49,7 @@ const LEGS = {
     from: '蓄水楼',
     to: '大水法',
     seg: 5,
-    text: '顺着档案上的路线继续往前，下一站是大水法。',
+    text: '顺着档案上的路线继续往前，大水法遗址逐渐出现在眼前。',
     sides: [],
     next: '/plate21/module/pages/dashuifa/dashuifa'
   },
@@ -57,7 +57,7 @@ const LEGS = {
     from: '大水法',
     to: '雨果雕像',
     seg: 6,
-    text: '都没了，一场火过后，这些都没了……下一站：雨果雕像。',
+    text: '都没了，一场火过后，这些都没了……',
     sides: [],
     next: '/plate21/module/pages/s4-timeline/s4-timeline'
   }

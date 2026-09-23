@@ -51,7 +51,7 @@ Page({
     const finale = !!snap.finale
     this.setData({
       name: snap.name || '无名氏',
-      editionLabel: '今日对读',
+      editionLabel: snap.editionNo ? ('第 ' + snap.editionNo + ' 版') : '今日对读',
       today: sessionDate.formatDateKey(snap.sessionDate),
       collected: !!flags.collectedReport,
       completed: !!flags.experienceCompletedAt,

@@ -52,8 +52,7 @@ const SIDE_SITE_KEYS = ['yangquelong', 'guanshuifa', 'xianfahua']
 
 // 文档挂点锚 → 上屏渲染（锚内名称本来就是正文一部分的，按渲染意图还回）
 const MANUAL_EQUIV = [
-  ['牛皮纸【DJ-02 档案袋】已经发黄', '牛皮纸档案袋已经发黄'],
-  ['使用DJ-转盘，根据花纹匹配寻找信息', '使用转盘，根据花纹匹配寻找信息']
+  ['牛皮纸【DJ-02 档案袋】已经发黄', '牛皮纸档案袋已经发黄']
 ]
 
 const BACKWARD_EXEMPT = [

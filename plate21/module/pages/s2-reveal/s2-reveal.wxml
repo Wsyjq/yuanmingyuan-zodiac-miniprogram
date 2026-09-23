@@ -1,4 +1,4 @@
-<!-- 第二站 · 黄花阵 对读二：黄花从灯上来（文字作答，每次提示，第三次揭晓） -->
+<!-- 第二站 · 黄花阵名字由来：翻面揭晓（飞书 rev5614） -->
 <nav-back />
 <page-overlays />
 <bgm-ambience />
@@ -14,35 +14,10 @@
   <!-- DJ-09 黄花阵图：屏上弹出宫女游玩图，手里对照迷宫平面 -->
   <view class="ref-img">
     <image class="ref-pic img-aged" src="/plate21/module/assets/img/IMG-RUNTIME-LANTERN.jpg" mode="aspectFill" />
-    <view class="ref-note note-hand">对照手里的图：迷宫平面，和宫女提灯跑阵那一幕。</view>
   </view>
 
   <view class="answer" wx:if="{{!solved}}">
-    <view class="ans-label kaiti">一句话写下来。不超过 {{maxChars}} 字。</view>
-    <textarea
-      class="ans-input"
-      placeholder="你觉得「黄花」二字从何而来？"
-      placeholder-class="ans-ph"
-      value="{{answer}}"
-      maxlength="{{maxChars}}"
-      auto-height
-      disable-default-padding
-      confirm-type="done"
-      bindinput="onInput"
-      bindconfirm="onSubmit"
-    />
-    <view class="ans-meta">
-      <text class="char-count {{charCount >= maxChars ? 'char-full' : ''}}">{{charCount}}/{{maxChars}}</text>
-      <text class="try-count">还可答 {{maxAttempts - attempts}} 次</text>
-    </view>
-    <view class="ans-actions">
-      <button
-        class="btn-seal ans-btn"
-        bindtap="onSubmit"
-        disabled="{{!answer || checking}}"
-      >{{checking ? '核 对 中' : '提 交'}}</button>
-    </view>
-    <view wx:if="{{hint}}" class="hint">{{hint}}</view>
+    <button class="btn-seal ans-btn" bindtap="onFlip">翻面揭晓答案</button>
   </view>
 
   <view wx:if="{{solved && !showHistory}}" class="followup double-frame">

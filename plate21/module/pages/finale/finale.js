@@ -1,6 +1,6 @@
 // P14 结局（飞书 v3 rev4379 §结局）：五张残片拼合 → 新铜版画浮现 → 档案主人最后一段记录 → 署名定格。
 // 幕1 黑屏 → 幕2 重新组合记录 → 幕3 拼合揭示 → 幕4 长文叙事（不可跳过）→ 幕5 署名。
-// 版本编号「第 N 版」需全局递增发号能力，未落地（见 STORY-010），屏上不落。
+// 版本编号走 claimEdition。领不到号时署名屏写「第 — 版」，不挡住署名。
 const session = require('../../store/session')
 const sessionDate = require('../../utils/session-date')
 const motion = require('../../utils/motion')
@@ -28,17 +28,17 @@ const FINAL_CAPTION = '第二十一图。'
 
 // 幕4 长文叙事（飞书 v3 rev5614 §结局原文）
 const NOVEL_PARAGRAPHS = [
-  { text: '至此，西洋楼遗址已经快走完了，可是，第二十一幅画到底在哪呢？' },
-  { text: '屏幕暗了一下，然后亮起，一幅画面缓缓浮现。密集交错的线条构成明暗，锐利的刻痕描绘着建筑轮廓，仿佛一幅真正的《西洋楼铜版图》。' },
-  { text: '画面中没有乾隆时期的宫苑盛景。' },
-  { text: '而是记录着我一路走过的地方：黄花阵的中心亭、海晏堂残存的石座、大水法的断壁，以及雨果雕像前停留的身影……以及档案包和其中的文件。' },
-  { text: '这究竟是怎么回事？' },
-  { text: '屏幕中缓缓出来了一封信：如果你看到这里，说明你已经走完了这条路。你一定很好奇，那幅传闻中的第二十一幅版画，究竟在哪里。其实，它从未被藏在某个地方。因为它从来不是一幅等待被发现的旧画。它是一幅等待被后来者完成的“新画”。' },
-  { text: '西洋楼的二十幅版画，把西洋楼记录得完完整整，喷泉、石柱、兽首、琉璃瓦，样样俱全。' },
-  { text: '可是，站在今天的遗址前，还有许多东西没有被画下来。那些断裂的石柱，那些被火焚烧后的痕迹，那些流散海外、等待归来的文物，还有无数后来的人，站在废墟前发出的叹息。所以，我留下了这个传闻。希望有一天，会有人因为这个问题，重新走进这片遗址，将那些未曾被记录的一一记下。' },
-  { text: '每一个来到这里、认真看过它的人，都在画第21幅的第N个版本。' },
-  { text: '它记录毁灭，也记录重生。记录失去，也记录被重新看见。' },
-  { text: '几秒后，一份新的档案生成。' }
+  { pack: 1, text: '至此，西洋楼遗址已经快走完了，可是，第二十一幅画到底在哪呢？' },
+  { pack: 1, text: '屏幕暗了一下，然后亮起，一幅画面缓缓浮现。密集交错的线条构成明暗，锐利的刻痕描绘着建筑轮廓，仿佛一幅真正的《西洋楼铜版图》。' },
+  { pack: 1, text: '画面中没有乾隆时期的宫苑盛景。' },
+  { pack: 1, text: '而是记录着我一路走过的地方：黄花阵的中心亭、海晏堂残存的石座、大水法的断壁，以及雨果雕像前停留的身影……以及档案包和其中的文件。' },
+  { pack: 2, text: '这究竟是怎么回事？' },
+  { pack: 2, text: '屏幕中缓缓出来了一封信：如果你看到这里，说明你已经走完了这条路。你一定很好奇，那幅传闻中的第二十一幅版画，究竟在哪里。其实，它从未被藏在某个地方。因为它从来不是一幅等待被发现的旧画。它是一幅等待被后来者完成的“新画”。' },
+  { pack: 2, text: '西洋楼的二十幅版画，把西洋楼记录得完完整整，喷泉、石柱、兽首、琉璃瓦，样样俱全。' },
+  { pack: 3, text: '可是，站在今天的遗址前，还有许多东西没有被画下来。那些断裂的石柱，那些被火焚烧后的痕迹，那些流散海外、等待归来的文物，还有无数后来的人，站在废墟前发出的叹息。所以，我留下了这个传闻。希望有一天，会有人因为这个问题，重新走进这片遗址，将那些未曾被记录的一一记下。' },
+  { pack: 3, text: '每一个来到这里、认真看过它的人，都在画第21幅的第N个版本。' },
+  { pack: 3, text: '它记录毁灭，也记录重生。记录失去，也记录被重新看见。' },
+  { pack: 3, text: '几秒后，一份新的档案生成。' }
 ]
 
 Page({
@@ -55,7 +55,8 @@ Page({
     name: '',
     signing: false,
     signed: false,
-    reporting: false
+    reporting: false,
+    editionNo: null
   },
 
   timers: [],
@@ -85,6 +86,7 @@ Page({
       act: signed ? 5 : 1,
       name: snap.name || '',
       signed: signed,
+      editionNo: snap.editionNo || null,
       layerCount: signed ? 5 : 0,
       caption: signed ? FINAL_CAPTION : '',
       echoDashuifa: echoDashuifa,
@@ -181,14 +183,15 @@ Page({
     this.setData({ name: e.detail.value })
   },
 
-  // 幕5 署名：sign → completeFinale（V2.1 定格无「第 N 版」）
+  // 幕5 署名：sign → claimEdition → completeFinale。飞书记录要「第 N 版」。
   onSign() {
     if (this.data.signing || this.data.signed) return
     const name = (this.data.name || '').trim() || '无名氏'
     this.setData({ signing: true, name: name })
     session.sign(name)
-      .then(() => {
-        this.setData({ signed: true, signing: false })
+      .then(function () { return session.claimEdition() })
+      .then((editionNo) => {
+        this.setData({ signed: true, signing: false, editionNo: editionNo || null })
         session.emit({ name: 'finale_viewed' })
         return session.completeFinale()
       })

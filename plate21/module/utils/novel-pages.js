@@ -22,9 +22,27 @@ function itemWeight(item, imageWeight) {
 }
 
 // 返回页数组：每页是按原顺序打包的条目数组；超预算的长段独立成页（纸面可滚动）。
+// 条目带 pack 时按作者页界切，不再走字数预算（旁白一页一条）。
 function buildPages(items, options) {
   const opts = Object.assign({}, DEFAULT_OPTIONS, options || {})
   const source = Array.isArray(items) ? items : []
+  if (source.some(function (it) { return it && it.pack != null })) {
+    const pages = []
+    let page = []
+    let pack = null
+    for (let i = 0; i < source.length; i++) {
+      const item = source[i]
+      const g = item && item.pack
+      if (page.length && g !== pack) {
+        pages.push(page)
+        page = []
+      }
+      page.push(item)
+      pack = g
+    }
+    if (page.length) pages.push(page)
+    return pages.length ? pages : [[]]
+  }
   const pages = []
   let page = []
   let weight = 0

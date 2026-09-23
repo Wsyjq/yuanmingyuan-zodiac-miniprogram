@@ -58,6 +58,11 @@
   padding: 24rpx 48rpx;
   box-sizing: border-box;
 }
+.letter-photo {
+  writing-mode: horizontal-tb;
+  width: 420rpx;
+  margin-left: 28rpx;
+}
 .letter-para {
   max-height: 100%;
   margin-left: 34rpx;

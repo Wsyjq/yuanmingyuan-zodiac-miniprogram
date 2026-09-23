@@ -13,7 +13,6 @@
       <view class="tape" style="top:-20rpx; left:50%; margin-left:-90rpx;"></view>
       <image class="dsf-plate-img" src="/plate21/module/assets/img/plate-dashuifa.jpg" mode="widthFix" />
     </view>
-    <view class="note-hand olive dsf-plate-note tilt-r">档案里的《大水法南面》——画上的热闹，地上都没有了。</view>
     <view class="dsf-zones">
       <view wx:for="{{zones}}" wx:key="key" class="dsf-zone" data-zone="{{item.key}}" bindtap="onDrop">{{item.label}}</view>
     </view>
@@ -26,8 +25,8 @@
 
   <block wx:else>
     <view class="dsf-quote kaiti">原来这些动物并不是随便摆在喷泉里的装饰。鹿站在中间，猎狗围在周围，水流一喷起来，周围十只铜猎狗同时向鹿喷水，组成“猎狗逐鹿”的场景。而对面的观水法，正是皇帝当年观赏喷泉的地方。</view>
-    <!-- 飞书 v3 rev5614：喷泉画面破碎，转入一段英法联军侵入圆明园的视频（视频素材未就位，先给占位） -->
-    <view class="dsf-plate double-frame">
+    <!-- 飞书：喷泉画面破碎。包内没有火烧视频，只做画面碎开，不另造影像。 -->
+    <view class="dsf-plate double-frame dsf-break">
       <view class="tape" style="top:-20rpx; left:50%; margin-left:-90rpx;"></view>
       <image class="dsf-plate-img img-aged" src="/plate21/module/assets/img/plate-dashuifa.jpg" mode="widthFix" />
     </view>

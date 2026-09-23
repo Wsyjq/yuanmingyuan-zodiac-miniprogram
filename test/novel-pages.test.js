@@ -72,6 +72,21 @@ test('prologue-shaped content collapses from ten sheets to a few dense pages', (
   assert.equal(pages.reduce((n, page) => n + page.length, 0), items.length)
 })
 
+test('pack field pins author page breaks and ignores the char budget', () => {
+  const items = [
+    { pack: 1, text: '甲'.repeat(20) },
+    { pack: 1, text: '乙'.repeat(20) },
+    { pack: 2, text: '丙'.repeat(20) },
+    { pack: 2, image: 'IMG', caption: '图' },
+    { pack: 3, text: '丁'.repeat(300) }
+  ]
+  const pages = buildPages(items, { firstPageBudget: 10, budget: 10 })
+  assert.equal(pages.length, 3)
+  assert.deepEqual(pages[0], items.slice(0, 2))
+  assert.deepEqual(pages[1], items.slice(2, 4))
+  assert.deepEqual(pages[2], items.slice(4))
+})
+
 test('textLength counts code points, not utf-16 units', () => {
   assert.equal(novelPages.textLength('𝕒𝕓'), 2)
   assert.equal(novelPages.textLength(null), 0)

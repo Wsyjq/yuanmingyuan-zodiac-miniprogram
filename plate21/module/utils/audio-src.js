@@ -23,9 +23,9 @@ var AUDIO_BASE = 'http://127.0.0.1:8787/audio/v22'
 // 避免「音不对字」；散页 dlg-* 台词（养雀笼/观水法/线法画）与音乐声景不受影响。
 // 重录后从本清单移除对应 id 即可恢复。
 var STALE_CLIPS = {
-  'narr-prologue-p01': 1, 'narr-prologue-p02': 1, 'narr-prologue-p03': 1, 'narr-prologue-p04': 1,
+  'narr-prologue-p01': 1, 'narr-prologue-p02': 1, 'narr-prologue-p03': 1, 'narr-prologue-p04': 1, 'narr-prologue-p05': 1,
   'narr-prologue-handover': 1,
-  'narr-s1-decode-sealed': 1, 'narr-s1-decode-reading': 1, 'narr-s1-decode-puzzle': 1, 'narr-s1-decode-solved': 1,
+  'narr-s1-arrive': 1, 'narr-s1-decode-sealed': 1, 'narr-s1-decode-reading': 1, 'narr-s1-decode-puzzle': 1, 'narr-s1-decode-solved': 1,
   'narr-s2-quiz': 1, 'narr-s2-quiz-followup': 1,
   'narr-s2-reveal': 1, 'narr-s2-reveal-followup': 1,
   'narr-s2-blend': 1,

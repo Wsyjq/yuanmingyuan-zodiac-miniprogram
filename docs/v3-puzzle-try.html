@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>v3 谜题试做 · 只看效果，不改生产页</title>
+<style>
+  :root {
+    --paper: #F4EDDC; --paper2: #EBE1CB; --paper3: #DED1B4;
+    --ink: #46382A; --ink-deep: #2E1F0D; --ink60: #8A7A60;
+    --patina: #4A6B64; --olive: #6F7248; --coffee: #7A5C3E;
+    --brass: #A98F5F; --cinnabar: #A63A2E; --dash: #C0B49A;
+    --night: #23282E;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; background: #2a241c; color: var(--ink); }
+  body {
+    font-family: "Songti SC", "STSong", "SimSun", serif;
+    background:
+      radial-gradient(ellipse at 20% 0%, #3a3228 0%, transparent 50%),
+      #241e18;
+  }
+  .app {
+    display: grid;
+    grid-template-columns: 280px 390px 1fr;
+    gap: 28px;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 28px 24px 48px;
+    align-items: start;
+  }
+  @media (max-width: 1100px) {
+    .app { grid-template-columns: 1fr; }
+    .phone { margin: 0 auto; }
+  }
+  .panel {
+    background: var(--paper);
+    border: 1px solid #c9b99a;
+    box-shadow: 0 18px 40px rgba(0,0,0,.35);
+    padding: 18px 16px 20px;
+  }
+  .kicker { font-size: 11px; letter-spacing: .22em; color: var(--olive); text-transform: uppercase; }
+  h1 { font-size: 20px; margin: 6px 0 8px; color: var(--ink-deep); font-weight: 700; }
+  .lead { font-size: 13px; line-height: 1.7; color: var(--ink60); margin: 0 0 14px; }
+  .nav { display: flex; flex-direction: column; gap: 6px; }
+  .nav button {
+    text-align: left; border: 1px solid var(--dash); background: var(--paper2);
+    color: var(--ink); padding: 8px 10px; cursor: pointer; font: inherit; font-size: 13px;
+  }
+  .nav button.on { border-color: var(--patina); background: rgba(74,107,100,.12); box-shadow: inset 4px 0 0 var(--patina); }
+  .nav .st { float: right; font-size: 10px; letter-spacing: .08em; color: var(--olive); }
+  .st.keep { color: var(--patina); }
+  .st.change { color: var(--coffee); }
+  .st.new { color: var(--cinnabar); }
+  .st.skip { color: var(--ink60); }
+  .phone {
+    width: 390px; height: 780px; background: #1a1612; border-radius: 28px;
+    padding: 12px; box-shadow: 0 24px 60px rgba(0,0,0,.5);
+  }
+  .screen {
+    height: 100%; background: var(--paper); border-radius: 18px; overflow: hidden;
+    position: relative;
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(70,56,42,.06) 1px, transparent 0);
+    background-size: 7px 7px;
+  }
+  .binder {
+    position: absolute; left: 0; top: 0; bottom: 0; width: 18px;
+    background: repeating-linear-gradient(#d7c7a6 0 18px, transparent 18px 36px);
+    border-right: 1px dashed #c0b49a; z-index: 2;
+  }
+  .doc { height: 100%; overflow: auto; padding: 22px 18px 28px 32px; }
+  .tag { position: absolute; top: 14px; right: 16px; font-size: 11px; color: var(--olive); letter-spacing: .16em; }
+  .q-title { font-size: 18px; font-weight: 700; letter-spacing: .12em; margin: 18px 0 10px; color: var(--ink-deep); }
+  .note { font-family: "KaiTi", "STKaiti", serif; color: var(--olive); font-size: 13px; transform: rotate(-1deg); margin: 8px 0 14px; }
+  .shot { width: 100%; height: 120px; object-fit: cover; border: 1px solid var(--dash); filter: sepia(.25) contrast(1.05); background: var(--paper2); }
+  .opt, .chip {
+    display: flex; gap: 10px; align-items: flex-start; width: 100%;
+    border: 1px solid var(--dash); background: var(--paper2); color: var(--ink);
+    padding: 10px 12px; margin: 0 0 8px; text-align: left; cursor: pointer; font: inherit; font-size: 14px; line-height: 1.55;
+  }
+  .opt.on { border: 2px solid var(--patina); background: rgba(74,107,100,.12); }
+  .opt.wrong { opacity: .55; }
+  .opt.good { border-color: var(--patina); }
+  .key { color: var(--patina); font-weight: 700; min-width: 1.2em; }
+  .btn {
+    display: block; width: 100%; margin-top: 12px; border: 0; background: var(--cinnabar);
+    color: var(--paper); padding: 10px 0; letter-spacing: .4em; cursor: pointer; font: inherit;
+  }
+  .btn[disabled] { opacity: .35; cursor: default; }
+  .ghost { background: transparent; color: var(--olive); border-bottom: 1px dotted var(--olive); letter-spacing: .08em; }
+  .hint { color: var(--patina); font-size: 13px; margin-top: 8px; }
+  .pass, .fail { padding: 10px 12px; margin-top: 12px; font-size: 14px; line-height: 1.65; }
+  .pass { background: rgba(74,107,100,.12); border-left: 4px solid var(--patina); }
+  .fail { background: rgba(166,58,46,.08); border-left: 4px solid var(--cinnabar); }
+  .slots { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0; }
+  .slot {
+    min-height: 72px; border: 1px dashed var(--dash); background: rgba(192,180,154,.18);
+    padding: 8px; font-size: 12px; color: var(--ink60);
+  }
+  .slot.filled { border-style: solid; border-color: var(--patina); color: var(--ink); background: var(--paper2); }
+  .card {
+    border: 1px solid var(--coffee); background: #f7f0de; padding: 8px; margin: 0 0 6px;
+    font-size: 13px; cursor: grab; user-select: none;
+  }
+  .card.picked { outline: 2px solid var(--patina); }
+  .stage { position: relative; width: 100%; height: 210px; background: #1c1814; overflow: hidden; }
+  .stage img { width: 100%; height: 100%; object-fit: cover; opacity: .92; filter: sepia(.35); }
+  .piece {
+    position: absolute; width: 54px; height: 36px; font-size: 11px; color: #f4eddc;
+    background: rgba(166,58,46,.82); border: 1px solid #e8d5a3; cursor: grab; text-align: center; line-height: 36px;
+  }
+  .hot { position: absolute; width: 58px; height: 40px; border: 1px dashed rgba(244,237,220,.7); }
+  audio { width: 100%; margin: 8px 0 4px; }
+  .aside h2 { font-size: 16px; margin: 0 0 8px; color: var(--paper); }
+  .aside p, .aside li { color: #d8cbb0; font-size: 13px; line-height: 1.7; }
+  .aside { color: #d8cbb0; }
+  .aside .box { background: #322a22; border: 1px solid #5a4c3c; padding: 12px 14px; margin-top: 10px; }
+  .verdict { font-size: 15px; color: #f4eddc; margin: 0 0 8px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="panel">
+    <div class="kicker">worktree · 试做</div>
+    <h1>点一道，看效果</h1>
+    <p class="lead">不改生产页。左边选题，中间是手机里会变成的样子。已经上线的题也列在这里，方便对照。</p>
+    <div class="nav" id="nav"></div>
+  </div>
+  <div class="phone"><div class="screen"><div class="binder"></div><div class="tag" id="tag">No.</div><div class="doc" id="doc"></div></div></div>
+  <div class="aside">
+    <h2>这一题怎么样</h2>
+    <p id="verdict" class="verdict">先从左边点一道。</p>
+    <div class="box" id="note"></div>
+  </div>
+</div>
+<script>
+const ITEMS = [
+  { id:'sound', st:'new', stLabel:'能做·未做', tag:'S·A', title:'谐奇趣 · 听辨',
+    verdict:'能做。30 秒音频已经有一版，多选判定是现成能力。',
+    note:'NFC 先不管。请戴耳机听完再勾。笙、班竹板是干扰项——如果听出笙，这条音频就要换。通关句里的「水法」不要做成可点的词。' },
+  { id:'maze', st:'change', stLabel:'已做·要改', tag:'S2-1', title:'黄花阵 · 灯会',
+    verdict:'能做，而且比现在更干净。现页是开放输入，v3 只要四选一。',
+    note:'现页命中「中秋／灯／宫女／玩／赏」即可。改成 ABCD 之后，错项会更像在考观察，而不是猜关键词。' },
+  { id:'clock', st:'change', stLabel:'已做·要改', tag:'S3-1', title:'海晏堂 · 正午',
+    verdict:'能做。现页两问（马／午时）可以收成这一题。',
+    note:'答案没变：正午十二生肖齐喷。漫画图可以留着当题面，不必再问两遍。' },
+  { id:'relic', st:'change', stLabel:'已做·要改', tag:'S4', title:'雨果 · 遗物去哪',
+    verdict:'能做。现页四张静卡，改成「点卡 → 点地点」即可，时间轴那套点选已经有。',
+    note:'真机拖拽在微信里手感一般，试做用点选。四条去向和现文案一致。' },
+  { id:'fang', st:'new', stLabel:'能做·未做', tag:'S·C', title:'方外观 · 三文化',
+    verdict:'能做。六选三和声景是同一套多选。',
+    note:'现页写着「都不是题」，到站文案还泄了两层／中式顶／阿拉伯碑。上题之前要先改到站那几句。' },
+  { id:'water', st:'new', stLabel:'能做·未做', tag:'S·D', title:'蓄水楼 · 物理',
+    verdict:'能做。一张示意图加三选一。',
+    note:'正文还没写死选项，试做按 DJ-07 图意：池子越高，喷得越高。两座蓄水楼不要画成同一座。' },
+  { id:'yuan', st:'new', stLabel:'能做·未做', tag:'S3', title:'大水法 · 北侧是谁',
+    verdict:'能做。一题选择，挂在大水法页后面。',
+    note:'远瀛观不做史料卡。现场朝向：北高台＝远瀛观，南对面＝观水法。' },
+  { id:'hunt', st:'risk', stLabel:'能做·有坑', tag:'S3', title:'大水法 · 猎狗逐鹿',
+    verdict:'题意能做，真 AR 不能当过关。',
+    note:'试做是铜版图上拖三件回位。户外废墟无标记，wx.createVKSession 跟不住。生产建议就用这种 2D 叠合。' },
+  { id:'done', st:'keep', stLabel:'已做·可留', tag:'—', title:'已经能玩的题',
+    verdict:'半字、四图拍照、万字纹、时间轴、密码、拼图、明信片，不用为了 v3 重做引擎。',
+    note:'打开现有页就能看效果。结局残片名单还写着养雀笼／线法画，那是文案不是玩法。转盘和水显纸 v3 表里没有了，要不要下线另说。' }
+];
+
+const nav = document.getElementById('nav');
+ITEMS.forEach(it => {
+  const b = document.createElement('button');
+  b.innerHTML = it.title + '<span class="st ' + it.st + '">' + it.stLabel + '</span>';
+  b.onclick = () => openItem(it.id);
+  b.dataset.id = it.id;
+  nav.appendChild(b);
+});
+
+function openItem(id) {
+  const it = ITEMS.find(x => x.id === id);
+  document.querySelectorAll('.nav button').forEach(b => b.classList.toggle('on', b.dataset.id === id));
+  document.getElementById('tag').textContent = it.tag;
+  document.getElementById('verdict').textContent = it.verdict;
+  document.getElementById('note').innerHTML = '<p>' + it.note + '</p>';
+  const render = RENDER[id];
+  document.getElementById('doc').innerHTML = '';
+  render(document.getElementById('doc'));
+}
+
+function el(html) {
+  const d = document.createElement('div');
+  d.innerHTML = html.trim();
+  return d.firstChild;
+}
+
+const RENDER = {
+  sound(root) {
+    root.appendChild(el('<div class="q-title">刚才这段里，你听见了哪些声音？</div>'));
+    root.appendChild(el('<p class="note">先听完约 30 秒。水 → 琵琶 → 小拉琴 → 西洋箫。</p>'));
+    const audio = document.createElement('audio');
+    audio.controls = true;
+    audio.src = 'v3-try-assets/dj06-xieqiqu-soundscape-30s.mp3';
+    root.appendChild(audio);
+    const keys = [
+      ['A','小拉琴', true], ['B','西洋箫', true], ['C','琵琶', true],
+      ['D','笙', false], ['E','班竹板', false], ['F','水法', true]
+    ];
+    const picked = new Set();
+    keys.forEach(([k,t]) => {
+      const b = el('<button class="opt"><span class="key">'+k+'</span><span>'+t+'</span></button>');
+      b.onclick = () => { if (picked.has(k)) picked.delete(k); else picked.add(k); b.classList.toggle('on', picked.has(k)); };
+      root.appendChild(b);
+    });
+    const btn = el('<button class="btn">确 认</button>');
+    const box = el('<div></div>');
+    btn.onclick = () => {
+      const hit = keys.filter(x => x[2] && picked.has(x[0])).length;
+      const wrong = keys.filter(x => !x[2] && picked.has(x[0])).length;
+      const ok = (hit === 4 && wrong === 0) || (hit >= 3 && wrong <= 1);
+      box.className = ok ? 'pass' : 'fail';
+      box.textContent = ok
+        ? '可以通关。乾隆时期宫廷里已有小拉琴、西洋箫。谐奇趣也是演奏中西音乐、观赏水法的场所。'
+        : '再听一次，注意声音进入的先后顺序。（对 '+hit+'，错 '+wrong+'）';
+    };
+    root.appendChild(btn); root.appendChild(box);
+  },
+  maze(root) {
+    root.appendChild(el('<img class="shot" src="v3-try-assets/maze.jpg" alt="黄花阵夜景">'));
+    root.appendChild(el('<div class="q-title">这座迷宫，当初是干什么的？</div>'));
+    root.appendChild(el('<p class="note">画上有人提灯往中心亭跑。地上大白天一个也没有。</p>'));
+    const opts = [
+      ['A','军事防御，迷惑入侵的敌人'],
+      ['B','皇家藏书楼，用复杂路径护书'],
+      ['C','中秋灯会，宫女跑阵先到有赏'],
+      ['D','皇子密议，防外人窃听']
+    ];
+    let sel = '';
+    const box = el('<div></div>');
+    opts.forEach(([k,t]) => {
+      const b = el('<button class="opt"><span class="key">'+k+'</span><span>'+t+'</span></button>');
+      b.onclick = () => {
+        sel = k; [...root.querySelectorAll('.opt')].forEach(o => o.classList.remove('on','wrong'));
+        b.classList.add('on');
+        if (k === 'C') { box.className = 'pass'; box.textContent = '中秋夜，皇帝坐阵心凉亭，宫女跑阵，先到有赏。'; }
+        else { b.classList.add('wrong'); box.className = 'fail'; box.textContent = '再看看画里人手里拿着什么、往哪儿跑。'; }
+      };
+      root.appendChild(b);
+    });
+    root.appendChild(box);
+  },
+  clock(root) {
+    root.appendChild(el('<img class="shot" src="v3-try-assets/comic.jpg" alt="十二时辰漫画">'));
+    root.appendChild(el('<div class="q-title">正午来到海晏堂，喷泉会是什么样？</div>'));
+    const opts = [
+      ['A','只有午马喷水'],
+      ['B','十二生肖同时喷水'],
+      ['C','鼠、马同时喷水'],
+      ['D','所有兽首停止喷水']
+    ];
+    const box = el('<div></div>');
+    opts.forEach(([k,t]) => {
+      const b = el('<button class="opt"><span class="key">'+k+'</span><span>'+t+'</span></button>');
+      b.onclick = () => {
+        [...root.querySelectorAll('.opt')].forEach(o => o.classList.remove('on','wrong'));
+        b.classList.add('on');
+        if (k === 'B') { box.className = 'pass'; box.textContent = '按十二时辰轮喷，正午十二尊一同喷，所以叫水力钟。'; }
+        else { b.classList.add('wrong'); box.className = 'fail'; box.textContent = '常规是轮值。正午这一响，是全员到齐。'; }
+      };
+      root.appendChild(b);
+    });
+    root.appendChild(box);
+  },
+  relic(root) {
+    root.appendChild(el('<div class="q-title">它们后来去了哪里？</div>'));
+    root.appendChild(el('<p class="note">先点一张遗物，再点它现在的位置。</p>'));
+    const places = [
+      { id:'yuanming', name:'回到圆明园' },
+      { id:'pku', name:'留在北京大学' },
+      { id:'china', name:'回到中国' },
+      { id:'gone', name:'已不在原位' }
+    ];
+    const relics = [
+      { id:'ping', name:'观水法石屏风', at:'yuanming' },
+      { id:'fish', name:'谐奇趣翻尾石鱼', at:'pku' },
+      { id:'col', name:'七根圆明园石柱', at:'china' },
+      { id:'deer', name:'大水法铜鹿与铜狗', at:'gone' }
+    ];
+    let pick = null;
+    const map = {};
+    const slots = el('<div class="slots"></div>');
+    places.forEach(p => {
+      const s = el('<div class="slot" data-id="'+p.id+'">'+p.name+'</div>');
+      s.onclick = () => {
+        if (!pick) return;
+        Object.keys(map).forEach(k => { if (map[k] === p.id) delete map[k]; });
+        map[pick] = p.id;
+        pick = null;
+        draw();
+      };
+      slots.appendChild(s);
+    });
+    const tray = el('<div></div>');
+    const box = el('<div></div>');
+    function draw() {
+      [...slots.children].forEach(s => {
+        const who = relics.find(r => map[r.id] === s.dataset.id);
+        s.classList.toggle('filled', !!who);
+        s.textContent = who ? (places.find(p=>p.id===s.dataset.id).name + ' · ' + who.name) : places.find(p=>p.id===s.dataset.id).name;
+      });
+      tray.innerHTML = '';
+      relics.filter(r => !map[r.id]).forEach(r => {
+        const c = el('<div class="card">' + r.name + '</div>');
+        if (pick === r.id) c.classList.add('picked');
+        c.onclick = () => { pick = r.id; draw(); };
+        tray.appendChild(c);
+      });
+      if (Object.keys(map).length === 4) {
+        const ok = relics.every(r => map[r.id] === r.at);
+        box.className = ok ? 'pass' : 'fail';
+        box.textContent = ok ? '四处都对上了。石屏风回园，石鱼在北大，七柱回国，鹿狗不在原位。' : '有的位置还不对，再挪一挪。';
+      }
+    }
+    root.appendChild(slots); root.appendChild(tray); root.appendChild(box);
+    draw();
+  },
+  fang(root) {
+    root.appendChild(el('<img class="shot" src="v3-try-assets/fangwaiguan.jpg" alt="方外观正面">'));
+    root.appendChild(el('<div class="q-title">哪些真正属于方外观？</div>'));
+    root.appendChild(el('<p class="note">对照铜版《方外观正面》。选三项。</p>'));
+    const keys = [
+      ['A','西式两层楼体', true], ['B','中式重檐屋顶', true], ['C','阿拉伯文碑刻', true],
+      ['D','十二生肖兽首', false], ['E','黄花阵迷宫墙', false], ['F','猎狗逐鹿喷泉', false]
+    ];
+    const picked = new Set();
+    keys.forEach(([k,t]) => {
+      const b = el('<button class="opt"><span class="key">'+k+'</span><span>'+t+'</span></button>');
+      b.onclick = () => { if (picked.has(k)) picked.delete(k); else picked.add(k); b.classList.toggle('on', picked.has(k)); };
+      root.appendChild(b);
+    });
+    const btn = el('<button class="btn">确 认</button>');
+    const box = el('<div></div>');
+    btn.onclick = () => {
+      const ok = keys.every(([k,,good]) => picked.has(k) === good);
+      box.className = ok ? 'pass' : 'fail';
+      box.textContent = ok ? '对。楼体、屋顶、碑，三样叠在一座小楼上。' : '对照铜版图再看：哪些是这座楼自己的，哪些是别的站的。';
+    };
+    root.appendChild(btn); root.appendChild(box);
+  },
+  water(root) {
+    root.appendChild(el('<div class="q-title">要把喷泉喷得更高，蓄水池该在哪？</div>'));
+    root.appendChild(el('<p class="note">西洋楼喷泉没有电泵。水先送到高处，再用落差换成水压。</p>'));
+    const opts = [
+      ['A','比喷口更低的池子'],
+      ['B','和喷口一样高的池子'],
+      ['C','比喷口更高的池子']
+    ];
+    const box = el('<div></div>');
+    opts.forEach(([k,t]) => {
+      const b = el('<button class="opt"><span class="key">'+k+'</span><span>'+t+'</span></button>');
+      b.onclick = () => {
+        [...root.querySelectorAll('.opt')].forEach(o => o.classList.remove('on','wrong'));
+        b.classList.add('on');
+        if (k === 'C') { box.className = 'pass'; box.textContent = '高差越大，水压通常越大。原理挂题后，题前不要写「抬上去」。'; }
+        else { b.classList.add('wrong'); box.className = 'fail'; box.textContent = '没有电泵。想想水是从哪一截高度差里挤出来的。'; }
+      };
+      root.appendChild(b);
+    });
+    root.appendChild(box);
+  },
+  yuan(root) {
+    root.appendChild(el('<img class="shot" src="v3-try-assets/dashuifa-plate.jpg" alt="大水法南面">'));
+    root.appendChild(el('<div class="q-title">大水法北侧、高台上的建筑是？</div>'));
+    const opts = [['A','海晏堂'],['B','远瀛观'],['C','观水法'],['D','谐奇趣']];
+    const box = el('<div></div>');
+    opts.forEach(([k,t]) => {
+      const b = el('<button class="opt"><span class="key">'+k+'</span><span>'+t+'</span></button>');
+      b.onclick = () => {
+        [...root.querySelectorAll('.opt')].forEach(o => o.classList.remove('on','wrong'));
+        b.classList.add('on');
+        if (k === 'B') { box.className = 'pass'; box.textContent = '远瀛观在大水法北侧高台。南对面才是观水法。'; }
+        else { b.classList.add('wrong'); box.className = 'fail'; box.textContent = '对着铜版《大水法南面》：你站在南边往北看，高台上那座是谁。'; }
+      };
+      root.appendChild(b);
+    });
+    root.appendChild(box);
+  },
+  hunt(root) {
+    root.appendChild(el('<div class="q-title">把三组构件放回原位</div>'));
+    root.appendChild(el('<p class="note">这是 2D 叠合，不是真 AR。拖到虚线框里。</p>'));
+    const stage = el('<div class="stage"><img src="v3-try-assets/dashuifa-plate.jpg" alt=""><div class="hot" style="left:46%;top:58%" data-slot="deer"></div><div class="hot" style="left:38%;top:70%" data-slot="dogs"></div><div class="hot" style="left:12%;top:62%" data-slot="beast"></div></div>');
+    const names = { deer:'梅花鹿', dogs:'十只猎狗', beast:'卷尾铜兽' };
+    const need = { deer:'deer', dogs:'dogs', beast:'beast' };
+    const placed = {};
+    ['deer','dogs','beast'].forEach((id,i) => {
+      const p = el('<div class="piece">'+names[id]+'</div>');
+      p.style.left = (12 + i*28) + '%'; p.style.top = '8%';
+      p.onpointerdown = ev => {
+        p.setPointerCapture(ev.pointerId);
+        const r = stage.getBoundingClientRect();
+        const dx = ev.clientX - p.getBoundingClientRect().left;
+        const dy = ev.clientY - p.getBoundingClientRect().top;
+        p.onpointermove = e => {
+          p.style.left = (e.clientX - r.left - dx) + 'px';
+          p.style.top = (e.clientY - r.top - dy) + 'px';
+        };
+        p.onpointerup = () => {
+          p.onpointermove = null;
+          const pr = p.getBoundingClientRect();
+          const cx = pr.left + pr.width/2, cy = pr.top + pr.height/2;
+          let hit = null;
+          stage.querySelectorAll('.hot').forEach(h => {
+            const hr = h.getBoundingClientRect();
+            if (cx>hr.left && cx<hr.right && cy>hr.top && cy<hr.bottom) hit = h.dataset.slot;
+          });
+          placed[id] = hit;
+          check();
+        };
+      };
+      stage.appendChild(p);
+    });
+    const box = el('<div></div>');
+    function check() {
+      if (Object.keys(placed).length < 3) return;
+      const ok = Object.keys(need).every(k => placed[k] === need[k]);
+      box.className = ok ? 'pass' : 'fail';
+      box.textContent = ok ? '鹿在池心，狗环绕，铜兽在两端。真 AR 做不到这个精度，生产就用这一层。' : '三件还没都落到对应虚线框。';
+    }
+    root.appendChild(stage); root.appendChild(box);
+  },
+  done(root) {
+    root.appendChild(el('<div class="q-title">这些不用重做</div>'));
+    root.appendChild(el('<div class="pass">半字拼「黄花阵」· s1-decode<br>亭子四图拍照 · s2-blend<br>万字纹四选一 · s2-pattern<br>时间轴五事 · s4-timeline<br>八位密码 · s4-password<br>拼第二十一图 · finale<br>明信片 · report</div>'));
+    root.appendChild(el('<p class="note">在微信开发者工具里打开对应页，就是现在游客摸到的效果。</p>'));
+    root.appendChild(el('<div class="fail">v3 表里没有、页还在：花纹转盘 s3-zodiac、水显纸 s3-water。下线会动日期卡位数，这次试做不动。</div>'));
+  }
+};
+
+openItem('sound');
+</script>
+</body>
+</html>

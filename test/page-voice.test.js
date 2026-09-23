@@ -21,11 +21,12 @@ test('voice manifest splits narration per visible screen', () => {
   assert.ok(!ids.includes('narr-s1-decode'), 'old concatenated s1 clip retired')
   assert.ok(ids.includes('narr-prologue-p01'))
   assert.ok(ids.includes('narr-prologue-handover'))
-  assert.ok(ids.includes('narr-s1-decode-sealed'))
-  assert.ok(ids.includes('narr-s1-decode-reading'))
+  assert.ok(ids.includes('narr-s1-arrive'))
+  assert.ok(!ids.includes('narr-s1-decode-sealed'))
+  assert.ok(!ids.includes('narr-s1-decode-reading'))
   assert.ok(ids.includes('narr-waypoint-xieqiqu-followup'))
   assert.ok(ids.includes('narr-dashuifa-hunt'))
-  assert.ok(ids.includes('narr-dashuifa-followup'))
+  assert.ok(ids.includes('narr-dashuifa-after'))
   assert.ok(ids.includes('narr-finale-p01'))
   for (const clip of narr) {
     const text = Array.isArray(clip.text) ? clip.text.join('') : clip.text

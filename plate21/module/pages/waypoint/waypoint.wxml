@@ -46,6 +46,12 @@
         <block wx:if="{{site.textPuzzle}}">
           <view class="wp-line kaiti">{{site.textPuzzle.prompt}}</view>
           <view class="note-hand olive">{{site.textPuzzle.lead}}</view>
+          <view class="wp-plate double-frame">
+            <image class="wp-plate-img" src="/plate21/module/assets/img/IMG-ENVELOPE-FRONT.png" mode="widthFix" />
+          </view>
+          <view class="wp-plate double-frame">
+            <image class="wp-plate-img" src="/plate21/module/assets/img/IMG-ENVELOPE-BACK.png" mode="widthFix" />
+          </view>
           <block wx:if="{{!textSolved}}">
             <input class="answer-input" value="{{textInput}}" bindinput="onTextInput" placeholder="{{site.textPuzzle.placeholder}}" maxlength="8" />
             <view wx:if="{{textHint}}" class="hint note-hand">{{textHint}}</view>
@@ -98,6 +104,13 @@
   >
     <view class="wp-beat {{item.prop ? 'wp-prop' : ''}}">
       <view class="wp-kicker">{{item.kicker}}</view>
+      <view wx:if="{{item.fadeCard}}" class="wp-fade-card">
+        <view class="wp-fade-name serif">容妃</view>
+      </view>
+      <view wx:if="{{item.image}}" class="wp-plate double-frame">
+        <image class="wp-plate-img" src="{{item.image}}" mode="widthFix" />
+      </view>
+      <view wx:if="{{item.imageNote}}" class="note-hand olive wp-plate-note">{{item.imageNote}}</view>
       <view wx:if="{{item.action}}" class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">{{item.action}}</text></view>
       <view wx:for="{{item.lines}}" wx:for-item="line" wx:key="*this" class="wp-line kaiti">{{line}}</view>
       <view wx:if="{{item.parts}}" class="wp-line kaiti"><gloss-text parts="{{item.parts}}" bind:glossary="onGlossary" /></view>
@@ -136,7 +149,7 @@
   <view wx:if="{{bgmSrc}}" class="wp-step {{step === site.beats.length + 1 ? '' : 'wp-step-off'}}">
     <view class="wp-beat wp-prop">
       <view class="wp-kicker">现场 · 听 · 当年两边同时响</view>
-      <view class="wp-line kaiti">左耳机是中乐，右耳机是西乐——先各响各的，后头合到一处。戴上耳机听，别用单边外放。</view>
+      <view class="wp-line kaiti">喷泉声、少数民族音乐和西洋音乐</view>
       <audio-clip src="{{bgmSrc}}" label="听 · 左右同响" kind="bgm" />
     </view>
   </view>

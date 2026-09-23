@@ -128,6 +128,10 @@
         <text class="sign-label">绘制时间</text>
         <text class="sign-value">{{today}}</text>
       </view>
+      <view class="sign-row" wx:if="{{signed}}">
+        <text class="sign-label">版本编号</text>
+        <text class="sign-value">{{editionNo ? '第 ' + editionNo + ' 版' : '第 — 版'}}</text>
+      </view>
       <button wx:if="{{!signed}}" class="btn-seal sign-btn" bindtap="onSign" disabled="{{signing}}">{{signing ? '落款中……' : '署 名'}}</button>
       <button wx:else class="btn-seal sign-btn" bindtap="goReport" disabled="{{reporting}}">{{reporting ? '正在归档……' : '查看考察报告'}}</button>
     </view>

@@ -41,7 +41,7 @@ Page({
   },
 
   // 信件正文为飞书 v3 rev5614「彩蛋：离园之后」（次日推送的彩蛋信件）。
-  // 「下面我要揭晓了」之后点按钮展开后半（老师现身）；彩蛋配图待制作，先不落图。
+  // 「下面我要揭晓了」之后点按钮展开后半（老师现身）；配图 letter-teacher.jpg。
   // HORSE_UPDATE 为运营维护位（null = 隐藏）。
   buildParagraphs(flags) {
     const paras = [
@@ -50,6 +50,7 @@ Page({
       { text: '下面我要揭晓了：' }
     ]
     if (this.data.revealed) {
+      paras.push({ image: '/plate21/module/assets/img/letter-teacher.jpg' })
       paras.push({ text: '是老师！', cls: 'quote' })
       paras.push({ text: '不错，我的这个学生历史系毕业，习惯于历史学的训练思维，总喜欢靠文献研究过去。我啊，总想带着他去现场考察下，可是实在是老迈多病，于是我把年少时候考察的经历一一记下，设成谜题，供我的学生训练，也算是带他去考察了。' })
       paras.push({ text: '关于圆明园西洋楼，还有很多，老夫来不及说也没来得及设计谜题，借此机会，再和你多絮叨几句：' })

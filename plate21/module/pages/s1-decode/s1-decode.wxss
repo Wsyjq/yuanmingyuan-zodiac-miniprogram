@@ -5,6 +5,7 @@ page{background:var(--paper)}
 .title-div{margin:20rpx 0 28rpx}
 .lead{font-size:32rpx;line-height:1.8;color:var(--ink);margin-bottom:36rpx}
 .prop-card{margin-top:56rpx;padding:56rpx 34rpx 26rpx}
+.s1-map{display:block;width:100%;margin:16rpx 0 8rpx}
 .prop-label{white-space:nowrap}
 .prop-title{color:var(--ink-deep);font-size:40rpx;font-weight:700;line-height:1.5}
 .step-row{display:flex;align-items:flex-start;padding:16rpx 0}

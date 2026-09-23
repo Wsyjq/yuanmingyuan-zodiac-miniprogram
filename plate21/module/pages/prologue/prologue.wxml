@@ -30,13 +30,12 @@
   <view wx:if="{{showHandover}}" class="pack">
     <view class="pack-sheet archive-sheet">
       <view class="physical-label archive-tab">线下道具 · 档案袋</view>
-      <view class="pack-title serif">清点交到你手上的东西</view>
+      <view class="pack-title serif">西洋楼现场考察资料</view>
       <view class="archive-rule"></view>
-      <view class="pack-note">这份考察资料跟着你走完全程。</view>
+      <view class="pack-note">里面有一封信、一张手绘路线图、几张空白记录页，以及几件用于现场记录的工具。</view>
       <view class="pack-map">
         <image class="pack-map-img img-aged" src="/plate21/module/assets/img/IMG-RUNTIME-MAP.jpg" mode="widthFix" />
       </view>
-      <view class="pack-route note-hand olive">路线：入口 · 谐奇趣 · 黄花阵 · 方外观 · 海晏堂 · 蓄水楼 · 大水法 · 雨果雕像</view>
       <view class="pack-items">
         <view wx:for="{{props}}" wx:key="*this" class="pack-item">{{item}}</view>
       </view>

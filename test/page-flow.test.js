@@ -8,8 +8,7 @@ const HISTORY_CASES = [
     name: 's2-reveal',
     route: 'plate21/module/pages/s2-reveal/s2-reveal',
     async drive(instance) {
-      instance.onInput({ detail: { value: '莲花灯' } })
-      await instance.onSubmit()
+      instance.onFlip()
     }
   },
   {
@@ -373,7 +372,7 @@ test('prologue hands over the archive bag from the v3 plot', async () => {
   // 飞书 v3：序章收尾为档案袋交接清点（旧日记「寻廿一图」已入叙事）
   assert.equal(result.data.showHandover, true)
   assert.match(result.html, /档案袋/)
-  assert.match(result.html, /这份考察资料跟着你走完全程/)
+  assert.match(result.html, /里面有一封信、一张手绘路线图、几张空白记录页，以及几件用于现场记录的工具/)
   assert.doesNotMatch(result.html, /IMG-ENVELOPE|envelope-img/)
 })
 
@@ -683,8 +682,10 @@ test('waypoint xieqiqu presents the v3 soundscape quiz from the plot', async () 
   })
   assert.deepEqual(result.errors, [])
   assert.match(result.html, /皇家园林史上首座西洋建筑/)
-  assert.match(result.html, /刚才的谐奇趣里，你听见了哪些声音/)
-  assert.match(result.html, /小拉琴/)
+  assert.match(result.html, /喷泉声、少数民族音乐和西洋音乐/)
+  assert.match(result.html, /喷泉声/)
+  assert.match(result.html, /少数民族音乐/)
+  assert.doesNotMatch(result.html, /小拉琴/)
   assert.doesNotMatch(result.html, /东厅乐师/)
 })
 
@@ -771,7 +772,7 @@ test('v3 mainline scored sites keep a back button and original plot copy', async
   })
   assert.deepEqual(wp.errors, [])
   assert.match(wp.html, /nav-back/)
-  assert.match(wp.html, /刚才的谐奇趣里，你听见了哪些声音/)
+  assert.match(wp.html, /喷泉声、少数民族音乐和西洋音乐/)
   assert.doesNotMatch(wp.html, /谜题/)
 
   const xs = await renderPage({
