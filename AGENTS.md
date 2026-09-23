@@ -53,6 +53,13 @@ subjects are auto-captured. Verify a capture with `search_events("<hash>")`
 — search matches the `git_commit` field. When in doubt, record explicitly.
 <!-- <<< pollux <<< -->
 
+## 主线设计稿
+
+两份都在仓库里，改主线以它们为准：
+
+- `docs/飞书分页接入方案.md` 定每一页的字、图和玩法。
+- `docs/主线模块技术设计.md` 定支付、流程、地图、音频、玩法、进程怎么接。
+
 ## 客户端接入
 
 当前主通道：Grok / ZCode / Claude Code / kimi-code CLI，一律走 pollux。项目已于 2026-09-19 脱离 WorkBuddy。
