@@ -53,12 +53,18 @@ subjects are auto-captured. Verify a capture with `search_events("<hash>")`
 — search matches the `git_commit` field. When in doubt, record explicitly.
 <!-- <<< pollux <<< -->
 
+## 当前工作区
+
+只在本仓库 `D:\kc\ymy2` 开发。最新代码就是 `main`。不要打开、对照，也不要把改动写进这些旧目录：`D:\kc\ymy`、`D:\kc\ymy-cdce962`、`D:\kc\ymy2-wt-nfc`、`D:\kc\ymy2-wt-word`。
+
+`docs/` 里的飞书稿、Word 摘录和送审稿是档案。用户没有点名要按某一份改时，不要用它们改已经落地的页面。
+
 ## 主线设计稿
 
-两份都在仓库里，改主线以它们为准：
+下面两份只在用户点名要按设计稿改时才用，不自动覆盖当前页面：
 
-- `docs/飞书分页接入方案.md` 定每一页的字、图和玩法。
-- `docs/主线模块技术设计.md` 定支付、流程、地图、音频、玩法、进程怎么接。
+- `docs/飞书分页接入方案.md` 记每一页的字、图和玩法。
+- `docs/主线模块技术设计.md` 记支付、流程、地图、音频、玩法、进程怎么接。
 
 ## 客户端接入
 
