@@ -2,7 +2,7 @@
 
 // 把页表收成屏幕上的块。选项只出现一次，并且是按钮，不写进正文。
 const pages = require('./pages')
-const play = require('../play')
+const play = require('../play/index')
 const nav = require('../capabilities/map/nav-model')
 
 const PATTERN_OPTIONS = ['万字纹', '贝壳纹', '卷草纹', '花篮纹']

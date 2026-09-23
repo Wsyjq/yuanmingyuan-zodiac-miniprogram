@@ -1,7 +1,7 @@
 const session = require('../../store/session')
 const engine = require('../../flow/engine')
 const pages = require('../../flow/pages')
-const play = require('../../play')
+const play = require('../../play/index')
 const cue = require('../../audio/cue')
 const progress = require('../../progress/build')
 const { screen } = require('../../flow/screen')
