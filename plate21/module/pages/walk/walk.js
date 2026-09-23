@@ -10,6 +10,7 @@ const nav = require('../../capabilities/map/nav-model')
 const sessionDate = require('../../utils/session-date')
 const cards = require('../../utils/sl-cards')
 const nfcListen = require('../../capabilities/nfc/listen')
+const nfcLaunch = require('../../capabilities/nfc/launch')
 
 const STORE_KEY = 'plate21-mainline-run'
 
@@ -78,19 +79,24 @@ Page({
     card: null
   },
 
-  onLoad() {
+  onLoad(options) {
+    this.pageQuery = options || {}
     const self = this
     session.init({}).then(function () {
       return session.checkPremiumUnlocked()
     }).then(function (unlocked) {
       if (!unlocked) {
-        wx.redirectTo({ url: '/plate21/module/pages/gate/gate' })
+        wx.redirectTo({ url: self.lockedUrl() })
         return
       }
       self.boot()
     }).catch(function () {
-      wx.redirectTo({ url: '/plate21/module/pages/gate/gate' })
+      wx.redirectTo({ url: self.lockedUrl() })
     })
+  },
+
+  lockedUrl() {
+    return nfcLaunch.parse(this.pageQuery) ? nfcLaunch.gateUrl() : '/plate21/module/pages/gate/gate'
   },
 
   boot() {
@@ -102,7 +108,12 @@ Page({
     if (letterIsDue(run)) run = Object.assign({}, run, { pageId: 'LT1' })
     this.run = engine.enter(run, run.pageId)
     this.ui = {}
+    const launch = nfcLaunch.parse(this.pageQuery)
+    if (launch && this.run.pageId !== 'X1') {
+      this.ui.nfcAside = '这张贴是谐奇趣的。走到那一页再听，这一下不算过关。'
+    }
     this.render()
+    if (launch && this.run.pageId === 'X1') this.markHeard('贴片已经靠近')
     this.coachFor(this.run.pageId)
   },
 

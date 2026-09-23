@@ -3,6 +3,7 @@
 // unavailable=宿主未提供付费能力（iOS 差异/类目受限），隐藏购买入口。
 // 权益权威=宿主订单（checkEntitlement）；本地 flags.premiumUnlockedAt 仅缓存。
 const session = require('../../store/session')
+const nfcLaunch = require('../../capabilities/nfc/launch')
 
 const COVER_URL = '/plate21/module/pages/cover/cover'
 
@@ -16,16 +17,24 @@ Page({
     purchasing: false
   },
 
-  onLoad() {
+  onLoad(options) {
+    this.entry = options || {}
     if (session.getSnapshot()) this.refresh()
     else session.init({}).then(() => this.refresh())
   },
 
+  destination() {
+    const launch = nfcLaunch.parse(this.entry)
+    if (launch && this.entry.next === nfcLaunch.SITE) return nfcLaunch.waypointUrl(launch)
+    return COVER_URL
+  },
+
   refresh() {
+    const self = this
     session.checkPremiumUnlocked().then((unlocked) => {
       if (unlocked) {
         this.setData({ state: 'paid' })
-        wx.redirectTo({ url: COVER_URL })
+        wx.redirectTo({ url: self.destination() })
       } else {
         this.setData({ state: 'locked' })
       }
@@ -39,7 +48,7 @@ Page({
       const status = res && res.status
       if (status === 'paid') {
         this.setData({ state: 'paid', purchasing: false })
-        setTimeout(() => wx.redirectTo({ url: COVER_URL }), 600)
+        setTimeout(() => wx.redirectTo({ url: this.destination() }), 600)
         return
       }
       this.setData({ purchasing: false })

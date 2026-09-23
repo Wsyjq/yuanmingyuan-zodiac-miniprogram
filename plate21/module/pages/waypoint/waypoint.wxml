@@ -10,6 +10,7 @@
   <block wx:if="{{site.scored}}">
     <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
       <view class="title serif">{{site.title}}</view>
+      <view wx:if="{{nfcNote}}" class="note-hand olive">{{nfcNote}}</view>
       <view class="wp-intro kaiti"><gloss-text wx:if="{{site.introParts}}" parts="{{site.introParts}}" bind:glossary="onGlossary" /><block wx:else>{{site.intro}}</block></view>
       <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
       <view wx:if="{{site.image}}" class="wp-plate double-frame">

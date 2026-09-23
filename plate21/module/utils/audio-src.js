@@ -49,7 +49,9 @@ function clip(id) {
 
 // bgm/ 与 audio/ 同级（同一本地服务下），单独一个入口避免散落拼接
 function bgm(file) {
-  return file ? AUDIO_BASE.replace(/\/audio\/v22$/, '') + '/bgm/' + file : ''
+  if (!file) return ''
+  if (file.charAt(0) === '/') return file
+  return AUDIO_BASE.replace(/\/audio\/v22$/, '') + '/bgm/' + file
 }
 
 module.exports = {

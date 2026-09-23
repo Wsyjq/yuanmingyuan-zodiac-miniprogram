@@ -7,6 +7,7 @@ const session = require('../../store/session')
 const audioSrc = require('../../utils/audio-src')
 const ladder = require('../../utils/attempt-ladder')
 const glossHost = require('../../utils/gloss-host')
+const nfcLaunch = require('../../capabilities/nfc/launch')
 
 const SITES = {
   xieqiqu: {
@@ -24,7 +25,7 @@ const SITES = {
     image: '/plate21/module/assets/img/plate-xieqiqu.jpg',
     quiz: {
       puzzleId: 'xq-sound',
-      listenFile: 'xieqiqu-soundscape/dj06-xieqiqu-soundscape-30s.mp3',
+      listenFile: '/plate21/module/assets/audio/dj06-xieqiqu-soundscape-30s-v2.mp3',
       prompt: '喷泉声、少数民族音乐和西洋音乐',
       multi: true,
       options: [
@@ -327,11 +328,35 @@ Page({
     listenSrc: '',
     textInput: '',
     textSolved: false,
-    textHint: ''
+    textHint: '',
+    nfcNote: ''
   },
 
   onLoad(options) {
-    const key = SITES[options.site] ? options.site : 'xieqiqu'
+    const query = options || {}
+    const launch = nfcLaunch.parse(query)
+    if (!launch || query.site !== nfcLaunch.SITE) {
+      this.openSite(query, null)
+      return
+    }
+    const self = this
+    const ready = session.getSnapshot() ? Promise.resolve() : session.init({})
+    ready.then(function () {
+      return session.checkPremiumUnlocked()
+    }).then(function (unlocked) {
+      if (!unlocked) {
+        wx.redirectTo({ url: nfcLaunch.gateUrl() })
+        return
+      }
+      self.openSite(query, launch)
+    }).catch(function () {
+      wx.redirectTo({ url: nfcLaunch.gateUrl() })
+    })
+  },
+
+  openSite(options, launch) {
+    const query = options || {}
+    const key = SITES[query.site] ? query.site : 'xieqiqu'
     const site = SITES[key]
     this._key = key
     this._next = site.next
@@ -348,6 +373,10 @@ Page({
     const tp = site.textPuzzle
     const tpSolved = tp ? !!session.getPuzzle(tp.puzzleId) : false
     if (tp) session.viewPuzzle(tp.puzzleId)
+    let nfcNote = ''
+    if (launch && key === nfcLaunch.SITE) {
+      nfcNote = '贴片已经靠近。点「听」，播出' + nfcLaunch.LINE + '。这一下本身不算过关。'
+    }
     this.setData({
       site: withOn(site, selected),
       steps: steps,
@@ -363,7 +392,8 @@ Page({
       attempts: Number(puzzle && puzzle.payload && puzzle.payload.attempts) || 0,
       listened: !!puzzle || !(quiz && quiz.listenFile),
       textSolved: tpSolved,
-      textInput: tpSolved ? tp.answer : ''
+      textInput: tpSolved ? tp.answer : '',
+      nfcNote: nfcNote
     })
     this.recordVisit(key)
   },

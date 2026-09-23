@@ -59,7 +59,11 @@ test('14 时是未时羊首，正午可以看十二像一起喷', function () {
 test('贴片没读到之前主钮不出现，读到 xieqiqu 才算听过', function () {
   const waiting = screen({ pageId: 'X1', sites: {}, puzzles: {} }, {})
   assert.equal(waiting.nfc, true)
+  assert.equal(waiting.nfcLine, '喷泉声、少数民族音乐和西洋音乐')
   assert.equal(waiting.primary, '')
+  const aside = screen({ pageId: 'P1', sites: {}, puzzles: {} }, { nfcAside: '留在这一页' })
+  assert.equal(aside.pageId, 'P1')
+  assert.equal(aside.nfcAside, '留在这一页')
   const heard = screen({ pageId: 'X1', sites: {}, puzzles: {} }, { heard: true })
   assert.equal(heard.primary, '贴片已播完')
   assert.equal(nfc.matches({ messages: [textRecord('xieqiqu')] }), true)

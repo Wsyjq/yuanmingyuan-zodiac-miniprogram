@@ -29,10 +29,11 @@
     <view wx:for="{{view.revealLines}}" wx:key="index" class="line kaiti">{{item}}</view>
 
     <view wx:if="{{view.nfc}}" class="nfc">
-      <view class="note-hand">把音乐贴片靠近手机背面。贴片写成一段文字：xieqiqu。安卓上的微信才能读；读不了就直接听，这一步不是门。</view>
+      <view class="note-hand">贴片播出{{view.nfcLine}}。没有贴片就直接听，这一步不是门。</view>
       <button class="choice" bindtap="onDirectListen">没有贴片，直接听</button>
       <view wx:if="{{view.nfcStatus}}" class="note-hand">{{view.nfcStatus}}</view>
     </view>
+    <view wx:if="{{view.nfcAside}}" class="prop note-hand">{{view.nfcAside}}</view>
 
     <view wx:if="{{view.spots.length}}" class="spots">
       <view
