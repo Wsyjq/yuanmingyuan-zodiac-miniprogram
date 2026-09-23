@@ -24,6 +24,7 @@ const PUZZLE_IDS = [
   'prologue-envelope',
   's1-decode',
   'xq-sound',
+  'xq-next',
   's2-purpose',
   's2-name',
   's2-blend',

@@ -1,8 +1,7 @@
-// v2 顺路散页站（可选）：谐奇趣 / 养雀笼 / 方外观 / 蓄水楼 / 观水法 / 线法画。
-// 主线不经过此页——入口在 transit 的散页卡与考察手册；站点内容配置驱动。
-// 散页红线（V2.2 讲述版，V2.1 全部沿用）：不设谜题判定、不要求输入、不做裁判、不出日期卡；
-// 人不出题、不调度游客、不知身后事；蓄水楼五段拼卡为实体道具自校验，页面只做操作引导。
-// 正文与台词逐句取自 docs/剧情可用稿-人物对话版-V2.2.md（骨架/道具/残片与 V2.1 一致）。
+// 站点页（主线计分站 + 顺路散页）：谐奇趣 / 养雀笼 / 方外观 / 蓄水楼 / 观水法 / 线法画。
+// 主线站（xieqiqu / fangwaiguan / xushuilou）：导语、谜题、揭晓、收尾按飞书 v3 rev4379 逐字；
+// 养雀笼 / 观水法 / 线法画为可选散页（v3 正文之外的补充内容，入口在 transit 散页卡与考察手册）。
+// 散页红线：不设谜题判定、不要求输入、不做裁判、不出日期卡。
 // dialogues[].clipId 对应 tools/gen_voice.py 产物（audio/v22/dlg-*.mp3），无服务时自动退回纯文稿。
 const session = require('../../store/session')
 const audioSrc = require('../../utils/audio-src')
@@ -56,50 +55,21 @@ const SITES = {
         ] }
       ],
       followup: [
-        '原来当年的谐奇趣，不只是“看”的地方，也是“听”的地方。',
-        '继续看路线图，谐奇趣后面还有一个被重重圈出来的地方。旁边只写着一句：',
-        '“灯行阵中，路藏墙间。”',
-        '我顺着地图上的路线继续往前。圈出来的下一处，就是黄花阵。'
+        '如此悠扬动耳的音乐，真不愧“谐奇趣”三字之名。'
       ]
     },
-    beats: [
-      {
-        kicker: '现场 · 听',
-        action: '站到台基中间，正对主楼。当年皇帝就在正楼当中用膳，他听乐的位置，和你站的这条线是同一条。',
-        lines: [
-          '东侧、西侧，中乐、西乐，同时响。先别急着走，站到台基中间去，正对主楼：当年皇帝就在正楼当中用膳，他听乐的位置，和你现在站的这条线是同一条。这一页留了声音，站对了位置，两边会自己响起来。'
-        ],
-        dialogues: [
-          { speaker: '东厅乐师', aside: '左声道', text: '调音了，调音了，万岁爷落座前得过一遍。笙先起，笛跟着，琵琶托底，一样都不许抢。快着点儿，今儿的菜多。', clipId: 'dlg-xieqiqu-1' },
-          { speaker: '西厅乐师', aside: '右声道', text: '你们过你们的，我们调我们的，谁也不碍谁。提琴这根弦又松了，这天儿……算了，管风琴先来。我们这边就这点好，省弦。', clipId: 'dlg-xieqiqu-2' },
-          { speaker: '东厅乐师', aside: '左声道', text: '待会儿可要一块儿来了。今儿万岁爷在正楼用膳，咱们两边同时响，他那边听得见我这边，我这边也听得见他那边。就怕你们那洋调，跟我这笙笛打架。', clipId: 'dlg-xieqiqu-3' },
-          { speaker: '西厅乐师', aside: '右声道', text: '打不了架。各吹各的，各拉各的，声儿都往正楼送。他两边都要，爱听哪边，听哪边。', clipId: 'dlg-xieqiqu-4' }
-        ],
-        stageNote: '两边先后响，先分后合。左是笙笛琵琶，右是提琴管风琴。听多久自己定。',
-        dialogues2: [
-          { speaker: '东厅乐师', aside: '左声道', text: '听见没有？没打架。这楼是园子里头一座洋楼，往后东边还一座接一座。他要什么，就往园子里搬什么。', clipId: 'dlg-xieqiqu-5' },
-          { speaker: '西厅乐师', aside: '右声道', text: '本来就打不了。各是各的调，都往中间那个人耳朵里去。可不是么，连我都是搬来的。', clipId: 'dlg-xieqiqu-6' }
-        ]
-      },
-      {
-        kicker: '道具 · 取景框卡',
-        action: '掏出中间挖空的那张卡片，举起来，闭一只眼，让纸上的楼落到石头上。',
-        prop: true,
-        lines: [
-          '两边的东西都是他自己挑的，都要，那就并排摆在自己手边。听完，这一页还有一件事要办：试试纸上的楼和地上的楼，还对不对得上。掏出那张卡片——中间挖空的那张，印着这座楼；举起来，闭上一只眼，让纸上的楼落到这片石头上。',
-          '硬卡中间镂空，印谐奇趣主楼线稿。烧的是梁柱门窗，石头台基还在，所以轮廓还对得上。对上就是对上了。不拍照、不提交。',
-          '卡背＝散页残片·谐奇趣轮廓（不进结局必需拼图），收进档案夹。'
-        ]
-      },
-      {
-        kicker: '收尾 · 南池',
-        lines: [
-          '纸上的线条落在石头上，位置差不多：画是两百多年前的，石头是眼前的，中间烧过一场火，轮廓居然还咬得上。南边有一口海棠形的水池，可以沿池边走一圈：池里原先有铜羊、铜鸭，还有一条西洋式的翻尾石鱼，一起喷水；基座的痕迹还在，鱼不在了。',
-          '它的下落，档案记在别处——那条石鱼如今在北京大学的未名湖里。回头看一眼，基座还空着。合上档案，往黄花阵走，迷宫就在前头。'
-        ]
-      }
-    ],
-    motif: '原来当年的谐奇趣，不只是“看”的地方，也是“听”的地方。',
+    // 站尾谜题（飞书 v3 rev5614 §谐奇趣）：日记和信封指引第一站的方向
+    textPuzzle: {
+      puzzleId: 'xq-next',
+      prompt: '下一站要到哪里去呢？我一时没有了头绪。',
+      lead: '日记和信封会指引你第一站的方向',
+      hints: ['信封的封口处和信的背面都有一半的字，拼接起来看一下！'],
+      placeholder: '下一站是哪里',
+      answer: '黄花阵',
+      solvedText: '原来线索在这里上！下一站的去处很明确了：黄花阵。'
+    },
+    beats: [],
+    motif: '如此悠扬动耳的音乐，真不愧“谐奇趣”三字之名。',
     next: '/plate21/module/pages/transit/transit?leg=xq-s2',
     nextLabel: '继续前往黄花阵',
     checkpoint: 's2-purpose'
@@ -144,93 +114,46 @@ const SITES = {
   fangwaiguan: {
     no: 'S·C',
     title: '方外观',
-    scored: true,
+    scored: false,
     audioStation: 't-fangwaiguan',
     narrClip: 'narr-waypoint-fangwaiguan',
-    intro: '站在方外观的正面看现在的方外观只剩下部分台基和石构，不过档案中的《方外观正面》铜版图还保存着它原本的样子让我能够了解原来的精美建筑：两层西式楼体、半环形石阶，上面却盖着中国传统样式的重檐屋顶。继续往下看还能发现，方外观内部曾设置阿拉伯文碑刻。可是西式楼体、中式屋顶、阿拉伯文碑刻，为什么会同时出现在一座建筑里？',
+    intro: '现在的方外观只剩下部分台基和石构，不过档案中的铜版图还保存着它原本的样子：两层西式楼体、半环形石阶，上面却盖着中国传统样式的重檐屋顶，内部曾设置阿拉伯文碑刻。可是西式楼体、中式屋顶、阿拉伯文碑刻，为什么会同时出现在一座建筑里？',
     introParts: [
-      { t: '站在' },
+      { t: '现在的' },
       { t: '方外观', g: 'sl09' },
-      { t: '的正面看现在的方外观只剩下部分台基和石构，不过档案中的《方外观正面》铜版图还保存着它原本的样子让我能够了解原来的精美建筑：两层西式楼体、半环形石阶，上面却盖着中国传统样式的重檐屋顶。继续往下看还能发现，方外观内部曾设置阿拉伯文碑刻。可是西式楼体、中式屋顶、阿拉伯文碑刻，为什么会同时出现在一座建筑里？' }
+      { t: '只剩下部分台基和石构，不过档案中的铜版图还保存着它原本的样子：两层西式楼体、半环形石阶，上面却盖着中国传统样式的重檐屋顶，内部曾设置阿拉伯文碑刻。可是西式楼体、中式屋顶、阿拉伯文碑刻，为什么会同时出现在一座建筑里？' }
     ],
     image: '/plate21/module/assets/img/plate-fangwaiguan.jpg',
-    imageNote: '对照档案里这张《方外观正面》，看楼自己身上有什么。',
-    quiz: {
-      puzzleId: 'fw-three',
-      cardPuzzleId: 's3-zodiac',
-      action: '根据《方外观正面》铜版图，选出真正属于方外观的三项',
-      prompt: '这座楼身上叠了哪三样？',
-      multi: true,
-      pickN: 3,
-      options: [
-        { key: 'A', text: '西式两层楼体' },
-        { key: 'B', text: '中式重檐屋顶' },
-        { key: 'C', text: '阿拉伯文碑刻' },
-        { key: 'D', text: '十二生肖兽首' },
-        { key: 'E', text: '黄花阵迷宫墙' },
-        { key: 'F', text: '猎狗逐鹿喷泉' }
-      ],
-      correct: ['A', 'B', 'C'],
-      hints: [
-        '对照铜版，哪些是这座楼自己的。',
-        '楼体、屋顶、碑。不是喷泉，也不是迷宫。'
-      ],
-      revealText: '西式建筑形式 + 中国传统屋顶 + 伊斯兰文化元素 = 方外观',
-      historyTitle: '方外观 · 三种文化',
-      historyLines: [
-        '西式建筑形式 + 中国传统屋顶 + 伊斯兰文化元素 = 方外观',
-        { parts: [
-          { t: '档案页边写着一个名字：' },
-          { t: '容妃', g: 'sl10' },
-          { t: '。' }
-        ] }
-      ],
-      followup: [
-        '原来这里根本就不是一座纯粹的西式建筑呀。',
-        '再往下翻，档案页边写着一个名字：容妃。',
-        { parts: [
-          { t: '这里怎么还有一张《竹亭北面》的铜版图？图上是五座彼此相连的亭子，档案标注为“' },
-          { t: '五竹亭', g: 'sl11' },
-          { t: '”，原本就在方外观对面，与这里隔水相望。传说旁边还记着一条流传下来的说法：容妃在方外观礼拜时，乾隆曾在五竹亭等候。这件事情是真是假我们不得而知。看来这件事只能先记作——“传说，待证。”' }
-        ] },
-        '我把卡片夹回档案，继续翻看路线图。五竹亭之后，还有一条线一直往前延伸，最后停在了一座很大的水池旁。旁边写着三个字：海晏堂。'
-      ]
-    },
     beats: [
       {
-        action: '第一件，纹样：卡上六种纹样，墙上的花样见着一个划一道，有几个算几个；数出来的和档案上的多半对不上，两个数都记下，不用纠哪个对。',
-        kicker: '档案 · 一行字',
+        kicker: '档案 · 页边',
         lines: [],
-        quotes: [
-          '方外观，乾隆二十四年建成，殿里供着阿拉伯文的碑刻，是给一位维吾尔族的妃子做礼拜用的——容妃，民间叫她香妃。（容妃《清史稿》有载；「香妃」「体有异香」为民间传说，无实证。）',
-          '同页还有半句：她每次来，乾隆都陪着来。'
-        ],
-        dialogues: [
-          { speaker: '当差的人', text: '轿子到桥那头，就不往前抬了。娘娘自己进去，我们在外头候着。万岁爷有时候也跟了来，也就在台阶底下站站，不进去。里头那块碑，上的字，我们不认得。', clipId: 'dlg-fangwaiguan-1' }
+        quotes: [],
+        parts: [
+          { t: '页面渐显出一张图片——' },
+          { t: '容妃', g: 'sl10' },
+          { t: '。点开看看她是谁。' }
         ]
       },
       {
-        kicker: '这一页的两件事 · 都不是题',
-        lines: [
-          '正对面隔着五孔石桥是五竹亭。一个人在殿里礼拜的时候，陪她来的人，就在桥那头；档案没写谁在那儿等过，也没写等了多久，就那么一行字。这一页有两件事，都不是题。',
-          '第一件，纹样：卡上六种纹样，墙上的花样见着一个，划一道，有几个算几个——档案上的数目和你数出来的多半对不上，两个数都记下来，不用纠哪个对。第二件，等候卡：正面印着台基和五竹亭的位置，背面是空的，等过谁，自己写，写完自己收着。'
-        ],
-        dialogues: [
-          { speaker: '当差的人', text: '墙上的花样，看见一个，划一道，有几个算几个，不用凑数。还有那张背面空白的，等过谁，你自己写。写完收着，这张不用给谁看。', clipId: 'dlg-fangwaiguan-2' }
+        kicker: '对面',
+        lines: [],
+        parts: [
+          { t: '方外观的对面便是“' },
+          { t: '五竹亭', g: 'sl11' },
+          { t: '”。点它看看。' }
         ]
       },
       {
-        kicker: '道具 · 纹样对照卡 / 等候卡',
-        prop: true,
+        kicker: '见证',
         lines: [
-          '纹样对照卡：六种纹样——番花、卷草、贝壳、莲花、缠枝、几何回纹，现场划记。卡背＝散页残片·纹样卡。',
-          '等候卡：背面空白，一行浅字——你在外面等过谁？不上传、不进留言池，写完自己收着。'
+          '传闻是真是假不得而知，但是与乾隆的爱情确实真真切切，方外观和五竹亭就是最好的见证。'
         ]
       }
     ],
-    motif: '原来这里根本就不是一座纯粹的西式建筑呀。',
+    motif: '传闻是真是假不得而知，但是与乾隆的爱情确实真真切切，方外观和五竹亭就是最好的见证。',
     next: '/plate21/module/pages/transit/transit?leg=fw-s3',
-    nextLabel: '前往海晏堂',
+    nextLabel: '下一站：海晏堂',
     checkpoint: 's3-hour'
   },
   xushuilou: {
@@ -269,74 +192,14 @@ const SITES = {
       ],
       followup: [
         { parts: [
-          { t: '还好仅存的物理知识没忘光。原来喷泉里面的' },
+          { t: '原来喷泉里面的' },
           { t: '物理原理', g: 'sl04' },
           { t: '是这样的：抬高蓄水，用高度差换成水压，再从喷嘴喷出。' }
-        ] },
-        '水源查清了。日记里那行淡字这才接得上：',
-        '「海晏以水记时，大水法以水成戏。」',
-        '海晏堂用水来报时。再往东，大水法又把水做成了什么？我把特刊收进档案袋，按地图往东走。'
+        ] }
       ]
     },
-    beats: [
-      {
-        action: '站到台子底下，仰头看：得摞几个你，才够得着池沿。',
-        kicker: '三声 · 水怎么上去的',
-        lines: [],
-        dialogues: [
-          { speaker: '亲历当差', text: '你们是来问水的吧，一拨一拨的，都问这个。水提上去，靠水车。水车，人踩，一班八个，换着来。我踩过，腿到现在还记得。', clipId: 'dlg-xushuilou-1' },
-          { speaker: '当地老人', text: '不是不是，不是人踩。我小时候听老的们讲：毛驴。黑灯瞎火的，驴眼睛上蒙块布，就那么转圈拉，拉到天亮。', clipId: 'dlg-xushuilou-2' },
-          { speaker: '念册子的', text: '你们俩说的，都是听来的。工程册子上写的是骡。几匹，一匹一天几斗料，草几束，都记着数。白纸黑字。', clipId: 'dlg-xushuilou-3' },
-          { speaker: '亲历当差', text: '我踩过！', clipId: 'dlg-xushuilou-4' },
-          { speaker: '当地老人', text: '你踩的是别处的车。', clipId: 'dlg-xushuilou-5' },
-          { speaker: '念册子的', text: '册子上，是骡。', clipId: 'dlg-xushuilou-6' }
-        ],
-        stageNote: '停两秒。谁也不再说了。',
-        dialogues2: [
-          { speaker: '亲历当差', text: '水是上去了，这个不作假。怎么上去的，各说各的，谁也说不服谁。', clipId: 'dlg-xushuilou-7' },
-          { speaker: '念册子的', text: '吵完了？那我也念一页。这楼叫蓄水楼，楼顶的大池子叫锡海，池底四壁铺锡板，防渗，蓄满一回，一百六十多立方米。蓄满了，水靠自身的落差压进铜管，送到各处喷口，不用任何机器推。这些数，册子上一笔一笔都记着。就水怎么上去，没个准数。', clipId: 'dlg-xushuilou-8' }
-        ]
-      },
-      {
-        kicker: '现场 · 比高',
-        lines: [
-          '一百六十多立方米——数字先搁在这儿，站到台子底下，再回头想它。',
-          '站到台子底下，仰头看，得摞几个你，才够得着池沿。不提交、不判分。',
-          '水得提到这个高度，一天十二个时辰，提上去，喷下来，再提上去，中间不能停。这笔账，站到底下好算。'
-        ]
-      },
-      {
-        kicker: '道具 · 五段咬合卡',
-        prop: true,
-        confirm: true,
-        lines: [
-          '这一页还配了五段卡，凹凸咬合，只有一种顺序能接上，把水走过的路拼出来。',
-          '提示一：从最低的地方开始想。',
-          '提示二：到了楼顶之后呢？喷出去的水又去了哪儿？',
-          '顺序：水道 → 汲水池 → 水车 → 锡海 → 铜管喷口。拼到最后接回第一段。不是线，是圈。自校验，不拍照。',
-          '散页残片·水循环圈（不进结局必需拼图），收进档案夹。'
-        ]
-      },
-      {
-        kicker: '收尾 · 空栏',
-        lines: [
-          '拼到最后一段，接回了第一段：不是一条线，是个圈——同一批水，喷出去，落回池子，流进水道，再被提上来，一天要走很多遍。'
-        ],
-        quotes: [
-          '档案页边注：三页纸，三种说法，年代不一，谁也没说服谁。其中一栏是空的。整理这份档案的人，什么都没写。'
-        ]
-      }
-    ],
-    reveal: [
-      '水道：东西两侧为明道，南北两侧为暗道。',
-      '汲水池：四角各一，全用石条砌成。',
-      '水车：操作间在二楼。',
-      '锡海：四壁铺锡板，蓄水一百六十余立方米。',
-      '铜管喷口：靠高差产生压强，不用动力。',
-      '拼到最后一段你会发现：它能接回第一段——这不是一条线，是一个圈。',
-      '石头还在，土台还在，据说地下的铜管也还在；没了的，是让水上去的那个办法，连记录都对不上。在台子底下坐一会儿，不用给自己下结论。'
-    ],
-    motif: '海晏堂用水来报时。再往东，大水法又把水做成了什么？',
+    beats: [],
+    motif: '抬高蓄水，用高度差换成水压，再从喷嘴喷出。',
     next: '/plate21/module/pages/transit/transit?leg=xs-ds',
     nextLabel: '前往大水法',
     checkpoint: 'ds-hunt'
@@ -465,7 +328,10 @@ Page({
     followup: false,
     showHistory: false,
     listened: false,
-    listenSrc: ''
+    listenSrc: '',
+    textInput: '',
+    textSolved: false,
+    textHint: ''
   },
 
   onLoad(options) {
@@ -483,6 +349,9 @@ Page({
     if (site.bgmFile) steps.push({ type: 'dual' })
     steps.push({ type: 'end' })
     const selected = puzzle && quiz ? quiz.correct.slice() : []
+    const tp = site.textPuzzle
+    const tpSolved = tp ? !!session.getPuzzle(tp.puzzleId) : false
+    if (tp) session.viewPuzzle(tp.puzzleId)
     this.setData({
       site: withOn(site, selected),
       steps: steps,
@@ -496,7 +365,9 @@ Page({
       solved: !!puzzle,
       followup: !!puzzle,
       attempts: Number(puzzle && puzzle.payload && puzzle.payload.attempts) || 0,
-      listened: !!puzzle || !(quiz && quiz.listenFile)
+      listened: !!puzzle || !(quiz && quiz.listenFile),
+      textSolved: tpSolved,
+      textInput: tpSolved ? tp.answer : ''
     })
     this.recordVisit(key)
   },
@@ -627,6 +498,37 @@ Page({
         session.setFlag('xishuilouConfirmed', Date.now()).catch(() => {})
       }
     } catch (e) { /* 忽略 */ }
+  },
+
+  // 站尾文本谜题（v3 rev5614）：两半字拼出下一站名；答错出提示，三次直接揭晓
+  onTextInput(e) {
+    this.setData({ textInput: e.detail.value, textHint: '' })
+  },
+
+  onTextSubmit() {
+    const tp = this.data.site && this.data.site.textPuzzle
+    if (!tp || this.data.textSolved) return
+    const value = String(this.data.textInput || '').replace(/\s+/g, '')
+    if (!value) return
+    const attempts = (this._textAttempts || 0) + 1
+    this._textAttempts = attempts
+    if (value.includes(tp.answer)) {
+      session.attemptPuzzle(tp.puzzleId, attempts, true, 'text')
+      this.setData({ textSolved: true, textHint: '' })
+      session.completePuzzle(tp.puzzleId, { answer: tp.answer, attempts: attempts }).catch(function () {
+        wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' })
+      })
+      return
+    }
+    session.attemptPuzzle(tp.puzzleId, attempts, false, 'text')
+    if (attempts >= 3) {
+      this.setData({ textSolved: true, textInput: tp.answer, textHint: '' })
+      session.completePuzzle(tp.puzzleId, { answer: tp.answer, attempts: attempts, revealed: true }).catch(function () {
+        wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' })
+      })
+      return
+    }
+    this.setData({ textHint: tp.hints[Math.min(attempts - 1, tp.hints.length - 1)] })
   },
 
   onNext() {

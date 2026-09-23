@@ -12,7 +12,7 @@ Page({
     pwd: '',
     attempts: 0,
     showHint: false,
-    hint: '回看封面的考察凭证：系统建立本次档案时，已按设备本地日历锁定建档日。八张卡按考察顺序依次记录 YYYYMMDD 的一位；即使跨过午夜，仍以同一建档日为准。',
+    hint: '看看一路收到的卡片角落。日期依据见封面考察凭证：建档日已在考察开始时锁定，即使跨过午夜也不变。',
     wrongTip: '',
     archiveDate: '',
     correct: false,

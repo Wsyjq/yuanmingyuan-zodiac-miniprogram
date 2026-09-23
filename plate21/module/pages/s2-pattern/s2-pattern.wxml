@@ -12,11 +12,10 @@
 
   <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
   <!-- ============ 标题区 ============ -->
-  <view class="title serif">纹样举纸对照</view>
+  <view class="title serif">黄花阵花纹观察</view>
   <view class="hatch-divider title-div"></view>
-  <view class="lead kaiti">出亭子顺墙走。这一路的墙上都是同一种花纹，手里那页正好印着四种纹样图样。第四件事，举纸对照。</view>
-  <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">举起纹样页，对照墙上的纹：哪种对得上，就是这一路看到的纹。</text></view>
-  <dialogue-block speaker="造办处匠人" text="四种花样，举到墙跟前比，别贴着。哪个的走向和墙上的对得上，就是它。" clip-id="dlg-huanghuazhen-5" />
+  <view class="lead kaiti">{{lead}}</view>
+  <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">{{actStrip}}</text></view>
   <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
 
   <!-- ============ 主图区（4 花纹格子）============ -->
@@ -64,18 +63,11 @@
 
   </block>
 
-  <!-- ============ 收尾：翻照片背面（V2.2：看砖＋砌墙师傅，不可跳）============ -->
+  <!-- ============ 收尾：飞书 v3 原文（不可跳）============ -->
   <view wx:if="{{showFinale}}" class="reveal-block">
-    <view class="novel-p" wx:for="{{finaleLead}}" wx:key="index">{{item}}</view>
-    <view class="paper-quote kaiti">{{finaleQuote}}</view>
-    <view class="novel-p">{{finaleBridge}}</view>
-    <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">离墙近一点，看砖。砖是新的，砖缝是新的，两百年前的墙不会这么齐。</text></view>
-    <view class="novel-p">这一页的人声也换了个人，年纪近得多。</view>
-    <dialogue-block speaker="砌墙师傅" text="我八七年进的场。那会儿这儿就是一片土坡子。图？图就你们夹子里那张，我们对着它放的线。砖是新的，砖缝也新，你别嫌。不照图砌回来，你今天都进不来。八九年，又收了一回尾。画这阵的，就占两号，四号、五号，我们砌回来的，也就这两号。再往下，没派给我们。" clip-id="dlg-huanghuazhen-6" />
-    <view class="novel-p" wx:for="{{finaleTail}}" wx:key="index">{{item}}</view>
-    <view class="result-evidence note-hand olive">【记】空栏 · 黄花阵：对得上，但不是要找的那一页。砌墙的人是在干活；要不是这道墙，今天谁也走不进这座迷宫。</view>
+    <view class="novel-p">{{finaleReveal}}</view>
     <view class="novel-p"><gloss-text parts="{{wallParts}}" bind:glossary="onGlossary" /></view>
-    <view class="novel-p">我按照地图继续走，下一站是方外观。</view>
+    <view class="novel-p">{{finaleClosing}}</view>
     <button class="btn-seal" bindtap="onGoS3" disabled="{{advancing}}">{{advancing ? '正在保存……' : '前往方外观'}}</button>
   </view>
   </scroll-view>
@@ -99,7 +91,7 @@
     title="{{gloss.title}}"
     source="{{gloss.source}}"
     lines="{{gloss.lines}}"
-    btn-text="返 回"
+    btn-text="学到了"
     bind:next="onGlossClose"
     bind:close="onGlossClose"
   />

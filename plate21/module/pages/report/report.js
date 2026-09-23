@@ -156,7 +156,7 @@ Page({
   async drawReport(ctx, canvas) {
     const name = this.data.name
     // 旧纸底
-    ctx.fillStyle = '#E5D5B8'
+    ctx.fillStyle = '#F7F4EC'
     ctx.fillRect(0, 0, CW, CH)
     // 万字纹画框（双线）
     ctx.strokeStyle = '#46382A'

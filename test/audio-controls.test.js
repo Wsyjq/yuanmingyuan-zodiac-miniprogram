@@ -110,16 +110,18 @@ test('handbook renders the two independent audio switches', async () => {
 test('voice clips hide when the voice switch is off, bgm clips follow bgm switch', async () => {
   const { renderPage } = require('./harness/runtime')
 
-  // 默认开：旁白按钮在
+  // 默认开：旁白按钮在（主线 narr 因飞书 v3 改词暂时静音，用散页站点验证开关逻辑）
   let result = await renderPage({
-    route: 'plate21/module/pages/s2-quiz/s2-quiz',
+    route: 'plate21/module/pages/waypoint/waypoint',
+    query: { site: 'yangquelong' },
     settleMs: 10
   })
   assert.match(result.html, /听 · 本页讲述/)
 
   // 人声关（经 harness 的存储覆写播种设备偏好）：按钮整体退场
   result = await renderPage({
-    route: 'plate21/module/pages/s2-quiz/s2-quiz',
+    route: 'plate21/module/pages/waypoint/waypoint',
+    query: { site: 'yangquelong' },
     settleMs: 10,
     wxOverrides: {
       getStorageSync: (k) => (k === 'plate21_audio_settings' ? { bgm: true, voice: false } : '')
@@ -129,7 +131,8 @@ test('voice clips hide when the voice switch is off, bgm clips follow bgm switch
 
   // 背景音乐关不影响人声按钮
   result = await renderPage({
-    route: 'plate21/module/pages/s2-quiz/s2-quiz',
+    route: 'plate21/module/pages/waypoint/waypoint',
+    query: { site: 'yangquelong' },
     settleMs: 10,
     wxOverrides: {
       getStorageSync: (k) => (k === 'plate21_audio_settings' ? { bgm: false, voice: true } : '')

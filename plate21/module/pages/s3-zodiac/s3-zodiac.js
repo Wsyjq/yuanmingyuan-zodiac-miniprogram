@@ -107,8 +107,9 @@ Page({
     session.completePuzzle('s3-zodiac', {
       answer: RETURNED,
       attempts: this.data.attempts || 1
-    }, { collectCard: !this.data.skipped, checkpoint: 's3-water' }).then(function () {
-      wx.redirectTo({ url: '/plate21/module/pages/s3-water/s3-water' })
+    }, { collectCard: !this.data.skipped, checkpoint: 'xs-height' }).then(function () {
+      // 飞书 v3 rev5614：转盘后直奔蓄水楼（水显纸页已不在正文主线）
+      wx.redirectTo({ url: '/plate21/module/pages/transit/transit?leg=s3-xs' })
     }).catch(() => {
       this.setData({ advancing: false })
       wx.showToast({ title: '进度保存失败，请重试', icon: 'none' })

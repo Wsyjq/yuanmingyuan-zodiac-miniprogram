@@ -17,7 +17,7 @@ const LEGS = {
     from: '谐奇趣',
     to: '黄花阵',
     seg: 1,
-    text: '我顺着地图上的路线继续往前。圈出来的下一处，就是黄花阵。',
+    text: '我按照地图继续走，下一站是黄花阵。',
     sides: [],
     next: '/plate21/module/pages/s2-quiz/s2-quiz'
   },
@@ -33,7 +33,7 @@ const LEGS = {
     from: '方外观',
     to: '海晏堂',
     seg: 3,
-    text: '五竹亭之后，还有一条线一直往前延伸，最后停在了一座很大的水池旁。旁边写着三个字：海晏堂。',
+    text: '下一站：海晏堂。',
     sides: [],
     next: '/plate21/module/pages/s3-comic/s3-comic'
   },
@@ -41,7 +41,7 @@ const LEGS = {
     from: '海晏堂',
     to: '蓄水楼',
     seg: 4,
-    text: '水力钟在眼前，水源却不在水池里。路线图在海晏堂北面另标了一处高台——蓄水楼。',
+    text: '水力钟在眼前，水源却不在水池里。地图上面我看到了蓄水楼，或许喷泉正是靠它喷水。',
     sides: [],
     next: WP + '?site=xushuilou'
   },
@@ -49,7 +49,7 @@ const LEGS = {
     from: '蓄水楼',
     to: '大水法',
     seg: 5,
-    text: '海晏堂用水来报时。再往东，大水法又把水做成了什么？我把特刊收进档案袋，按地图往东走。',
+    text: '顺着档案上的路线继续往前，下一站是大水法。',
     sides: [],
     next: '/plate21/module/pages/dashuifa/dashuifa'
   },
@@ -57,7 +57,7 @@ const LEGS = {
     from: '大水法',
     to: '雨果雕像',
     seg: 6,
-    text: '档案下一处标记是一个名字，和一张纸：维克多·雨果，《致巴特勒上尉的信》。',
+    text: '都没了，一场火过后，这些都没了……下一站：雨果雕像。',
     sides: [],
     next: '/plate21/module/pages/s4-timeline/s4-timeline'
   }

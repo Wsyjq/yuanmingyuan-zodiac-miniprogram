@@ -8,7 +8,7 @@
   <block wx:if="{{stage === 'hunt'}}">
     <view class="dsf-quote kaiti"><gloss-text parts="{{introParts}}" bind:glossary="onGlossary" /></view>
     <view class="dsf-quote kaiti">我翻了翻档案，正好找到了一幅《大水法南面》的铜版图。图中的石构轮廓和眼前能够对得上。但真正吸引我注意的，反而是前面的喷水池。不过水池中间怎么还有一只鹿？周围那些动物又是在做什么？</view>
-    <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">根据铜版图，把三件放回原本的位置</text></view>
+    <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">档案中缺少了三组重要构件，请根据铜版图，把它们放回原本的位置</text></view>
     <view class="dsf-plate double-frame">
       <view class="tape" style="top:-20rpx; left:50%; margin-left:-90rpx;"></view>
       <image class="dsf-plate-img" src="/plate21/module/assets/img/plate-dashuifa.jpg" mode="widthFix" />
@@ -24,45 +24,26 @@
     <button class="btn-seal" bindtap="onHuntConfirm">放 好 了</button>
   </block>
 
-  <block wx:elif="{{stage === 'after'}}">
-    <view class="dsf-quote kaiti">最后一只猎狗归位之后，水流一下子从屏幕里的各个方向喷了出来。原来这些动物并不是随便摆在喷泉里的装饰。鹿站在中间，猎狗围在周围，水流一喷起来，整个场景一下子就像“动”了起来。所以，海晏堂是用水来表示时间，大水法则是用水来表现一场正在发生的追逐。难怪日记里会写“以水成戏”。</view>
-    <view class="dsf-quote kaiti">我本来准备把档案翻向下一页，却发现复原画面的后方似乎还有一座建筑。刚开始我还以为那只是大水法的一部分，可再看看铜版图，又抬头看了看现场的方向，好像并不是这样。大水法后面，原本还有一座更高的建筑。那会是什么地方？</view>
-    <button class="btn-seal" bindtap="onAfterNext">往北看</button>
-  </block>
-
   <block wx:else>
-    <view class="q-title serif">大水法北侧、位于高台上的建筑是什么？</view>
-    <view
-      wx:for="{{yuanOpts}}"
-      wx:key="key"
-      class="dsf-choice {{yuanSelected === item.key ? 'on' : ''}} {{yuanSolved && item.key !== 'B' ? 'dsf-dim' : ''}}"
-      data-key="{{item.key}}"
-      bindtap="onYuanSelect"
-      role="button"
-      aria-pressed="{{yuanSelected === item.key}}"
-    >
-      <text class="dsf-key">{{item.key}}</text>
-      <text class="dsf-text">{{item.text}}</text>
+    <view class="dsf-quote kaiti">原来这些动物并不是随便摆在喷泉里的装饰。鹿站在中间，猎狗围在周围，水流一喷起来，周围十只铜猎狗同时向鹿喷水，组成“猎狗逐鹿”的场景。而对面的观水法，正是皇帝当年观赏喷泉的地方。</view>
+    <!-- 飞书 v3 rev5614：喷泉画面破碎，转入一段英法联军侵入圆明园的视频（视频素材未就位，先给占位） -->
+    <view class="dsf-plate double-frame">
+      <view class="tape" style="top:-20rpx; left:50%; margin-left:-90rpx;"></view>
+      <image class="dsf-plate-img img-aged" src="/plate21/module/assets/img/plate-dashuifa.jpg" mode="widthFix" />
     </view>
-    <view class="hint note-hand" wx:if="{{yuanHint}}">{{yuanHint}}</view>
-    <button wx:if="{{!followup}}" class="btn-seal" bindtap="onYuanConfirm" disabled="{{!yuanSelected || yuanSolved}}">{{yuanRevealed ? '记 下 了' : '就 是 这 座'}}</button>
-    <view wx:if="{{followup}}">
-      <view class="dsf-quote kaiti"><gloss-text parts="{{axisParts}}" bind:glossary="onGlossary" /></view>
-      <view class="paper-quote">「上观其形。」</view>
-      <view class="dsf-quote kaiti"><gloss-text parts="{{hugoParts}}" bind:glossary="onGlossary" /></view>
-      <button class="btn-seal" bindtap="onNext">前往雨果雕像</button>
-    </view>
+    <view class="dsf-quote kaiti">都没了，一场火过后，这些都没了……</view>
+    <button class="btn-seal" bindtap="onNext">前往雨果雕像</button>
   </block>
   </scroll-view>
 
-  <!-- 术语史料卡（「大水法」SL-14 /「观水法」SL-15 /「雨果」SL-17 点入） -->
+  <!-- 术语史料卡（「大水法」SL-14 点入） -->
   <history-card
     wx:if="{{gloss}}"
     visible="{{!!gloss}}"
     title="{{gloss.title}}"
     source="{{gloss.source}}"
     lines="{{gloss.lines}}"
-    btn-text="返 回"
+    btn-text="学到了"
     bind:next="onGlossClose"
     bind:close="onGlossClose"
   />

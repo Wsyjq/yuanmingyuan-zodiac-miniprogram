@@ -42,7 +42,18 @@
       </view>
       <view wx:if="{{followup}}" class="followup">
         <view class="wp-line kaiti" wx:for="{{site.quiz.followup}}" wx:key="index"><gloss-text wx:if="{{item.parts}}" parts="{{item.parts}}" bind:glossary="onGlossary" /><block wx:else>{{item}}</block></view>
-        <button class="btn-seal wp-next" bindtap="onNext">{{site.nextLabel}}</button>
+        <!-- 站尾文本谜题（飞书 v3 rev5614 §谐奇趣：两半字拼出黄花阵） -->
+        <block wx:if="{{site.textPuzzle}}">
+          <view class="wp-line kaiti">{{site.textPuzzle.prompt}}</view>
+          <view class="note-hand olive">{{site.textPuzzle.lead}}</view>
+          <block wx:if="{{!textSolved}}">
+            <input class="answer-input" value="{{textInput}}" bindinput="onTextInput" placeholder="{{site.textPuzzle.placeholder}}" maxlength="8" />
+            <view wx:if="{{textHint}}" class="hint note-hand">{{textHint}}</view>
+            <button class="btn-seal wp-confirm-btn" bindtap="onTextSubmit" disabled="{{!textInput}}">就 是 这 里</button>
+          </block>
+          <view wx:else class="wp-line kaiti">{{site.textPuzzle.solvedText}}</view>
+        </block>
+        <button wx:if="{{!site.textPuzzle || textSolved}}" class="btn-seal wp-next" bindtap="onNext">{{site.nextLabel}}</button>
       </view>
     </scroll-view>
     <history-card
@@ -62,7 +73,7 @@
       title="{{gloss.title}}"
       source="{{gloss.source}}"
       lines="{{gloss.lines}}"
-      btn-text="返 回"
+      btn-text="学到了"
       bind:next="onGlossClose"
       bind:close="onGlossClose"
     />
@@ -89,6 +100,7 @@
       <view class="wp-kicker">{{item.kicker}}</view>
       <view wx:if="{{item.action}}" class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">{{item.action}}</text></view>
       <view wx:for="{{item.lines}}" wx:for-item="line" wx:key="*this" class="wp-line kaiti">{{line}}</view>
+      <view wx:if="{{item.parts}}" class="wp-line kaiti"><gloss-text parts="{{item.parts}}" bind:glossary="onGlossary" /></view>
       <view wx:for="{{item.quotes}}" wx:for-item="quote" wx:key="*this" class="wp-quote kaiti">{{quote}}</view>
       <dialogue-block
         wx:for="{{item.dialogues}}"
@@ -144,5 +156,17 @@
       <button wx:if="{{step < steps.length - 1}}" class="btn-seal wp-step-next" bindtap="onStepNext">继 续</button>
     </view>
   </view>
+
+  <!-- 术语史料卡（散页/叙事站内的铜绿术语点入，如 容妃 SL-10、五竹亭 SL-11） -->
+  <history-card
+    wx:if="{{gloss}}"
+    visible="{{!!gloss}}"
+    title="{{gloss.title}}"
+    source="{{gloss.source}}"
+    lines="{{gloss.lines}}"
+    btn-text="学到了"
+    bind:next="onGlossClose"
+    bind:close="onGlossClose"
+  />
   </block>
 </view>

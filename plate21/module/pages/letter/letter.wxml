@@ -17,11 +17,14 @@
 
   <scroll-view wx:else scroll-x class="letter-scroll" enhanced show-scrollbar="{{false}}">
     <view class="letter-body">
+      <view class="letter-title serif">彩蛋 · 离园之后</view>
       <view
         wx:for="{{paragraphs}}"
         wx:key="index"
         class="letter-para kaiti {{item.cls ? 'letter-' + item.cls : ''}}"
       >{{item.text}}</view>
+      <!-- 飞书 v3 rev5614 彩蛋：点击按钮揭晓档案主人 -->
+      <button wx:if="{{!revealed}}" class="btn-seal letter-reveal" bindtap="onReveal">揭 晓</button>
     </view>
   </scroll-view>
   <!-- 信末脚注（不在信正文内，V2.1 信稿一字不动）：读完信去读大家的留言 -->

@@ -1,19 +1,16 @@
 // 第二站 · 黄花阵 对读二：黄花从灯上来（V2.2 讲述版）
 // 玩法：对照 DJ-09 黄花阵图（地图＋宫女游玩图）与屏上参考图，文字作答；
 //      调 answer-judge 检验意思。字数 40；每次答错给提示，第三次揭晓标准答案。
-// 史料：宫女手持黄色彩绸扎成的莲花灯，迷宫因此得名黄花阵。卡片角落数字 0。
+// 文案单点在 content/s2-reveal.js。
 const session = require('../../store/session')
 const audioSrc = require('../../utils/audio-src')
 const audioBus = require('../../utils/audio-bus')
 const judge = require('../../utils/answer-judge')
 const playGuide = require('../../capabilities/play-guide/guide')
 const coachHost = require('../../capabilities/play-guide/coach-host')
+const content = require('../../content/s2-reveal')
 
-const HISTORY_LINES = [
-  '黄花阵名字由来：',
-  '由于宫女们手持黄色彩绸扎成的莲花灯，',
-  '所以这个迷宫也得名「黄花阵」。'
-]
+const PUZZLE = content.puzzleId
 
 Page({
   behaviors: [coachHost],
@@ -26,22 +23,22 @@ Page({
     checking: false,
     hint: '',
     showHistory: false,
-    historyLines: HISTORY_LINES,
+    historyLines: content.historyLines,
     cardNumber: 0,
     showCardNumber: false,
     solved: false,
     skipped: false,
     advancing: false,
-    narrSrc: audioSrc.clip('narr-s2-reveal')
+    narrSrc: audioSrc.clip(content.clips.main)
   },
 
   onLoad() {
-    session.viewPuzzle('s2-name')
-    const puzzle = session.getPuzzle('s2-name')
+    session.viewPuzzle(PUZZLE)
+    const puzzle = session.getPuzzle(PUZZLE)
     const skipped = !!(puzzle && puzzle.payload && puzzle.payload.action === 'skipped')
     const savedAnswer = puzzle && puzzle.payload && puzzle.payload.answer || ''
     this.setData({
-      cardNumber: Number(session.getCardDigit('s2-name')),
+      cardNumber: Number(session.getCardDigit(PUZZLE)),
       solved: !!puzzle,
       skipped: skipped,
       showHistory: !!puzzle && !skipped,
@@ -72,7 +69,7 @@ Page({
     }
     this.setData({ checking: true, hint: '' })
     const self = this
-    return judge.judge({ puzzleId: 's2-name', text: check.text }).then(function (result) {
+    return judge.judge({ puzzleId: PUZZLE, text: check.text }).then(function (result) {
       self._applyFreeformResult(result)
     }).catch(function () {
       self._applyFreeformResult({
@@ -96,7 +93,7 @@ Page({
     }
     const attempts = this.data.attempts + 1
     const correct = result.verdict === 'correct'
-    session.attemptPuzzle('s2-name', attempts, correct, 'text')
+    session.attemptPuzzle(PUZZLE, attempts, correct, 'text')
     if (correct) {
       this.setData({
         checking: false,
@@ -106,11 +103,11 @@ Page({
         attempts: attempts,
         hint: ''
       })
-      session.completePuzzle('s2-name', { answer: result.text, attempts: attempts }, { collectCard: true })
+      session.completePuzzle(PUZZLE, { answer: result.text, attempts: attempts }, { collectCard: true })
         .catch(function () { wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' }) })
       return
     }
-    session.viewHint('s2-name', attempts)
+    session.viewHint(PUZZLE, attempts)
     if (judge.shouldRevealAnswer(attempts)) {
       this.setData({
         checking: false,
@@ -121,7 +118,7 @@ Page({
         showCardNumber: true,
         answer: judge.GOLD_ANSWER
       })
-      session.completePuzzle('s2-name', {
+      session.completePuzzle(PUZZLE, {
         answer: judge.GOLD_ANSWER,
         attempts: attempts,
         revealed: true
@@ -137,22 +134,22 @@ Page({
   },
 
   onHistoryNext() {
-    this.setData({ showHistory: false, narrSrc: audioSrc.clip('narr-s2-reveal-followup') })
+    this.setData({ showHistory: false, narrSrc: audioSrc.clip(content.clips.followup) })
   },
 
   onCloseHistory() {
-    this.setData({ showHistory: false, narrSrc: audioSrc.clip('narr-s2-reveal-followup') })
+    this.setData({ showHistory: false, narrSrc: audioSrc.clip(content.clips.followup) })
   },
 
   onNext() {
     if (this.data.advancing) return
     this.setData({ advancing: true, showHistory: false })
-    session.completePuzzle('s2-name', {
+    session.completePuzzle(PUZZLE, {
       answer: this.data.answer,
       attempts: this.data.attempts || 1
-    }, { collectCard: true, checkpoint: 's2-blend' }).then(() => {
+    }, { collectCard: true, checkpoint: content.next.checkpoint }).then(() => {
       wx.redirectTo({
-        url: '/plate21/module/pages/s2-blend/s2-blend',
+        url: content.next.url,
         fail: () => {
           this.setData({ advancing: false })
           wx.showToast({ title: '页面跳转失败，请重试', icon: 'none' })

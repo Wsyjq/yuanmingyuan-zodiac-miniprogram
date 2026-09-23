@@ -10,6 +10,7 @@ const HORSE_UPDATE = null
 Page({
   data: {
     state: 'loading',
+    revealed: false,
     paragraphs: []
   },
 
@@ -39,30 +40,32 @@ Page({
     }
   },
 
-  // 信件正文为 V2.1 可用稿「回响」节（可直接用）。
-  // 动态段一：蓄水楼深讲层空栏段，仅点开过深讲的玩家显示（deepOpened_t-xushuilou）；
-  // 动态段二：明信片投递块，仅投递过的玩家显示；动态段三：HORSE_UPDATE，运营维护。
+  // 信件正文为飞书 v3 rev5614「彩蛋：离园之后」（次日推送的彩蛋信件）。
+  // 「下面我要揭晓了」之后点按钮展开后半（老师现身）；彩蛋配图待制作，先不落图。
+  // HORSE_UPDATE 为运营维护位（null = 隐藏）。
   buildParagraphs(flags) {
     const paras = [
-      { text: '见字如面。' },
-      { text: '序章那行铅笔字，是我写的。卡片是民国的，字不是。' },
-      { text: '昨天你走完了那条路。我不知道你是谁，也不知道你走到哪一站的时候停得最久。' },
-      { text: '我把档案交出去的时候，其实心里有点没底。那份东西是残的。好几页只画了个土台子，好几处我自己也没查清楚。' }
+      { text: '昨天，你已经来过西洋楼了' },
+      { text: '想必你还不知道那个考察档案究竟是谁人留下的' },
+      { text: '下面我要揭晓了：' }
     ]
-    if (flags['deepOpened_t-xushuilou']) {
-      paras.push({ text: '你大概已经发现了，那一栏我是空着的。三种说法摆在那儿，我一种也不敢选。' })
+    if (this.data.revealed) {
+      paras.push({ text: '是老师！', cls: 'quote' })
+      paras.push({ text: '不错，我的这个学生历史系毕业，习惯于历史学的训练思维，总喜欢靠文献研究过去。我啊，总想带着他去现场考察下，可是实在是老迈多病，于是我把年少时候考察的经历一一记下，设成谜题，供我的学生训练，也算是带他去考察了。' })
+      paras.push({ text: '关于圆明园西洋楼，还有很多，老夫来不及说也没来得及设计谜题，借此机会，再和你多絮叨几句：' })
+      paras.push({ text: '《西洋楼铜版画》二十幅，乾隆四十六年至五十一年由伊兰泰起稿、造办处在北京刻印，共印200份（首版100、加印100），用于赏赐并陈设紫禁城、三山五园及各行宫。现在在含经堂中，就存有这套铜版画，下次再来圆明园，你可以亲自去看看；谐奇趣的翻尾石鱼现在在北京大学未名湖西侧水中。观水法的巴洛克门底座，现在在颐和园仁寿门前。大水法的石鱼一对于2006年11月回归，现存圆明园展览馆。' })
+      paras.push({ text: '在这份档案中，只有第一站我通过日记的方式指引他走到了黄花阵，剩下的全靠他自己去想。' })
+      paras.push({ text: '我能带他走过第一步，剩下的路还要融会贯通自己走。' })
+      paras.push({ text: '老夫日记中写下“丙午年于西洋楼”，想必这小子还要去猜到底是哪个丙午年，其实就是2026年。' })
+      paras.push({ text: '这个档案我还会继续流传下去，请你一定要替老夫保密啊，让更多的人去亲自找找第二十一幅画吧。' })
     }
-    paras.push({ text: '不过我后来在黄花阵上想明白了一件事。那道墙是 1987 年和 1989 年，有人照着一幅两百年前的画，一块砖一块砖重新砌起来的。' })
-    paras.push({ text: '所以那件事早就发生过了。有人拿着一幅旧画，把地上的东西补回来了。不是补成原来的样子。原来的样子回不来了。是补成了今天你能走进去的样子。' })
-    paras.push({ text: '那我要找的第二十一幅，大概也不用再找了。它在昨天你走过的那条路上。', cls: 'quote' })
-    if (flags.messageSubmittedAt) {
-      paras.push({ text: '你昨天投进信箱的那张，我读了。我不打算回答。我把它放进档案了。下一个来的人，会读到你写的那一句。', cls: 'quote' })
-    }
-    paras.push({ text: '档案还是残的。不过现在比昨天多了一页。' })
-    paras.push({ text: '往后，档案跟着你了。' })
     if (HORSE_UPDATE) paras.push({ text: HORSE_UPDATE, cls: 'aside' })
-    paras.push({ text: '——那个还在整理档案的人', cls: 'sign' })
     return paras
+  },
+
+  onReveal() {
+    if (this.data.revealed) return
+    this.setData({ revealed: true, paragraphs: this.buildParagraphs((session.getSnapshot() || {}).flags || {}) })
   },
 
   onBack() {

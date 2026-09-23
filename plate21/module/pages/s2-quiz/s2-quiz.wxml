@@ -21,7 +21,7 @@
   <view class="hatch-divider" style="width: 140rpx; margin: 44rpx auto;"></view>
 
   <view class="quiz" wx:if="{{!followup}}">
-    <view class="q-title serif">这迷宫的修建目的是</view>
+    <view class="q-title serif">我不禁好奇，这迷宫的修建目的是</view>
     <view class="opts">
       <view
         wx:for="{{options}}"
@@ -43,7 +43,7 @@
   </view>
 
   <view class="followup" wx:if="{{followup}}">
-    <view class="novel-p">原来，这个黄花阵是皇帝用来观赏宫女在迷宫路径中奔跑嬉戏的。好嘛，这下不出门就有游乐场了！不过迷宫和黄花又有什么关系呢，像这样的地方起名字肯定是有些其渊源的可是这又和“黄花”有什么关系呢？</view>
+    <view class="novel-p">原来，这个黄花阵是皇帝用来观赏宫女在迷宫路径中奔跑嬉戏的。好嘛，这下不出门就有游乐场了！可是这又和“黄花”有什么关系呢？</view>
     <button class="btn-seal" bindtap="onNext">继 续</button>
   </view>
   </scroll-view>
@@ -67,7 +67,7 @@
   title="{{gloss.title}}"
   source="{{gloss.source}}"
   lines="{{gloss.lines}}"
-  btn-text="返 回"
+  btn-text="学到了"
   bind:next="onGlossClose"
   bind:close="onGlossClose"
 />

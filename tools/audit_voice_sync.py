@@ -8,6 +8,7 @@ import io, json, re, sys, os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGES = os.path.join(ROOT, 'plate21', 'module', 'pages')
+CONTENT = os.path.join(ROOT, 'plate21', 'module', 'content')  # 已外置页的文案注册表
 CN_DIGITS = str.maketrans('0123456789', '〇一二三四五六七八九')
 
 def norm(s):
@@ -64,13 +65,14 @@ for cid in sorted(page_texts):
         problems.append(('manifest缺条目', cid, ''))
 
 # ---- 旁白：页面源码 → 纯文本，逐段命中 ----
+# ('@content', '<页>.js') = 文案已外置到 plate21/module/content/
 NARR_PAGE = {
-    'narr-prologue': [('prologue', 'prologue.js')],
+    'narr-prologue': [('@content', 'prologue.js')],
     'narr-s1-decode': [('s1-decode', 's1-decode.wxml')],
     'narr-s2-quiz': [('s2-quiz', 's2-quiz.wxml')],
     'narr-s2-reveal': [('s2-reveal', 's2-reveal.wxml')],
     'narr-s2-blend': [('s2-blend', 's2-blend.wxml')],
-    'narr-s2-pattern': [('s2-pattern', 's2-pattern.js'), ('s2-pattern', 's2-pattern.wxml')],
+    'narr-s2-pattern': [('@content', 's2-pattern.js'), ('s2-pattern', 's2-pattern.wxml')],
     'narr-s3-comic': [('s3-comic', 's3-comic.wxml')],
     'narr-s3-zodiac': [('s3-zodiac', 's3-zodiac.wxml')],
     'narr-s3-water': [('s3-water', 's3-water.wxml')],
@@ -86,7 +88,8 @@ NARR_PAGE = {
 }
 
 def page_plain(page, src):
-    s = io.open(os.path.join(PAGES, page, src), encoding='utf-8').read()
+    base = CONTENT if page == '@content' else os.path.join(PAGES, page)
+    s = io.open(os.path.join(base, src), encoding='utf-8').read()
     if src.endswith('.wxml'):
         s = re.sub(r'<!--.*?-->', '', s, flags=re.S)
         s = re.sub(r'<[^>]+>', '', s)

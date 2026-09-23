@@ -6,11 +6,10 @@
   <view class="tag-no tag-no-fixed">No.S3-2</view>
 
   <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
-  <view class="title serif">有哪些兽首归来了</view>
+  <view class="title serif">转盘花纹匹配</view>
   <view class="hatch-divider title-div"></view>
-  <view class="lead kaiti">第二步，认座位：座是空的，座身上的花纹倒还清楚，纹会告诉你，哪一尊坐哪一座。这一页配了一只转盘，转盘上也是这些纹。</view>
-  <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">用转盘对座上的纹，把回来的名字一个个读出来。</text></view>
-  <dialogue-block speaker="蒋友仁" text="座子上还留着纹，一尊一个样，哪一尊坐哪一座，纹上写着。你手里那只转盘，转到对的那一圈，镂空里的记号就对上了。回来的名字，自己会出来。" clip-id="dlg-haiyantang-3" note="历史人物 · 台词为艺术演绎" />
+  <view class="lead kaiti">池两侧的座基上，一尊一个花纹还清楚——哪一尊坐哪一座，纹上写着。这一页配了一只转盘，转盘上也是这些纹。</view>
+  <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">使用转盘，根据花纹匹配寻找信息。</text></view>
   <view class="note-hand olive" style="margin: 8rpx 0 0;">七尊里正好有马。正午值班的那一尊，就是马。</view>
   <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
 
@@ -37,15 +36,14 @@
   </view>
 
   <view class="prop-card archive-sheet" wx:if="{{showHandoff}}">
-    <view class="prop-label archive-tab">道具交接</view>
-    <view class="prop-title serif">收好转盘，取出水显纸</view>
+    <view class="prop-label archive-tab">道具收尾</view>
+    <view class="prop-title serif">收好转盘</view>
     <view class="archive-rule"></view>
     <view class="archive-steps">
       <view class="step-row"><view class="step-no">1</view><view class="step-copy">将七纹样转盘转回平整位置，收回资料袋。</view></view>
-      <view class="step-row"><view class="step-no">2</view><view class="step-copy">取出实体水显纸，并准备少量清水和微湿工具。</view></view>
-      <view class="step-row"><view class="step-no">3</view><view class="step-copy">让纸张远离手机与其他纸质资料，再进入下一步。</view></view>
+      <view class="step-row"><view class="step-no">2</view><view class="step-copy">可是这些喷泉怎么喷出的水呢？水力钟在眼前，水源却不在水池里。地图上面我看到了蓄水楼，或许喷泉正是靠它喷水。</view></view>
     </view>
-    <button class="btn-seal confirm-btn record-action" bindtap="onNext" disabled="{{advancing}}">水显纸已准备好</button>
+    <button class="btn-seal confirm-btn record-action" bindtap="onNext" disabled="{{advancing}}">前往蓄水楼</button>
   </view>
   </scroll-view>
 

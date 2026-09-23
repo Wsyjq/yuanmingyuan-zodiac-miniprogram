@@ -1,35 +1,44 @@
-// 第一站 · 西洋楼入口（V2.1 可用稿）：拆信读信 → 封口半字 → 两半合上=黄花阵。
-// 三段交互：sealed（到门口，撕开封口）→ reading（去读纸上的信）→ puzzle（半字拼合，输入校验）。
-// 信的内容只在实体信纸上（正面＝信全文，背面＝上半截字），软件不重复呈现，本页只给引导与判定。
-// 判定：拼出「黄花阵」即过，不拍照、不提交；卡住才出提示。
+// 第一站 · 西洋楼入口（飞书 v3 rev4379 §西洋楼入口）：
+// 到站导语 → 地图判方位（长春园四选一，答案 d 东北）→ 揭晓叙述。
+// 文案与选项按飞书原文；页面保留 puzzleId「s1-decode」与既有存档/检查点兼容。
 const session = require('../../store/session')
 const audioSrc = require('../../utils/audio-src')
 const playGuide = require('../../capabilities/play-guide/guide')
 const coachHost = require('../../capabilities/play-guide/coach-host')
 const glossHost = require('../../utils/gloss-host')
 
-const ANSWER = '黄花阵'
-
-// 信全文见 docs/剧情可用稿-主线走一遍.md §第一站【信·可直接用】，印在实体信纸正面，此处不再复制。
+const ANSWER = 'D'
+const OPTIONS = [
+  { key: 'A', text: '西北' },
+  { key: 'B', text: '东南' },
+  { key: 'C', text: '西南' },
+  { key: 'D', text: '东北' }
+]
 
 Page({
   behaviors: [coachHost, glossHost],
   data: {
     narrSrc: audioSrc.clip('narr-s1-decode-sealed'),
-    stage: 'sealed', // sealed → reading → puzzle
-    answerInput: '',
+    options: OPTIONS,
+    selected: '',
     attempts: 0,
-    hintLevel: 0,
     hintText: '',
-    wrongTip: '',
     solved: false,
+    revealed: false,
     advancing: false,
-    // 到站导语里的「西洋楼」= SL-02 史料卡挂点（v3 rev 3346：到入口弹）
+    // 到站导语（飞书原文）
     leadParts: [
-      { t: '到了' },
+      { t: '来到了' },
       { t: '西洋楼', g: 'sl02' },
-      { t: '入口。门里一条路往东伸进去，两边残基一处接一处，看不出当年谁是谁。说好了到门口拆信，现在就是门口。' }
-    ]
+      { t: '入口，我从背包里面取出档案袋，还有那份地图，决定按照上面手绘的路线图走。' }
+    ],
+    // 揭晓叙述（飞书原文）：西洋楼沿长春园北界东西展开
+    revealParts: [
+      { t: '西洋楼沿着' },
+      { t: '长春园', g: 'sl05' },
+      { t: '的北界东西展开。虽然叫“楼”，但它不是一栋楼，而是一组楼殿、喷泉和庭园的总称。谐奇趣、方外观、大水法……今天我将一一踏足，去找寻第二十一幅图的线索。' }
+    ],
+    followup: '档案袋里还有几张西洋楼的铜版画，或许我在现场中能对应起来这几幅铜版画对应的建筑名字，以及现在长什么样。'
   },
 
   onReady() {
@@ -37,80 +46,50 @@ Page({
       playGuide.runPageStop(this)
       return
     }
-    if (this.data.stage === 'sealed') this.scheduleCoach([playGuide.SPOTS.listen])
+    if (!this.data.solved) this.scheduleCoach([playGuide.SPOTS.listen])
   },
 
   onLoad(options) {
     if (playGuide.enterTourPage('pages/s1-decode/s1-decode', options)) {
-      this.setData({ touring: true, stage: 'sealed' })
+      this.setData({ touring: true })
       return
     }
     session.viewPuzzle('s1-decode')
     const puzzle = session.getPuzzle('s1-decode')
     if (puzzle) {
       this.setData({
-        stage: 'puzzle',
         solved: true,
+        selected: ANSWER,
         narrSrc: audioSrc.clip('narr-s1-decode-solved'),
-        answerInput: ANSWER,
         attempts: Number(puzzle.payload && puzzle.payload.attempts) || 1
       })
     }
   },
 
-  // 撕开封口：转到「去读纸上的信」。信不在屏幕上，这里只给一句引导。
-  onTear() {
-    this.setData({ stage: 'reading', narrSrc: audioSrc.clip('narr-s1-decode-reading') })
+  onSelect(e) {
+    if (this.data.solved) return
+    this.setData({ selected: e.currentTarget.dataset.key, hintText: '' })
   },
 
-  // 读完纸信，回头看封口上那半截字
-  onReadDone() {
-    this.setData({ stage: 'puzzle', narrSrc: audioSrc.clip('narr-s1-decode-puzzle') })
-  },
-
-  onInput(e) {
-    this.setData({ answerInput: e.detail.value, wrongTip: '' })
-  },
-
-  onShowSurfaceHint() {
-    session.viewHint('s1-decode', 1)
-    this.setData({
-      hintLevel: Math.max(this.data.hintLevel, 1),
-      hintText: '封口上留着半截字，只有下面一半。'
-    })
-  },
-
-  onShowJoinHint() {
-    session.viewHint('s1-decode', 2)
-    this.setData({
-      hintLevel: 2,
-      hintText: '信纸翻过来，背面印着上面那一半。两半合上。'
-    })
-  },
-
-  onSubmit() {
-    const value = String(this.data.answerInput || '').replace(/\s+/g, '')
-    if (!value) {
-      wx.showToast({ title: '先填一个地点试试', icon: 'none' })
-      return
-    }
-    if (value.includes(ANSWER)) {
-      const attempts = this.data.attempts + 1
-      session.attemptPuzzle('s1-decode', attempts, true, 'text')
-      this.setData({ solved: true, attempts, wrongTip: '', narrSrc: audioSrc.clip('narr-s1-decode-solved') })
+  onConfirm() {
+    if (!this.data.selected || this.data.solved) return
+    const attempts = this.data.attempts + 1
+    if (this.data.selected === ANSWER) {
+      session.attemptPuzzle('s1-decode', attempts, true, 'tap')
+      this.setData({ solved: true, attempts, hintText: '', narrSrc: audioSrc.clip('narr-s1-decode-solved') })
       session.completePuzzle('s1-decode', { answer: ANSWER, attempts: attempts }).catch(function () {
         wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' })
       })
       return
     }
-    const attempts = this.data.attempts + 1
-    session.attemptPuzzle('s1-decode', attempts, false, 'text')
+    session.attemptPuzzle('s1-decode', attempts, false, 'tap')
     if (attempts >= 3) {
       this.setData({
         solved: true,
+        revealed: true,
         attempts,
-        answerInput: ANSWER,
-        wrongTip: '两半合上，是三个字：黄花阵。',
+        selected: ANSWER,
+        hintText: '西洋楼贴着长春园的北围墙。',
         narrSrc: audioSrc.clip('narr-s1-decode-solved')
       })
       session.completePuzzle('s1-decode', { answer: ANSWER, attempts: attempts, revealed: true }).catch(function () {
@@ -120,9 +99,7 @@ Page({
     }
     this.setData({
       attempts,
-      wrongTip: attempts > 1
-        ? '还不是这三个字。封口那半和信纸背面那半，要对上位置再合。'
-        : '答案没有对上。先看看封口上留着的那半截字。'
+      hintText: '再看看地图上西洋楼贴着长春园的哪一边。'
     })
   },
 

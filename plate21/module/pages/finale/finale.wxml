@@ -46,7 +46,7 @@
       <!-- L5 落款 -->
       <view class="layer layer-l5">
         <view class="l5-box">
-          <text class="l5-line kaiti">此处待绘</text>
+          <text class="l5-line kaiti">第二十一图</text>
         </view>
       </view>
       <view class="reveal-curtain curtain-1 {{layerCount >= 1 ? 'is-open' : ''}}"></view>
@@ -101,7 +101,7 @@
     </view>
 
     <!-- v1.3 手账：考察者手记批注 -->
-    <view class="note-hand fin-note" style="transform: rotate(-1.5deg);">中央空着的那一块，是你站着的位置。</view>
+    <view class="note-hand fin-note" style="transform: rotate(-1.5deg);">可以订阅关注小程序，第二天会推送彩蛋～</view>
 
     <!-- V2.3 回显：全程仅有的两处游客输入，只在结局以屏幕文字出现（不进音频） -->
     <view class="echo-panel" wx:if="{{echoDashuifa || echoPostcard}}">

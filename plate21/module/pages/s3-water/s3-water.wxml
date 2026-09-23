@@ -8,9 +8,8 @@
   <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
   <view class="title serif">让水显出答案</view>
   <view class="hatch-divider title-div"></view>
-  <view class="lead kaiti">第三步，校到正午。这座钟报时靠水，正午该当班的是马；档案里夹的那张纸，恰好也认水。</view>
+  <view class="lead kaiti">正午轮到马首喷水。档案里夹的那张纸认水——蘸点水，看它显出谁来。</view>
   <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">蘸点水，涂在那张纸上（只涂自家道具纸），看它显出谁来。</text></view>
-  <dialogue-block speaker="蒋友仁" text="我们这里，样样都认水，钟认水，纸也认。你那张纸也认。蘸点水，看它显出谁来。" clip-id="dlg-haiyantang-4" note="历史人物 · 台词为艺术演绎 · 水只涂在自家道具纸上" />
   <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
 
   <view class="prop-card archive-sheet">
@@ -42,11 +41,9 @@
     <view class="archive-rule"></view>
     <view class="care-note">将纸张平放自然晾干，不要擦拭或折叠湿润区域；完全干燥后再收好。</view>
     <view class="archive-steps">
-      <view class="step-row"><view class="step-no">1</view><view class="step-copy">纸遇水，马首显出来了——正午那一尊。钟校到了正午，这一响落在纸上。把纸晾干收好。</view></view>
-      <view class="step-row"><view class="step-no">2</view><view class="step-copy">往东看，几根残柱已经戳在视线尽头，档案的下一页就在那儿，画上水花翻得很凶。</view></view>
+      <view class="step-row"><view class="step-no">1</view><view class="step-copy">纸遇水，马首显出来了——正午那一尊。把纸晾干收好。</view></view>
+      <view class="step-row"><view class="step-no">2</view><view class="step-copy">往东看，几根残柱已经戳在视线尽头，档案的下一页就在那儿。</view></view>
     </view>
-    <view class="result-evidence note-hand olive">【记】空栏 · 海晏堂：画上是一座钟，地上，钟停了。</view>
-    <dialogue-block speaker="蒋友仁" text="往东去。柱子，你自己看得见。" clip-id="dlg-haiyantang-5" note="历史人物 · 台词为艺术演绎" />
     <button class="btn-seal confirm-btn record-action" bindtap="onNext" disabled="{{advancing}}">水显纸已收好，往东走</button>
   </view>
   </scroll-view>

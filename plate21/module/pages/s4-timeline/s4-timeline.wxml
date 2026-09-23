@@ -2,119 +2,34 @@
 <page-overlays />
 <bgm-ambience />
 
-<!-- 站名叙事 + 引文卡 -->
-<view class="page page-shell paper-grain paper-real" wx:if="{{phase === 'novel'}}">
-  <!-- v1.3.1 手账：左侧活页装订孔列（全站统一） -->
+<!-- 雨果雕像（飞书 v3 rev5614 §雨果雕像：纯叙事） -->
+<view class="page page-shell paper-grain paper-real">
   <view class="binder"></view>
-  <view class="tag-no page-tag">No.S4-1</view>
-  <view class="navi-title serif">第四站 · 雨果雕像</view>
+  <view class="tag-no page-tag">No.S4</view>
+  <view class="navi-title serif">雨果雕像</view>
   <view class="hatch-divider navi-line"></view>
   <scroll-view class="navi-body" scroll-y>
     <view class="navi-figure double-frame">
       <image class="navi-image img-aged" src="/plate21/module/assets/img/IMG-RUNTIME-HUGO.jpg" mode="aspectFill" />
       <view class="navi-caption">雨果雕像 · 项目 AI 叙事图</view>
     </view>
+    <view class="para"><gloss-text parts="{{hugoParts}}" bind:glossary="onGlossary" /></view>
     <view class="para" wx:for="{{paragraphs}}" wx:key="index">{{item}}</view>
     <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
-    <dialogue-block speaker="守档人" text="到这儿，才轮到我说话，前面几站我没跟着你。拆封套之前，先听我两句。里头除了信，还有几张写着年份的条子，是我从各处抄回来的。抄的时候是齐的，你倒出来就乱了。先把它们捋回各自的位置。年不捋顺，这封信你不知道该站在哪一年读。" clip-id="dlg-yugao-1" />
-    <view class="quote-card">
-      <view class="hatch-divider quote-line"></view>
-      <view class="quote-text kaiti">{{quote}}</view>
-      <view class="hatch-divider quote-line"></view>
-    </view>
-    <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">把乱掉的年份条子，一条条拖回时间轴原位。</text></view>
-    <view class="note-hand navi-note" style="transform: rotate(1.5deg)">先把年份对齐，再读信。</view>
   </scroll-view>
   <view class="navi-footer">
-    <button class="btn-seal" bindtap="onNovelFinish">继续</button>
+    <button class="btn-seal" bindtap="onNext" disabled="{{advancing}}">{{advancing ? '正在保存……' : '继 续'}}</button>
   </view>
 </view>
 
-<!-- 谜题区 -->
-<view class="page page-shell paper-grain paper-real {{timelineComplete ? 'timeline-complete' : ''}}" wx:if="{{phase === 'puzzle'}}">
-  <!-- v1.3.1 手账：左侧活页装订孔列（全站统一） -->
-  <view class="binder"></view>
-  <view class="tag-no page-tag">No.S4-1</view>
-  <view class="title serif">时间轴排序</view>
-  <view class="subtitle">把事件卡拖回它发生的那一年（可左右拖动时间轴）</view>
-  <!-- v1.3.1 手账：邮戳贴纸压在编号签下方页边（不扰时间轴拖拽） -->
-  <image class="tl-postmark" src="/plate21/module/assets/img/stickers/st-postmark-02.png" mode="aspectFit" />
-  <view class="note-hand olive tl-note" style="transform: rotate(-1deg)">底座的年与信封的年，对不齐。</view>
-
-  <!-- 横向时间轴：1747 —— 2010（采风修订版 5 节点） -->
-  <scroll-view class="tl" scroll-x scroll-with-animation scroll-left="{{scrollLeft}}" enhanced show-scrollbar="{{false}}">
-    <view class="tl-inner">
-      <view class="gold-line"></view>
-      <view class="tl-slots">
-        <view wx:for="{{slots}}" wx:key="index" class="tl-cell">
-          <view class="tl-label">
-            <text>{{item.label}}</text>
-          </view>
-          <view class="tl-slot {{item.filled ? 'filled' : ''}} {{item.flash ? 'flash' : ''}} {{item.near ? 'near' : ''}}" data-index="{{index}}" bindtap="onSlotTap" role="button" aria-label="年份{{item.label}}">
-            <view class="tl-filled">{{item.filled}}</view>
-          </view>
-        </view>
-      </view>
-    </view>
-  </scroll-view>
-
-  <view class="tray-label">事件卡 · 先选一张，再点上方年份</view>
-  <view class="card-tray" role="list" aria-label="待归位事件卡">
-    <view
-      wx:for="{{cards}}"
-      wx:key="id"
-      wx:if="{{!item.placed}}"
-      class="card {{item.dragging ? 'dragging' : ''}} {{selectedCard === index ? 'selected' : ''}}"
-      style="{{item.dragStyle}}"
-      data-idx="{{index}}"
-      bindtouchstart="onCardStart"
-      bindtouchmove="onCardMove"
-      bindtouchend="onCardEnd"
-      bindtouchcancel="onCardEnd"
-      bindtap="onCardSelect"
-      role="button"
-      aria-pressed="{{selectedCard === index}}"
-      aria-label="选择事件卡{{item.title}}"
-    >
-      <view class="card-title serif">{{item.title}}</view>
-      <view class="card-sub">{{item.sub}}</view>
-    </view>
-  </view>
-
-  <view wx:if="{{pointTip && !monologue}}" class="point-tip">{{pointTip}}</view>
-
-  <!-- V2.1：时间轴可跳——跳过不发该卡，直接读信 -->
-  <button wx:if="{{phase === 'puzzle' && !monologue && !showHistory}}" class="skip-btn note-hand olive" bindtap="onSkipTimeline">年份先不对了，直接读信</button>
-
-  <!-- 站尾：守档人串场——拆信读信；四件东西卡自排不评分；开放问不给选项（V2.2） -->
-  <view class="mono" wx:if="{{monologue}}">
-    <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
-    <view class="mono-text kaiti" wx:for="{{monologueParagraphs}}" wx:key="index">{{item}}</view>
-    <dialogue-block speaker="守档人" text="对了。现在拆信。信我不念，他的字，你自己看。" clip-id="dlg-yugao-2" />
-    <view class="mono-text kaiti">把信抽出来，站在像底下读。这封信本来就不是写给你的，把它读完。</view>
-    <dialogue-block speaker="守档人" text="读完了？这信不是写给你的，你也不是第一个这么读完的。行了，信封底下还有东西。四张卡，是我这些年从别处抄回来的下落：石屏风，翻尾石鱼，七根石柱，还有一对铜鹿十只铜狗。怎么摆，你自己定，我不打分。" clip-id="dlg-yugao-3" />
-    <view class="mono-relics-label note-hand olive">信封下面还压着四张卡片——东西们后来的下落。自己排一列，不排序、不评分：</view>
-    <view class="mono-relic" wx:for="{{relicCards}}" wx:key="no"><text class="mono-relic-no">{{item.no}}</text><text class="mono-relic-text">{{item.text}}</text></view>
-    <dialogue-block speaker="守档人" text="问你一句：一样东西放在哪儿，才算被保住了？别急着答我，这题没有标准答案，至少我没有。包里那张明信片，正面是回来的那七根柱子，背面是空的。想写就写。投进那个信箱，下一个走到这儿的人会读到一张，就一张。不投，自己收着，也行。" clip-id="dlg-yugao-4" />
-    <view class="mono-question kaiti">{{openQuestion}}</view>
-    <view class="mono-question-note">不给选项，不投票，不点评。想，和同行的人吵，什么都不想直接走，都不影响后面。</view>
-    <view class="mono-text kaiti">到这儿，八张写着数字的卡片到齐了，档案夹里的三张残片也都收在格子里，中间那块，还空着。</view>
-    <dialogue-block speaker="守档人" text="行了。就地摊开吧。" clip-id="dlg-yugao-5" />
-    <view wx:if="{{saveError}}" class="hint">{{saveError}}</view>
-    <button class="btn-seal" bindtap="goReport" disabled="{{advancing}}">{{advancing ? '正在保存……' : '就地摊开档案'}}</button>
-  </view>
-</view>
-
+<!-- 术语史料卡（「雨果」SL-17 点入） -->
 <history-card
-  visible="{{showHistory}}"
-  title="时间轴 · 西洋楼二百七十年"
-  source="《西洋楼铜版图》；雨果《致巴特勒上尉的信》；圆明园管理处公开资料"
-  lines="{{historyLines}}"
-  corner-number="{{cardNumber}}"
-  show-corner="{{showHistory}}"
-  btn-text="查看最后一道锁"
-  bind:next="goReport"
-  bind:close="onCloseHistory"
+  wx:if="{{gloss}}"
+  visible="{{!!gloss}}"
+  title="{{gloss.title}}"
+  source="{{gloss.source}}"
+  lines="{{gloss.lines}}"
+  btn-text="学到了"
+  bind:next="onGlossClose"
+  bind:close="onGlossClose"
 />
-<task-banner icon="hand" text="拖动事件卡，或先点事件卡再点年份" visible="{{phase === 'puzzle' && !monologue && !showHistory}}" />
-<stamp-toast id="stamp" />

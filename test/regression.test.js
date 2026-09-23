@@ -303,11 +303,13 @@ test('history card custom action ignores duplicate taps', () => {
 })
 
 // V2.2 红线词静态扫描：游客侧页面标记（wxml，剥注释后）不得出现触摸指引与假设感受句
+// 注：「还在水里」曾是红线词，飞书 v3 rev4379 §拓展：回家之后 已将其转正为官方文案
+// （翻尾石鱼——北京大学未名湖西侧，还在水里），故从禁用表移除。
 test('V2.2 red-line words stay out of visitor-facing page markup', () => {
   const fs = require('node:fs')
   const path = require('node:path')
   const root = path.join(__dirname, '..', 'plate21', 'module', 'pages')
-  const forbidden = [/贴墙/, /摸一摸/, /摸完墙/, /看了很久/, /愣了/, /还在水里/]
+  const forbidden = [/贴墙/, /摸一摸/, /摸完墙/, /看了很久/, /愣了/]
   const hits = []
   ;(function walk(dir) {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {

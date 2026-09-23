@@ -11,11 +11,8 @@
 
   <view class="novel">
     <view class="novel-p"><gloss-text parts="{{introParts}}" bind:glossary="onGlossary" /></view>
-    <view class="novel-p">铜版图里，这里原本排列着十二尊人身兽首像，分别对应十二生肖，也对应一天里的十二个时辰。看到这里，我忽然想起来，调查日记中好像有一句话：</view>
   </view>
-  <view class="paper-quote">“十二兽各守一时，至午而全见。”</view>
-  <view class="novel"><view class="novel-p">“各守一时”应该很好理解，可“至午而全见”又是什么意思？</view></view>
-  <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">根据铜版图和现场遗迹，判断正午喷泉会是什么样子</text></view>
+  <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">观看小程序不同时辰喷水示意，回答 14 时对应由哪个兽首喷水，并推测正午时候由哪个兽首喷水</text></view>
   <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
 
   <view class="comic-plate double-frame" role="img" aria-label="十二兽首按时辰喷水的四格漫画">
@@ -30,25 +27,18 @@
   </view>
 
   <view class="q" wx:if="{{!followup}}">
-    <view class="q-title serif">如果在正午来到海晏堂，当年的十二生肖喷泉会是什么样子？</view>
-    <view
-      wx:for="{{options}}"
-      wx:key="key"
-      class="hour {{selected === item.key ? 'hour-sel' : ''}}"
-      data-key="{{item.key}}"
-      bindtap="onSelect"
-      role="button"
-      aria-pressed="{{selected === item.key}}"
-    >{{item.key}}　{{item.text}}</view>
+    <view class="q-title serif">14 时对应由哪个兽首喷水？</view>
+    <input class="answer-input" value="{{q1}}" bindinput="onInputQ1" placeholder="写一个生肖" maxlength="4" disabled="{{solved}}" />
+    <view class="q-title serif">正午时候由哪个兽首喷水？</view>
+    <input class="answer-input" value="{{q2}}" bindinput="onInputQ2" placeholder="写一个生肖" maxlength="4" disabled="{{solved}}" />
     <view class="hint" wx:if="{{hint}}">{{hint}}</view>
-    <button class="btn-seal" bindtap="onConfirm" disabled="{{!selected || solved}}">{{revealed ? '记 下 了' : '就 是 这 样'}}</button>
+    <button class="btn-seal" bindtap="onConfirm" disabled="{{!q1 || !q2 || solved}}">就 是 这 样</button>
   </view>
 
   <view class="followup" wx:if="{{followup}}">
-    <view class="novel-p">原来所谓的“水力钟”，真的就是用水来表示时间。这样一来，调查日记里的那句话也说得通了。可是这些喷泉怎么喷出的水呢？</view>
-    <view class="novel-p"><gloss-text parts="{{followupWaterParts}}" bind:glossary="onGlossary" /></view>
-    <view class="novel-p">西洋楼里的喷泉不是电泵。要先弄清水是怎么被抬高的，再往东去看大水法把水做成了什么。</view>
-    <button class="btn-seal" bindtap="onNext" disabled="{{advancing}}">请前往蓄水楼</button>
+    <view class="novel-p">答案确认后，画面里的十二生肖一个接一个亮起，到了正午，十二道水流同时喷出。</view>
+    <view class="novel-p">昔日竟然如此壮观，可如今却只剩下断壁残垣。这些兽首流离失所，有七尊归来了，但还有五尊不知所踪。</view>
+    <button class="btn-seal" bindtap="onNext" disabled="{{advancing}}">前往转盘花纹匹配</button>
   </view>
 </scroll-view>
 </view>
@@ -64,14 +54,14 @@
   bind:next="onHistoryNext"
   bind:close="onCloseHistory"
 />
-<!-- 术语史料卡（导语「海晏堂」SL-12 / 收尾「蓄水楼」SL-13 点入） -->
+<!-- 术语史料卡（导语「海晏堂」SL-12 点入） -->
 <history-card
   wx:if="{{gloss}}"
   visible="{{!!gloss}}"
   title="{{gloss.title}}"
   source="{{gloss.source}}"
   lines="{{gloss.lines}}"
-  btn-text="返 回"
+  btn-text="学到了"
   bind:next="onGlossClose"
   bind:close="onGlossClose"
 />

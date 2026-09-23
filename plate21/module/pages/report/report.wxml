@@ -4,7 +4,7 @@
 <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
   <view class="tag-no page-no">No.015</view>
   <view class="title serif">西洋楼铜版图 · 第二十一图</view>
-  <view class="subtitle">考察报告 · {{editionLabel}} · 非馆藏原件</view>
+  <view class="subtitle">考察记录生成完成 · {{editionLabel}} · 非馆藏原件</view>
   <view class="archive-rule report-rule"></view>
 
   <!-- 万字纹画框（邮票齿孔框 + 角花）+ 完整第 21 图预览 -->

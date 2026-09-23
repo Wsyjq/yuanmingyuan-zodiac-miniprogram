@@ -17,8 +17,33 @@ var bundled = require('./voice-pkg-map')
 
 var AUDIO_BASE = 'http://127.0.0.1:8787/audio/v22'
 
+// 2026-09-23 飞书剧情对齐 rev4379：主线页面文案已按 v3 逐字改写，
+// 既有 narr-* 人声录音仍是 V2.2 旧词，与屏上文字不符。重录待 MiniMax 账户充值
+// （1008 insufficient balance）。在重录完成前，下列主线叙述类 clip 一律静音，
+// 避免「音不对字」；散页 dlg-* 台词（养雀笼/观水法/线法画）与音乐声景不受影响。
+// 重录后从本清单移除对应 id 即可恢复。
+var STALE_CLIPS = {
+  'narr-prologue-p01': 1, 'narr-prologue-p02': 1, 'narr-prologue-p03': 1, 'narr-prologue-p04': 1,
+  'narr-prologue-handover': 1,
+  'narr-s1-decode-sealed': 1, 'narr-s1-decode-reading': 1, 'narr-s1-decode-puzzle': 1, 'narr-s1-decode-solved': 1,
+  'narr-s2-quiz': 1, 'narr-s2-quiz-followup': 1,
+  'narr-s2-reveal': 1, 'narr-s2-reveal-followup': 1,
+  'narr-s2-blend': 1,
+  'narr-s2-pattern': 1, 'narr-s2-pattern-finale': 1,
+  'narr-waypoint-xieqiqu': 1, 'narr-waypoint-xieqiqu-followup': 1,
+  'narr-waypoint-fangwaiguan': 1, 'narr-waypoint-fangwaiguan-followup': 1,
+  'narr-waypoint-xushuilou': 1, 'narr-waypoint-xushuilou-followup': 1,
+  'narr-s3-comic': 1, 'narr-s3-comic-followup': 1,
+  'narr-s3-zodiac': 1, 'narr-s3-water': 1,
+  'narr-dashuifa-hunt': 1, 'narr-dashuifa-after': 1, 'narr-dashuifa-yuan': 1, 'narr-dashuifa-followup': 1,
+  'narr-s4-timeline': 1, 'narr-s4-timeline-mono': 1,
+  'narr-s4-password': 1,
+  'narr-finale-p01': 1, 'narr-finale-p02': 1, 'narr-finale-p03': 1
+}
+
 function clip(id) {
   if (!id) return ''
+  if (STALE_CLIPS[id]) return ''
   return bundled[id] || (AUDIO_BASE + '/' + id + '.mp3')
 }
 

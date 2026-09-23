@@ -10,8 +10,8 @@
 
   <view class="title serif">亭子线稿对眼前这座亭</view>
   <view class="hatch-divider title-div"></view>
-  <view class="lead kaiti">终于到了中心亭了，好别致的亭子啊，之前上学的时候我就听老师说过西洋楼的建筑是中西结合的典范，不过一直没机会来，今日一见果然如此</view>
-  <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">对照小册子，找到中西结合的具体体现，拍下来</text></view>
+  <view class="lead kaiti">终于到了中心亭了，融合了中西审美，好别致的亭子！</view>
+  <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">你能找到这座亭子建筑风格中西结合的具体体现吗，找到后请拍照记录你的考察结果</text></view>
   <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
 
   <view class="capture-grid">

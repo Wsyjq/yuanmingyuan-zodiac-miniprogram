@@ -311,8 +311,9 @@ test('password uses the locked archive date and explains its provenance', async 
   assert.equal(result.data.correct, true)
   assert.equal(result.data.archiveDate, '2026 年 8 月 8 日')
   assert.deepEqual(Array.from(result.data.collectedNums), answer.split(''))
-  assert.match(result.data.hint, /设备本地日历/)
-  assert.match(result.html, /建档日/)
+  assert.match(result.data.hint, /考察凭证/)
+  assert.match(result.data.hint, /建档日/)
+  assert.match(result.html, /档案锁打开/)
 })
 
 test('host page describes the V2.1 five-stop mainline', async () => {
@@ -321,15 +322,15 @@ test('host page describes the V2.1 five-stop mainline', async () => {
   assert.doesNotMatch(result.html, /四站考察|五站考察|等待完成的铜版画|主线|支线/)
 })
 
-test('timeline puzzle does not reveal the ordered answer card before solving', async () => {
+test('hugo page reads the letter plot and advances to the finale (rev5614)', async () => {
   const result = await renderPage({
     route: 'plate21/module/pages/s4-timeline/s4-timeline',
     settleMs: 10,
-    drive: async (instance) => instance.onNovelFinish()
+    drive: async (instance) => instance.onNext()
   })
-  assert.equal(result.data.phase, 'puzzle')
-  assert.equal(result.data.showHistory, false)
-  assert.doesNotMatch(result.html, /history-card-mask/)
+  // rev5614：雨果页为纯叙事，继续即往结局
+  assert.deepEqual(result.errors, [])
+  assert.equal(result.data.advancing, true)
 })
 
 test('finale uses the v3 ending narrative from the plot', async () => {
@@ -338,10 +339,12 @@ test('finale uses the v3 ending narrative from the plot', async () => {
     settleMs: 10
   })
   const text = result.data.novel.map((item) => item.text).join('')
-  assert.match(text, /此处待绘/)
-  assert.match(text, /屏幕上的残片/)
+  // 飞书 v3 rev5614 §结局原文
+  assert.match(text, /第二十一幅画到底在哪呢/)
+  assert.match(text, /等待被后来者完成的“新画”/)
+  assert.match(text, /第21幅的第N个版本/)
+  assert.doesNotMatch(text, /此处待绘/)
   assert.doesNotMatch(text, /养雀笼/)
-  assert.doesNotMatch(text, /第N个版本/)
 })
 
 test('finale skip completes the CSS reveal without a per-frame veil object', async () => {
@@ -361,36 +364,35 @@ test('finale skip completes the CSS reveal without a per-frame veil object', asy
   assert.equal(Object.prototype.hasOwnProperty.call(result.data, 'veils'), false)
 })
 
-test('prologue hands over the archive without opening the letter', async () => {
+test('prologue hands over the archive bag from the v3 plot', async () => {
   const result = await renderPage({
     route: 'plate21/module/pages/prologue/prologue',
     settleMs: 10,
     drive: async (instance) => instance.onNovelFinish()
   })
-  // V2.1：信到遗址门口再拆——序章只做档案交接清点，不拆信
+  // 飞书 v3：序章收尾为档案袋交接清点（旧日记「寻廿一图」已入叙事）
   assert.equal(result.data.showHandover, true)
-  assert.match(result.html, /档案夹与信/)
-  assert.match(result.html, /到门口再拆/)
+  assert.match(result.html, /档案袋/)
+  assert.match(result.html, /这份考察资料跟着你走完全程/)
   assert.doesNotMatch(result.html, /IMG-ENVELOPE|envelope-img/)
 })
 
-test('first station validates the answer found on the physical envelope', async () => {
+test('first station reads the map and picks the right quarter of Changchunyuan', async () => {
   const result = await renderPage({
     route: 'plate21/module/pages/s1-decode/s1-decode',
     settleMs: 10,
     drive: async (instance, sleep) => {
-      instance.onTear()
-      instance.onReadDone()
-      instance.onInput({ detail: { value: '黄花阵' } })
-      instance.onSubmit()
+      instance.onSelect({ currentTarget: { dataset: { key: 'A' } } })
+      instance.onConfirm()
+      instance.onSelect({ currentTarget: { dataset: { key: 'D' } } })
+      instance.onConfirm()
       await sleep(10)
     }
   })
-  assert.equal(result.data.stage, 'puzzle')
+  // 飞书 v3 §西洋楼入口：西洋楼在长春园东北部（答案 d）
   assert.equal(result.data.solved, true)
-  assert.match(result.html, /两半合上了/)
-  assert.match(result.html, /黄花阵/)
-  assert.doesNotMatch(result.html, /env-art|envelope-wrap/)
+  assert.match(result.html, /东北/)
+  assert.match(result.html, /前往谐奇趣/)
 })
 
 test('zodiac page guides the physical wheel instead of rendering a virtual selector', async () => {
@@ -564,7 +566,7 @@ test('cover restart confirmation clears field photos and starts a fresh prologue
   assert.equal(storage.plate21_session.snapshot.checkpoint, 'prologue')
 })
 
-test('pattern conclusion walks out via the photo back, with no invented water meaning', async () => {
+test('pattern conclusion follows the v3 reveal text, with no invented water meaning', async () => {
   const result = await renderPage({
     route: 'plate21/module/pages/s2-pattern/s2-pattern',
     settleMs: 10,
@@ -575,20 +577,20 @@ test('pattern conclusion walks out via the photo back, with no invented water me
     }
   })
 
-  // V2.2：纹样举纸对照后收尾走照片背面（1987/1989 + 砌墙师傅台词里的四、五号），手绘路线图退出主线
+  // 飞书 v3 rev4379 §黄花阵：万字纹寓意＋今墙重建（SL-08）＋前往方外观
   assert.deepEqual(result.errors, [])
   assert.equal(result.data.showFinale, true)
-  assert.match(result.html, /照原图，复位/)
-  assert.match(result.html, /砌墙师傅/)
-  assert.match(result.html, /四号、五号/)
-  assert.match(result.html, /离墙近一点，看砖/)
-  assert.doesNotMatch(result.html, /手绘路线图/)
+  assert.match(result.html, /卐字不到头/)
+  assert.match(result.html, /万寿无疆/)
+  assert.match(result.html, /原墙/)
+  assert.match(result.html, /我按照地图继续走，下一站是方外观/)
+  assert.doesNotMatch(result.html, /砌墙师傅|照原图，复位|照片背面/)
   assert.doesNotMatch(result.html, /万字纹[^<]{0,30}(寓意|暗示).{0,10}水/)
   // V2.2 红线：不触摸文物（页内不得再出现贴墙/摸墙类指引）
   assert.doesNotMatch(result.html, /贴墙|贴到墙上|摸一摸|摸完墙/)
 })
 
-test('zodiac and water conclusions render explicit physical-prop handoffs', async () => {
+test('zodiac conclusion hands off toward 蓄水楼 (v3 rev5614)', async () => {
   const zodiac = await renderPage({
     route: 'plate21/module/pages/s3-zodiac/s3-zodiac',
     settleMs: 10,
@@ -597,20 +599,12 @@ test('zodiac and water conclusions render explicit physical-prop handoffs', asyn
       instance.onHistoryNext()
     }
   })
-  const water = await renderPage({
-    route: 'plate21/module/pages/s3-water/s3-water',
-    settleMs: 10,
-    drive(instance) {
-      instance.setData({ solved: true })
-      instance.onHistoryNext()
-    }
-  })
 
   assert.deepEqual(zodiac.errors, [])
-  assert.match(zodiac.html, /收好转盘，取出水显纸/)
-  assert.match(water.html, /晾干水显纸，再收回资料袋/)
-  // V2.1 红线：大水法之前不预告雨果——水显纸收尾只往东指残柱
-  assert.doesNotMatch(water.html, /雨果/)
+  assert.match(zodiac.html, /收好转盘/)
+  assert.match(zodiac.html, /前往蓄水楼/)
+  // rev5614：水显纸页已出主线，转盘页不再交接水显纸
+  assert.doesNotMatch(zodiac.html, /取出水显纸/)
 })
 
 test('report with missing player photos offers repair and never inserts guide images', async () => {
@@ -657,44 +651,7 @@ test('repairing an old photo record without a draft preserves its existing photo
   assert.equal(restored.data.points[2].photoPath, '/saved/plate21-photo.jpg')
 })
 
-test('timeline supports selecting a card and then tapping its year', async () => {
-  const result = await renderPage({
-    route: 'plate21/module/pages/s4-timeline/s4-timeline',
-    settleMs: 10,
-    drive(instance) {
-      instance.onNovelFinish()
-      instance.onCardSelect({ currentTarget: { dataset: { idx: 0 } } })
-      instance.onSlotTap({ currentTarget: { dataset: { index: 4 } } })
-    }
-  })
-
-  assert.deepEqual(result.errors, [])
-  assert.equal(result.data.cards[0].placed, true)
-  assert.equal(result.data.slots[4].filled, '雨果雕像落成')
-  assert.match(result.data.pointTip, /归位正确/)
-})
-
-test('timeline can be completed entirely through the click path', async () => {
-  const result = await renderPage({
-    route: 'plate21/module/pages/s4-timeline/s4-timeline',
-    settleMs: 10,
-    async drive(instance, sleep) {
-      instance.onNovelFinish()
-      for (let index = 0; index < instance.data.cards.length; index += 1) {
-        const card = instance.data.cards[index]
-        instance.onCardSelect({ currentTarget: { dataset: { idx: index } } })
-        instance.onSlotTap({ currentTarget: { dataset: { index: card.target } } })
-      }
-      await sleep(950)
-    }
-  })
-
-  assert.deepEqual(result.errors, [])
-  assert.equal(result.data.timelineComplete, true)
-  assert.equal(result.data.cards.every((card) => card.placed), true)
-  assert.equal(result.data.cards.some((card) => Object.prototype.hasOwnProperty.call(card, 'x')), false)
-  assert.equal(result.data.showHistory, true)
-})
+// rev5614：时间线拖拽谜题已从正文删除（雨果雕像改为纯叙事页），原两个 timeline 交互测试随之移除
 
 test('report distinguishes album permission denial and exposes settings recovery', async () => {
   let opened = false
@@ -771,28 +728,38 @@ test('s2-quiz followup uses the v3 lantern plot, not palace-maid dialogue', asyn
   assert.doesNotMatch(result.html, /跑起来跑起来/)
 })
 
-test('s3-comic opens with the v3 noon clock question from the plot', async () => {
+test('s3-comic asks the 14h and noon zodiac questions from the plot (rev5614)', async () => {
   const result = await renderPage({
     route: 'plate21/module/pages/s3-comic/s3-comic',
-    settleMs: 10
+    settleMs: 10,
+    drive(instance) {
+      instance.setData({ q1: '羊', q2: '马' })
+      instance.onConfirm()
+      instance.onCloseHistory()
+    }
   })
   assert.deepEqual(result.errors, [])
-  assert.match(result.html, /十二兽各守一时/)
-  assert.match(result.html, /至午而全见/)
-  assert.match(result.html, /十二生肖同时喷水/)
+  assert.match(result.html, /14 时对应由哪个兽首喷水/)
+  assert.match(result.html, /正午时候由哪个兽首喷水/)
+  assert.match(result.html, /十二道水流同时喷出/)
+  assert.match(result.html, /有七尊归来了，但还有五尊不知所踪/)
 })
 
-test('s4-timeline lets the archivist speak for the first time (V2.2)', async () => {
+test('s4-timeline is the narrative-only Hugo page (v3 rev5614)', async () => {
   const result = await renderPage({
     route: 'plate21/module/pages/s4-timeline/s4-timeline',
     settleMs: 10
   })
   assert.deepEqual(result.errors, [])
   assert.match(result.html, /致巴特勒上尉的信/)
-  assert.match(result.html, /公开信/)
+  assert.match(result.html, /断壁残垣/)
+  // 首句经 gloss-text 渲染（「雨果」挂 SL-17 史料卡），按数据断言
+  assert.match(result.data.hugoParts.map(p => p.t).join(''), /同样愤怒的还有面前的这位法国作家——雨果。/)
+  // rev5614：守档人对话层与时间线谜题已删
+  assert.doesNotMatch(result.html, /守档人/)
+  assert.doesNotMatch(result.html, /时间轴排序/)
   // V2.2 红线：不再替游客编感受（旧稿「愣了一下」句已删）
   assert.doesNotMatch(result.html, /愣了/)
-  assert.doesNotMatch(result.html, /还在水里/)
 })
 
 // V2.2 支线可跳过（用户口径）：散页随时进出、无判定门；大水法静默可提前结束、三选一可跳
@@ -835,5 +802,5 @@ test('v3 mainline scored sites keep a back button and original plot copy', async
   })
   assert.deepEqual(dsf.errors, [])
   assert.equal(dsf.data.stage, 'after')
-  assert.match(dsf.html, /以水成戏/)
+  assert.match(dsf.html, /猎狗逐鹿/)
 })

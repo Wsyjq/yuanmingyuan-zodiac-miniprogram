@@ -1,22 +1,14 @@
-// 海晏堂 · 正午水力钟。飞书 v3 原文一问。下一站蓄水楼。
+// 海晏堂 · 十二生肖水力钟（飞书 v3 rev5614 §海晏堂）。
+// 观看不同时辰喷水示意 → 回答 14 时对应哪个兽首（未时·羊）→ 推测正午哪个兽首（午马）。
+// 答完接转盘花纹匹配（s3-zodiac）。文案与答案按飞书原文。
 const session = require('../../store/session')
 const audioSrc = require('../../utils/audio-src')
 const audioBus = require('../../utils/audio-bus')
-const ladder = require('../../utils/attempt-ladder')
 const glossHost = require('../../utils/gloss-host')
 
-const OPTIONS = [
-  { key: 'A', text: '只有“午马”喷水' },
-  { key: 'B', text: '十二生肖同时喷水' },
-  { key: 'C', text: '鼠、马同时喷水' },
-  { key: 'D', text: '所有兽首停止喷水' }
-]
-const CORRECT = 'B'
-const HINTS = [
-  '“各守一时”很好理解，再想想“至午而全见”。',
-  '常规是轮值，正午不同。'
-]
-const REVEAL = '海晏堂十二生肖喷水装置按照十二时辰依次喷水，到正午时，十二尊兽首会一同喷水，因此也被称作“水力钟”。'
+// 时辰→兽首：14 时落在未时（13-15 点），正午是午马
+const Q1_ANSWERS = ['羊', '羊首', '未羊']
+const Q2_ANSWERS = ['马', '马首', '午马']
 
 Page({
   behaviors: [glossHost],
@@ -25,18 +17,12 @@ Page({
     showHistory: false,
     cardNumber: 0,
     historyLines: [
-      '海晏堂十二生肖喷水装置按照十二时辰依次喷水，到正午时，十二尊兽首会一同喷水，因此也被称作“水力钟”。'
+      '池周分布十二兽首铜像代表十二时辰，依次喷水构成报时系统。'
     ],
-    // 「海晏堂」= SL-12 挂点（题前）；题后「蓄水楼」= SL-13 挂点（v3 rev 3346）
+    // 「海晏堂」= SL-12 挂点（飞书 v3 rev5614 §海晏堂开场）
     introParts: [
-      { t: '沿着地图走，我来到了' },
       { t: '海晏堂', g: 'sl12' },
-      { t: '遗址。眼前已经很难看出当年建筑完整的样子了，但把档案里的《海晏堂西面》铜版图和现场对照起来，还是能找到一些对应的位置。' }
-    ],
-    followupWaterParts: [
-      { t: '水力钟在眼前，水源却不在水池里。路线图在海晏堂北面另标了一处高台——' },
-      { t: '蓄水楼', g: 'sl13' },
-      { t: '。' }
+      { t: '，名字取自“河清海晏”一词，寓意天下太平。池周分布十二兽首铜像代表十二时辰，依次喷水构成报时系统。十二兽首分别代表不同时辰？这是怎么实现的呢？' }
     ],
     cells: [
       { id: 'zi', time: '子', mark: '鼠', art: 'single', desc: '鼠首先报子时' },
@@ -44,54 +30,72 @@ Page({
       { id: 'noon', time: '午', mark: '', art: 'sundial', desc: '日影逼近正中' },
       { id: 'all', time: '正午', mark: '', art: 'fountain', desc: '十二水位同时亮起' }
     ],
-    options: OPTIONS,
-    selected: '',
+    q1: '',
+    q2: '',
     attempts: 0,
     hint: '',
     solved: false,
-    revealed: false,
     followup: false,
     advancing: false
   },
 
-  onSelect(e) {
-    if (this.data.solved) return
-    this.setData({ selected: e.currentTarget.dataset.key })
+  onInputQ1(e) {
+    this.setData({ q1: e.detail.value, hint: '' })
+  },
+
+  onInputQ2(e) {
+    this.setData({ q2: e.detail.value, hint: '' })
   },
 
   onConfirm() {
     audioBus.stopKind('voice')
-    if (this.data.solved || !this.data.selected) return
-    const ok = this.data.selected === CORRECT
-    const result = ladder.submit({
-      ok: ok,
-      attempts: this.data.attempts,
-      hints: HINTS,
-      revealText: REVEAL
-    })
-    session.attemptPuzzle('s3-hour', result.attempts, ok, 'tap')
-    if (result.solved) {
+    if (this.data.solved || !this.data.q1 || !this.data.q2) return
+    const norm = function (s) { return String(s).replace(/\s+/g, '') }
+    const ok = Q1_ANSWERS.indexOf(norm(this.data.q1)) >= 0 && Q2_ANSWERS.indexOf(norm(this.data.q2)) >= 0
+    const attempts = this.data.attempts + 1
+    if (ok) {
+      session.attemptPuzzle('s3-hour', attempts, true, 'text')
       this.setData({
-        attempts: result.attempts,
+        attempts: attempts,
         solved: true,
-        revealed: result.revealed,
-        hint: result.hint,
-        selected: CORRECT,
+        hint: '',
         showHistory: true
       })
       const stamp = this.selectComponent('#stamp')
       if (stamp && stamp.show) stamp.show('考察记录已保存')
       session.completePuzzle('s3-hour', {
-        answer: CORRECT,
-        attempts: result.attempts,
-        revealed: result.revealed
+        answer: ['羊', '马'],
+        attempts: attempts
       }, { collectCard: true }).catch(function () {
         wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' })
       })
       return
     }
-    session.viewHint('s3-hour', result.attempts)
-    this.setData({ attempts: result.attempts, hint: result.hint })
+    session.viewHint('s3-hour', attempts)
+    if (attempts >= 3) {
+      session.attemptPuzzle('s3-hour', attempts, false, 'text')
+      this.setData({
+        attempts: attempts,
+        solved: true,
+        q1: '羊',
+        q2: '马',
+        hint: '',
+        showHistory: true
+      })
+      session.completePuzzle('s3-hour', {
+        answer: ['羊', '马'],
+        attempts: attempts,
+        revealed: true
+      }, { collectCard: true }).catch(function () {
+        wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' })
+      })
+      return
+    }
+    session.attemptPuzzle('s3-hour', attempts, false, 'text')
+    this.setData({
+      attempts: attempts,
+      hint: '一天十二个时辰，每个时辰两个小时。14 时落在未时；正午，是午时。'
+    })
   },
 
   onCloseHistory() {
@@ -110,14 +114,15 @@ Page({
     })
   },
 
+  // 答案确认后 → 转盘花纹匹配（飞书 v3 rev5614 §海晏堂 互动玩法｜转盘花纹匹配）
   onNext() {
     if (this.data.advancing) return
     this.setData({ advancing: true, showHistory: false })
     session.completePuzzle('s3-hour', {
-      answer: CORRECT,
+      answer: ['羊', '马'],
       attempts: this.data.attempts || 1
-    }, { collectCard: true, checkpoint: 'xs-height' }).then(function () {
-      wx.redirectTo({ url: '/plate21/module/pages/transit/transit?leg=s3-xs' })
+    }, { collectCard: true, checkpoint: 's3-zodiac' }).then(function () {
+      wx.redirectTo({ url: '/plate21/module/pages/s3-zodiac/s3-zodiac' })
     }).catch(() => {
       this.setData({ advancing: false })
       wx.showToast({ title: '进度保存失败，请重试', icon: 'none' })
@@ -131,7 +136,8 @@ Page({
     this.setData({
       cardNumber: Number(session.getCardDigit('s3-hour')),
       solved: !!puzzle,
-      selected: puzzle ? CORRECT : '',
+      q1: puzzle ? '羊' : '',
+      q2: puzzle ? '马' : '',
       showHistory: !!puzzle,
       attempts: Number(puzzle && puzzle.payload && puzzle.payload.attempts) || 0
     })

@@ -24,17 +24,7 @@
     </button>
   </view>
 
-  <!-- 三段结尾叙事 -->
-  <view class="narr">
-    <view class="narr-p">你收好拓包与手账，把用过的道具一一归位，像做完一天田野工作的考察队员。</view>
-    <view class="hatch-divider narr-div"></view>
-    <view class="narr-p">你穿过大水法的拱门，经过海晏堂的座基——十二兽首的位置上，回来了七尊，还差五尊。</view>
-    <view class="hatch-divider narr-div"></view>
-    <view class="narr-p">走出遗址时，你回望了一眼。残垣无声。但今天，有人沿着它的纹路走了一遍，一笔一笔，把它记了下来。如今的铜版画中，多了一幅我的——第廿一图。</view>
-  </view>
-
-  <!-- v1.3 手账：考察者归途批注 -->
-  <view class="note-hand olive end-note" style="transform: rotate(-1.5deg);">归途记：图成，人散，园犹在。</view>
+  <!-- 飞书 v3 rev5614：正文至结局与彩蛋止，离场页只保留完结卡与离场视频位 -->
 
   <!-- 完结卡 -->
   <view class="end-card">
