@@ -25,7 +25,7 @@ const SITES = {
     image: '/plate21/module/assets/img/plate-xieqiqu.jpg',
     quiz: {
       puzzleId: 'xq-sound',
-      listenFile: '/plate21/module/assets/audio/dj06-xieqiqu-soundscape-30s-v2.mp3',
+      listenFile: '/voice-a/dj06-xieqiqu-soundscape-30s-v2.mp3',
       prompt: '喷泉声、少数民族音乐和西洋音乐',
       multi: true,
       options: [
@@ -118,7 +118,7 @@ const SITES = {
         lines: [],
         quotes: [],
         fadeCard: true,
-        fadeImage: '/plate21/module/assets/img/rongfei.jpg',
+        fadeImage: '/assets/fig/rongfei.jpg',
         lines: [],
         parts: [
           { t: '容妃', g: 'sl10' }

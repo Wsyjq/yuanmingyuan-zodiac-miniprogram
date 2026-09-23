@@ -42,7 +42,7 @@ test('sticker query names the word soundscape and the packaged file', () => {
   assert.equal(launch.site, 'xieqiqu')
   assert.equal(nfc.LINE, '喷泉声、少数民族音乐和西洋音乐')
   assert.equal(nfc.parse({ from: 'qr', prop: 'dj06' }), null)
-  const file = path.join(__dirname, '../plate21/module/assets/audio/dj06-xieqiqu-soundscape-30s-v2.mp3')
+  const file = path.join(__dirname, '../voice-a/dj06-xieqiqu-soundscape-30s-v2.mp3')
   assert.equal(fs.existsSync(file), true)
 })
 
@@ -73,6 +73,6 @@ test('sticker opens the word soundscape and does not tick it', async () => {
   assert.equal(result.data.selected.length, 0)
   assert.match(result.data.nfcNote, /喷泉声、少数民族音乐和西洋音乐/)
   assert.match(result.data.nfcNote, /不算过关/)
-  assert.equal(result.data.listenSrc, '/plate21/module/assets/audio/dj06-xieqiqu-soundscape-30s-v2.mp3')
+  assert.equal(result.data.listenSrc, '/voice-a/dj06-xieqiqu-soundscape-30s-v2.mp3')
   assert.doesNotMatch(result.html, /小拉琴/)
 })

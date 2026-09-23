@@ -86,7 +86,7 @@ test('史料卡用文档里的分层，不是旧的一句摘要', function () {
   }
   Object.keys(images).forEach(function (key) {
     assert.equal(get(key).image.indexOf(images[key]) >= 0, true)
-    assert.equal(fs.existsSync(path.join(__dirname, '../plate21/module/assets/img', images[key])), true)
+    assert.equal(fs.existsSync(path.join(__dirname, '..', get(key).image.replace(/^\//, ''))), true)
   })
   ;['sl04', 'sl05', 'sl06', 'sl08', 'sl09', 'sl12', 'sl14', 'sl15'].forEach(function (key) {
     assert.equal(get(key).image, undefined)

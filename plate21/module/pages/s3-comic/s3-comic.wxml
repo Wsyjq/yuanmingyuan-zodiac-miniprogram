@@ -17,7 +17,7 @@
 
   <view class="comic-plate double-frame" role="img" aria-label="十二兽首按时辰喷水的四格漫画">
     <view class="tape" style="top:-20rpx; left:50%; margin-left:-90rpx;"></view>
-    <image class="comic-image img-aged" src="/plate21/module/assets/img/IMG-RUNTIME-COMIC.jpg" mode="widthFix" />
+    <image class="comic-image img-aged" src="/assets/fig/IMG-RUNTIME-COMIC.jpg" mode="widthFix" />
   </view>
   <view class="comic-captions">
     <view class="comic-caption" wx:for="{{cells}}" wx:key="id" wx:for-index="index">

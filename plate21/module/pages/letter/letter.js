@@ -52,7 +52,7 @@ Page({
       { text: '但昨天，还有一件事没有告诉你。' }
     ]
     if (this.data.revealed) {
-      paras.push({ image: '/plate21/module/assets/img/letter-teacher.jpg' })
+      paras.push({ image: '/assets/fig/letter-teacher.jpg' })
       ;[
         '不错，这份档案，最初确实是我留下的。',
         '我那个学生是历史系出身，受惯了历史学的训练，碰见什么问题，总想着先翻文献、查目录、找出处。我一直想带他真正去现场走一趟——有些东西，坐在书桌前是看不出来的。只是那几年我身体已经不大好了，实在没办法陪着他从头走到尾。',
