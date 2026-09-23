@@ -1,7 +1,7 @@
 <nav-back />
 <!-- v1.3.1 手账：左侧活页装订孔列（移到 .page 外，避免 flex 容器影响 fixed 定位） -->
 <view class="binder"></view>
-<view class="page page-shell paper-grain paper-real">
+<view class="page page-shell paper-grain">
   <!-- v1.3.1 手账：真实吊牌素材 + 叠字编号（右上角，避让返回按钮与胶囊） -->
   <view class="page-tag">
     <image class="page-tag-img" src="/plate21/module/assets/img/stickers/st-hang-tag-01.png" mode="aspectFit" />
@@ -90,7 +90,7 @@
   <view class="restart-card card-archive" catchtap="noop">
     <view class="restart-kicker">ARCHIVE RESET · 档案重建</view>
     <view class="restart-title serif">确认重新考察？</view>
-    <view class="archive-rule"></view>
+    <view class="hatch-divider"></view>
     <view class="restart-copy">这会清除全程进度、八张日期卡、现场照片、署名与报告记录。此操作无法撤销。</view>
     <view class="restart-actions">
       <button class="btn-seal restart-keep" bindtap="onCancelRestart" disabled="{{restarting}}">保留当前记录</button>

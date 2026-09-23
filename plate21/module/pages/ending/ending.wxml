@@ -1,6 +1,6 @@
 <!-- v1.3.1 手账：左侧活页装订孔列（移到 .page 外，避免 flex 影响 fixed） -->
 <view class="binder"></view>
-<view class="page paper-grain paper-real">
+<view class="page paper-grain">
 
   <!-- v1.3 手账：归档编号签 -->
   <view class="tag-no page-tag">No.016</view>

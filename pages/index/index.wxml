@@ -1,7 +1,7 @@
 <!-- v1.3.1 手账：左侧活页装订孔列（移到容器外，避免 flex 影响 fixed） -->
 <view class="binder"></view>
 
-<view class="host-home page-shell paper-grain paper-real">
+<view class="host-home page-shell paper-grain">
   <!-- 右上角：编号签 + 邮戳贴纸 -->
   <view class="tag-no tag-corner">No.HOST</view>
   <image class="host-postmark" src="/assets/host/st-postmark-02.png" mode="aspectFit" />

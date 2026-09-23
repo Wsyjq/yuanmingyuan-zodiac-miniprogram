@@ -7,7 +7,6 @@
   flex-direction: column;
   box-sizing: border-box;
   padding-left: 52rpx; /* 给左侧活页装订孔列让位 */
-  /* 真纸纹底由全局 .paper-real 统一接管（v1.3.3 全站一致） */
 }
 
 /* v1.3.1：真实吊牌 + 叠字编号 */

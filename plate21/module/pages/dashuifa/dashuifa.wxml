@@ -1,6 +1,6 @@
 <nav-back />
 <page-overlays />
-<view class="page page-shell paper-grain paper-real dsf-page">
+<view class="page page-shell paper-grain dsf-page">
   <view class="binder"></view>
   <view class="tag-no page-no">No.DS</view>
   <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
@@ -29,7 +29,7 @@
     <!-- 飞书：喷泉画面破碎。包内没有火烧视频，只做画面碎开，不另造影像。 -->
     <view class="dsf-plate double-frame dsf-break">
       <view class="tape" style="top:-20rpx; left:50%; margin-left:-90rpx;"></view>
-      <image class="dsf-plate-img img-aged" src="/plate21/module/assets/img/plate-dashuifa.jpg" mode="widthFix" />
+      <image class="dsf-plate-img" src="/plate21/module/assets/img/plate-dashuifa.jpg" mode="widthFix" />
     </view>
     <view class="dsf-quote kaiti">都没了，一场火过后，这些都没了……</view>
     <button class="btn-seal" bindtap="onNext">前往雨果雕像</button>

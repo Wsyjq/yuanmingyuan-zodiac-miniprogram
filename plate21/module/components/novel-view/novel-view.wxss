@@ -10,7 +10,7 @@
   overflow: hidden;
 }
 
-.archive-tab {
+.journal-tab {
   position: relative;
   z-index: 20;
   align-self: flex-start;
@@ -224,7 +224,7 @@
   background: rgba(70, 56, 42, 0.28);
 }
 
-.archive-stamp {
+.page-stamp {
   position: absolute;
   right: 31rpx;
   top: 79rpx;
@@ -245,7 +245,7 @@
   transform: rotate(9deg);
 }
 
-.archive-stamp::after {
+.page-stamp::after {
   content: "";
   position: absolute;
   inset: 7rpx;

@@ -1,6 +1,6 @@
 <!-- 考察者留言簿：通关后的档案新增页。留言墙（前人种子池+自己的那句话）+ 留一句 + 回访次级入口 -->
 <view class="binder"></view>
-<view class="page page-shell board-page paper-grain paper-real">
+<view class="page page-shell board-page paper-grain">
   <view wx:if="{{state === 'loading'}}" class="board-state note-hand">翻到新的一页……</view>
 
   <view wx:elif="{{state === 'notFinished'}}" class="board-state">

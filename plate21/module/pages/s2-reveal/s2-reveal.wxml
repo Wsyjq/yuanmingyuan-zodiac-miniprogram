@@ -2,7 +2,7 @@
 <nav-back />
 <page-overlays />
 <bgm-ambience />
-<view class="page page-shell paper-grain paper-real">
+<view class="page page-shell paper-grain">
   <view class="binder"></view>
   <view class="tag-no tag-no-fixed">No.S2-2</view>
 
@@ -13,7 +13,7 @@
 
   <!-- DJ-09 黄花阵图：屏上弹出宫女游玩图，手里对照迷宫平面 -->
   <view class="ref-img">
-    <image class="ref-pic img-aged" src="/plate21/module/assets/img/IMG-RUNTIME-LANTERN.jpg" mode="aspectFill" />
+    <image class="ref-pic" src="/plate21/module/assets/img/IMG-RUNTIME-LANTERN.jpg" mode="aspectFill" />
   </view>
 
   <view class="answer" wx:if="{{!solved}}">
