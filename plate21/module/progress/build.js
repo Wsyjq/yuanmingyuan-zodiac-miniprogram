@@ -15,7 +15,7 @@ const PAGE_ORDER = [
   'M6', 'DS1', 'DS2',
   'M7', 'HG1',
   'FN1', 'FN2', 'FN3', 'FN4',
-  'LT1', 'LT2', 'LT3', 'LT4'
+  'LT1', 'LT2', 'LT3', 'LT4', 'LT5', 'LT6', 'LT7', 'LT8'
 ]
 
 const GATE_INDEX = PAGE_ORDER.indexOf('E1')

@@ -48,9 +48,11 @@ test('nav page is the map itself and site pages keep a side button', () => {
   assert.equal(prologue.sideProgress, false)
 })
 
-test('animal pieces are toggles, not plain sentences', () => {
+test('animal pieces sit on the pool, not as three on-switches', () => {
   const view = screen({ pageId: 'DS1', sites: {}, puzzles: {} }, {})
-  assert.equal(view.toggles.length, 3)
+  assert.equal(view.toggles.length, 0)
+  assert.equal(view.board.pieces.length, 3)
+  assert.equal(view.board.slots.length, 3)
   assert.equal(view.lines.some(function (line) { return line.indexOf('梅花鹿') === 0 }), false)
   assert.equal(view.lines.some(function (line) { return line.indexOf('水池中间') >= 0 }), true)
 })

@@ -15,7 +15,7 @@ function lanternOptions() {
   const found = []
   const lines = FEISHU.split(/\n/)
   for (let i = 0; i < lines.length; i += 1) {
-    const match = /^[A-D]\.\s+(.+)$/.exec(lines[i])
+    const match = /^[A-D]\.\s+(.+)$/.exec(lines[i].replace(/\s+$/, ''))
     if (match) found.push(match[1].trim())
   }
   return found

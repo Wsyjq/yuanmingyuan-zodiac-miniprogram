@@ -82,6 +82,7 @@ SVG 源文件经 `test/stickers-src/build.js` 渲染/缩放为 PNG。
 | plate-zhuting.jpg | 竹亭北面（第9开，方外观站） |
 | plate-dashuifa.jpg | 大水法正面 |
 | letter-teacher.jpg | 次日彩蛋老师伏案图，取自飞书正文插图，压缩为 900px |
+| rongfei.jpg | 方外观页渐显的容妃画像。取自《第廿一图》史料表 SL-10 配图（飞书素材 FCupb5kogoqJPAx0a6GcVhQTnic），不是馆藏肖像原件 |
 
 ### 项目自制素材
 

@@ -19,7 +19,7 @@ const ORDER = [
   'M6', 'DS1', 'DS2',
   'M7', 'HG1',
   'FN1', 'FN2', 'FN3', 'FN4',
-  'LT1', 'LT2', 'LT3', 'LT4'
+  'LT1', 'LT2', 'LT3', 'LT4', 'LT5', 'LT6', 'LT7', 'LT8'
 ]
 
 const SKIP = {
@@ -58,20 +58,24 @@ const IMAGES = {
   H5: '四张浮雕照片',
   HY1: '十二时辰喷水示意',
   F2: '容妃图，渐显',
-  DS2: '火烧视频',
-  FN1: '第二十一图',
-  LT2: '老师伏案图'
+  FN1: '第二十一图'
 }
 
 const FIELDS = ['id', 'kind', 'siteId', 'lines', 'narrId', 'image', 'propPrompt', 'playId', 'revealOf', 'next', 'skipTo']
 
 function strippedDoc() {
-  const raw = fs.readFileSync(path.join(__dirname, '../docs/feishu-import/第廿一图_v3-rev5614.md'), 'utf8')
+  // 唯一正确稿：《第廿一图v3.docx》提取文本，正文段起
+  const all = fs.readFileSync(path.join(__dirname, '../docs/feishu-import/第廿一图v3-docx.txt'), 'utf8').split('\n')
+  const start = all.findIndex((line) => line.trim() === '正文')
+  const raw = all.slice(start + 1).join('\n')
   const stripped = raw
     .replace('牛皮纸【DJ-02 档案袋】已经发黄', '牛皮纸档案袋已经发黄')
     .replace(/【[^】]*】/g, '')
     .replace(/\*\*/g, '')
-  return { raw: raw, stripped: stripped }
+  // 去空白拼接：允许 docx 合段/拆段差异（如「西洋楼现场考察资料未完成」）
+  const joined = stripped.replace(/\s+/g, '')
+  const joinedFull = raw.replace(/\s+/g, '')
+  return { raw: raw, stripped: stripped, joined: joined, joinedFull: joinedFull }
 }
 
 test('页表覆盖接入方案全部页号', function () {
@@ -81,7 +85,7 @@ test('页表覆盖接入方案全部页号', function () {
     assert.deepEqual(Object.keys(byId[ORDER[i]]), FIELDS)
     assert.ok(contract.PAGE_KINDS.indexOf(byId[ORDER[i]].kind) !== -1)
   }
-  assert.equal(ORDER.length, 39)
+  assert.equal(ORDER.length, 43)
 })
 
 test('旁白号、图和跳过目标按接入方案', function () {
@@ -103,7 +107,7 @@ test('旁白号、图和跳过目标按接入方案', function () {
     if (item.revealOf) assert.ok(contract.PLAY_IDS.indexOf(item.revealOf) !== -1, item.revealOf)
     if (i < ORDER.length - 1) assert.equal(item.next, ORDER[i + 1], item.id)
   }
-  assert.equal(byId.LT4.next, '')
+  assert.equal(byId.LT8.next, '')
   assert.deepEqual(plays.slice().sort(), contract.PLAY_IDS.slice().sort())
   assert.equal(byId.X3.revealOf, 'quiz-envelope')
   assert.equal(byId.H2.revealOf, 'quiz-lantern')
@@ -116,7 +120,7 @@ test('旁白号、图和跳过目标按接入方案', function () {
   assert.equal(byId.M1.siteId, 'xieqiqu')
 })
 
-test('屏上句子是飞书原句，没有道具编号', function () {
+test('屏上句子是 docx 原句，没有道具编号', function () {
   const doc = strippedDoc()
   for (let i = 0; i < list.length; i++) {
     const item = list[i]
@@ -125,10 +129,16 @@ test('屏上句子是飞书原句，没有道具编号', function () {
       assert.equal(/\u3010|\u3011|DJ-|SL\d/.test(line), false, item.id + ' ' + line)
       if (line.indexOf('\u3000') !== -1) {
         assert.equal(line, '西洋楼在圆明三园中的长春园（\u3000）部。')
-        assert.ok(doc.stripped.indexOf('长春园x部') !== -1)
+        assert.ok(doc.raw.indexOf('长春园x部') !== -1)
         continue
       }
-      assert.ok(doc.stripped.indexOf(line) !== -1 || doc.raw.indexOf(line) !== -1, item.id + ' ' + line)
+      if (line === '下一站：海晏堂') {
+        // docx 写作导航提示【下一站，海晏堂】
+        assert.ok(doc.raw.indexOf('下一站，海晏堂') !== -1)
+        continue
+      }
+      const flat = line.replace(/\s+/g, '')
+      assert.ok(doc.joined.indexOf(flat) !== -1 || doc.joinedFull.indexOf(flat) !== -1, item.id + ' ' + line)
     }
   }
   assert.ok(byId.P1.lines[1].indexOf('\u2013') !== -1)

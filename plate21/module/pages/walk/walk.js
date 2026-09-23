@@ -5,10 +5,21 @@ const pages = require('../../flow/pages')
 const play = require('../../play/index')
 const cue = require('../../audio/cue')
 const progress = require('../../progress/build')
-const { screen } = require('../../flow/screen')
+const { screen, PIECES } = require('../../flow/screen')
 const nav = require('../../capabilities/map/nav-model')
+const sessionDate = require('../../utils/session-date')
+const cards = require('../../utils/sl-cards')
+const nfcListen = require('../../capabilities/nfc/listen')
 
 const STORE_KEY = 'plate21-mainline-run'
+
+// 当天署名停在 FN4。署名日早于今天才进 LT1。引擎不看日期。
+function letterIsDue(run, now) {
+  if (!run || run.pageId !== 'FN4' || !run.signedAt) return false
+  const today = sessionDate.dateKeyFromTimestamp(now == null ? Date.now() : now)
+  const signed = sessionDate.dateKeyFromTimestamp(run.signedAt)
+  return today > signed
+}
 
 const COACH_START = [
   {
@@ -63,7 +74,8 @@ Page({
     progressRows: [],
     showProgress: false,
     showMap: false,
-    mapSites: []
+    mapSites: [],
+    card: null
   },
 
   onLoad() {
@@ -87,6 +99,7 @@ Page({
       const saved = wx.getStorageSync(STORE_KEY)
       if (saved && saved.pageId && pages.byId[saved.pageId]) run = saved
     } catch (err) {}
+    if (letterIsDue(run)) run = Object.assign({}, run, { pageId: 'LT1' })
     this.run = engine.enter(run, run.pageId)
     this.ui = {}
     this.render()
@@ -123,10 +136,70 @@ Page({
     })
     this.setData({
       view: view,
+      card: this.cardView(),
       progressRows: progressRows,
       mapSites: nav.listSites()
     })
     this.progressOpen = built.openPageId
+    this.syncNfc()
+  },
+
+  cardView() {
+    const found = cards.get(this.ui.cardKey)
+    if (!found) return null
+    const count = Math.min(this.ui.cardLayer || 1, found.layers.length)
+    return {
+      title: found.title,
+      source: found.source,
+      lines: found.layers.slice(0, count),
+      more: count < found.layers.length
+    }
+  },
+
+  syncNfc() {
+    const page = pages.byId[this.run.pageId]
+    if (!page || page.playId !== 'listen-nfc') {
+      this.stopNfc()
+      return
+    }
+    if (this.nfcOn) return
+    this.nfcOn = true
+    const self = this
+    this.nfcHandle = nfcListen.start({
+      onTag: function () { self.markHeard('贴片读到了，声景在放') },
+      onStatus: function (status) {
+        if (status === 'unsupported') self.ui.nfcStatus = '这台手机读不了贴片，可以直接听'
+        else if (status === 'foreign') self.ui.nfcStatus = '这张贴片不是谐奇趣的'
+        else self.ui.nfcStatus = status
+        self.render()
+      }
+    })
+  },
+
+  stopNfc() {
+    this.nfcOn = false
+    if (this.nfcHandle) {
+      this.nfcHandle.stop()
+      this.nfcHandle = null
+    }
+  },
+
+  markHeard(status) {
+    this.ui.heard = true
+    this.ui.nfcStatus = status
+    this.playSound()
+    this.render()
+  },
+
+  playSound() {
+    if (typeof wx === 'undefined' || typeof wx.createInnerAudioContext !== 'function') return
+    if (this.audio) {
+      try { this.audio.stop() } catch (err) {}
+    }
+    const audio = wx.createInnerAudioContext()
+    audio.src = nfcListen.SOUND
+    audio.play()
+    this.audio = audio
   },
 
   persist() {
@@ -254,30 +327,160 @@ Page({
   },
 
   action() {
+    const placed = this.ui.placed || {}
+    const animals = {}
+    PIECES.forEach(function (piece) {
+      animals[piece.id] = placed[piece.id] === piece.slot
+    })
     return {
       value: this.ui.choice || this.ui.text || '',
-      played: true,
+      played: !!this.ui.heard,
       confirmed: true,
       count: this.ui.count || 0,
-      hour14: this.ui.hour14 || '',
-      noon: this.ui.noon || '',
-      deer: !!this.ui.deer,
-      dogs: !!this.ui.dogs,
-      beasts: !!this.ui.beasts
+      hour14: (this.ui.hour14 || '').trim(),
+      noon: (this.ui.noon || '').trim(),
+      deer: animals.deer,
+      dogs: animals.dogs,
+      beasts: animals.beasts
     }
+  },
+
+  onSpot(e) {
+    this.ui.spot = e.currentTarget.dataset.id
+    this.ui.again = false
+    this.render()
+  },
+
+  onBeast(e) {
+    this.ui.beast = e.currentTarget.dataset.branch
+    this.ui.noonWatch = false
+    this.render()
+  },
+
+  onNoonWatch() {
+    this.ui.noonWatch = true
+    this.ui.beast = ''
+    this.render()
+  },
+
+  onPiece(e) {
+    this.ui.selectedPiece = e.currentTarget.dataset.id
+    this.ui.again = false
+    this.render()
+  },
+
+  onSlot(e) {
+    const pieceId = this.ui.selectedPiece
+    if (!pieceId) return
+    const slotId = e.currentTarget.dataset.id
+    const placed = Object.assign({}, this.ui.placed)
+    Object.keys(placed).forEach(function (key) {
+      if (placed[key] === slotId) delete placed[key]
+    })
+    placed[pieceId] = slotId
+    this.ui.placed = placed
+    this.ui.selectedPiece = ''
+    this.ui.again = false
+    this.render()
+  },
+
+  onDirectListen() {
+    this.markHeard('直接在听')
+  },
+
+  onTerm(e) {
+    this.ui.cardKey = e.currentTarget.dataset.key
+    this.ui.cardLayer = 1
+    this.render()
+  },
+
+  onCardMore() {
+    this.ui.cardLayer = (this.ui.cardLayer || 1) + 1
+    this.render()
+  },
+
+  onCardClose() {
+    this.ui.cardKey = ''
+    this.render()
+  },
+
+  onPrev() {
+    const self = this
+    session.listBoardMessages({ limit: 1 }).then(function (res) {
+      const note = res && res.messages && res.messages[0]
+      self.ui.prevNote = note ? note.from + '：' + note.text : '还没有经审核的上一位留言'
+      self.render()
+    }).catch(function () {
+      self.ui.prevNote = '留言这会儿打不开'
+      self.render()
+    })
+  },
+
+  onLeaveText() {
+    const text = String(this.ui.leaveText || '').trim()
+    if (!text) {
+      this.ui.leftAck = '先写一句'
+      this.render()
+      return
+    }
+    this.submitLeave(text)
+  },
+
+  onLeaveWish() {
+    const text = String(this.ui.wish || '').trim()
+    if (!text) {
+      this.ui.leftAck = '写一个你希望他再看一眼的地方'
+      this.render()
+      return
+    }
+    this.submitLeave('替我再看一眼：' + text)
+  },
+
+  onLeavePhoto() {
+    const self = this
+    this.shoot(function (path) {
+      self.ui.photo = path
+      self.submitLeave('今天在遗址拍下的一张照片。')
+    })
+  },
+
+  submitLeave(text) {
+    const self = this
+    session.submitBoardMessage(text).then(function () {
+      self.ui.leftAck = '已收下。审核通过后，才会出现在下一位的信里。'
+      self.render()
+    }).catch(function () {
+      self.ui.leftAck = '这会儿没送出去'
+      self.render()
+    })
   },
 
   onShoot() {
     const self = this
+    this.shoot(function (path) {
+      self.ui.photo = path
+      self.ui.count = (self.ui.count || 0) + 1
+      self.ui.again = false
+      self.render()
+    })
+  },
+
+  shoot(done) {
+    if (typeof wx === 'undefined' || typeof wx.chooseImage !== 'function') return
     wx.chooseImage({
       count: 1,
       sizeType: ['compressed'],
       sourceType: ['camera', 'album'],
-      success() {
-        self.ui.count = (self.ui.count || 0) + 1
-        self.ui.again = false
-        self.render()
+      success: function (res) {
+        done(res.tempFilePaths && res.tempFilePaths[0])
       }
     })
+  },
+
+  onUnload() {
+    this.stopNfc()
+    if (this.audio) {
+      try { this.audio.stop() } catch (err) {}
+    }
   }
 })
