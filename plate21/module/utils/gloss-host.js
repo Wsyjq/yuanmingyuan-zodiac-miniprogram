@@ -15,7 +15,11 @@ module.exports = Behavior({
     onGlossary(e) {
       const key = e.detail && e.detail.key
       const g = key && slCards.get(key)
-      if (g) this.setData({ gloss: g })
+      if (!g) return
+      const layers = g.layers || g.lines || []
+      this.setData({
+        gloss: Object.assign({}, g, { layered: layers.length > 1 })
+      })
     },
     onGlossClose() {
       this.setData({ gloss: null })

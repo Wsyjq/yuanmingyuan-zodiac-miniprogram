@@ -162,6 +162,8 @@ Page({
     return {
       title: found.title,
       source: found.source,
+      image: found.image || '',
+      caption: found.caption || '',
       lines: found.layers.slice(0, count),
       more: count < found.layers.length
     }

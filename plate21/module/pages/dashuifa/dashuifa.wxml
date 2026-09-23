@@ -42,7 +42,7 @@
     visible="{{!!gloss}}"
     title="{{gloss.title}}"
     source="{{gloss.source}}"
-    lines="{{gloss.lines}}"
+    lines="{{gloss.lines}}" layered="{{gloss.layered}}" image="{{gloss.image}}" caption="{{gloss.caption}}"
     btn-text="学到了"
     bind:next="onGlossClose"
     bind:close="onGlossClose"

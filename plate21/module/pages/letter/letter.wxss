@@ -104,3 +104,13 @@
   font-size: 28rpx;
   color: var(--patina);
 }
+.letter-input {
+  width: 280rpx;
+  min-height: 72rpx;
+  margin: 12rpx 0;
+  padding: 0 16rpx;
+  box-sizing: border-box;
+  border: 1rpx solid var(--dash);
+  background: rgba(255, 252, 245, 0.7);
+  font-size: 28rpx;
+}

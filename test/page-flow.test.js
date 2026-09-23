@@ -582,7 +582,7 @@ test('pattern conclusion follows the v3 reveal text, with no invented water mean
   assert.match(result.html, /卐字不到头/)
   assert.match(result.html, /万寿无疆/)
   assert.match(result.html, /原墙/)
-  assert.match(result.html, /我按照地图继续走，下一站是方外观/)
+  assert.match(result.html, /我要亲自去看看/)
   assert.doesNotMatch(result.html, /砌墙师傅|照原图，复位|照片背面/)
   assert.doesNotMatch(result.html, /万字纹[^<]{0,30}(寓意|暗示).{0,10}水/)
   // V2.2 红线：不触摸文物（页内不得再出现贴墙/摸墙类指引）

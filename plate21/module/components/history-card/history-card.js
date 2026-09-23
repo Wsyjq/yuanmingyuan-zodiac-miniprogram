@@ -11,6 +11,8 @@
  *   cornerNumber  Number        卡片右下角数字（采风修订版主线：数字连成日期密码）
  *   showCorner    Boolean       是否显示角落数字
  *   btnText       String        底部按钮文案（缺省"收入考察手册"）
+ *   image         String        配图路径；没有配图则为空
+ *   caption       String        配图图注，只在原文单独给出时显示
  * 事件:
  *   bind:collect  点击"收入考察手册"（触发后组件自动关闭）
  *   bind:next     点击自定义按钮文案时触发（采风修订版：前往下一题）
@@ -25,16 +27,20 @@ Component({
     lines: { type: Array, value: [] },
     cornerNumber: { type: Number, value: 0 },
     showCorner: { type: Boolean, value: false },
-    btnText: { type: String, value: '' }
+    btnText: { type: String, value: '' },
+    layered: { type: Boolean, value: false },
+    image: { type: String, value: '' },
+    caption: { type: String, value: '' }
   },
 
   data: {
-    closing: false   // INT-301：离场动画中间态，期间忽略二次操作
+    closing: false,  // INT-301：离场动画中间态，期间忽略二次操作
+    shown: 1
   },
 
   observers: {
     visible(value) {
-      if (value && this.data.closing) this.setData({ closing: false })
+      if (value) this.setData({ closing: false, shown: 1 })
     }
   },
 
@@ -75,6 +81,11 @@ Component({
         this.triggerEvent('collect')
         this.onClose()
       }
+    },
+
+    onMore() {
+      if (this.data.closing) return
+      this.setData({ shown: this.data.shown + 1 })
     },
 
     noop() {},

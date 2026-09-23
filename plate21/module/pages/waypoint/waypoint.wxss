@@ -42,6 +42,11 @@
   background: var(--paper2);
   animation: wp-fade-in 1.2s ease both;
 }
+.wp-fade-img {
+  display: block;
+  width: 100%;
+  margin-bottom: 16rpx;
+}
 .wp-fade-name {
   font-size: 40rpx;
   letter-spacing: 8rpx;

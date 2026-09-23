@@ -75,7 +75,7 @@
   <history-card
     wx:if="{{showHistory}}"
     visible="{{showHistory}}"
-    title="黄花阵 · 万字回纹"
+    title="黄花阵 · 万字纹"
     source="圆明园西洋楼景区史料"
     lines="{{historyLines}}"
     corner-number="{{cardNumber}}"
@@ -90,7 +90,7 @@
     visible="{{!!gloss}}"
     title="{{gloss.title}}"
     source="{{gloss.source}}"
-    lines="{{gloss.lines}}"
+    lines="{{gloss.lines}}" layered="{{gloss.layered}}" image="{{gloss.image}}" caption="{{gloss.caption}}"
     btn-text="学到了"
     bind:next="onGlossClose"
     bind:close="onGlossClose"

@@ -79,7 +79,7 @@
       visible="{{!!gloss}}"
       title="{{gloss.title}}"
       source="{{gloss.source}}"
-      lines="{{gloss.lines}}"
+      lines="{{gloss.lines}}" layered="{{gloss.layered}}" image="{{gloss.image}}" caption="{{gloss.caption}}"
       btn-text="学到了"
       bind:next="onGlossClose"
       bind:close="onGlossClose"
@@ -106,6 +106,7 @@
     <view class="wp-beat {{item.prop ? 'wp-prop' : ''}}">
       <view class="wp-kicker">{{item.kicker}}</view>
       <view wx:if="{{item.fadeCard}}" class="wp-fade-card">
+        <image wx:if="{{item.fadeImage}}" class="wp-fade-img" src="{{item.fadeImage}}" mode="widthFix" />
         <view class="wp-fade-name serif">容妃</view>
       </view>
       <view wx:if="{{item.image}}" class="wp-plate double-frame">
@@ -177,7 +178,7 @@
     visible="{{!!gloss}}"
     title="{{gloss.title}}"
     source="{{gloss.source}}"
-    lines="{{gloss.lines}}"
+    lines="{{gloss.lines}}" layered="{{gloss.layered}}" image="{{gloss.image}}" caption="{{gloss.caption}}"
     btn-text="学到了"
     bind:next="onGlossClose"
     bind:close="onGlossClose"

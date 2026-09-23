@@ -102,6 +102,20 @@
   max-height: 50vh;
 }
 
+.hc-fig {
+  width: 100%;
+  margin-bottom: 12rpx;
+}
+
+.hc-cap {
+  margin-bottom: 20rpx;
+  font-size: 22rpx;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--ink60);
+  letter-spacing: 1rpx;
+}
+
 .hc-line {
   font-family: "STSong", "SimSun", serif;
   font-size: 29rpx;
@@ -144,6 +158,7 @@
 }
 
 .hc-collect {
+  margin-left: auto;
   padding: 12rpx 32rpx;
   font-size: 26rpx;
   letter-spacing: 4rpx;

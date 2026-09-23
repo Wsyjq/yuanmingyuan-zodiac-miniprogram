@@ -196,8 +196,10 @@
   <view wx:if="{{card}}" class="mask" bindtap="onCardClose">
     <view class="panel" catchtap="noop">
       <view class="panel-title">{{card.title}}</view>
+      <image wx:if="{{card.image}}" class="card-fig" src="{{card.image}}" mode="widthFix" />
+      <view wx:if="{{card.caption}}" class="note-hand">{{card.caption}}</view>
       <view wx:for="{{card.lines}}" wx:key="index" class="line kaiti">{{item}}</view>
-      <view class="note-hand">〔来源〕{{card.source}}</view>
+      <view wx:if="{{card.source}}" class="note-hand">〔来源〕{{card.source}}</view>
       <button wx:if="{{card.more}}" class="choice" bindtap="onCardMore">再听一层</button>
       <button class="choice" bindtap="onCardClose">关上</button>
     </view>
