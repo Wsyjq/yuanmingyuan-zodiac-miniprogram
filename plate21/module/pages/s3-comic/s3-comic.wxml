@@ -1,68 +1,90 @@
+<!-- P07 第三站 · 时辰漫画推理 -->
 <nav-back />
 <page-overlays />
-<bgm-ambience />
 <view class="page page-shell paper-grain paper-real">
-<scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
+  <!-- v1.3.1 手账：左侧活页装订孔列（全站统一） -->
   <view class="binder"></view>
+  <!-- v1.3.1 手账：干花标本贴纸压在页右上角（页边，不扰漫画推理） -->
   <image class="comic-botanical" src="/plate21/module/assets/img/stickers/st-botanical-01.png" mode="aspectFit" />
+  <!-- 页眉：档案编号 -->
   <view class="page-head">
-    <view class="tag-no">No.S3</view>
+    <view class="tag-no">No.007</view>
   </view>
 
   <view class="novel">
-    <view class="novel-p"><gloss-text parts="{{introParts}}" bind:glossary="onGlossary" /></view>
+    <view class="novel-p">海晏堂前，扇形水池早已干涸，池底只余裂纹与荒草。</view>
+    <view class="novel-p">阶前十二座石座残存，其上兽首不知所终——这里曾是一座以水报时的钟。</view>
   </view>
-  <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">观看小程序不同时辰喷水示意，回答14时对应由哪个兽首喷水，并推测正午时候由哪个兽首喷水</text></view>
-  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
 
-  <view class="comic-plate double-frame" role="img" aria-label="十二兽首按时辰喷水的四格漫画">
+  <!-- 已授权 AI 四格漫画；下方文字编号保留非颜色线索。 -->
+  <view class="comic-plate double-frame" role="img" aria-label="十二兽首按时辰喷水的四格推理漫画">
     <view class="tape" style="top:-20rpx; left:50%; margin-left:-90rpx;"></view>
-    <image class="comic-image img-aged" src="/plate21/module/assets/img/IMG-RUNTIME-COMIC.jpg" mode="widthFix" />
+    <image class="comic-image" src="/plate21/module/assets/img/IMG-RUNTIME-COMIC.jpg" mode="widthFix" />
   </view>
   <view class="comic-captions">
-    <view class="comic-caption" wx:for="{{cells}}" wx:key="id" wx:for-index="index">
+    <view class="comic-caption {{clue && index < 2 ? 'cell-clue' : ''}}" wx:for="{{cells}}" wx:key="id" wx:for-index="index">
       <view class="panel-no serif">第 {{index + 1}} 格 · {{item.time}}</view>
       <view class="cell-desc">{{item.desc}}</view>
     </view>
   </view>
+  <view class="note-hand olive note-comic" style="transform: rotate(-1.5deg);">日晷影短，午正将至——记于池畔。</view>
 
-  <view class="q" wx:if="{{!followup}}">
-    <view class="q-title serif">14 时对应由哪个兽首喷水？</view>
-    <input class="answer-input" value="{{q1}}" bindinput="onInputQ1" placeholder="写一个生肖" maxlength="4" disabled="{{solved}}" />
-    <view class="q-title serif">正午时候由哪个兽首喷水？</view>
-    <input class="answer-input" value="{{q2}}" bindinput="onInputQ2" placeholder="写一个生肖" maxlength="4" disabled="{{solved}}" />
-    <view class="hint" wx:if="{{hint}}">{{hint}}</view>
-    <button class="btn-seal" bindtap="onConfirm" disabled="{{!q1 || !q2 || solved}}">就 是 这 样</button>
+  <!-- 小问一 -->
+  <view class="q" wx:if="{{!q1Done}}">
+    <view class="q-title serif">午时将至，哪尊兽首即将喷水？</view>
+    <view class="heads">
+      <view
+        wx:for="{{heads}}"
+        wx:key="*this"
+        class="head {{q1Selected === item ? 'head-sel' : ''}} {{q1Correct && q1Selected === item ? 'head-correct' : ''}} {{shakeKey === item ? 'shake' : ''}}"
+        data-v="{{item}}"
+        bindtap="onQ1"
+        role="button"
+        aria-pressed="{{q1Selected === item}}"
+        aria-label="选择{{item}}首"
+      >{{item}}</view>
+    </view>
+    <view class="note-hand note-q" style="transform: rotate(1deg);">兽首各按时辰当值，如更鼓然。</view>
+    <view class="hint" wx:if="{{q1Attempts >= 2}}">提示：看漫画前两格——子时鼠首，丑时牛首，各按时辰当值。</view>
   </view>
 
-  <view class="followup" wx:if="{{followup}}">
-    <view class="novel-p">答案确认后，画面里的十二生肖一个接一个亮起，到了正午，十二道水流同时喷出。</view>
-    <view class="novel-p">昔日竟然如此壮观，可如今却只剩下断壁残垣。这些兽首流离失所，有七尊归来了，但还有五尊不知所踪。</view>
-    <button class="btn-seal" bindtap="onNext" disabled="{{advancing}}">前往转盘花纹匹配</button>
+  <!-- 小问二 -->
+  <view class="q" wx:if="{{q1Done && !q2Done}}">
+    <view class="q-title serif">十二兽首齐喷，此时是什么时辰？</view>
+    <view class="q-sub">每个时辰两小时，正午为马首。</view>
+    <view class="hours">
+      <view
+        wx:for="{{hours}}"
+        wx:key="*this"
+        class="hour {{q2Selected === item ? 'hour-sel' : ''}} {{shakeKey === item ? 'shake' : ''}}"
+        data-v="{{item}}"
+        bindtap="onQ2"
+        role="button"
+        aria-pressed="{{q2Selected === item}}"
+        aria-label="选择{{item}}"
+      >{{item}}</view>
+    </view>
+    <view class="hint" wx:if="{{q2Attempts >= 2}}">提示：正午十二兽首齐喷——正午对应的，正是马首当值的时辰。</view>
   </view>
-</scroll-view>
+
+  <view class="followup prop-card archive-sheet" wx:if="{{q2Done && !showHistory}}">
+    <view class="physical-label archive-tab">下一件道具 · 七纹样转盘</view>
+    <view class="q-title serif">取出实体七纹样转盘</view>
+    <view class="archive-rule"></view>
+    <view class="q-sub">报时规律已经明确。资料袋里那只转盘，正好能继续核对十二兽首的去向。</view>
+    <button class="btn-seal" bindtap="onNext" disabled="{{advancing}}">我已取出转盘，继续</button>
+  </view>
 </view>
 
 <history-card
   visible="{{showHistory}}"
-  title="海晏堂 · 水力钟"
-  source="《西洋楼铜版图·海晏堂西面》"
+  title="海晏堂 · 大水法营造史料"
+  source="《西洋楼铜版图·海晏堂》；圆明园水利史料"
   lines="{{historyLines}}"
   corner-number="{{cardNumber}}"
   show-corner="{{showHistory}}"
-  btn-text="继 续"
+  btn-text="取出七纹样转盘"
   bind:next="onHistoryNext"
   bind:close="onCloseHistory"
-/>
-<!-- 术语史料卡（导语「海晏堂」SL-12 点入） -->
-<history-card
-  wx:if="{{gloss}}"
-  visible="{{!!gloss}}"
-  title="{{gloss.title}}"
-  source="{{gloss.source}}"
-  lines="{{gloss.lines}}"
-  btn-text="学到了"
-  bind:next="onGlossClose"
-  bind:close="onGlossClose"
 />
 <stamp-toast id="stamp" />

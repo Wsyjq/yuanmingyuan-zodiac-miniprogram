@@ -1,9 +1,6 @@
 {
   "navigationStyle": "custom",
   "usingComponents": {
-    "nav-back": "../../components/nav-back/nav-back",
-    "coach-spot": "../../components/coach-spot/coach-spot",
-    "play-guide": "../../components/play-guide/play-guide"
-  },
-  "disableScroll": true
+    "nav-back": "../../components/nav-back/nav-back"
+  }
 }

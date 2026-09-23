@@ -1,15 +1,12 @@
 <nav-back />
 <page-overlays />
-<bgm-ambience />
 <view class="page page-shell paper-grain paper-real">
   <view class="binder"></view>
   <view class="tag-no tag-no-fixed">No.S3-2</view>
 
-  <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
-  <view class="title serif">转盘花纹匹配</view>
+  <view class="title serif">有哪些兽首归来了</view>
   <view class="hatch-divider title-div"></view>
-  <view class="lead kaiti">使用DJ-转盘，根据花纹匹配寻找信息</view>
-  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
+  <view class="lead kaiti">十二生肖兽首流离海外，其中七尊已经归来。请用资料袋里的实体转盘找出它们。</view>
 
   <view class="prop-card archive-sheet">
     <view class="prop-label archive-tab">线下道具 · 实体转盘</view>
@@ -30,20 +27,19 @@
     <view class="hint-copy note-hand" wx:if="{{hintText}}">{{hintText}}</view>
     <view class="wrong-tip" wx:if="{{wrongTip}}">{{wrongTip}}</view>
     <button class="btn-seal confirm-btn record-action" bindtap="onConfirm">核 对 转 盘 结 果</button>
-    <button class="skip-btn note-hand olive" bindtap="onSkip">转盘先不转了，往下走</button>
   </view>
 
   <view class="prop-card archive-sheet" wx:if="{{showHandoff}}">
-    <view class="prop-label archive-tab">道具收尾</view>
-    <view class="prop-title serif">收好转盘</view>
+    <view class="prop-label archive-tab">道具交接</view>
+    <view class="prop-title serif">收好转盘，取出水显纸</view>
     <view class="archive-rule"></view>
     <view class="archive-steps">
-      <view class="step-row"><view class="step-copy">可是这些喷泉怎么喷出的水呢？</view></view>
-      <view class="step-row"><view class="step-copy">水力钟在眼前，水源却不在水池里。地图上面我看到了蓄水楼，或许喷泉正是靠它喷水。</view></view>
+      <view class="step-row"><view class="step-no">1</view><view class="step-copy">将七纹样转盘转回平整位置，收回资料袋。</view></view>
+      <view class="step-row"><view class="step-no">2</view><view class="step-copy">取出实体水显纸，并准备少量清水和微湿工具。</view></view>
+      <view class="step-row"><view class="step-no">3</view><view class="step-copy">让纸张远离手机与其他纸质资料，再进入下一步。</view></view>
     </view>
-    <button class="btn-seal confirm-btn record-action" bindtap="onNext" disabled="{{advancing}}">前往蓄水楼</button>
+    <button class="btn-seal confirm-btn record-action" bindtap="onNext" disabled="{{advancing}}">水显纸已准备好</button>
   </view>
-  </scroll-view>
 
   <history-card
     wx:if="{{showHistory}}"

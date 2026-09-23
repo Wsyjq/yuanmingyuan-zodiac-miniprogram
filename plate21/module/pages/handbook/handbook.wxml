@@ -2,7 +2,6 @@
 <!-- v1.3.1 手账：左侧活页装订孔列（移到 .page 外，避免 flex 影响 fixed） -->
 <view class="binder"></view>
 <view class="page page-shell paper-grain paper-real">
-<scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
 
   <!-- v1.3.1 手账：票根贴纸压在标题右上角，像手册的装订凭证 -->
   <image class="hb-ticket" src="/plate21/module/assets/img/stickers/st-ticket-02.png" mode="aspectFit" />
@@ -31,14 +30,14 @@
 
   <!-- 第贰折：玩家实际拍摄的四图考察卡 -->
   <view class="hatch-divider sec-div"></view>
-  <view class="sec-head serif">第贰折 · 亭下考察卡</view>
+  <view class="sec-head serif">第贰折 · 四图考察卡</view>
   <view class="photo-record archive-sheet">
     <view class="photo-record-head">
       <view>
         <view class="photo-record-kicker">FIELD RECORD · S2-3</view>
-        <view class="photo-record-title serif">亭子线稿对眼前这座亭</view>
+        <view class="photo-record-title serif">中西结合的现场观察</view>
       </view>
-      <view class="photo-record-count">已记 {{photoCount}} / 4 处</view>
+      <view class="photo-record-count">{{photoCount}} / 4</view>
     </view>
     <view class="archive-rule"></view>
     <view class="photo-record-grid">
@@ -85,7 +84,7 @@
       <view class="canvas report-artwork">
         <image class="canvas-bg" src="/plate21/module/assets/img/IMG-RUNTIME-PLATE.jpg" mode="aspectFill" />
         <view class="layer layer-l2"><view class="l2-frame"><view class="l2-inner"></view></view></view>
-        <view class="layer layer-l1"><view class="l1-bar"><text class="l1-text kaiti">前二十幅记录建成，此幅记录后来</text></view></view>
+        <view class="layer layer-l1"><view class="l1-bar"><text class="l1-text kaiti">前二十幅记录建成，此幅记录毁灭之后</text></view></view>
         <view class="layer layer-l5">
           <view class="l5-box">
             <text class="l5-line kaiti">1747 —— 本次考察</text>
@@ -114,58 +113,6 @@
   </view>
   <view class="note-hand olive hb-note">已得 {{achievementCount}} 印，共 {{achievementList.length}} 印。</view>
 
-  <!-- V2.2 独立音频开关：背景音乐 / 人声讲述，各自独立、默认全开（产品定位拍板项） -->
-  <view class="hatch-divider sec-div"></view>
-  <view class="sec-head serif">音频 · 独立开关</view>
-  <view class="audio-set">
-    <view class="audio-set-row">
-      <view class="audio-set-main">
-        <view class="audio-set-title serif">背景音乐</view>
-        <view class="audio-set-sub">各站的氛围曲，循环低音量；人声讲话时自动让路。</view>
-      </view>
-      <switch checked="{{audioBgm}}" bindchange="onToggleBgm" aria-label="背景音乐开关" color="#4a6b64" />
-    </view>
-    <view class="audio-set-row">
-      <view class="audio-set-main">
-        <view class="audio-set-title serif">人声讲述</view>
-        <view class="audio-set-sub">台词、旁白与语音导览的播放键；关掉后只读文稿，一处不留按钮。</view>
-      </view>
-      <switch checked="{{audioVoice}}" bindchange="onToggleVoice" aria-label="人声讲述开关" color="#4a6b64" />
-    </view>
-  </view>
-  <view class="note-hand olive hb-note">两个开关互不影响；大水法那一段什么都不会响——那是设计。</view>
-
-  <!-- v2 顺路散页：可选站点，随时可进；不显示 X/N 完成度（反结算红线） -->
-  <view class="hatch-divider sec-div"></view>
-  <view class="sec-head serif">路上的页 · 可选</view>
-  <view class="side-grid">
-    <view
-      wx:for="{{sideSites}}"
-      wx:key="key"
-      class="side-chip {{item.visited ? 'got' : ''}}"
-      data-key="{{item.key}}"
-      bindtap="onOpenSide"
-      role="button"
-      aria-label="翻看顺路散页{{item.title}}"
-    >
-      <text class="side-chip-mark">{{item.visited ? '✓' : '·'}}</text>
-      <text class="side-chip-name">{{item.title}}</text>
-    </view>
-  </view>
-  <view class="note-hand olive hb-note">档案里夹着的页，不出日期卡、不做裁判；翻不翻，由你决定。</view>
-
-  <!-- v2 回响：次日之信入口（finale 后出现；当日封蜡，次日出信） -->
-  <view class="hatch-divider sec-div"></view>
-  <view class="hb-letter {{letterReady ? '' : 'sealed'}}" bindtap="onOpenLetter" role="button" aria-label="次日之信入口">
-    <view class="hb-letter-wax kaiti">封</view>
-    <view class="hb-letter-main">
-      <view class="hb-letter-title serif">{{letterReady ? '有一封信在等你' : '明日启封'}}</view>
-      <view class="hb-letter-sub kaiti">{{letterReady ? '来自那个还在整理档案的人' : '明天，这里会有一封写给你的信'}}</view>
-    </view>
-    <view wx:if="{{letterReady}}" class="hb-letter-arrow">›</view>
-  </view>
-
-</scroll-view>
 </view>
 
 <history-card

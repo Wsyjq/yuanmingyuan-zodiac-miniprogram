@@ -1,8 +1,7 @@
 /* P00 封面 */
 .page {
   position: relative;
-  height: 100%;
-  overflow: hidden;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -58,9 +57,7 @@
 /* ---------- 上 1/3：主视觉 + 排线 ---------- */
 .hero {
   position: relative;
-  height: 24vh;
-  flex-shrink: 0;
-  overflow: hidden;
+  height: 36vh;
   display: flex;
   flex-direction: column;
 }
@@ -111,7 +108,7 @@
 }
 /* 排线从左到右显现一次（设计文档 §1.5 排线逐笔显现 1200ms） */
 .hero-hatch {
-  margin: 8rpx 40rpx 0;
+  margin: 24rpx 40rpx 0;
   transform-origin: left center;
   animation: hatch-in 1.2s ease both;
 }
@@ -122,20 +119,19 @@
 
 /* ---------- 中部：拱券顶饰 + 书名 + 印章 ---------- */
 .middle {
-  flex: none;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 12rpx 0 8rpx;
 }
 .middle .arch {
   margin-bottom: 32rpx;
 }
 .title {
-  font-size: 40rpx;
+  font-size: 56rpx;
   font-weight: 700;
-  letter-spacing: 10rpx;
+  letter-spacing: 24rpx;
   color: var(--ink-deep);
 }
 /* 书名下旧金 1rpx 分隔线（两端渐隐） */
@@ -147,12 +143,12 @@
 }
 /* 朱砂方印「第二十一图」：白文（纸色字朱砂底）、楷体、旋转 -3° */
 .seal {
-  margin-top: 20rpx;
-  width: 168rpx;
-  height: 168rpx;
+  margin-top: 36rpx;
+  width: 124rpx;
+  height: 124rpx;
   background: var(--cinnabar);
-  border-radius: 8rpx;
-  box-shadow: inset 0 0 0 4rpx rgba(247, 244, 236, 0.55);
+  border-radius: 6rpx;
+  box-shadow: inset 0 0 0 3rpx rgba(244, 237, 220, 0.55);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -160,8 +156,8 @@
   transform: rotate(-3deg);
 }
 .seal-text {
-  font-size: 44rpx;
-  line-height: 1.2;
+  font-size: 34rpx;
+  line-height: 1.25;
   color: var(--paper);
 }
 
@@ -202,17 +198,6 @@
 .restart {
   margin-top: 24rpx;
 }
-.coach-hit {
-  display: inline-flex;
-  align-self: center;
-}
-/* 宿主铺满本次量到的可视区域，组件内 absolute 与按钮同一套 px */
-.coach-host {
-  position: fixed !important;
-  z-index: 140;
-  pointer-events: none;
-  overflow: hidden;
-}
 
 /* ---------- 底部小字入口 ---------- */
 .foot-links {
@@ -240,6 +225,41 @@
   height: 6rpx;
   border-radius: 50%;
   background: var(--dash);
+}
+
+/* ---------- 玩法说明浮层 ---------- */
+.mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(70, 56, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.help-card {
+  width: 600rpx;
+  padding: 40rpx 44rpx 36rpx;
+}
+.help-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  letter-spacing: 6rpx;
+  color: var(--ink);
+  margin: 20rpx 0 24rpx;
+}
+.help-body {
+  font-size: 26rpx;
+  line-height: 1.9;
+  color: var(--ink);
+  margin-bottom: 20rpx;
+}
+.help-close {
+  margin: 12rpx auto 0;
+  width: 200rpx;
 }
 
 /* ---------- 重新考察确认 ---------- */

@@ -1,35 +1,102 @@
 <nav-back />
 <page-overlays />
-<bgm-ambience />
 
-<!-- 雨果雕像（飞书 v3 rev5614 §雨果雕像：纯叙事） -->
-<view class="page page-shell paper-grain paper-real">
+<!-- 站名叙事 + 引文卡 -->
+<view class="page page-shell paper-grain paper-real" wx:if="{{phase === 'novel'}}">
+  <!-- v1.3.1 手账：左侧活页装订孔列（全站统一） -->
   <view class="binder"></view>
-  <view class="tag-no page-tag">No.S4</view>
-  <view class="navi-title serif">雨果雕像</view>
+  <view class="tag-no page-tag">No.013</view>
+  <view class="navi-title serif">第四站 · 雨果雕像</view>
   <view class="hatch-divider navi-line"></view>
   <scroll-view class="navi-body" scroll-y>
     <view class="navi-figure double-frame">
-      <image class="navi-image img-aged" src="/plate21/module/assets/img/IMG-RUNTIME-HUGO.jpg" mode="aspectFill" />
+      <image class="navi-image" src="/plate21/module/assets/img/IMG-RUNTIME-HUGO.jpg" mode="aspectFill" />
       <view class="navi-caption">雨果雕像 · 项目 AI 叙事图</view>
     </view>
-    <view class="para"><gloss-text parts="{{hugoParts}}" bind:glossary="onGlossary" /></view>
     <view class="para" wx:for="{{paragraphs}}" wx:key="index">{{item}}</view>
-    <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
+    <view class="quote-card">
+      <view class="hatch-divider quote-line"></view>
+      <view class="quote-text kaiti">{{quote}}</view>
+      <view class="hatch-divider quote-line"></view>
+    </view>
+    <view class="note-hand navi-note" style="transform: rotate(1.5deg)">此信写于劫火之后一年，字字带火。</view>
   </scroll-view>
   <view class="navi-footer">
-    <button class="btn-seal" bindtap="onNext" disabled="{{advancing}}">{{advancing ? '正在保存……' : '继 续'}}</button>
+    <button class="btn-seal" bindtap="onNovelFinish">继续</button>
   </view>
 </view>
 
-<!-- 术语史料卡（「雨果」SL-17 点入） -->
+<!-- 谜题区 -->
+<view class="page page-shell paper-grain paper-real {{timelineComplete ? 'timeline-complete' : ''}}" wx:if="{{phase === 'puzzle'}}">
+  <!-- v1.3.1 手账：左侧活页装订孔列（全站统一） -->
+  <view class="binder"></view>
+  <view class="tag-no page-tag">No.013</view>
+  <view class="title serif">时间轴排序</view>
+  <view class="subtitle">把事件卡拖回它发生的那一年（可左右拖动时间轴）</view>
+  <!-- v1.3.1 手账：邮戳贴纸压在编号签下方页边（不扰时间轴拖拽） -->
+  <image class="tl-postmark" src="/plate21/module/assets/img/stickers/st-postmark-02.png" mode="aspectFit" />
+  <view class="note-hand olive tl-note" style="transform: rotate(-1deg)">一八六零年十月，一炬成灰。</view>
+
+  <!-- 横向时间轴：1747 —— 2010（采风修订版 5 节点） -->
+  <scroll-view class="tl" scroll-x scroll-with-animation scroll-left="{{scrollLeft}}" enhanced show-scrollbar="{{false}}">
+    <view class="tl-inner">
+      <view class="gold-line"></view>
+      <view class="tl-slots">
+        <view wx:for="{{slots}}" wx:key="index" class="tl-cell">
+          <view class="tl-label">
+            <text>{{item.label}}</text>
+          </view>
+          <view class="tl-slot {{item.filled ? 'filled' : ''}} {{item.flash ? 'flash' : ''}} {{item.near ? 'near' : ''}}" data-index="{{index}}" bindtap="onSlotTap" role="button" aria-label="年份{{item.label}}">
+            <view class="tl-filled">{{item.filled}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <view class="tray-label">事件卡 · 先选一张，再点上方年份</view>
+  <view class="card-tray" role="list" aria-label="待归位事件卡">
+    <view
+      wx:for="{{cards}}"
+      wx:key="id"
+      wx:if="{{!item.placed}}"
+      class="card {{item.dragging ? 'dragging' : ''}} {{selectedCard === index ? 'selected' : ''}}"
+      style="{{item.dragStyle}}"
+      data-idx="{{index}}"
+      bindtouchstart="onCardStart"
+      bindtouchmove="onCardMove"
+      bindtouchend="onCardEnd"
+      bindtouchcancel="onCardEnd"
+      bindtap="onCardSelect"
+      role="button"
+      aria-pressed="{{selectedCard === index}}"
+      aria-label="选择事件卡{{item.title}}"
+    >
+      <view class="card-title serif">{{item.title}}</view>
+      <view class="card-sub">{{item.sub}}</view>
+    </view>
+  </view>
+
+  <view wx:if="{{pointTip && !monologue}}" class="point-tip">{{pointTip}}</view>
+
+  <!-- 独白 + 前往密码锁 -->
+  <view class="mono" wx:if="{{monologue}}">
+    <view class="mono-text kaiti">时间排好了。可第二十一幅版画呢？也许，最后还有一道锁——需要本次考察的日期。</view>
+    <view wx:if="{{saveError}}" class="hint">{{saveError}}</view>
+    <button class="btn-seal" bindtap="goReport" disabled="{{advancing}}">{{advancing ? '正在保存时间轴……' : '前往最后一道锁'}}</button>
+  </view>
+</view>
+
 <history-card
-  wx:if="{{gloss}}"
-  visible="{{!!gloss}}"
-  title="{{gloss.title}}"
-  source="{{gloss.source}}"
-  lines="{{gloss.lines}}"
-  btn-text="学到了"
-  bind:next="onGlossClose"
-  bind:close="onGlossClose"
+  visible="{{showHistory}}"
+  title="时间轴 · 西洋楼二百七十年"
+  source="《西洋楼铜版图》；雨果《致巴特勒上尉的信》；圆明园管理处公开资料"
+  lines="{{historyLines}}"
+  corner-number="{{cardNumber}}"
+  show-corner="{{showHistory}}"
+  btn-text="查看最后一道锁"
+  bind:next="goReport"
+  bind:close="onCloseHistory"
 />
+<task-banner icon="hand" text="拖动事件卡，或先点事件卡再点年份" visible="{{phase === 'puzzle' && !monologue && !showHistory}}" />
+<stamp-toast id="stamp" />

@@ -1,7 +1,5 @@
 const session = require('../../store/session')
 const answers = require('../../utils/puzzle-answers')
-const audioSrc = require('../../utils/audio-src')
-const audioBus = require('../../utils/audio-bus')
 
 const HISTORY_LINES = [
   '马首铜像曾流失海外，后由澳门爱国企业家何鸿燊先生出资购回。',
@@ -22,24 +20,19 @@ Page({
     cardNumber: 0,
     operated: false,
     solved: false,
-    skipped: false,
     showHandoff: false,
-    advancing: false,
-    narrSrc: audioSrc.clip('narr-s3-water')
+    advancing: false
   },
 
   onLoad() {
     session.viewPuzzle('s3-water')
     const puzzle = session.getPuzzle('s3-water')
-    const skipped = !!(puzzle && puzzle.payload && puzzle.payload.action === 'skipped')
     this.setData({
       cardNumber: Number(session.getCardDigit('s3-water')),
       operated: !!puzzle,
       solved: !!puzzle,
-      skipped: skipped,
-      showHistory: !!puzzle && !skipped,
-      showHandoff: skipped,
-      answerInput: puzzle && !skipped ? '马首' : '',
+      showHistory: !!puzzle,
+      answerInput: puzzle ? '马首' : '',
       attempts: Number(puzzle && puzzle.payload && puzzle.payload.attempts) || 0
     })
   },
@@ -58,8 +51,6 @@ Page({
   },
 
   onSubmit() {
-    // V2.3：答题交互起，压停正在播的人声（做题与听讲不打架）
-    audioBus.stopKind('voice')
     if (this.data.showHistory) return
     const value = String(this.data.answerInput || '').trim()
     if (!value) {
@@ -92,20 +83,11 @@ Page({
     this.setData({ showHistory: false, showHandoff: this.data.solved })
   },
 
-  // V2.1 对读三可跳：跳过不发该卡，收尾照常（往东=大水法，不预告雨果）。
-  onSkip() {
-    if (this.data.solved || this.data.skipped) return
-    this.setData({ skipped: true, solved: true, showHistory: false, showHandoff: true })
-    session.attemptPuzzle('s3-water', this.data.attempts, true, 'skip')
-    session.completePuzzle('s3-water', { action: 'skipped', attempts: this.data.attempts })
-      .catch(function () { /* 进度失败不阻断浏览 */ })
-  },
-
   onNext() {
     if (this.data.advancing) return
     this.setData({ advancing: true })
     session.completePuzzle('s3-water', { answer: '马首', attempts: this.data.attempts || 1 }, {
-      collectCard: !this.data.skipped,
+      collectCard: true,
       station: 's3',
       checkpoint: 's4-timeline'
     })

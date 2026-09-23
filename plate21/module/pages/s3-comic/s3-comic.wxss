@@ -1,9 +1,8 @@
 /* P07 时辰漫画推理 */
 .page {
   position: relative;
-  height: 100%;
-  overflow: hidden;
-  padding: 140rpx 48rpx 40rpx 100rpx; /* 左 100rpx = 48 + 52 让位 .binder */
+  min-height: 100vh;
+  padding: 220rpx 48rpx 120rpx 100rpx; /* 左 100rpx = 48 + 52 让位 .binder */
   box-sizing: border-box;
 }
 
@@ -42,8 +41,6 @@
   display: block;
   width: 100%;
   height: auto;
-  max-height: 360rpx;
-  object-fit: contain;
   filter: sepia(.18) saturate(.82) contrast(1.03);
   mix-blend-mode: multiply;
 }
@@ -135,7 +132,7 @@
   text-align: center;
   background: var(--paper2);
   border: 1rpx solid var(--dash);
-  font-size: 30rpx;
+  font-size: 28rpx;
   color: var(--ink);
   min-height: 88rpx;
   box-sizing: border-box;
@@ -179,7 +176,3 @@
   pointer-events: none;
   filter: drop-shadow(0 3rpx 6rpx rgba(70, 56, 42, 0.22));
 }
-
-/* V2.1 可跳通道 */
-.skip-btn { display: block; width: auto; min-height: 0; line-height: 1.6; margin: 20rpx auto 0; padding: 6rpx 10rpx; border: 0; border-bottom: 2rpx dotted currentColor; border-radius: 0; background: transparent; font-size: 26rpx; }
-.skip-btn::after { border: 0; }

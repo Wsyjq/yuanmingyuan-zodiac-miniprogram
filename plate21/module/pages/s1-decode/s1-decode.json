@@ -4,13 +4,6 @@
     "nav-back": "../../components/nav-back/nav-back",
     "task-banner": "../../components/task-banner/task-banner",
     "stamp-toast": "../../components/stamp-toast/stamp-toast",
-    "page-overlays": "../../capabilities/overlay-host/overlay-host",
-    "audio-clip": "../../components/audio-clip/audio-clip",
-    "dialogue-block": "../../components/dialogue-block/dialogue-block",
-    "bgm-ambience": "../../components/bgm-ambience/bgm-ambience",
-    "coach-spot": "../../components/coach-spot/coach-spot",
-    "history-card": "../../components/history-card/history-card",
-    "gloss-text": "../../components/gloss-text/gloss-text"
-  },
-  "disableScroll": true
+    "page-overlays": "../../capabilities/overlay-host/overlay-host"
+  }
 }

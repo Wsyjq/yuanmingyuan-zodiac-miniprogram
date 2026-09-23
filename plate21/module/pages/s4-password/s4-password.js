@@ -1,18 +1,16 @@
-// 第四站收口 · 八位日期（V2.1：密码是加料，不是门）
-// 剧情：八张卡片角落的数字连起来 = 建档日 YYYYMMDD。连上就填进空栏；缺卡也出报告，不卡死。
-// 校验口径：会话锁定日期 YYYYMMDD；跳过通道与答对通道都完成第四站并进入 finale。
+// 第四站 · 末题 密码输入（采风修订版玩法核心主线收口）
+// 剧情：之前每张卡片角落都有一个数字，连起来是本次考察的锁定日期。
+// 校验口径：会话锁定日期 YYYYMMDD，对应一路收集的八张卡片。
+// 输入正确 → 谜题与第四站原子落库 → 玩家确认后进入反转揭示 finale。
 const session = require('../../store/session')
 const sessionDate = require('../../utils/session-date')
-const audioSrc = require('../../utils/audio-src')
-const audioBus = require('../../utils/audio-bus')
 
 Page({
   data: {
-    narrSrc: audioSrc.clip('narr-s4-password'),
     pwd: '',
     attempts: 0,
     showHint: false,
-    hint: '看看一路收到的卡片角落。日期依据见封面考察凭证：建档日已在考察开始时锁定，即使跨过午夜也不变。',
+    hint: '回看封面的考察凭证：系统建立本次档案时，已按设备本地日历锁定建档日。八张卡按考察顺序依次记录 YYYYMMDD 的一位；即使跨过午夜，仍以同一建档日为准。',
     wrongTip: '',
     archiveDate: '',
     correct: false,
@@ -61,25 +59,7 @@ Page({
     this.setData({ showHint: true })
   },
 
-  // 缺卡通道（V2.1：密码缺卡不卡死）：不连数字，直接摊开档案进结局。
-  onSkipPassword() {
-    if (this.data.advancing) return
-    this.setData({ advancing: true })
-    session.attemptPuzzle('s4-password', this.data.attempts, true, 'skip')
-    session.completePuzzle('s4-password', { action: 'skipped', attempts: this.data.attempts }, {
-      station: 's4',
-      checkpoint: 'finale'
-    }).then(function () {
-      wx.redirectTo({ url: '/plate21/module/pages/finale/finale' })
-    }).catch(() => {
-      this.setData({ advancing: false })
-      wx.showToast({ title: '进度保存失败，请重试', icon: 'none' })
-    })
-  },
-
   onSubmit() {
-    // V2.3：答题交互起，压停正在播的人声（做题与听讲不打架）
-    audioBus.stopKind('voice')
     if (this.data.correct) return
     const input = this.data.pwd
     if (input.length < 8) {

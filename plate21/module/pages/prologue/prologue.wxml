@@ -2,60 +2,42 @@
   <!-- v1.3.1 手账：左侧活页装订孔列（叙事页） -->
   <view class="binder"></view>
   <nav-back />
-<bgm-ambience />
   <novel-view
-    style="flex: 1; min-height: 0; height: 0;"
     title="序章"
     paragraphs="{{paragraphs}}"
-    finish-text="翻完这一册档案"
-    bind:pagechange="onNovelPage"
+    finish-text="取出实体信封"
     bind:finish="onNovelFinish"
-    bind:glossary="onGlossary"
-  />
-  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 序章讲述" dock="{{true}}" />
-
-  <!-- 术语史料卡（正文铜绿词点入，如《西洋楼铜版图》SL-01） -->
-  <history-card
-    wx:if="{{gloss}}"
-    visible="{{!!gloss}}"
-    title="{{gloss.title}}"
-    source="{{gloss.source}}"
-    lines="{{gloss.lines}}"
-    btn-text="学到了"
-    bind:next="onGlossClose"
-    bind:close="onGlossClose"
   />
 
-  <!-- 叙事结束：档案交接清点（飞书 v3 序章：档案袋＋日记）。 -->
-  <view wx:if="{{showHandover}}" class="pack">
+  <!-- 叙事结束：引导玩家拆开手中的实体信封。 -->
+  <view wx:if="{{showEnvelope}}" class="pack">
     <view class="pack-sheet archive-sheet">
-      <view class="physical-label archive-tab">线下道具 · 档案袋</view>
-      <view class="pack-title serif">西洋楼现场考察资料</view>
+      <view class="physical-label archive-tab">线下道具 · 实体信封</view>
+      <view class="pack-title serif">取出资料袋里的信封</view>
       <view class="archive-rule"></view>
-      <view class="pack-note">里面有一封信、一张手绘路线图、几张空白记录页，以及几件用于现场记录的工具。</view>
-      <view class="pack-map">
-        <image class="pack-map-img img-aged" src="/plate21/module/assets/img/IMG-RUNTIME-MAP.jpg" mode="widthFix" />
+      <view class="pack-note">这一段需要操作手中的实物，手机只负责记录进度。</view>
+      <view class="step-list archive-steps">
+        <view class="step-row"><view class="step-no">1</view><view class="step-copy">找到封口未启的实体信封。</view></view>
+        <view class="step-row"><view class="step-no">2</view><view class="step-copy">拆开信封，取出并读完里面的信。</view></view>
+        <view class="step-row"><view class="step-no">3</view><view class="step-copy">信和信封都要保留，后面的调查还会用到。</view></view>
       </view>
+      <button class="btn-seal pack-btn record-action" bindtap="onOpenEnvelope">我已拆开并读完</button>
+    </view>
+  </view>
+
+  <!-- 信件读完后：在小程序中重述关键信息，不复刻实体道具。 -->
+  <view wx:if="{{showPack}}" class="pack pack-open">
+    <view class="pack-sheet archive-sheet">
+      <view class="physical-label archive-tab">信中内容</view>
+      <view class="letter-copy kaiti">“如果你想知道第二十一幅铜版画的秘密，就去圆明园西洋楼遗址吧，里面也许会有你想要的答案。”</view>
+      <view class="decision-copy">我不知道这份资料是谁留下的，也不知道它是否与那幅传闻中的铜版画有关。但既然线索已经指向圆明园西洋楼遗址，我决定带着这份资料前往现场，去一探究竟。</view>
+      <view class="pack-title props-title serif">收好考察资料</view>
       <view class="pack-items">
         <view wx:for="{{props}}" wx:key="*this" class="pack-item">{{item}}</view>
       </view>
-      <button class="btn-seal pack-btn record-action" bindtap="onTakeArchive">档案已收好</button>
-      <button id="coachGo" class="btn-seal pack-btn record-action" bindtap="onGoS1" disabled="{{advancing}}">{{advancing ? '正在保存档案……' : '前 往 西 洋 楼 入 口'}}</button>
+      <button class="btn-seal pack-btn record-action" bindtap="onGoS1" disabled="{{advancing}}">{{advancing ? '正在保存档案……' : '前 往 西 洋 楼'}}</button>
     </view>
   </view>
 
   <stamp-toast id="stamp" />
 </view>
-<coach-spot
-  class="coach-host"
-  style="top: {{coachWin.top}}px; left: {{coachWin.left}}px; width: {{coachWin.windowWidth}}px; height: {{coachWin.windowHeight}}px;"
-  visible="{{showCoach}}"
-  closing="{{coachClosing}}"
-  index="{{coachIndex}}"
-  total="{{coachSteps.length}}"
-  step="{{coachStep}}"
-  hole="{{coachHole}}"
-  win="{{coachWin}}"
-  bind:next="onCoachNext"
-  bind:skip="onCoachSkip"
-/>

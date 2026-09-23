@@ -1,52 +1,90 @@
-// 黄花阵 · 修建目的（四选一）。
-// 文案单点在 content/s2-quiz.js；答题流程（选择/判分/史料卡/后续旁白）走 quiz-host 公共行为。
+// 第二站 · 谜题1 黄花阵作用选择题（采风修订版玩法）
+// 谜题 S2-1：固定答案 C（中秋皇家娱乐·迷宫灯会）；答错不锁，第二次错给排除提示。
+// 答对弹史料卡（卡片角落数字 2）。本页不是 S2 末题，不调 completeStation（由 s2-pattern 收口）。
 const session = require('../../store/session')
-const audioSrc = require('../../utils/audio-src')
-const playGuide = require('../../capabilities/play-guide/guide')
-const coachHost = require('../../capabilities/play-guide/coach-host')
-const glossHost = require('../../utils/gloss-host')
-const quizHost = require('../../utils/quiz-host')
-const content = require('../../content/s2-quiz')
 
 Page({
-  behaviors: [coachHost, glossHost, quizHost],
   data: {
-    content: content,
-    options: content.options,
-    cardNumber: content.cardNumber,
-    introParts: content.introParts,
-    historyLines: content.historyLines,
-    narrSrc: audioSrc.clip(content.clips.main)
+    options: [
+      { key: 'A', text: '军事防御工事', wrong: false },
+      { key: 'B', text: '皇家藏书楼', wrong: false },
+      { key: 'C', text: '中秋皇家娱乐 · 迷宫灯会', wrong: false },
+      { key: 'D', text: '皇子秘密议事厅', wrong: false }
+    ],
+    selected: '',
+    attempts: 0,
+    shakeKey: '',   // INT-404：错误项晃动反馈
+    hint: '',
+    solved: false,
+    showHistory: false,
+    cardNumber: 2,
+    followup: false,
+    advancing: false,
+    historyLines: [
+      '每逢中秋之夜，皇帝坐阵中心凉亭。',
+      '观宫女持灯竞走，最先到达中心者得皇帝赏赐。'
+    ]
+  },
+
+  onSelect(e) {
+    if (this.data.solved) return
+    this.setData({ selected: e.currentTarget.dataset.key })
+  },
+
+  onConfirm() {
+    const { selected, options, attempts, solved } = this.data
+    if (!selected || solved) return
+
+    if (selected === 'C') {
+      session.attemptPuzzle('s2-purpose', attempts + 1, true, 'tap')
+      // 铜钉点亮（wxml 中由 solved 驱动）→ 史料卡弹出
+      this.setData({ solved: true, hint: '', showHistory: true })
+      // 收集黄花阵作用卡片角落数字 2 ——主线：卡片数字 → 日期密码
+      session.completePuzzle('s2-purpose', { answer: 'C', attempts: attempts + 1 }, { collectCard: true })
+        .catch(function () { wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' }) })
+      return
+    }
+
+    const idx = options.findIndex(o => o.key === selected)
+    const n = attempts + 1
+    session.attemptPuzzle('s2-purpose', n, false, 'tap')
+    if (n === 2) session.viewHint('s2-purpose', 1)
+    this.setData({
+      ['options[' + idx + '].wrong']: true,
+      shakeKey: selected,   // INT-404：错误项晃动
+      attempts: n,
+      hint: n >= 2 ? '排除提示：与战事无关，与藏书也无关。' : ''
+    })
+    this._timers.push(setTimeout(() => this.setData({ shakeKey: '' }), 450))
+  },
+
+  onCloseHistory() {
+    this.setData({ showHistory: false, followup: true })
   },
 
   onNext() {
     if (this.data.advancing) return
     this.setData({ advancing: true, showHistory: false })
-    session.completePuzzle(content.puzzleId, { attempts: this.data.attempts || 1, answer: content.correct }, {
+    session.completePuzzle('s2-purpose', { answer: 'C', attempts: this.data.attempts || 1 }, {
       collectCard: true,
-      checkpoint: content.next.checkpoint
+      checkpoint: 's2-name'
     }).then(function () {
-      wx.redirectTo({ url: content.next.url })
+      wx.redirectTo({ url: '/plate21/module/pages/s2-reveal/s2-reveal' })
     }).catch(() => {
       this.setData({ advancing: false })
       wx.showToast({ title: '进度保存失败，请重试', icon: 'none' })
     })
   },
 
-  onLoad(options) {
+  onLoad() {
     this._timers = []
-    if (playGuide.enterTourPage('pages/s2-quiz/s2-quiz', options)) {
-      this.setData({ touring: true, solved: false, followup: false, showHistory: false })
-      return
-    }
-    session.viewPuzzle(content.puzzleId)
-    const puzzle = session.getPuzzle(content.puzzleId)
+    session.viewPuzzle('s2-purpose')
+    const puzzle = session.getPuzzle('s2-purpose')
     this.setData({
-      cardNumber: Number(session.getCardDigit(content.puzzleId)) || content.cardNumber,
+      cardNumber: Number(session.getCardDigit('s2-purpose')),
+      selected: puzzle ? 'C' : '',
       solved: !!puzzle,
-      selected: puzzle ? content.correct : '',
       showHistory: !!puzzle,
-      followup: false,
       attempts: Number(puzzle && puzzle.payload && puzzle.payload.attempts) || 0
     })
   },

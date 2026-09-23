@@ -1,17 +1,48 @@
 'use strict'
 
-// 第二站 · 黄花阵 对读三：亭子线稿对眼前这座亭（V2.1 可用稿）。
-// 举线稿对照，用手机拍下中西混作的细节——找到一处即算；四处细目都拍，记录更厚。
+// 第二站 · 谜题3：现场拍摄四处中西结合细节，生成一张考察卡。
 // 最低交付只记录玩家实际拍摄结果，不调用或伪造场景识别。
-// 文案与点位单点在 content/s2-blend.js。
 const session = require('../../store/session')
 const sessionDate = require('../../utils/session-date')
 const photoPipeline = require('../../utils/photo-pipeline')
-const audioSrc = require('../../utils/audio-src')
-const content = require('../../content/s2-blend')
 
-const POINTS = content.points
-const PUZZLE = content.puzzleId
+const POINTS = [
+  {
+    key: 'dome',
+    no: '01',
+    title: '穹顶与飞檐',
+    desc: '同时纳入西式穹顶与中式八角飞檐。',
+    guideSrc: '/plate21/module/assets/img/IMG-RUNTIME-DETAIL-DOME.jpg'
+  },
+  {
+    key: 'beast',
+    no: '02',
+    title: '檐角立兽',
+    desc: '拍清飞檐角部的小型立式装饰。',
+    guideSrc: '/plate21/module/assets/img/IMG-RUNTIME-DETAIL-BEAST.jpg'
+  },
+  {
+    key: 'lotus',
+    no: '03',
+    title: '莲座宝瓶',
+    desc: '记录中式莲座与西洋宝瓶花苞的组合。',
+    guideSrc: '/plate21/module/assets/img/IMG-RUNTIME-DETAIL-LOTUS.jpg'
+  },
+  {
+    key: 'swan',
+    no: '04',
+    title: '双天鹅蝙蝠纹',
+    desc: '对准弧形基座，记录双天鹅与蝙蝠纹细节。',
+    guideSrc: '/plate21/module/assets/img/IMG-RUNTIME-DETAIL-SWAN.jpg'
+  }
+]
+
+const HISTORY_LINES = [
+  '西学东渐后的皇家审美转译。',
+  '西洋楼黄花阵中心亭，西式穹顶与中式八角飞檐并存；',
+  '檐角立兽、莲座宝瓶、双天鹅间暗藏的蝙蝠纹——',
+  '西方形制与中式吉祥寓意的叠加，是清宫石匠的本土化改造。'
+]
 
 function formatDate(timestamp) {
   return sessionDate.formatArchiveDate(sessionDate.dateKeyFromTimestamp(timestamp || Date.now()))
@@ -60,19 +91,18 @@ Page({
     persistenceWarning: '',
     showRecordCard: false,
     showHistory: false,
-    historyLines: content.historyLines,
+    historyLines: HISTORY_LINES,
     cardNumber: 2,
     showCardNumber: false,
     done: false,
     readyNext: false,
     advancing: false,
-    dateLabel: formatDate(),
-    narrSrc: audioSrc.clip(content.clips.main)
+    dateLabel: formatDate()
   },
 
   onLoad() {
     this._active = true
-    session.viewPuzzle(PUZZLE)
+    session.viewPuzzle('s2-blend')
     const snap = session.getSnapshot()
     if (snap) {
       this.restoreFromSnapshot(snap)
@@ -95,9 +125,9 @@ Page({
     this.setData({
       points: points,
       photoCount: photoCount,
-      done: !!completed && !hasNewerDraft && photoCount >= 1,
+      done: !!completed && !hasNewerDraft && photoCount === POINTS.length,
       dateLabel: draft.dateLabel || sessionDate.formatArchiveDate(snap && snap.sessionDate) || formatDate(),
-      cardNumber: Number(session.getCardDigit(PUZZLE))
+      cardNumber: Number(session.getCardDigit('s2-blend'))
     })
   },
 
@@ -178,7 +208,7 @@ Page({
         type: 'photo',
         image: { filePath: saved.path },
         meta: {
-          puzzle: PUZZLE,
+          puzzle: 's2-blend',
           slot: key,
           width: saved.normalization.width,
           height: saved.normalization.height,
@@ -253,17 +283,16 @@ Page({
   onComplete() {
     const completeAttempts = this.data.completeAttempts + 1
     this.setData({ completeAttempts: completeAttempts })
-    // V2.1：观察＋拍照，产品不判图——拍到一处即算，四处更厚。
-    if (this.data.photoCount < 1) {
-      session.attemptPuzzle(PUZZLE, completeAttempts, false, 'camera')
-      wx.showToast({ title: '至少拍下一处细节', icon: 'none' })
+    if (this.data.photoCount < POINTS.length) {
+      session.attemptPuzzle('s2-blend', completeAttempts, false, 'camera')
+      wx.showToast({ title: '请先完成四处拍摄', icon: 'none' })
       return Promise.resolve(false)
     }
     if (this.data.done) {
       this.setData({ showRecordCard: true })
       return Promise.resolve(true)
     }
-    session.attemptPuzzle(PUZZLE, completeAttempts, true, 'camera')
+    session.attemptPuzzle('s2-blend', completeAttempts, true, 'camera')
 
     const snap = session.getSnapshot()
     const draft = snap && snap.flags && snap.flags.s2PhotoDraft
@@ -285,7 +314,7 @@ Page({
     this.setData({ done: true, showRecordCard: true })
     return session.setFlag('s2PhotoRecord', record)
       .then(function () {
-        return session.completePuzzle(PUZZLE, {
+        return session.completePuzzle('s2-blend', {
           slots: POINTS.map(function (point) { return point.key }),
           completedAt: record.completedAt
         }, { collectCard: true })
@@ -320,12 +349,12 @@ Page({
     if (this.data.advancing) return
     this.setData({ advancing: true })
     this.setData({ showHistory: false })
-    session.completePuzzle(PUZZLE, { slots: POINTS.map(function (point) { return point.key }) }, {
+    session.completePuzzle('s2-blend', { slots: POINTS.map(function (point) { return point.key }) }, {
       collectCard: true,
-      checkpoint: content.next.checkpoint
+      checkpoint: 's2-pattern'
     }).then(() => {
       wx.redirectTo({
-        url: content.next.url,
+        url: '/plate21/module/pages/s2-pattern/s2-pattern',
         fail: () => this.setData({ advancing: false })
       })
     }).catch(() => {

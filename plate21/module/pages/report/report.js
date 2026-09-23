@@ -1,8 +1,11 @@
 // P15 考察报告（成果页）：第 21 图成品展示 + 保存相册 + 拓印提示
-// 定格口径（V2.1）：《西洋楼铜版图·第二十一图》/ 今日对读。非馆藏原件。/ 绘制者 / 绘制时间。
 const session = require('../../store/session')
 const fieldRecord = require('../../store/field-record')
 const sessionDate = require('../../utils/session-date')
+
+function editionText(no) {
+  return no ? '第 ' + no + ' 版' : '第 — 版'
+}
 
 // 离屏画布逻辑尺寸（导出分辨率基准，与屏幕 rpx 无关）
 const CW = 700
@@ -12,7 +15,8 @@ const REPORT_PLATE_SRC = '/plate21/module/assets/img/IMG-RUNTIME-PLATE.jpg'
 Page({
   data: {
     name: '',
-    editionLabel: '今日对读',
+    editionNo: null,
+    editionLabel: '第 — 版',
     today: '',
     showRubbing: false,
     saving: false,
@@ -21,14 +25,6 @@ Page({
     collected: false,
     completed: false,
     completing: false,
-    finale: false,
-    letterReady: false,
-    boardSubmitted: false,
-    messageText: '',
-    messageConsent: true,
-    messageSubmitted: false,
-    submittedText: '',
-    messageSubmitting: false,
     fieldPhotos: fieldRecord.photosFromSnapshot(),
     photoCount: 0
   },
@@ -44,25 +40,17 @@ Page({
 
   refreshSnapshot() {
     const snap = session.getSnapshot() || {}
-    const flags = snap.flags || {}
+    const no = snap.editionNo || null
     const fieldPhotos = fieldRecord.photosFromSnapshot(snap)
-    const todayKey = sessionDate.dateKeyFromTimestamp(Date.now())
-    const sessionDay = sessionDate.isValidDateKey(snap.sessionDate) ? snap.sessionDate : todayKey
-    const finale = !!snap.finale
     this.setData({
       name: snap.name || '无名氏',
-      editionLabel: snap.editionNo ? ('第 ' + snap.editionNo + ' 版') : '今日对读',
+      editionNo: no,
+      editionLabel: editionText(no),
       today: sessionDate.formatDateKey(snap.sessionDate),
-      collected: !!flags.collectedReport,
-      completed: !!flags.experienceCompletedAt,
+      collected: !!(snap.flags && snap.flags.collectedReport),
+      completed: !!(snap.flags && snap.flags.experienceCompletedAt),
       fieldPhotos: fieldPhotos,
-      photoCount: fieldPhotos.filter(function (photo) { return !!photo.photoPath }).length,
-      finale: finale,
-      letterReady: (finale || !!flags.experienceCompletedAt) && todayKey > sessionDay,
-      boardSubmitted: !!flags.boardSubmittedAt,
-      messageSubmitted: !!flags.messageSubmittedAt,
-      submittedText: flags.messageDraft || '',
-      messageText: flags.messageDraft || ''
+      photoCount: fieldPhotos.filter(function (photo) { return !!photo.photoPath }).length
     })
   },
 
@@ -116,8 +104,8 @@ Page({
               success: () => {
                 this.setData({ saving: false, saveError: '', canOpenAlbumSettings: false })
                 wx.showToast({ title: '已保存到相册', icon: 'none' })
-                session.saveMedia({ type: 'report', image: { filePath: r.tempFilePath }, meta: { editionLabel: this.data.editionLabel } })
-                session.emit({ name: 'report_saved', destination: 'album', success: true, editionLabel: this.data.editionLabel })
+                session.saveMedia({ type: 'report', image: { filePath: r.tempFilePath }, meta: { editionNo: this.data.editionNo } })
+                session.emit({ name: 'report_saved', destination: 'album', success: true, editionNo: this.data.editionNo })
               },
               fail: (error) => this.setSaveFailure('album', error)
             })
@@ -156,7 +144,7 @@ Page({
   async drawReport(ctx, canvas) {
     const name = this.data.name
     // 旧纸底
-    ctx.fillStyle = '#F7F4EC'
+    ctx.fillStyle = '#F4EDDC'
     ctx.fillRect(0, 0, CW, CH)
     // 万字纹画框（双线）
     ctx.strokeStyle = '#46382A'
@@ -169,7 +157,7 @@ Page({
     ctx.textAlign = 'center'
     ctx.font = '700 30px STSong, SimSun, serif'
     ctx.fillText('西洋楼铜版图·第二十一图', CW / 2, 84)
-    // L1 题跋横条（V2.1 副行：今日对读，非馆藏原件）
+    // L1 题跋横条
     ctx.fillStyle = '#EBE1CB'
     ctx.strokeStyle = '#46382A'
     ctx.lineWidth = 1
@@ -177,7 +165,8 @@ Page({
     ctx.strokeRect(50, 110, CW - 100, 60)
     ctx.fillStyle = '#46382A'
     ctx.font = '15px STKaiti, KaiTi, serif'
-    ctx.fillText('今日对读。非馆藏原件。', CW / 2, 145)
+    ctx.fillText('前二十幅记录建成，此幅记录毁灭之后', CW / 2, 134)
+    ctx.fillText('——被修复，被注视，被重新看见。', CW / 2, 156)
 
     const loadImage = (src) => new Promise((resolve) => {
       if (!src || !canvas || typeof canvas.createImage !== 'function') return resolve(null)
@@ -343,15 +332,15 @@ Page({
     ctx.textAlign = 'right'
     ctx.fillStyle = '#46382A'
     ctx.font = '18px STKaiti, KaiTi, serif'
-    ctx.fillText('绘制者：' + name, CW - 82, 540)
+    ctx.fillText('1747 —— 本次考察', CW - 82, 540)
     ctx.fillStyle = '#A63A2E'
     ctx.font = '22px STKaiti, KaiTi, serif'
-    ctx.fillText('今日对读', CW - 82, 572)
+    ctx.fillText(name, CW - 82, 572)
 
     ctx.textAlign = 'center'
     ctx.fillStyle = '#8A7A60'
     ctx.font = '14px sans-serif'
-    ctx.fillText('绘制时间：' + this.data.today, CW / 2, 1078)
+    ctx.fillText('绘制时间：' + this.data.today + '    ' + this.data.editionLabel, CW / 2, 1078)
   },
 
   // 「收入考察手册」INT-202：真正写入 session，handbook 据此显示缩略
@@ -370,53 +359,6 @@ Page({
 
   onOpenHandbook() {
     wx.navigateTo({ url: '/plate21/module/pages/handbook/handbook' })
-  },
-
-  // —— v2 回响区：明信片投递（开放题不评判，仅落档）——
-  onMessageInput(e) {
-    this.setData({ messageText: e.detail.value })
-  },
-
-  onConsentToggle() {
-    this.setData({ messageConsent: !this.data.messageConsent })
-  },
-
-  onSubmitMessage() {
-    const text = (this.data.messageText || '').trim()
-    if (!text) {
-      wx.showToast({ title: '写下那句话，再投进信箱', icon: 'none' })
-      return
-    }
-    if (this.data.messageSubmitting) return
-    this.setData({ messageSubmitting: true })
-    session.setFlag('messageDraft', text)
-      .then(() => session.setFlag('messageConsentAnonymous', this.data.messageConsent))
-      .then(() => session.setFlag('messageSubmittedAt', Date.now()))
-      .then(() => {
-        this.setData({ messageSubmitting: false, messageSubmitted: true, submittedText: text })
-        wx.showToast({ title: '已投进信箱', icon: 'none' })
-      })
-      .catch(() => {
-        this.setData({ messageSubmitting: false })
-        wx.showToast({ title: '投递失败，请重试', icon: 'none' })
-      })
-  },
-
-  onEditMessage() {
-    this.setData({ messageSubmitted: false, messageText: this.data.submittedText })
-  },
-
-  onOpenLetter() {
-    if (!this.data.letterReady) {
-      wx.showToast({ title: '明日启封', icon: 'none' })
-      return
-    }
-    wx.navigateTo({ url: '/plate21/module/pages/letter/letter' })
-  },
-
-  // 留言簿：通关当天剧情末尾的「写」入口（次日回访链路只负责读）
-  onOpenBoard() {
-    wx.navigateTo({ url: '/plate21/module/pages/board/board' })
   },
 
   onFinish() {

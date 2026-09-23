@@ -4,12 +4,11 @@
 
 .page {
   position: relative;
-  height: 100%;
-  overflow: hidden;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 200rpx 0 24rpx 52rpx; /* 左侧 52rpx 让位 .binder */
+  padding: 200rpx 0 100rpx 52rpx; /* 左侧 52rpx 让位 .binder */
   box-sizing: border-box;
 }
 
@@ -405,96 +404,4 @@
   min-height: 36rpx;
   font-size: 28rpx;
   color: var(--cinnabar);
-}
-
-/* v2 回响：次日之信入口（封蜡卡） */
-.hb-letter {
-  display: flex;
-  align-items: center;
-  gap: 22rpx;
-  padding: 22rpx 24rpx;
-  border: 2rpx solid rgba(166, 58, 46, 0.45);
-  background: rgba(233, 222, 196, 0.5);
-}
-.hb-letter.sealed { opacity: 0.72; }
-.hb-letter-wax {
-  flex-shrink: 0;
-  width: 84rpx;
-  height: 84rpx;
-  border-radius: 50%;
-  background: var(--cinnabar);
-  color: var(--paper);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 34rpx;
-  box-shadow: inset 0 0 10rpx rgba(0, 0, 0, 0.2);
-}
-.hb-letter-main { flex: 1; min-width: 0; }
-.hb-letter-title { font-size: 30rpx; color: var(--ink-deep); }
-.hb-letter-sub { margin-top: 6rpx; font-size: 24rpx; color: var(--ink60); }
-.hb-letter-arrow { font-size: 40rpx; color: var(--cinnabar); }
-
-/* v2 顺路支线：站点小 chip 网格 */
-.side-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14rpx;
-  margin-top: 18rpx;
-}
-.side-chip {
-  display: flex;
-  align-items: center;
-  gap: 8rpx;
-  padding: 12rpx 22rpx;
-  border: 2rpx dashed rgba(74, 107, 100, 0.7);
-  border-radius: 999rpx;
-  color: var(--ink60);
-  font-size: 24rpx;
-}
-.side-chip.got {
-  border-style: solid;
-  border-color: var(--patina);
-  color: var(--ink-deep);
-  background: rgba(74, 107, 100, 0.1);
-}
-.side-chip-mark {
-  font-size: 22rpx;
-  color: var(--patina);
-}
-
-/* V2.2 独立音频开关卡片 */
-.audio-set {
-  width: 100%;
-  max-width: var(--content-max);
-  box-sizing: border-box;
-  margin-top: 20rpx;
-  padding: 8rpx 28rpx;
-  border: 2rpx solid rgba(70, 56, 42, 0.4);
-  background: rgba(247, 244, 236, 0.55);
-}
-.audio-set-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24rpx;
-  padding: 20rpx 0;
-}
-.audio-set-row + .audio-set-row {
-  border-top: 1rpx dashed rgba(70, 56, 42, 0.25);
-}
-.audio-set-main {
-  flex: 1;
-  min-width: 0;
-}
-.audio-set-title {
-  font-size: 28rpx;
-  color: var(--ink-deep);
-  letter-spacing: 2rpx;
-}
-.audio-set-sub {
-  margin-top: 6rpx;
-  font-size: 22rpx;
-  line-height: 1.6;
-  color: rgba(74, 64, 46, 0.72);
 }

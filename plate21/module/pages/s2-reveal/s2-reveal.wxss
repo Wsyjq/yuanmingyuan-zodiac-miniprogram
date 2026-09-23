@@ -1,122 +1,27 @@
-/* 第二站 · 谜题2 名字由来：文字作答，答错给提示，第三次揭晓 */
+/* 第二站 · 谜题2 名字由来（采风修订版：文字输入） */
 .page {
   position: relative;
-  height: 100%;
-  overflow: hidden;
+  min-height: 100vh;
   padding: 130rpx 48rpx 80rpx 100rpx;
   box-sizing: border-box;
 }
-.tag-no-fixed { position: absolute; top: 88rpx; right: 210rpx; }
+.tag-no-fixed { position: absolute; top: 32rpx; right: 32rpx; }
 
 .title { font-size: 40rpx; font-weight: 700; color: var(--patina, #46382A); letter-spacing: 4rpx; }
-.lead { margin-top: 18rpx; font-size: 31rpx; line-height: 1.85; color: var(--ink, #46382A); }
+.lead { margin-top: 18rpx; font-size: 28rpx; line-height: 1.85; color: var(--ink, #46382A); }
 
 .ref-img { margin-top: 36rpx; display: flex; flex-direction: column; align-items: center; }
-.ref-pic { width: 480rpx; height: 360rpx; border: 1rpx solid var(--brass, #A98F5F); border-radius: 10rpx; background: var(--paper2, #EFE9DC); }
-.ref-note { margin-top: 12rpx; font-size: 26rpx; color: var(--ink60, #8A7A60); transform: rotate(-1deg); text-align: center; line-height: 1.6; }
+.ref-pic { width: 480rpx; height: 360rpx; border: 1rpx solid #A98F5F; border-radius: 10rpx; background: #EFE4C8; }
+.ref-note { margin-top: 12rpx; font-size: 24rpx; color: var(--ink60, #8A7A60); transform: rotate(-1deg); }
 
-.answer,
-.choice {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  margin-top: 36rpx;
-  gap: 16rpx;
-}
-.ans-label { font-size: 29rpx; line-height: 1.6; color: var(--ink, #46382A); }
+.answer { display: flex; align-items: center; margin-top: 40rpx; }
 .ans-input {
-  width: 100%;
-  min-height: 88rpx;
-  box-sizing: border-box;
-  border: 0;
-  border-bottom: 4rpx solid var(--ink, #46382A);
-  border-radius: 0;
-  background: transparent;
-  padding: 12rpx 8rpx;
-  font-size: 32rpx;
-  line-height: 1.6;
-  color: var(--ink, #46382A);
-  font-family: "STKaiti", "KaiTi", serif;
-  letter-spacing: 0.08em;
+  flex: 1; height: 88rpx; box-sizing: border-box;
+  border: 1rpx solid var(--ink, #46382A); border-radius: 4rpx;
+  background: var(--paper2, #EFE4C8); padding: 0 24rpx;
+  font-size: 28rpx; color: var(--ink, #46382A);
 }
-.ans-ph { color: var(--ink60, #8A7A60); font-size: 28rpx; }
-.ans-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 24rpx;
-  color: var(--ink60, #8A7A60);
-}
-.char-full { color: var(--cinnabar, #A63A2E); }
-.ans-actions {
-  display: flex;
-  align-items: stretch;
-  gap: 16rpx;
-  margin-top: 8rpx;
-}
-.ans-btn {
-  flex: 1;
-  margin: 0;
-  height: 88rpx;
-  letter-spacing: 4rpx;
-  font-size: 28rpx;
-}
-.hint { margin-top: 16rpx; font-size: 27rpx; color: var(--ink60, #8A7A60); letter-spacing: 2rpx; text-align: center; }
+.ans-ph { color: var(--ink60, #8A7A60); font-size: 26rpx; }
+.ans-btn { margin-left: 24rpx; padding: 0 32rpx; height: 88rpx; letter-spacing: 4rpx; font-size: 28rpx; }
 
-.opt {
-  position: relative;
-  display: flex;
-  align-items: center;
-  background: var(--paper2, #EFE9DC);
-  border: 1rpx solid var(--dash, #C0B49A);
-  padding: 24rpx 28rpx;
-  min-height: 88rpx;
-  box-sizing: border-box;
-}
-.opt-sel {
-  border: 3rpx solid var(--patina, #4A6B64);
-  background: rgba(74, 107, 100, 0.12);
-  box-shadow: inset 8rpx 0 0 rgba(74, 107, 100, 0.22);
-}
-.opt-key {
-  font-size: 32rpx;
-  font-weight: 700;
-  color: var(--patina, #4A6B64);
-  margin-right: 20rpx;
-}
-.opt-text {
-  flex: 1;
-  font-size: 30rpx;
-  line-height: 1.5;
-  color: var(--ink, #46382A);
-}
-.opt-wrong { opacity: 0.55; }
-.shake {
-  animation: shake 0.45s ease;
-}
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-10rpx); }
-  50% { transform: translateX(8rpx); }
-  75% { transform: translateX(-6rpx); }
-}
-
-.hint-btn-inline {
-  width: auto;
-  min-height: 0;
-  line-height: 1.4;
-  margin: 0 auto;
-  padding: 12rpx 22rpx;
-  border: 2rpx dashed var(--olive, #6F7248);
-  border-radius: 0;
-  background: rgba(111, 114, 72, 0.04);
-  color: var(--olive, #6F7248);
-  font-size: 26rpx;
-}
-.hint-btn-inline::after { border: 0; }
-
-.skip-btn { display: block; width: auto; min-height: 0; line-height: 1.6; margin: 4rpx auto 0; padding: 6rpx 10rpx; border: 0; border-bottom: 2rpx dotted currentColor; border-radius: 0; background: transparent; font-size: 26rpx; text-align: center; }
-.skip-btn::after { border: 0; }
-
-.followup { margin-top: 40rpx; }
-.followup .btn-seal { margin-top: 24rpx; }
+.hint { margin-top: 16rpx; font-size: 24rpx; color: var(--ink60, #8A7A60); letter-spacing: 2rpx; text-align: center; }
