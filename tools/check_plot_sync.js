@@ -138,8 +138,8 @@ function readDoc() {
   return body
 }
 
-function stripMd(s) {
-  return s
+function stripMd(s, strict) {
+  let out = s
     .replace(/<callout[^>]*>/g, '').replace(/<\/callout>/g, '')
     .replace(/<table[\s\S]*?<\/table>/g, '')
     .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
@@ -149,7 +149,9 @@ function stripMd(s) {
     .replace(/\*\*/g, '')
     .replace(/^#+\s*/gm, '')
     .replace(/^>\s?/gm, '')
-    .replace(/[ \t　]+/g, '')
+  // 严格模式保留空格（逐字节口径）；锚点剥除后残留的句首冒号（如【谜题提示】：）剥掉
+  if (strict) return out.replace(/(^|\n)：/g, '$1')
+  return out.replace(/[ \t　]+/g, '')
 }
 
 function norm(s) {
@@ -158,11 +160,17 @@ function norm(s) {
     .replace(/[\s　]+/g, '')
 }
 
-function docSentences() {
-  const text = stripMd(readDoc())
+// --strict：逐字节口径——不统一引号、不去空格、句末标点敏感。
+// 仍有意的例外：挂点锚【】剥除（含 DJ/SL 编号，非上屏文字）、设计注记行不参与。
+function normStrict(s) {
+  return String(s).replace(/[\r\n]+/g, '')
+}
+
+function docSentences(strict) {
+  const text = stripMd(readDoc(), strict)
   const out = []
   for (let line of text.split('\n')) {
-    line = line.trim()
+    line = strict ? line.replace(/^\s+|\s+$/g, '') : line.trim()
     if (!line || line.length < 4) continue
     if (DOC_SKIP.test(line)) continue
     out.push(line)
@@ -172,10 +180,17 @@ function docSentences() {
 
 function stringLiterals(src) {
   const out = []
-  const re = /['"`]([^'"`\n]*)['"`]/g
+  // 支持单/双引号与模板字符串，内容里可含另一类引号（如 '"闻有第二十一图，未见。"'）
+  const re = /'((?:[^'\\\n]|\\.)*)'|"((?:[^"\\\n]|\\.)*)"|`((?:[^`\\]|\\.)*)`/g
   let m
-  while ((m = re.exec(src))) out.push(m[1])
+  while ((m = re.exec(src))) out.push(m[1] !== undefined ? m[1] : (m[2] !== undefined ? m[2] : m[3]))
   return out
+}
+
+// 拼接语料过滤：只剥纯小写 ascii 键/路径/id（sl17、tap、/plate21/...），
+// 保留「。」等纯标点片段（gloss parts 的收尾声节）与其余中文
+function isJoinable(lit) {
+  return !/^[a-z0-9\-_.\/:]+$/.test(lit)
 }
 
 function buildCorpus() {
@@ -184,8 +199,7 @@ function buildCorpus() {
   for (const rel of MAINLINE_FILES) {
     const src = fs.readFileSync(path.join(ROOT, rel), 'utf8')
     raw += src + '\n'
-    // 拼接语料：只留含中文的字面量，gloss 键/路径/id 不再切断句子
-    joined += stringLiterals(src).filter(s => /[一-鿿]/.test(s)).join('') + '\n'
+    joined += stringLiterals(src).filter(isJoinable).join('') + '\n'
     if (rel.endsWith('.wxml')) {
       const re2 = />([^<>{}\n]*[一-鿿][^<>{}\n]*)</g
       let m
@@ -194,6 +208,24 @@ function buildCorpus() {
     }
   }
   return { raw: norm(raw), joined: norm(joined) }
+}
+
+// 严格口径语料：保引号保空格（仅去换行）
+function buildCorpusStrict() {
+  let raw = ''
+  let joined = ''
+  for (const rel of MAINLINE_FILES) {
+    const src = fs.readFileSync(path.join(ROOT, rel), 'utf8')
+    raw += src + '\n'
+    joined += stringLiterals(src).filter(isJoinable).join('') + '\n'
+    if (rel.endsWith('.wxml')) {
+      const re2 = />([^<>{}\n]*[一-鿿][^<>{}\n]*)</g
+      let m
+      while ((m = re2.exec(src))) joined += m[1].trim()
+      joined += '\n'
+    }
+  }
+  return { raw: normStrict(raw), joined: normStrict(joined) }
 }
 
 function appStrings() {
@@ -239,15 +271,23 @@ function inCorpus(corpus, clause) {
 
 function main() {
   const verbose = process.argv.includes('--verbose')
-  const corpus = buildCorpus()
-  const docNorm = norm(stripMd(readDoc()))
-  const docSents = docSentences()
+  const strict = process.argv.includes('--strict')
+  const corpus = strict ? buildCorpusStrict() : buildCorpus()
+  const docText = stripMd(readDoc(), strict)
+  const docNorm = strict ? normStrict(docText) : norm(docText)
+  const docSents = docSentences(strict)
 
   const missing = []
   for (const sent of docSents) {
     const clauses = sent.split(/(?<=[。！？；])/).map(s => s.trim()).filter(s => s.length >= 4)
     for (const c of clauses) {
       if (DOC_SKIP.test(c)) continue
+      if (strict) {
+        // 逐字节：不做句末标点豁免、不做 ：再拆
+        const cs = normStrict(c)
+        if (!corpus.raw.includes(cs) && !corpus.joined.includes(cs)) missing.push(c)
+        continue
+      }
       if (inCorpus(corpus, c)) continue
       // 长句在 UI 里常被引用块/插图/挂点分段：按 ：再拆，逐段核对
       const segs = c.split('：').map(s => s.trim()).filter(s => s.length >= 4)
@@ -257,19 +297,23 @@ function main() {
   }
 
   const extras = []
-  for (const item of appStrings()) {
-    const t = norm(item.text)
-    if (docNorm.includes(t)) continue
-    if (BACKWARD_EXEMPT.some(x => t.includes(norm(x)))) continue
-    extras.push(item)
+  if (!strict) {
+    for (const item of appStrings()) {
+      const t = norm(item.text)
+      if (docNorm.includes(t)) continue
+      if (BACKWARD_EXEMPT.some(x => t.includes(norm(x)))) continue
+      extras.push(item)
+    }
   }
 
-  console.log('== 正向（飞书剧情 → 小程序缺失）:', missing.length)
+  console.log('== 正向（飞书剧情 → 小程序缺失）' + (strict ? '【逐字节】' : '') + ':', missing.length)
   missing.forEach(m => console.log('  [缺]', m))
-  console.log('== 反向（小程序叙述 → 飞书无出处）:', extras.length)
-  if (verbose) extras.forEach(e => console.log('  [多]', e.file + ':', e.text.slice(0, 90)))
-  else extras.slice(0, 80).forEach(e => console.log('  [多]', e.file + ':', e.text.slice(0, 70)))
-  console.log('== 文档剧情句:', docSents.length, '；小程序叙述句:', appStrings().length)
+  if (!strict) {
+    console.log('== 反向（小程序叙述 → 飞书无出处）:', extras.length)
+    if (verbose) extras.forEach(e => console.log('  [多]', e.file + ':', e.text.slice(0, 90)))
+    else extras.slice(0, 80).forEach(e => console.log('  [多]', e.file + ':', e.text.slice(0, 70)))
+  }
+  console.log('== 文档剧情句:', docSents.length)
   process.exit(missing.length === 0 && extras.length === 0 ? 0 : 1)
 }
 

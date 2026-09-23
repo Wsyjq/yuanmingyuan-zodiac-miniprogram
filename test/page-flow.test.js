@@ -739,7 +739,7 @@ test('s3-comic asks the 14h and noon zodiac questions from the plot (rev5614)', 
     }
   })
   assert.deepEqual(result.errors, [])
-  assert.match(result.html, /14 时对应由哪个兽首喷水/)
+  assert.match(result.html, /14时对应由哪个兽首喷水/)
   assert.match(result.html, /正午时候由哪个兽首喷水/)
   assert.match(result.html, /十二道水流同时喷出/)
   assert.match(result.html, /有七尊归来了，但还有五尊不知所踪/)

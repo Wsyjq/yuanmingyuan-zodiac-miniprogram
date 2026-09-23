@@ -12,7 +12,7 @@
   <view class="novel">
     <view class="novel-p"><gloss-text parts="{{introParts}}" bind:glossary="onGlossary" /></view>
   </view>
-  <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">观看小程序不同时辰喷水示意，回答 14 时对应由哪个兽首喷水，并推测正午时候由哪个兽首喷水</text></view>
+  <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">观看小程序不同时辰喷水示意，回答14时对应由哪个兽首喷水，并推测正午时候由哪个兽首喷水</text></view>
   <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
 
   <view class="comic-plate double-frame" role="img" aria-label="十二兽首按时辰喷水的四格漫画">
