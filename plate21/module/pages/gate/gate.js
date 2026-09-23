@@ -4,7 +4,7 @@
 // 权益权威=宿主订单（checkEntitlement）；本地 flags.premiumUnlockedAt 仅缓存。
 const session = require('../../store/session')
 
-const COVER_URL = '/plate21/module/pages/walk/walk'
+const COVER_URL = '/plate21/module/pages/cover/cover'
 
 // 演示占位价：正式价格由宿主商品库配置下发到展示文案，模块零金额逻辑（契约 v1.4.0）。
 const PRICE_TEXT = '¥ 19.9'

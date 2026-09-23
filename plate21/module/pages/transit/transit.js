@@ -1,49 +1,102 @@
-// P03 站间过渡（通用页，设计文档 §4.6 / §5-P03）
-// query: leg = s1-s2 / s2-s3 / s3-s4
-// 三段式：墨晕转场进入 → 路线推进图（黄铜点位 + 当前段铜绿加粗线）→ 该段环境叙事 → 继续前往。
+// 站间过渡。v3 主线：入口→谐奇趣→黄花阵→方外观→海晏堂→蓄水楼→大水法→雨果。
+// 旧 leg 名仍可打开，落到新的下一段，避免旧存档卡死。
+// 转场正文取飞书 v3「剧情内容」离站句。散页不再挂主链。
 
-// 三段过渡配置（四站结构：西洋楼入口 → 黄花阵 → 海晏堂·大水法 → 雨果雕像）
+const WP = '/plate21/module/pages/waypoint/waypoint'
+
 const LEGS = {
-  's1-s2': {
+  's1-xq': {
     from: '西洋楼入口',
-    to: '黄花阵',
+    to: '谐奇趣',
     seg: 0,
-    text: '信封指引的方向，正是前方那座迷宫。穿过断柱与荒草，往黄花阵去。',
+    text: '按照路线图走进入口，就来到了谐奇趣。',
+    sides: [],
+    next: WP + '?site=xieqiqu'
+  },
+  'xq-s2': {
+    from: '谐奇趣',
+    to: '黄花阵',
+    seg: 1,
+    text: '原来线索在这里上！下一站的去处很明确了：黄花阵。',
+    sides: [],
     next: '/plate21/module/pages/s2-quiz/s2-quiz'
   },
-  's2-s3': {
+  's2-fw': {
     from: '黄花阵',
-    to: '海晏堂 · 大水法',
-    seg: 1,
-    text: '万字纹寓意福寿绵长，并不暗示“水”。展开资料袋里的手绘路线图：从黄花阵沿标注向东北行进，下一处圈注正是海晏堂·大水法。',
+    to: '方外观',
+    seg: 2,
+    text: '我按照地图继续走，下一站是方外观。',
+    sides: [],
+    next: WP + '?site=fangwaiguan'
+  },
+  'fw-s3': {
+    from: '方外观',
+    to: '海晏堂',
+    seg: 3,
+    text: '下一站：海晏堂。',
+    sides: [],
     next: '/plate21/module/pages/s3-comic/s3-comic'
   },
-  's3-s4': {
-    from: '海晏堂 · 大水法',
+  's3-xs': {
+    from: '海晏堂',
+    to: '蓄水楼',
+    seg: 4,
+    text: '可是这些喷泉怎么喷出的水呢？水力钟在眼前，水源却不在水池里。地图上面我看到了蓄水楼，或许喷泉正是靠它喷水。',
+    sides: [],
+    next: WP + '?site=xushuilou'
+  },
+  'xs-ds': {
+    from: '蓄水楼',
+    to: '大水法',
+    seg: 5,
+    text: '顺着档案上的路线继续往前，大水法遗址逐渐出现在眼前。',
+    sides: [],
+    next: '/plate21/module/pages/dashuifa/dashuifa'
+  },
+  'ds-s4': {
+    from: '大水法',
     to: '雨果雕像',
-    seg: 2,
-    text: '让水显纸自然晾干后收回资料袋。马首曾经流失海外，也终于回到圆明园；而在劫掠发生后的 1861 年，雨果写信公开谴责这场掠夺。循着信件线索，去近旁树荫下寻找他的雕像。',
+    seg: 6,
+    text: '都没了，一场火过后，这些都没了……',
+    sides: [],
     next: '/plate21/module/pages/s4-timeline/s4-timeline'
   }
 }
 
-// 四站在地图占位块上的点位（rpx，容器 670×480）
+LEGS['s1-s2'] = LEGS['s1-xq']
+LEGS['s2-s3'] = LEGS['s2-fw']
+LEGS['s3-s4'] = LEGS['s3-xs']
+LEGS['s4-s5'] = LEGS['ds-s4']
+
 const POINTS = [
-  { name: '西洋楼入口', x: 90, y: 400 },
-  { name: '黄花阵', x: 260, y: 290 },
-  { name: '海晏堂', x: 430, y: 180 },
-  { name: '雨果雕像', x: 600, y: 70 }
+  { name: '入口', x: 55, y: 430 },
+  { name: '谐奇趣', x: 140, y: 370 },
+  { name: '黄花阵', x: 225, y: 315 },
+  { name: '方外观', x: 310, y: 260 },
+  { name: '海晏堂', x: 395, y: 210 },
+  { name: '蓄水楼', x: 470, y: 165 },
+  { name: '大水法', x: 545, y: 115 },
+  { name: '雨果', x: 620, y: 65 }
 ]
 
+const playGuide = require('../../capabilities/play-guide/guide')
+const coachHost = require('../../capabilities/play-guide/coach-host')
+
 Page({
+  behaviors: [coachHost],
   data: {
     leg: null,
+    sides: [],
+    sideVisited: {},
     points: POINTS,
     lines: [],
     advancing: false
   },
 
   onLoad(options) {
+    if (playGuide.enterTourPage('pages/transit/transit', options)) {
+      this.setData({ touring: true })
+    }
     const leg = LEGS[options.leg] || LEGS['s1-s2']
     // 计算各段连线的位置 / 长度 / 角度，当前段用铜绿加粗示意
     const lines = []
@@ -66,18 +119,60 @@ Page({
       done: i <= leg.seg,           // 已抵达（含起点）
       current: i === leg.seg + 1    // 当前前往的目标点
     }))
-    this.setData({ leg: leg, lines: lines, points: points })
+    this.setData({ leg: leg, sides: leg.sides || [], sideVisited: {}, lines: lines, points: points })
+    this.refreshSideVisited()
+  },
+
+  onReady() {
+    if (playGuide.isTouring()) {
+      playGuide.runPageStop(this)
+      return
+    }
+    const spots = (this.data.sides || []).length
+      ? [playGuide.SPOTS.side, playGuide.SPOTS.go]
+      : [playGuide.SPOTS.go]
+    this.scheduleCoach(spots)
+  },
+
+  onShow() {
+    // 从支线返回本页时刷新「已走过」标记
+    this.refreshSideVisited()
+  },
+
+  refreshSideVisited() {
+    const leg = this.data.leg
+    if (!leg || !(leg.sides || []).length) return
+    try {
+      const snap = require('../../store/session').getSnapshot()
+      const flags = (snap && snap.flags) || {}
+      const visited = {}
+      leg.sides.forEach(function (side) {
+        visited[side.key] = !!flags['sideVisited_' + side.key]
+      })
+      this.setData({ sideVisited: visited })
+    } catch (e) { /* 快照不可用时忽略 */ }
+  },
+
+  // v2 顺路散页：可选进入，不影响主线推进
+  onOpenSide(e) {
+    const url = e.currentTarget.dataset.url
+    this.runAfterCoach(function () {
+      if (this.data.advancing) return
+      if (url) wx.navigateTo({ url: url })
+    })
   },
 
   onNext() {
-    if (this.data.advancing) return
-    this.setData({ advancing: true })
-    wx.redirectTo({
-      url: this.data.leg.next,
-      fail: () => {
-        this.setData({ advancing: false })
-        wx.showToast({ title: '页面跳转失败，请重试', icon: 'none' })
-      }
+    this.runAfterCoach(function () {
+      if (this.data.advancing) return
+      this.setData({ advancing: true })
+      wx.redirectTo({
+        url: this.data.leg.next,
+        fail: () => {
+          this.setData({ advancing: false })
+          wx.showToast({ title: '页面跳转失败，请重试', icon: 'none' })
+        }
+      })
     })
   }
 })

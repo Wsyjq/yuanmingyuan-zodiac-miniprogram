@@ -1,4 +1,5 @@
 const session = require('../../store/session')
+const coachHost = require('../../capabilities/play-guide/coach-host')
 const engine = require('../../flow/engine')
 const pages = require('../../flow/pages')
 const play = require('../../play/index')
@@ -9,7 +10,54 @@ const nav = require('../../capabilities/map/nav-model')
 
 const STORE_KEY = 'plate21-mainline-run'
 
+const COACH_START = [
+  {
+    flag: 'coachWalkGoAt',
+    selector: '#coachGo',
+    tag: '往下翻',
+    tap: '继续',
+    body: '这一页看完了，点底下朱红的钮往前。',
+    skipIfMissing: true
+  },
+  {
+    flag: 'coachWalkSkipAt',
+    selector: '#coachSkip',
+    tag: '先去园里',
+    tap: '先去园里',
+    body: '序章可以整段跳过。点浅色这颗，直接到入口。',
+    skipIfMissing: true
+  }
+]
+
+const COACH_SITE = [
+  {
+    flag: 'coachWalkPuzzleAt',
+    selector: '#coachSkip',
+    tag: '这处可以不做',
+    tap: '这题先跳过',
+    body: '不想做就点浅色这颗。跳过不会把答案揭出来。',
+    skipIfMissing: true
+  },
+  {
+    flag: 'coachWalkMapAt',
+    selector: '#coachMap',
+    tag: '打开地图',
+    tap: '地图',
+    body: '人在点位里时，点侧边这颗看周围。站与站之间那一页本身就是导航。',
+    skipIfMissing: true
+  },
+  {
+    flag: 'coachWalkProgressAt',
+    selector: '#coachProgress',
+    tag: '看进程',
+    tap: '进程',
+    body: '看哪些点去过、哪些地方跳过了。点一项可以回去。',
+    skipIfMissing: true
+  }
+]
+
 Page({
+  behaviors: [coachHost],
   data: {
     view: null,
     progressRows: [],
@@ -42,6 +90,12 @@ Page({
     this.run = engine.enter(run, run.pageId)
     this.ui = {}
     this.render()
+    this.coachFor(this.run.pageId)
+  },
+
+  coachFor(pageId) {
+    if (pageId === 'P1') this.scheduleCoach(COACH_START, 500)
+    if (pageId === 'E1') this.scheduleCoach(COACH_SITE, 500)
   },
 
   render() {
@@ -85,6 +139,7 @@ Page({
     this.persist()
     this.setData({ showProgress: false, showMap: false })
     this.render()
+    this.coachFor(this.run.pageId)
   },
 
   onChoose(e) {

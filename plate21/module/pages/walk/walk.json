@@ -1,4 +1,7 @@
 {
   "navigationBarTitleText": "第二十一图",
-  "disableScroll": true
+  "disableScroll": true,
+  "usingComponents": {
+    "coach-spot": "../../components/coach-spot/coach-spot"
+  }
 }

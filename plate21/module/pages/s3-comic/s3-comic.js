@@ -1,20 +1,28 @@
-// 第三站 · 谜题1 十二时辰漫画推理（采风修订版玩法）
-// 谜题 S3-1：两小问。小问一答案「马」（子鼠丑牛……午马）；
-// 小问二答案「午时」（正午十二兽首齐喷）。错 1 次轻晃，错 2 次高亮漫画前两格线索。
-// 史料卡：常规报时每时辰对应兽首轮流喷水；正午马首喷水其余十一首齐喷。
-// 卡片角落数字：会话锁定日期的月份第一位数字。
-// 本页不调 completeStation（S3 由 s3-water 收口）。
+// 海晏堂 · 十二生肖水力钟（飞书 v3 rev5614 §海晏堂）。
+// 观看不同时辰喷水示意 → 回答 14 时对应哪个兽首（未时·羊）→ 推测正午哪个兽首（午马）。
+// 答完接转盘花纹匹配（s3-zodiac）。文案与答案按飞书原文。
 const session = require('../../store/session')
+const audioSrc = require('../../utils/audio-src')
+const audioBus = require('../../utils/audio-bus')
+const glossHost = require('../../utils/gloss-host')
+
+// 时辰→兽首：14 时落在未时（13-15 点），正午是午马
+const Q1_ANSWERS = ['羊', '羊首', '未羊']
+const Q2_ANSWERS = ['马', '马首', '午马']
 
 Page({
+  behaviors: [glossHost],
   data: {
+    narrSrc: audioSrc.clip('narr-s3-comic'),
     showHistory: false,
     cardNumber: 0,
     historyLines: [
-      '常规报时：每个时辰（2 小时）由对应的兽首轮流喷水。',
-      '子时（23–1 点）鼠首，丑时（1–3 点）牛首，以此类推。',
-      '人们只要看到哪个兽首在喷水，就能知道当时的大致时辰。',
-      '正午盛景：到了正午时分，轮到马首喷水——此刻其余十一兽首一同喷水，蔚为壮观。'
+      '池周分布十二兽首铜像代表十二时辰，依次喷水构成报时系统。'
+    ],
+    // 「海晏堂」= SL-12 挂点（飞书 v3 rev5614 §海晏堂开场）
+    introParts: [
+      { t: '海晏堂', g: 'sl12' },
+      { t: '，名字取自“河清海晏”一词，寓意天下太平。池周分布十二兽首铜像代表十二时辰，依次喷水构成报时系统。十二兽首分别代表不同时辰？这是怎么实现的呢？' }
     ],
     cells: [
       { id: 'zi', time: '子', mark: '鼠', art: 'single', desc: '鼠首先报子时' },
@@ -22,79 +30,97 @@ Page({
       { id: 'noon', time: '午', mark: '', art: 'sundial', desc: '日影逼近正中' },
       { id: 'all', time: '正午', mark: '', art: 'fountain', desc: '十二水位同时亮起' }
     ],
-    twelve: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-    heads: ['鼠', '牛', '虎', '兔', '马', '鸡'],
-    hours: ['子时', '丑时', '寅时', '卯时', '辰时', '巳时', '午时', '未时', '申时', '酉时', '戌时', '亥时'],
-    q1Selected: '',
-    q1Attempts: 0,
-    q1Done: false,
-    q2Selected: '',
-    q2Attempts: 0,
-    q2Done: false,
-    clue: false,
-    shakeKey: '',
+    q1: '',
+    q2: '',
+    attempts: 0,
+    hint: '',
+    solved: false,
+    followup: false,
     advancing: false
   },
 
-  onCloseHistory() {
-    this.setData({ showHistory: false })
+  onInputQ1(e) {
+    this.setData({ q1: e.detail.value, hint: '' })
   },
 
-  onHistoryNext() {
-    this.setData({ showHistory: false })
+  onInputQ2(e) {
+    this.setData({ q2: e.detail.value, hint: '' })
   },
 
-  onQ1(e) {
-    if (this.data.q1Done) return
-    const v = e.currentTarget.dataset.v
-    this.setData({ q1Selected: v })
-    if (v === '马') {
-      session.attemptPuzzle('s3-hour', this.data.q1Attempts + 1, true, 'tap')
-      // INT-404：答对先高亮选中项 300ms（铜绿描金）再切下一问，给即时正反馈
-      this.setData({ q1Correct: true, shakeKey: '' })
-      this._timers.push(setTimeout(() => this.setData({ q1Done: true, q1Correct: false }), 300))
-      return
-    }
-    this.wrong('q1Attempts')
-  },
-
-  onQ2(e) {
-    if (this.data.q2Done) return
-    const v = e.currentTarget.dataset.v
-    this.setData({ q2Selected: v })
-    if (v === '午时') {
-      session.attemptPuzzle('s3-hour', this.data.q1Attempts + this.data.q2Attempts + 2, true, 'tap')
-      this.setData({ q2Done: true, shakeKey: '', showHistory: true })
-      this.selectComponent('#stamp').show('考察记录已保存')
-      // 收集时辰推理卡片角落数字（月份第一位）——主线：卡片数字 → 日期密码
+  onConfirm() {
+    audioBus.stopKind('voice')
+    if (this.data.solved || !this.data.q1 || !this.data.q2) return
+    const norm = function (s) { return String(s).replace(/\s+/g, '') }
+    const ok = Q1_ANSWERS.indexOf(norm(this.data.q1)) >= 0 && Q2_ANSWERS.indexOf(norm(this.data.q2)) >= 0
+    const attempts = this.data.attempts + 1
+    if (ok) {
+      session.attemptPuzzle('s3-hour', attempts, true, 'text')
+      this.setData({
+        attempts: attempts,
+        solved: true,
+        hint: '',
+        showHistory: true
+      })
+      const stamp = this.selectComponent('#stamp')
+      if (stamp && stamp.show) stamp.show('考察记录已保存')
       session.completePuzzle('s3-hour', {
-        answer: { zodiac: '马', hour: '午时' },
-        attempts: this.data.q1Attempts + this.data.q2Attempts + 2
+        answer: ['羊', '马'],
+        attempts: attempts
       }, { collectCard: true }).catch(function () {
         wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' })
       })
       return
     }
-    this.wrong('q2Attempts')
+    session.viewHint('s3-hour', attempts)
+    if (attempts >= 3) {
+      session.attemptPuzzle('s3-hour', attempts, false, 'text')
+      this.setData({
+        attempts: attempts,
+        solved: true,
+        q1: '羊',
+        q2: '马',
+        hint: '',
+        showHistory: true
+      })
+      session.completePuzzle('s3-hour', {
+        answer: ['羊', '马'],
+        attempts: attempts,
+        revealed: true
+      }, { collectCard: true }).catch(function () {
+        wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' })
+      })
+      return
+    }
+    session.attemptPuzzle('s3-hour', attempts, false, 'text')
+    this.setData({
+      attempts: attempts,
+      hint: '一天十二个时辰，每个时辰两个小时。14 时落在未时；正午，是午时。'
+    })
   },
 
-  // 错 1 次轻晃；错 2 次高亮漫画前两格线索（clue）+ 文字提示
-  wrong(field) {
-    const n = this.data[field] + 1
-    const v = field === 'q1Attempts' ? this.data.q1Selected : this.data.q2Selected
-    this.setData({ [field]: n, shakeKey: v, clue: n >= 2 || this.data.clue })
-    session.attemptPuzzle('s3-hour', this.data.q1Attempts + this.data.q2Attempts, false, 'tap')
-    if (n === 2) session.viewHint('s3-hour', field === 'q1Attempts' ? 1 : 2)
-    this._timers.push(setTimeout(() => this.setData({ shakeKey: '' }), 400))
+  onCloseHistory() {
+    this.setData({
+      showHistory: false,
+      followup: true,
+      narrSrc: audioSrc.clip('narr-s3-comic-followup')
+    })
   },
 
+  onHistoryNext() {
+    this.setData({
+      showHistory: false,
+      followup: true,
+      narrSrc: audioSrc.clip('narr-s3-comic-followup')
+    })
+  },
+
+  // 答案确认后 → 转盘花纹匹配（飞书 v3 rev5614 §海晏堂 互动玩法｜转盘花纹匹配）
   onNext() {
-    // 采风修订版顺序：comic（时辰推理）→ zodiac（兽首回归）→ water（水显马首）
     if (this.data.advancing) return
     this.setData({ advancing: true, showHistory: false })
     session.completePuzzle('s3-hour', {
-      answer: { zodiac: '马', hour: '午时' },
-      attempts: this.data.q1Attempts + this.data.q2Attempts + 2
+      answer: ['羊', '马'],
+      attempts: this.data.attempts || 1
     }, { collectCard: true, checkpoint: 's3-zodiac' }).then(function () {
       wx.redirectTo({ url: '/plate21/module/pages/s3-zodiac/s3-zodiac' })
     }).catch(() => {
@@ -109,11 +135,11 @@ Page({
     const puzzle = session.getPuzzle('s3-hour')
     this.setData({
       cardNumber: Number(session.getCardDigit('s3-hour')),
-      q1Done: !!puzzle,
-      q2Done: !!puzzle,
-      q1Selected: puzzle ? '马' : '',
-      q2Selected: puzzle ? '午时' : '',
-      showHistory: !!puzzle
+      solved: !!puzzle,
+      q1: puzzle ? '羊' : '',
+      q2: puzzle ? '马' : '',
+      showHistory: !!puzzle,
+      attempts: Number(puzzle && puzzle.payload && puzzle.payload.attempts) || 0
     })
   },
 

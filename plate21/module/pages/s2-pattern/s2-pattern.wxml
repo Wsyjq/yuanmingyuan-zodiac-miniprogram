@@ -1,22 +1,25 @@
-<!-- 第二站 · 谜题4 墙体花纹观察（采风修订版，复古手账风） -->
+<!-- 第二站 · 黄花阵 对读四：纹样举纸对照（V2.2 讲述版，举纸不贴墙 + 可跳） -->
 <nav-back />
 <page-overlays />
+<bgm-ambience />
 <view class="page page-shell paper-grain paper-real">
   <view class="binder"></view>
 
   <!-- ============ 编号区 ============ -->
   <view class="tag-no tag-no-fixed">No.S2-4</view>
-  <!-- 经历感贴纸：吊牌 + 邮票 + 票根（笔记强调的"经历感"元素）-->
   <image class="sticker-hangtag" src="/plate21/module/assets/img/stickers/st-hang-tag-01.png" mode="aspectFit" />
   <image class="sticker-stamp" src="/plate21/module/assets/img/stickers/st-stamp-02.png" mode="aspectFit" />
 
+  <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
   <!-- ============ 标题区 ============ -->
-  <view class="title serif">墙体的花纹</view>
+  <view class="title serif">黄花阵花纹观察</view>
   <view class="hatch-divider title-div"></view>
-  <view class="lead kaiti">这些花纹也有讲究。从黄花阵入口一路走来，我看到了好多花纹——你能认出墙体上反复出现的是哪一种吗？</view>
+  <view class="lead kaiti">{{lead}}</view>
+  <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">{{actStrip}}</text></view>
+  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
 
   <!-- ============ 主图区（4 花纹格子）============ -->
-  <view class="grid">
+  <view class="grid" wx:if="{{!solved && !skipped}}">
     <view
       wx:for="{{patterns}}"
       wx:key="key"
@@ -37,9 +40,9 @@
   </view>
 
   <!-- ============ 注释区（考察者手记）============ -->
-  <view class="note-hand olive annot">墙上的花纹，回转连绵，像是走不到头。</view>
 
-  <view wx:if="{{showHint}}" class="hint kaiti">{{hint}}</view>
+
+  <view wx:if="{{nudge}}" class="hint kaiti">{{nudge}}</view>
 
   <!-- ============ 日期区（朱砂日期章 = 真实记录证据）============ -->
   <view class="date-row">
@@ -50,25 +53,24 @@
     <view class="note-hand date-note">考察记录 · 第二站</view>
   </view>
 
-  <!-- ============ 操作区 ============ -->
-  <button
-    wx:if="{{!solved}}"
-    class="btn-seal {{!picked ? 'btn-disabled' : ''}}"
-    bindtap="onConfirm"
-    disabled="{{!picked}}"
-  >确认选择</button>
+  <!-- ============ 操作区：举纸对照后「我认出了」；可跳 ============ -->
+  <block wx:if="{{!solved && !skipped}}">
+    <button
+      class="btn-seal {{!picked ? 'btn-disabled' : ''}}"
+      bindtap="onConfirm"
+      disabled="{{!picked}}"
+    >我 认 出 了</button>
 
-  <!-- 纹样结论只说明寓意，不承担路线跳转。 -->
-  <view wx:if="{{revealText}}" class="reveal kaiti">{{revealText}}</view>
+  </block>
 
-  <view wx:if="{{showRoute}}" class="route-card archive-sheet">
-    <view class="archive-tab">线下道具 · 手绘路线图</view>
-    <view class="route-title serif">展开资料袋里的路线图</view>
-    <view class="archive-rule"></view>
-    <view class="route-copy">找到“黄花阵”的标记，沿手绘箭头向东北查看。下一处被圈出的地点是“海晏堂·大水法”。</view>
-    <view class="route-check">确认路线后，把地图折好收回资料袋，按现场步道前往下一站。</view>
-    <button class="btn-seal" bindtap="onGoS3" disabled="{{advancing}}">{{advancing ? '正在保存路线……' : '我已确认路线，出发'}}</button>
+  <!-- ============ 收尾：飞书 v3 原文（不可跳）============ -->
+  <view wx:if="{{showFinale}}" class="reveal-block">
+    <view class="novel-p">{{finaleReveal}}</view>
+    <view class="novel-p"><gloss-text parts="{{wallParts}}" bind:glossary="onGlossary" /></view>
+    <view class="novel-p">{{finaleClosing}}</view>
+    <button class="btn-seal" bindtap="onGoS3" disabled="{{advancing}}">{{advancing ? '正在保存……' : '前往方外观'}}</button>
   </view>
+  </scroll-view>
 
   <history-card
     wx:if="{{showHistory}}"
@@ -78,8 +80,19 @@
     lines="{{historyLines}}"
     corner-number="{{cardNumber}}"
     show-corner="{{showCardNumber}}"
-    btn-text="查看手绘路线图"
-    bind:next="onNext"
+    btn-text="继 续"
+    bind:next="onCloseHistory"
     bind:close="onCloseHistory"
+  />
+  <!-- 术语史料卡（收尾「原墙」点入，SL-08） -->
+  <history-card
+    wx:if="{{gloss}}"
+    visible="{{!!gloss}}"
+    title="{{gloss.title}}"
+    source="{{gloss.source}}"
+    lines="{{gloss.lines}}"
+    btn-text="学到了"
+    bind:next="onGlossClose"
+    bind:close="onGlossClose"
   />
 </view>

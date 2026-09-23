@@ -1,9 +1,10 @@
 <!-- v1.3.1 手账：左侧活页装订孔列（移到 .page 外，避免 flex 影响 fixed） -->
 <view class="binder"></view>
 <view class="page page-shell paper-grain paper-real">
+<scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
   <view class="tag-no page-no">No.015</view>
   <view class="title serif">西洋楼铜版图 · 第二十一图</view>
-  <view class="subtitle">考察报告 · {{editionLabel}}</view>
+  <view class="subtitle">考察记录生成完成 · {{editionLabel}} · 非馆藏原件</view>
   <view class="archive-rule report-rule"></view>
 
   <!-- 万字纹画框（邮票齿孔框 + 角花）+ 完整第 21 图预览 -->
@@ -29,13 +30,13 @@
         <view class="layer layer-l1">
           <view class="l1-bar">
             <text class="tag">L1 题跋</text>
-            <text class="l1-text kaiti">前二十幅记录建成，此幅记录毁灭之后——被修复，被注视，被重新看见。</text>
+            <text class="l1-text kaiti">今日对读。非馆藏原件。</text>
           </view>
         </view>
         <view class="layer layer-l5">
           <view class="l5-box">
             <text class="l5-tag">L5 落款</text>
-            <text class="l5-line kaiti">1747 —— 本次考察</text>
+            <text class="l5-line kaiti">今日对读</text>
             <text class="l5-name kaiti">{{name}}</text>
           </view>
         </view>
@@ -47,9 +48,9 @@
     <view class="field-head">
       <view>
         <view class="field-kicker">FIELD RECORD · S2-3</view>
-        <view class="field-title serif">现场四图考察记录</view>
+        <view class="field-title serif">亭下考察记录</view>
       </view>
-      <view class="field-count">{{photoCount}} / 4</view>
+      <view class="field-count">已记 {{photoCount}} / 4 处</view>
     </view>
     <view class="archive-rule"></view>
     <view class="field-grid">
@@ -63,8 +64,65 @@
     <button wx:if="{{photoCount < 4}}" class="btn-line repair-btn" bindtap="onRepairPhotos">返回现场照片页补录</button>
   </view>
 
-  <view class="meta">绘制者 {{name}} · {{today}} · {{editionLabel}}</view>
-  <view class="note-hand olive frame-note" style="transform: rotate(-1.5deg);">刻痕已校，与阵中亭基座相合，可归档。</view>
+  <!-- v2 回响区：明信片投递 + 次日之信入口（finale 后出现） -->
+  <view wx:if="{{finale}}" class="echo-zone">
+    <view class="field-head">
+      <view>
+        <view class="field-kicker">ECHO · 回响</view>
+        <view class="field-title serif">明信片 · 一句话</view>
+      </view>
+    </view>
+    <view class="archive-rule"></view>
+    <view class="echo-question kaiti">一样东西放在哪儿，才算被保住了？</view>
+
+    <block wx:if="{{!messageSubmitted}}">
+      <textarea
+        class="echo-input kaiti"
+        value="{{messageText}}"
+        maxlength="50"
+        placeholder="想写就写，不写也可以空着带走"
+        bindinput="onMessageInput"
+      />
+      <view class="echo-tools">
+        <view class="echo-consent" bindtap="onConsentToggle" role="button" aria-label="切换匿名引用授权">
+          <view class="echo-check {{messageConsent ? 'on' : ''}}"></view>
+          <text>愿意被匿名引用，下一位考察者可能读到</text>
+        </view>
+        <view class="echo-count">{{messageText.length}}/50</view>
+      </view>
+      <button class="btn-line echo-submit" bindtap="onSubmitMessage" disabled="{{messageSubmitting}}">
+        {{messageSubmitting ? '投递中……' : '投进信箱'}}
+      </button>
+    </block>
+
+    <view wx:else class="echo-sent card-ticket">
+      <view class="echo-sent-text kaiti">{{submittedText}}</view>
+      <view class="echo-sent-note note-hand olive">已存入第21图的档案。下一位来到这里的人，会读到你写的那一句。</view>
+      <button class="btn-line echo-edit" bindtap="onEditMessage">重写这张明信片</button>
+    </view>
+
+    <!-- 留言簿入口：写发生在通关当天剧情末尾（用户 2026-09-18 拍板）；次日回访只负责读 -->
+    <view class="letter-entry board-entry" bindtap="onOpenBoard" role="button" aria-label="留言簿入口">
+      <view class="letter-entry-wax board-entry-wax">留</view>
+      <view class="letter-entry-main">
+        <view class="letter-entry-title serif">留言簿 · 给后来的人</view>
+        <view class="letter-entry-sub kaiti">{{boardSubmitted ? '你的那句话已在档案里，去看看大家的话' : '走完了，给下一个来的人留一句话'}}</view>
+      </view>
+      <view class="letter-entry-arrow">›</view>
+    </view>
+
+    <view class="letter-entry {{letterReady ? '' : 'sealed'}}" bindtap="onOpenLetter" role="button" aria-label="次日之信入口">
+      <view class="letter-entry-wax">封</view>
+      <view class="letter-entry-main">
+        <view class="letter-entry-title serif">{{letterReady ? '有一封信在等你' : '明日启封'}}</view>
+        <view class="letter-entry-sub kaiti">{{letterReady ? '来自那个还在整理档案的人' : '明天，这里会有一封写给你的信'}}</view>
+      </view>
+      <view wx:if="{{letterReady}}" class="letter-entry-arrow">›</view>
+    </view>
+  </view>
+
+  <view class="meta">绘制者 {{name}} · 绘制时间 {{today}}</view>
+  <view class="note-hand olive frame-note" style="transform: rotate(-1.5deg);">中间那块空着的，就是你站着的位置。</view>
 
   <view class="actions">
     <button class="btn-seal act-btn finish-btn" bindtap="onFinish" disabled="{{completing}}">{{completing ? '正在完成考察……' : (completed ? '返回考察模块首页' : '完成考察并返回首页')}}</button>
@@ -90,6 +148,7 @@
     <view class="ticket-edge"></view>
   </view>
 
+</scroll-view>
   <!-- 离屏导出画布（不参与布局，尺寸为导出分辨率基准像素） -->
   <canvas type="2d" id="reportCanvas" class="offscreen" style="width: 700px; height: 1120px;"></canvas>
 </view>

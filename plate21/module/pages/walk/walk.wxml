@@ -1,10 +1,10 @@
 <view class="page-shell walk">
   <view wx:if="{{view.sideMap}}" class="edge">
-    <button class="edge-btn" bindtap="onOpenMap">地图</button>
-    <button wx:if="{{view.sideProgress}}" class="edge-btn" bindtap="onOpenProgress">进程</button>
+    <button id="coachMap" class="edge-btn" bindtap="onOpenMap">地图</button>
+    <button wx:if="{{view.sideProgress}}" id="coachProgress" class="edge-btn" bindtap="onOpenProgress">进程</button>
   </view>
   <view wx:elif="{{view.sideProgress}}" class="edge">
-    <button class="edge-btn" bindtap="onOpenProgress">进程</button>
+    <button id="coachProgress" class="edge-btn" bindtap="onOpenProgress">进程</button>
   </view>
 
   <scroll-view wx:if="{{view.kind !== 'nav'}}" class="sheet" scroll-y="{{true}}">
@@ -51,8 +51,8 @@
   </view>
 
   <view class="dock">
-    <button wx:if="{{view.showSkip}}" class="skip-btn dock-skip" bindtap="onSkip">{{view.skipLabel}}</button>
-    <button wx:if="{{view.primary}}" class="btn-seal dock-go" bindtap="onPrimary">{{view.primary}}</button>
+    <button wx:if="{{view.showSkip}}" id="coachSkip" class="skip-btn dock-skip" bindtap="onSkip">{{view.skipLabel}}</button>
+    <button wx:if="{{view.primary}}" id="coachGo" class="btn-seal dock-go" bindtap="onPrimary">{{view.primary}}</button>
   </view>
 
   <view wx:if="{{showMap}}" class="mask" bindtap="onCloseMap">
@@ -88,4 +88,18 @@
       <button class="choice" bindtap="onCloseProgress">关上</button>
     </view>
   </view>
+
+  <coach-spot
+    class="coach-host"
+    style="top: {{coachWin.top}}px; left: {{coachWin.left}}px; width: {{coachWin.windowWidth}}px; height: {{coachWin.windowHeight}}px;"
+    visible="{{showCoach}}"
+    closing="{{coachClosing}}"
+    index="{{coachIndex}}"
+    total="{{coachSteps.length}}"
+    step="{{coachStep}}"
+    hole="{{coachHole}}"
+    win="{{coachWin}}"
+    bind:next="onCoachNext"
+    bind:skip="onCoachSkip"
+  />
 </view>

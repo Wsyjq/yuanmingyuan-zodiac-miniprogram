@@ -1,105 +1,122 @@
-// 第二站 · 谜题4 墙体花纹观察（采风修订版玩法）
-// 给出 4 种花纹图样，让用户选出迷宫墙体上看到的花纹（万字回纹）。
-// 答案：万字纹 → 寓意「福寿绵长」；下一站由资料袋中的手绘路线图给出。
-// 卡片角落数字：6（固定）。
-// 点击路线交接后，以原子命令完成第二站并推进至 s3-hour。
-//
-// TODO（下轮迭代）：终版应为真实墙体高清图 + 多花纹识别；当前为 4 选 1 简化版。
+// 第二站 · 黄花阵 对读四：纹样举纸对照（V2.2 讲述版，骨架沿用 V2.1）
+// 玩法：这一路的墙上都是同一种花纹，手里那页印着四种纹样图样——举纸对照，
+// 走向对上的那张就是万字纹（另三种墙上没有）。红线：举纸不贴墙。
+// 不是四选一测验——判定靠实物对照自校验，小程序只收「我认出了」；可跳过（跳过不发该卡）。
+// 收尾（不可跳）：飞书 v3 原文——万字纹寓意＋今墙重建（SL-08）＋前往方外观。
+// 之后以原子命令完成第二站，转场走干池（transit s2-s3），不再依赖任何纹样「谜底」。
+// 文案与纹样单点在 content/s2-pattern.js。
 const session = require('../../store/session')
 const sessionDate = require('../../utils/session-date')
+const audioSrc = require('../../utils/audio-src')
+const audioBus = require('../../utils/audio-bus')
+const glossHost = require('../../utils/gloss-host')
+const content = require('../../content/s2-pattern')
 
-// 四种候选纹样使用项目方确认可商用的 AI 图片衍生文件。
-const PATTERNS = [
-  { key: 'wanzi', name: '万字回纹', src: '/plate21/module/assets/img/IMG-RUNTIME-PATTERN-WANZI.jpg', desc: '回转连绵，万字不断', correct: true },
-  { key: 'beike', name: '贝壳饰', src: '/plate21/module/assets/img/IMG-RUNTIME-PATTERN-SHELL.jpg', desc: '扇形放射，卷叶环绕', correct: false },
-  { key: 'juanco', name: '卷草饰', src: '/plate21/module/assets/img/IMG-RUNTIME-PATTERN-SCROLL.jpg', desc: '卷曲枝条彼此对称', correct: false },
-  { key: 'hualan', name: '花篮饰', src: '/plate21/module/assets/img/IMG-RUNTIME-PATTERN-BASKET.jpg', desc: '花束盛于西式饰篮', correct: false }
-]
-
-// 史料卡：仅剧情原文（"通水意"是开发脑补，已移除）
-const HISTORY_LINES = [
-  '迷宫墙体刻满万字回纹，寓意福寿绵长。'
-]
-
-const REVEAL_TEXT = '回转不断的万字纹，寄托的是福寿绵长。纹样本身不指向下一站，真正的路线线索还在资料袋里。'
+const PUZZLE = content.puzzleId
+const PATTERNS = content.patterns
 
 Page({
+  behaviors: [glossHost],
   data: {
     patterns: PATTERNS,
-    picked: null,       // 用户选中的 key
+    picked: null,       // 举纸对照后认出的 key
     attempts: 0,
+    nudge: '',
     showHistory: false,
-    historyLines: HISTORY_LINES,
-    cardNumber: 6,
+    historyLines: content.historyLines,
+    cardNumber: content.cardNumber,
     showCardNumber: false,
-    showHint: false,
     solved: false,
-    showRoute: false,
+    skipped: false,
+    showFinale: false,
+    lead: content.lead,
+    actStrip: content.actStrip,
+    finaleReveal: content.finale.reveal,
+    finaleClosing: content.finale.closing,
+    wallParts: content.wallParts,
+    narrSrc: audioSrc.clip(content.clips.main),
     advancing: false,
-    revealText: '',     // 解谜后独白（剧情原文，引出下一站）
-    hint: '再仔细看看墙体的回转连绵纹路。',
     today: ''           // 会话锁定日期（日期章用，跨午夜不变化）
   },
 
   onLoad() {
-    session.viewPuzzle('s2-pattern')
+    session.viewPuzzle(PUZZLE)
     const snap = session.getSnapshot() || {}
     const key = sessionDate.isValidDateKey(snap.sessionDate)
       ? snap.sessionDate
       : sessionDate.dateKeyFromTimestamp(Date.now())
-    const puzzle = session.getPuzzle('s2-pattern')
+    const puzzle = session.getPuzzle(PUZZLE)
+    const skipped = !!(puzzle && puzzle.payload && puzzle.payload.action === 'skipped')
+    const done = !!puzzle
     this.setData({
       today: sessionDate.formatShortDate(key),
-      cardNumber: Number(session.getCardDigit('s2-pattern')),
-      picked: puzzle ? 'wanzi' : null,
-      solved: !!puzzle,
-      showHistory: !!puzzle,
-      showCardNumber: !!puzzle,
-      revealText: puzzle ? REVEAL_TEXT : '',
+      cardNumber: Number(session.getCardDigit(PUZZLE)) || content.cardNumber,
+      picked: done && !skipped ? content.correctKey : null,
+      solved: done && !skipped,
+      skipped: skipped,
+      showHistory: done && !skipped,
+      showCardNumber: done && !skipped,
+      showFinale: skipped,
+      narrSrc: audioSrc.clip(skipped ? content.clips.finale : content.clips.main),
       attempts: Number(puzzle && puzzle.payload && puzzle.payload.attempts) || 0
     })
   },
 
   onPick(e) {
-    if (this.data.showHistory || this.data.solved) return
-    const key = e.currentTarget.dataset.key
-    this.setData({ picked: key })
+    if (this.data.solved || this.data.skipped) return
+    this.setData({ picked: e.currentTarget.dataset.key, nudge: '' })
   },
 
+  // 我认出了：举纸对照走向吻合即自校验。认成另三种时只轻推回去再比，不判错不锁。
   onConfirm() {
-    if (!this.data.picked || this.data.showHistory) return
+    // V2.3：答题交互起，压停正在播的人声（做题与听讲不打架）
+    audioBus.stopKind('voice')
+    if (!this.data.picked || this.data.solved || this.data.skipped) return
     const right = PATTERNS.find((p) => p.key === this.data.picked).correct
     const attempts = this.data.attempts + 1
-    session.attemptPuzzle('s2-pattern', attempts, right, 'tap')
     if (right) {
-      this.setData({ solved: true, showHistory: true, showCardNumber: true, revealText: REVEAL_TEXT, attempts: attempts })
-      session.completePuzzle('s2-pattern', { answer: 'wanzi', attempts: attempts }, { collectCard: true })
+      session.attemptPuzzle(PUZZLE, attempts, true, 'tap')
+      this.setData({ solved: true, showHistory: true, showCardNumber: true, attempts: attempts, nudge: '' })
+      session.completePuzzle(PUZZLE, { answer: content.correctKey, attempts: attempts }, { collectCard: true })
+        .catch(function () { wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' }) })
+    } else if (attempts >= 3) {
+      session.attemptPuzzle(PUZZLE, attempts, false, 'tap')
+      this.setData({
+        picked: content.correctKey,
+        solved: true,
+        showHistory: true,
+        showCardNumber: true,
+        attempts: attempts,
+        nudge: content.revealNudge
+      })
+      session.completePuzzle(PUZZLE, { answer: content.correctKey, attempts: attempts, revealed: true }, { collectCard: true })
         .catch(function () { wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' }) })
     } else {
-      // 错误：错 2 次给提示
-      this.setData({ attempts: attempts, showHint: attempts >= 2 })
-      if (attempts === 2) session.viewHint('s2-pattern', 1)
-      wx.showToast({ title: '再看看墙体纹路', icon: 'none' })
+      session.attemptPuzzle(PUZZLE, attempts, false, 'tap')
+      this.setData({
+        attempts: attempts,
+        nudge: content.nudges[attempts - 1]
+      })
     }
   },
 
   onCloseHistory() {
-    this.setData({ showHistory: false, showRoute: this.data.solved })
-  },
-
-  onNext() {
-    this.setData({ showHistory: false, showRoute: true })
+    this.setData({
+      showHistory: false,
+      showFinale: true,
+      narrSrc: audioSrc.clip(content.clips.finale)
+    })
   },
 
   onGoS3() {
     if (this.data.advancing) return
     this.setData({ advancing: true })
-    session.completePuzzle('s2-pattern', { answer: 'wanzi', attempts: this.data.attempts || 1 }, {
+    session.completePuzzle(PUZZLE, { attempts: this.data.attempts || 1 }, {
       collectCard: true,
       station: 's2',
-      checkpoint: 's3-hour'
+      checkpoint: content.next.checkpoint
     }).then(() => {
-      wx.redirectTo({ url: '/plate21/module/pages/transit/transit?leg=s2-s3' })
+      wx.redirectTo({ url: content.next.url })
     }).catch(() => {
       this.setData({ advancing: false })
       wx.showToast({ title: '进度保存失败，请重试', icon: 'none' })

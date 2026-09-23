@@ -1,53 +1,50 @@
-<!-- P04 第二站 · 黄花阵选择题 -->
-<nav-back />
+<nav-back wx:if="{{!touring}}" />
 <page-overlays />
+<bgm-ambience />
 <view class="page page-shell paper-grain paper-real">
-  <!-- v1.3.1 手账：左侧活页装订孔列（全站统一） -->
   <view class="binder"></view>
-  <view class="tag-no">No.004</view>
+  <view class="tag-no">No.S2-1</view>
+  <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
   <view class="novel">
-    <view class="novel-p">穿过西洋楼的断柱残垣，你在一方矮墙围合的园圃前停住脚步。</view>
-    <view class="novel-p">皇家宫苑中竟有一座迷宫——砖墙不过肩高，却纵横曲折如阵，踮起脚也望不穿它的路径。</view>
+    <view class="novel-p"><gloss-text parts="{{introParts}}" bind:glossary="onGlossary" /></view>
   </view>
+  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
 
   <view class="img-ph img-s2a double-frame">
     <view class="tape" style="top:-20rpx; left:50%; margin-left:-90rpx;"></view>
-    <!-- v1.3.1 手账：邮票贴纸压在黄花阵图右上角 -->
     <image class="s2a-stamp" src="/plate21/module/assets/img/stickers/st-stamp-02.png" mode="aspectFit" />
-    <image class="s2a-img" src="/plate21/module/assets/img/IMG-RUNTIME-MAZE.jpg" mode="aspectFill" />
+    <image class="s2a-img img-aged" src="/plate21/module/assets/img/IMG-RUNTIME-MAZE.jpg" mode="aspectFill" />
   </view>
-  <view class="note-hand olive" style="transform: rotate(-1.5deg); margin-top: 16rpx;">砖墙仅及肩，入阵便迷向，奇哉。</view>
 
   <view class="hatch-divider" style="width: 140rpx; margin: 44rpx auto;"></view>
 
-  <view class="quiz">
-    <view class="q-title serif">这迷宫的修建目的是</view>
-    <view class="note-hand" style="transform: rotate(1deg); margin-bottom: 16rpx;">须想透「戏」字，方得正解。</view>
-    <view class="opts" role="radiogroup" aria-label="黄花阵修建目的选项">
+  <view class="quiz" wx:if="{{!followup}}">
+    <view class="q-title serif">我不禁好奇，这迷宫的修建目的是</view>
+    <view class="opts">
       <view
         wx:for="{{options}}"
         wx:key="key"
-        class="opt {{selected === item.key ? 'opt-sel' : ''}} {{item.wrong ? 'opt-wrong' : ''}} {{shakeKey === item.key ? 'shake' : ''}}"
+        class="opt {{selected === item.key ? 'opt-sel' : ''}} {{revealed && item.key !== 'C' ? 'opt-wrong' : ''}}"
         data-key="{{item.key}}"
         bindtap="onSelect"
-        role="radio"
-        aria-checked="{{selected === item.key}}"
-        aria-label="{{item.key}}，{{item.text}}{{item.wrong ? '，不对应' : (selected === item.key ? '，已选择' : '')}}"
+        role="button"
+        aria-pressed="{{selected === item.key}}"
       >
-        <view class="opt-key serif">{{item.key}}</view>
-        <view class="opt-text">{{item.text}}</view>
-        <view wx:if="{{item.wrong || selected === item.key}}" class="opt-state">{{item.wrong ? '不对应' : (solved ? '正确' : '已选择')}}</view>
-        <view class="pin {{solved && item.key === 'C' ? 'pin-lit' : ''}}"></view>
+        <text class="opt-key">{{item.key}}</text>
+        <text class="opt-text">{{item.text}}</text>
       </view>
     </view>
-    <view class="hint" wx:if="{{hint}}">{{hint}}</view>
-    <button wx:if="{{!solved}}" class="btn-seal confirm" bindtap="onConfirm" disabled="{{!selected}}">确 认</button>
+    <view wx:if="{{hint}}" class="hint">{{hint}}</view>
+    <view class="q-actions">
+      <button class="btn-seal confirm" bindtap="onConfirm" disabled="{{!selected || solved}}">{{revealed ? '记 下 了' : '就 是 这 样'}}</button>
+    </view>
   </view>
 
   <view class="followup" wx:if="{{followup}}">
-    <view class="novel-p">可是这又和「黄花」有什么关系呢？</view>
+    <view class="novel-p">原来，这个黄花阵是皇帝用来观赏宫女在迷宫路径中奔跑嬉戏的。好嘛，这下不出门就有游乐场了！可是这又和“黄花”有什么关系呢？</view>
     <button class="btn-seal" bindtap="onNext">继 续</button>
   </view>
+  </scroll-view>
 </view>
 
 <history-card
@@ -58,7 +55,30 @@
   corner-number="{{cardNumber}}"
   show-corner="{{showHistory}}"
   btn-text="继 续"
-  bind:next="onNext"
+  bind:next="onCloseHistory"
   bind:close="onCloseHistory"
 />
-<stamp-toast id="stamp" />
+<!-- 术语史料卡（导语「黄花阵」点入，SL-07） -->
+<history-card
+  wx:if="{{gloss}}"
+  visible="{{!!gloss}}"
+  title="{{gloss.title}}"
+  source="{{gloss.source}}"
+  lines="{{gloss.lines}}"
+  btn-text="学到了"
+  bind:next="onGlossClose"
+  bind:close="onGlossClose"
+/>
+<coach-spot
+  class="coach-host"
+  style="top: {{coachWin.top}}px; left: {{coachWin.left}}px; width: {{coachWin.windowWidth}}px; height: {{coachWin.windowHeight}}px;"
+  visible="{{showCoach}}"
+  closing="{{coachClosing}}"
+  index="{{coachIndex}}"
+  total="{{coachSteps.length}}"
+  step="{{coachStep}}"
+  hole="{{coachHole}}"
+  win="{{coachWin}}"
+  bind:next="onCoachNext"
+  bind:skip="onCoachSkip"
+/>

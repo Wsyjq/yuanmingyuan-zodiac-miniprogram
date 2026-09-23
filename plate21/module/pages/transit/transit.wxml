@@ -1,7 +1,7 @@
 <!-- 墨晕转场：深色墨滴从中心扩散后收拢（约 900ms） -->
-<view class="ink-mask"></view>
+<view class="ink-mask" wx:if="{{!touring}}"></view>
 
-<nav-back />
+<nav-back wx:if="{{!touring}}" />
 <page-overlays />
 <view class="page page-shell paper-grain paper-real" wx:if="{{leg}}">
   <!-- v1.3.1 手账：左侧活页装订孔列（叙事过渡页） -->
@@ -47,5 +47,36 @@
     <view class="narr-text">{{leg.text}}</view>
   </view>
 
-  <button class="btn-seal next-btn" bindtap="onNext" disabled="{{advancing}}">{{advancing ? '正在前往……' : '继 续 前 往'}}</button>
+  <!-- v2 顺路散页：可选入口（一段可挂多张），停不停由你；走完支线一键回主线 -->
+  <view
+    wx:for="{{sides}}"
+    wx:key="key"
+    id="{{index === 0 ? 'coachSide' : ''}}"
+    class="side-entry"
+    data-url="{{item.url}}"
+    bindtap="onOpenSide"
+    role="button"
+    aria-label="翻看顺路散页{{item.title}}"
+  >
+    <view class="side-tag">档案里还夹着一页 · 可选</view>
+    <view class="side-title serif">{{item.title}}</view>
+    <view class="side-hook kaiti">{{item.hook}}</view>
+    <view wx:if="{{sideVisited[item.key]}}" class="side-done note-hand olive">✓ 已翻过</view>
+    <view class="side-arrow">›</view>
+  </view>
+
+  <button id="coachGo" class="btn-seal next-btn" bindtap="onNext" disabled="{{advancing}}">{{advancing ? '正在前往……' : '继 续 前 往'}}</button>
 </view>
+<coach-spot
+  class="coach-host"
+  style="top: {{coachWin.top}}px; left: {{coachWin.left}}px; width: {{coachWin.windowWidth}}px; height: {{coachWin.windowHeight}}px;"
+  visible="{{showCoach}}"
+  closing="{{coachClosing}}"
+  index="{{coachIndex}}"
+  total="{{coachSteps.length}}"
+  step="{{coachStep}}"
+  hole="{{coachHole}}"
+  win="{{coachWin}}"
+  bind:next="onCoachNext"
+  bind:skip="onCoachSkip"
+/>

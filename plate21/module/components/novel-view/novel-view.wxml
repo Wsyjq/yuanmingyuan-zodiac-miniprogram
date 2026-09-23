@@ -42,25 +42,27 @@
       </view>
 
       <scroll-view class="page-body" scroll-y enhanced show-scrollbar="{{false}}">
-        <view wx:if="{{currentItem.image}}" class="photo-sheet">
-          <view class="photo-tape"></view>
-          <archive-illustration wx:if="{{currentItem.illustrationType}}" class="page-photo" type="{{currentItem.illustrationType}}" label="{{currentItem.caption}}" compact="{{true}}" style="display:block;" />
-          <image wx:elif="{{currentItem.src}}" class="page-photo" src="{{currentItem.src}}" mode="aspectFill" />
-          <view wx:else class="photo-code">{{currentItem.image}}</view>
-          <view class="photo-caption">{{currentItem.caption}}</view>
-        </view>
-
-        <view wx:elif="{{currentItem.quote}}" class="quote-sheet">
-          <view class="quote-mark">“</view>
-          <view class="quote-copy kaiti">
-            <text class="reveal-copy {{showAll ? 'show-all' : ''}}" style="animation-duration: {{revealDuration}}ms">{{currentItem.text}}</text>
+        <block wx:for="{{currentPage}}" wx:key="index" wx:for-item="block">
+          <view wx:if="{{block.image}}" class="photo-sheet">
+            <view class="photo-tape"></view>
+            <archive-illustration wx:if="{{block.illustrationType}}" class="page-photo" type="{{block.illustrationType}}" label="{{block.caption}}" compact="{{true}}" style="display:block;" />
+            <image wx:elif="{{block.src}}" class="page-photo img-aged" src="{{block.src}}" mode="aspectFill" />
+            <view wx:else class="photo-code">{{block.image}}</view>
+            <view class="photo-caption">{{block.caption}}</view>
           </view>
-          <view class="quote-mark quote-end">”</view>
-        </view>
 
-        <view wx:else class="narrative-copy">
-          <text class="reveal-copy {{showAll ? 'show-all' : ''}}" style="animation-duration: {{revealDuration}}ms">{{currentItem.text}}</text>
-        </view>
+          <view wx:elif="{{block.quote}}" class="quote-sheet">
+            <view class="quote-mark">“</view>
+            <view class="quote-copy kaiti">
+              <text class="reveal-copy {{showAll ? 'show-all' : ''}}" style="animation-duration: {{revealDuration}}ms; animation-delay: {{index * blockDelay}}ms;">{{block.text}}</text>
+            </view>
+            <view class="quote-mark quote-end">”</view>
+          </view>
+
+          <view wx:else class="narrative-copy {{index === leadIndex ? 'lead-copy' : ''}}">
+            <text class="reveal-copy {{showAll ? 'show-all' : ''}}" style="animation-duration: {{revealDuration}}ms; animation-delay: {{index * blockDelay}}ms;"><gloss-text wx:if="{{block.parts}}" parts="{{block.parts}}" bind:glossary="onGlossary" /><block wx:else>{{block.text}}</block></text>
+          </view>
+        </block>
       </scroll-view>
 
       <image class="leaf-botanical" src="/plate21/module/assets/img/stickers/st-botanical-02.png" mode="aspectFit" />
@@ -100,19 +102,21 @@
         <text class="stamp-number">21</text>
       </view>
       <view class="page-body turn-body">
-        <view wx:if="{{turnItem.image}}" class="photo-sheet">
-          <view class="photo-tape"></view>
-          <archive-illustration wx:if="{{turnItem.illustrationType}}" class="page-photo" type="{{turnItem.illustrationType}}" label="{{turnItem.caption}}" compact="{{true}}" style="display:block;" />
-          <image wx:elif="{{turnItem.src}}" class="page-photo" src="{{turnItem.src}}" mode="aspectFill" />
-          <view wx:else class="photo-code">{{turnItem.image}}</view>
-          <view class="photo-caption">{{turnItem.caption}}</view>
-        </view>
-        <view wx:elif="{{turnItem.quote}}" class="quote-sheet">
-          <view class="quote-mark">“</view>
-          <view class="quote-copy kaiti">{{turnItem.text}}</view>
-          <view class="quote-mark quote-end">”</view>
-        </view>
-        <view wx:else class="narrative-copy">{{turnItem.text}}</view>
+        <block wx:for="{{turnPage}}" wx:key="index" wx:for-item="block">
+          <view wx:if="{{block.image}}" class="photo-sheet">
+            <view class="photo-tape"></view>
+            <archive-illustration wx:if="{{block.illustrationType}}" class="page-photo" type="{{block.illustrationType}}" label="{{block.caption}}" compact="{{true}}" style="display:block;" />
+            <image wx:elif="{{block.src}}" class="page-photo img-aged" src="{{block.src}}" mode="aspectFill" />
+            <view wx:else class="photo-code">{{block.image}}</view>
+            <view class="photo-caption">{{block.caption}}</view>
+          </view>
+          <view wx:elif="{{block.quote}}" class="quote-sheet">
+            <view class="quote-mark">“</view>
+            <view class="quote-copy kaiti">{{block.text}}</view>
+            <view class="quote-mark quote-end">”</view>
+          </view>
+          <view wx:else class="narrative-copy {{index === turnLeadIndex ? 'lead-copy' : ''}}"><gloss-text wx:if="{{block.parts}}" parts="{{block.parts}}" bind:glossary="onGlossary" /><block wx:else>{{block.text}}</block></view>
+        </block>
       </view>
       <view class="turn-shine"></view>
     </view>

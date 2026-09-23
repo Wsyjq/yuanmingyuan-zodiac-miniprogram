@@ -1,14 +1,18 @@
-<!-- 第二站 · 谜题3：现场四图考察记录 -->
+<!-- 第二站 · 黄花阵 对读三：亭子线稿对眼前这座亭（V2.2 讲述版，拍一处即算） -->
 <nav-back />
 <page-overlays />
+<bgm-ambience />
 <view class="page page-shell paper-grain paper-real">
+<scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
   <view class="binder"></view>
   <view class="tag-no tag-no-fixed">No.S2-3</view>
   <image class="page-tag-sticker" src="/plate21/module/assets/img/stickers/st-postmark-01.png" mode="aspectFit" />
 
-  <view class="title serif">中西结合的观察</view>
+  <view class="title serif">亭子线稿对眼前这座亭</view>
   <view class="hatch-divider title-div"></view>
-  <view class="lead kaiti">在中心亭找到下面四处细节，并用手机留下现场记录。参考图只帮助定位，考察卡必须使用你拍摄的照片。</view>
+  <view class="lead kaiti">终于到了中心亭了，融合了中西审美，好别致的亭子！</view>
+  <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">你能找到这座亭子建筑风格中西结合的具体体现吗，找到后请拍照记录你的考察结果</text></view>
+  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
 
   <view class="capture-grid">
     <view wx:for="{{points}}" wx:key="key" class="capture-card archive-sheet {{item.photoPath ? 'captured' : ''}}">
@@ -51,12 +55,13 @@
     </view>
     <view class="progress-track"><view class="progress-fill" style="width: {{photoCount / points.length * 100}}%"></view></view>
     <view class="note-hand olive progress-note">四处都拍清后，装订成一张考察卡。</view>
-    <button class="btn-seal complete-btn record-action {{photoCount < points.length ? 'btn-disabled' : ''}}" bindtap="onComplete" disabled="{{photoCount < points.length}}">{{done ? '查看四图考察卡' : '生成四图考察卡'}}</button>
+    <button class="btn-seal complete-btn record-action {{photoCount < 1 ? 'btn-disabled' : ''}}" bindtap="onComplete" disabled="{{photoCount < 1}}">{{done ? '查看亭下考察卡' : '记 下 了'}}</button>
   </view>
   <view wx:if="{{readyNext}}" class="progress-slip record-field">
     <view class="note-hand olive progress-note">四图考察结论已经收入手册，可继续辨认墙体纹样。</view>
     <button class="btn-seal complete-btn record-action" bindtap="onNext">继续观察墙体纹样</button>
   </view>
+</scroll-view>
 </view>
 
 <!-- 四张现场照片合成的考察卡，不进行虚假场景识别。 -->

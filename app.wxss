@@ -57,9 +57,17 @@ page {
   box-sizing: border-box;
 }
 .page-doc {
-  height: 100%;
-  width: 100%;
+  height: calc(100% - 48rpx);
+  width: auto;
+  margin: 24rpx 24rpx 24rpx 0;
+  padding: 36rpx 32rpx 160rpx;
   box-sizing: border-box;
+  border: 1rpx solid rgba(70, 56, 42, 0.34);
+  border-radius: 2rpx 18rpx 14rpx 2rpx;
+  background:
+    repeating-linear-gradient(0deg, rgba(122, 92, 62, 0.025) 0, rgba(122, 92, 62, 0.025) 1rpx, transparent 1rpx, transparent 13rpx),
+    linear-gradient(155deg, #F6F0E0 0%, var(--paper) 58%, #E8E0CE 100%);
+  box-shadow: 8rpx 10rpx 0 var(--paper2), 0 10rpx 28rpx rgba(70, 56, 42, 0.18);
 }
 
 /* ---------- 字体工具类（设计文档 §1.3） ---------- */

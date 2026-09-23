@@ -1,12 +1,13 @@
 .novel-view {
   position: relative;
   width: 100%;
-  min-height: 100vh;
+  height: 100%;
+  min-height: 0;
   padding: 138rpx 28rpx calc(22rpx + env(safe-area-inset-bottom)) 34rpx;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .archive-tab {
@@ -69,7 +70,7 @@
 
 .stack-mid {
   transform: translate(5rpx, 5rpx) rotate(-0.35deg);
-  background: #EFE5CE;
+  background: #EFE9DA;
 }
 
 .paper-leaf {
@@ -79,7 +80,7 @@
     radial-gradient(ellipse 300rpx 220rpx at 12% 18%, rgba(122, 92, 62, 0.07), transparent 72%),
     radial-gradient(ellipse 280rpx 340rpx at 92% 84%, rgba(111, 114, 72, 0.05), transparent 70%),
     repeating-linear-gradient(0deg, rgba(122, 92, 62, 0.025) 0, rgba(122, 92, 62, 0.025) 1rpx, transparent 1rpx, transparent 13rpx),
-    linear-gradient(155deg, #F8F1DF 0%, var(--paper) 58%, #EDE1C8 100%);
+    linear-gradient(155deg, #F6F0E0 0%, var(--paper) 58%, #E8E0CE 100%);
   box-shadow: 0 10rpx 28rpx rgba(70, 56, 42, 0.2), inset -12rpx 0 18rpx rgba(122, 92, 62, 0.055);
   transform-style: preserve-3d;
   backface-visibility: hidden;
@@ -291,10 +292,20 @@
   word-break: break-all;
 }
 
-.narrative-copy .reveal-copy::first-letter,
-.turning-leaf .narrative-copy::first-letter {
+/* 首字下沉只给每页首个叙述块，密度化后其余段落平铺 */
+.narrative-copy.lead-copy .reveal-copy::first-letter,
+.turning-leaf .narrative-copy.lead-copy::first-letter {
   font-size: 48rpx;
   line-height: 1;
+}
+
+/* 同页多块堆叠：叙述段之间收紧纵向间距，保持手账拼贴节奏 */
+.page-body .narrative-copy + .narrative-copy {
+  padding-top: 0;
+}
+
+.page-body .narrative-copy:last-child {
+  padding-bottom: 12rpx;
 }
 
 .reveal-copy {
@@ -569,7 +580,7 @@
   padding: 0 15rpx;
   border: 1rpx solid rgba(70, 56, 42, 0.38);
   border-radius: 0;
-  background: rgba(244, 237, 220, 0.72);
+  background: rgba(247, 244, 236, 0.72);
   color: var(--ink);
   font-size: 22rpx;
   letter-spacing: 2rpx;
