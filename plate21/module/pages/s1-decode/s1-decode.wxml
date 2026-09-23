@@ -1,0 +1,72 @@
+<nav-back wx:if="{{!touring}}" />
+<page-overlays />
+<bgm-ambience />
+<view class="page page-shell paper-grain paper-real">
+  <view class="binder"></view>
+  <view class="tag-no tag-no-fixed">No.S1-1</view>
+  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
+
+  <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
+    <view class="title serif">西洋楼入口</view>
+    <view class="hatch-divider title-div"></view>
+    <view class="lead kaiti"><gloss-text parts="{{leadParts}}" bind:glossary="onGlossary" /></view>
+
+    <!-- 地图判方位（飞书 v3：西洋楼在长春园哪一部，答案 d 东北） -->
+    <view class="prop-card archive-sheet" wx:if="{{!solved}}">
+      <view class="prop-label archive-tab">线下道具 · 西洋楼遗址地图</view>
+      <view class="prop-title serif">我打开了地图，从上面可以看出来西洋楼的地理位置。</view>
+      <image class="s1-map" src="/plate21/module/assets/img/IMG-RUNTIME-MAP.jpg" mode="widthFix" />
+      <view class="archive-rule"></view>
+      <view class="q-title serif">西洋楼在圆明三园中的长春园（　）部</view>
+      <view class="opts">
+        <view
+          wx:for="{{options}}"
+          wx:key="key"
+          class="opt {{selected === item.key ? 'opt-sel' : ''}}"
+          data-key="{{item.key}}"
+          bindtap="onSelect"
+          role="button"
+          aria-pressed="{{selected === item.key}}"
+        >
+          <text class="opt-key">{{item.key}}</text>
+          <text class="opt-text">{{item.text}}</text>
+        </view>
+      </view>
+      <view wx:if="{{hintText}}" class="hint">{{hintText}}</view>
+      <button class="btn-seal confirm-btn record-action" bindtap="onConfirm" disabled="{{!selected}}">就 是 这 里</button>
+    </view>
+
+    <!-- 揭晓（飞书原文） -->
+    <view class="result double-frame" wx:if="{{solved}}">
+      <view class="result-mark">答案：东北</view>
+      <view class="novel-p"><gloss-text parts="{{revealParts}}" bind:glossary="onGlossary" /></view>
+      <view class="novel-p">{{followup}}</view>
+      <button class="btn-seal next-btn" bindtap="onGoNext">前往谐奇趣</button>
+    </view>
+  </scroll-view>
+
+  <!-- 术语史料卡（「西洋楼」SL-02、「长春园」SL-05 点入） -->
+  <history-card
+    wx:if="{{gloss}}"
+    visible="{{!!gloss}}"
+    title="{{gloss.title}}"
+    source="{{gloss.source}}"
+    lines="{{gloss.lines}}" layered="{{gloss.layered}}" image="{{gloss.image}}" caption="{{gloss.caption}}"
+    btn-text="学到了"
+    bind:next="onGlossClose"
+    bind:close="onGlossClose"
+  />
+</view>
+<coach-spot
+  class="coach-host"
+  style="top: {{coachWin.top}}px; left: {{coachWin.left}}px; width: {{coachWin.windowWidth}}px; height: {{coachWin.windowHeight}}px;"
+  visible="{{showCoach}}"
+  closing="{{coachClosing}}"
+  index="{{coachIndex}}"
+  total="{{coachSteps.length}}"
+  step="{{coachStep}}"
+  hole="{{coachHole}}"
+  win="{{coachWin}}"
+  bind:next="onCoachNext"
+  bind:skip="onCoachSkip"
+/>

@@ -1,0 +1,13 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "nav-back": "../../components/nav-back/nav-back",
+    "page-overlays": "../../capabilities/overlay-host/overlay-host",
+    "coach-spot": "../../components/coach-spot/coach-spot",
+    "audio-clip": "../../components/audio-clip/audio-clip",
+    "history-card": "../../components/history-card/history-card",
+    "gloss-text": "../../components/gloss-text/gloss-text"
+  },
+  "navigationBarTitleText": "大水法",
+  "disableScroll": true
+}

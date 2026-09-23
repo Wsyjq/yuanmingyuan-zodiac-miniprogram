@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>圆明园考察 · 入口</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 390px;
+    height: 844px;
+    overflow: hidden;
+    background: #F4EDDC;
+  }
+  .screen {
+    position: relative;
+    width: 390px;
+    height: 844px;
+    overflow: hidden;
+    color: #46382A;
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    background:
+      radial-gradient(ellipse 220px 150px at 16% 18%, rgba(122, 92, 62, 0.07), transparent 70%),
+      radial-gradient(ellipse 240px 180px at 92% 78%, rgba(122, 92, 62, 0.06), transparent 70%),
+      radial-gradient(ellipse 180px 200px at 48% 100%, rgba(111, 114, 72, 0.05), transparent 72%),
+      repeating-linear-gradient(0deg, rgba(122, 92, 62, 0.028) 0 1px, transparent 1px 7px),
+      radial-gradient(ellipse at center, transparent 58%, rgba(90, 70, 46, 0.09) 100%),
+      linear-gradient(165deg, #F8F2E4 0%, #F4EDDC 52%, #EADFCB 100%);
+  }
+  .noise {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.35;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.55'/></svg>");
+  }
+
+  .wx { position: relative; z-index: 5; background: rgba(244, 237, 220, 0.92); }
+  .status {
+    height: 50px;
+    padding: 14px 18px 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    color: #1c1c1c;
+  }
+  .time {
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    line-height: 20px;
+  }
+  .status-icons { display: flex; align-items: center; gap: 6px; height: 20px; }
+  .nav {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-bottom: 1px solid rgba(70, 56, 42, 0.08);
+  }
+  .nav-title {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #1a1a1a;
+  }
+  .capsule {
+    position: absolute;
+    right: 8px;
+    top: 6px;
+    width: 87px;
+    height: 32px;
+    border-radius: 16px;
+    border: 1px solid rgba(70, 56, 42, 0.16);
+    background: rgba(255, 252, 246, 0.72);
+    display: flex;
+    align-items: center;
+  }
+  .capsule span {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .capsule i {
+    width: 1px;
+    height: 18px;
+    background: rgba(70, 56, 42, 0.16);
+  }
+
+  .binder {
+    position: absolute;
+    left: 0;
+    top: 94px;
+    bottom: 0;
+    width: 18px;
+    z-index: 4;
+    border-right: 1px solid rgba(138, 122, 96, 0.22);
+    background:
+      radial-gradient(circle at 9px 8%, #5c4a38 0 1.4px, transparent 1.6px),
+      radial-gradient(circle at 9px 8%, transparent 3px, rgba(168, 154, 132, 0.95) 3.4px, rgba(168, 154, 132, 0.95) 4.6px, transparent 5px),
+      linear-gradient(90deg, rgba(222, 209, 180, 0.45), rgba(244, 237, 220, 0));
+    background-size: 100% 72px, 100% 72px, 100% 100%;
+    background-repeat: repeat-y, repeat-y, no-repeat;
+    background-position: 0 36px, 0 46px, 0 0;
+    box-shadow: 1px 0 0 rgba(255, 250, 240, 0.4);
+  }
+
+  main {
+    position: relative;
+    z-index: 2;
+    height: 750px;
+    padding: 18px 20px 28px 34px;
+  }
+
+  .tag {
+    position: absolute;
+    top: 108px;
+    right: 22px;
+    z-index: 6;
+    padding: 2px 8px;
+    border: 1px solid #6F7248;
+    color: #6F7248;
+    font-family: "Palatino Linotype", Palatino, "Songti SC", SimSun, serif;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    background: rgba(111, 114, 72, 0.06);
+  }
+  .postmark {
+    position: absolute;
+    top: 128px;
+    right: 10px;
+    width: 92px;
+    z-index: 6;
+    transform: rotate(-8deg);
+    opacity: 0.88;
+    filter: drop-shadow(0 2px 3px rgba(70, 56, 42, 0.18));
+    pointer-events: none;
+  }
+
+  .mast {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 8px;
+  }
+  .arches {
+    display: flex;
+    align-items: flex-end;
+    gap: 5px;
+    height: 38px;
+    margin-bottom: 12px;
+  }
+  .arches i {
+    display: block;
+    width: 26px;
+    height: 26px;
+    border: 1.5px solid rgba(70, 56, 42, 0.48);
+    border-bottom: none;
+    border-radius: 26px 26px 0 0;
+  }
+  .arches i:nth-child(2) {
+    width: 34px;
+    height: 38px;
+    border-width: 1.5px;
+    border-color: rgba(70, 56, 42, 0.62);
+  }
+  h1 {
+    font-family: "Songti SC", "STSong", SimSun, serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 8px;
+    text-indent: 8px;
+    color: #2E1F0D;
+    line-height: 1.2;
+  }
+  .sub {
+    margin-top: 6px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: #8A7A60;
+  }
+  .hatch {
+    width: 168px;
+    height: 7px;
+    margin: 14px 0 20px;
+    background: repeating-linear-gradient(
+      90deg,
+      rgba(70, 56, 42, 0.45) 0 1.5px,
+      transparent 1.5px 7px
+    );
+  }
+
+  .card {
+    position: relative;
+    background: #FBF6EA;
+    border: 1px solid rgba(70, 56, 42, 0.16);
+    border-radius: 4px;
+    box-shadow:
+      0 10px 22px rgba(70, 56, 42, 0.12),
+      0 1px 0 rgba(255, 252, 246, 0.8) inset;
+    transform: rotate(-0.7deg);
+    padding: 12px 12px 14px;
+  }
+  .tape {
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    width: 78px;
+    height: 18px;
+    margin-left: -39px;
+    background: rgba(111, 114, 72, 0.32);
+    transform: rotate(-3deg);
+    box-shadow: 0 1px 2px rgba(70, 56, 42, 0.12);
+    z-index: 7;
+  }
+  .clip {
+    position: absolute;
+    top: -14px;
+    right: 22px;
+    width: 46px;
+    transform: rotate(78deg);
+    z-index: 8;
+    filter: drop-shadow(0 2px 2px rgba(70, 56, 42, 0.2));
+  }
+  .corner {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    z-index: 5;
+    pointer-events: none;
+  }
+  .corner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1.5px solid #A98F5F;
+  }
+  .corner.tl { left: 6px; top: 6px; }
+  .corner.tr { right: 6px; top: 6px; }
+  .corner.bl { left: 6px; bottom: 6px; }
+  .corner.br { right: 6px; bottom: 6px; }
+  .corner.tl::before { border-right: 0; border-bottom: 0; }
+  .corner.tr::before { border-left: 0; border-bottom: 0; }
+  .corner.bl::before { border-right: 0; border-top: 0; }
+  .corner.br::before { border-left: 0; border-top: 0; }
+
+  .plate {
+    position: relative;
+    border: 1.5px solid rgba(70, 56, 42, 0.55);
+    padding: 5px;
+    background: #F7F1E3;
+  }
+  .plate::after {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    border: 1px solid rgba(70, 56, 42, 0.28);
+    pointer-events: none;
+  }
+  .plate img {
+    display: block;
+    width: 100%;
+    height: 168px;
+    object-fit: cover;
+    object-position: center 46%;
+  }
+
+  .card-body {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+    padding: 0 2px;
+  }
+  .index {
+    font-family: "Palatino Linotype", Palatino, serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #A98F5F;
+  }
+  .name {
+    margin-top: 2px;
+    font-family: "Songti SC", "STSong", SimSun, serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: #2E1F0D;
+  }
+  .desc {
+    margin-top: 4px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: #4A6B64;
+  }
+  .meta {
+    margin-top: 5px;
+    font-size: 11px;
+    line-height: 1.45;
+    letter-spacing: 0.5px;
+    color: #8A7A60;
+  }
+  .enter {
+    flex-shrink: 0;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 1.5px solid #A63A2E;
+    box-shadow: inset 0 0 0 3px rgba(166, 58, 46, 0.0), inset 0 0 0 1px rgba(166, 58, 46, 0.35);
+    background:
+      radial-gradient(circle at 50% 50%, transparent 24px, rgba(166, 58, 46, 0.28) 24.5px, rgba(166, 58, 46, 0.28) 25.2px, transparent 25.6px),
+      rgba(166, 58, 46, 0.05);
+    color: #A63A2E;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+  }
+  .enter b {
+    font-family: "Songti SC", "STSong", SimSun, serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+  }
+  .enter em {
+    font-style: normal;
+    font-size: 14px;
+    line-height: 1;
+    margin-top: 1px;
+  }
+
+  .reserved {
+    margin-top: 22px;
+    padding: 16px 12px;
+    border: 1px dashed #C0B49A;
+    border-radius: 3px;
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: #8A7A60;
+    background: rgba(244, 237, 220, 0.35);
+    transform: rotate(0.4deg);
+  }
+
+  .torn {
+    height: 12px;
+    margin: 22px 2px 16px;
+    background:
+      linear-gradient(45deg, #E6DCC4 0 6px, transparent 6px),
+      linear-gradient(-45deg, #E6DCC4 0 6px, transparent 6px);
+    background-size: 14px 12px;
+    background-repeat: repeat-x;
+    opacity: 0.9;
+  }
+  .foot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    color: #8A7A60;
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
+  .foot .link { display: flex; align-items: center; gap: 5px; }
+  .foot img { width: 15px; height: 15px; object-fit: contain; }
+  .dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: #8A7A60;
+    opacity: 0.55;
+  }
+  .note {
+    margin-top: 28px;
+    margin-left: 8px;
+    font-family: "KaiTi", "STKaiti", serif;
+    font-size: 14px;
+    color: #8A7A60;
+    letter-spacing: 1px;
+    transform: rotate(-1.4deg);
+    transform-origin: left center;
+  }
+
+  .homebar {
+    position: absolute;
+    left: 50%;
+    bottom: 8px;
+    width: 128px;
+    height: 5px;
+    margin-left: -64px;
+    border-radius: 3px;
+    background: rgba(46, 31, 13, 0.72);
+    z-index: 6;
+  }
+</style>
+</head>
+<body>
+  <div class="screen">
+    <div class="noise"></div>
+    <header class="wx">
+      <div class="status">
+        <div class="time">16:08</div>
+        <div class="status-icons">
+          <svg width="17" height="12" viewBox="0 0 17 12" aria-hidden="true">
+            <rect x="0" y="8" width="3" height="4" rx="0.5" fill="#1c1c1c"/>
+            <rect x="4.5" y="5.5" width="3" height="6.5" rx="0.5" fill="#1c1c1c"/>
+            <rect x="9" y="3" width="3" height="9" rx="0.5" fill="#1c1c1c"/>
+            <rect x="13.5" y="0" width="3" height="12" rx="0.5" fill="#1c1c1c"/>
+          </svg>
+          <svg width="15" height="12" viewBox="0 0 15 12" aria-hidden="true">
+            <path d="M7.5 2.2c2.2 0 4.2.9 5.6 2.3l-1.2 1.2A6.2 6.2 0 0 0 7.5 4.2 6.2 6.2 0 0 0 3.1 5.7L1.9 4.5A8 8 0 0 1 7.5 2.2z" fill="#1c1c1c"/>
+            <path d="M7.5 5.6c1.3 0 2.4.5 3.3 1.3L9.6 8.1A3.2 3.2 0 0 0 7.5 7.2 3.2 3.2 0 0 0 5.4 8.1L4.2 6.9A4.7 4.7 0 0 1 7.5 5.6z" fill="#1c1c1c"/>
+            <circle cx="7.5" cy="10.2" r="1.3" fill="#1c1c1c"/>
+          </svg>
+          <svg width="25" height="12" viewBox="0 0 25 12" aria-hidden="true">
+            <rect x="0.6" y="0.6" width="20.2" height="10.8" rx="2" fill="none" stroke="#1c1c1c" stroke-width="1"/>
+            <rect x="2" y="2" width="15" height="8" rx="1" fill="#1c1c1c"/>
+            <rect x="22" y="3.6" width="1.6" height="4.8" rx="0.6" fill="#1c1c1c"/>
+          </svg>
+        </div>
+      </div>
+      <div class="nav">
+        <div class="nav-title">圆明园考察</div>
+        <div class="capsule">
+          <span>
+            <svg width="18" height="6" viewBox="0 0 18 6">
+              <circle cx="2" cy="3" r="1.5" fill="#1c1c1c"/>
+              <circle cx="9" cy="3" r="1.5" fill="#1c1c1c"/>
+              <circle cx="16" cy="3" r="1.5" fill="#1c1c1c"/>
+            </svg>
+          </span>
+          <i></i>
+          <span>
+            <svg width="16" height="16" viewBox="0 0 16 16">
+              <circle cx="8" cy="8" r="6" fill="none" stroke="#1c1c1c" stroke-width="1.4"/>
+              <circle cx="8" cy="8" r="2.2" fill="#1c1c1c"/>
+            </svg>
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <div class="binder"></div>
+    <div class="tag">No.HOST</div>
+    <img class="postmark" src="../assets/host/st-postmark-02.png" alt="">
+
+    <main>
+      <div class="mast">
+        <div class="arches" aria-hidden="true"><i></i><i></i><i></i></div>
+        <h1>考察模块</h1>
+        <div class="sub">西洋楼铜版图 · 实景解谜系列</div>
+        <div class="hatch"></div>
+      </div>
+
+      <article class="card">
+        <div class="tape"></div>
+        <img class="clip" src="../assets/host/st-paperclip-02.png" alt="">
+        <i class="corner tl"></i>
+        <i class="corner tr"></i>
+        <i class="corner bl"></i>
+        <i class="corner br"></i>
+        <div class="plate">
+          <img src="../assets/host/IMG-RUNTIME-HOST.jpg" alt="西洋楼铜版">
+        </div>
+        <div class="card-body">
+          <div>
+            <div class="index">PLATE XXI</div>
+            <div class="name">第二十一图</div>
+            <div class="desc">圆明园西洋楼 · 实景解谜</div>
+            <div class="meta">从西往东五处 · 拿一册档案，把纸和地对一遍</div>
+          </div>
+          <div class="enter">
+            <b>进入</b>
+            <em>→</em>
+          </div>
+        </div>
+      </article>
+
+      <div class="reserved">更多考察模块 · 敬请期待</div>
+      <div class="torn"></div>
+      <div class="foot">
+        <div class="link">
+          <img src="../assets/host/ic-notebook-pen-ink.png" alt="">
+          <span>考察手册</span>
+        </div>
+        <i class="dot"></i>
+        <div class="link">关于</div>
+      </div>
+      <div class="note">点选模块，开启一趟纸上考察。</div>
+    </main>
+    <div class="homebar"></div>
+  </div>
+</body>
+</html>

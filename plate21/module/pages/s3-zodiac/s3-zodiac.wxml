@@ -1,0 +1,60 @@
+<nav-back />
+<page-overlays />
+<bgm-ambience />
+<view class="page page-shell paper-grain paper-real">
+  <view class="binder"></view>
+  <view class="tag-no tag-no-fixed">No.S3-2</view>
+
+  <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
+  <view class="title serif">转盘花纹匹配</view>
+  <view class="hatch-divider title-div"></view>
+  <view class="lead kaiti">使用DJ-转盘，根据花纹匹配寻找信息</view>
+  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
+
+  <view class="prop-card archive-sheet">
+    <view class="prop-label archive-tab">线下道具 · 实体转盘</view>
+    <view class="prop-title serif">转动七纹样转盘</view>
+    <view class="archive-rule"></view>
+    <view class="archive-steps">
+      <view class="step-row"><view class="step-no">1</view><view class="step-copy">取出实体七纹样转盘，保持中心连接件平放。</view></view>
+      <view class="step-row"><view class="step-no">2</view><view class="step-copy">按照转盘自身的图示说明对齐并转动纹样。</view></view>
+      <view class="step-row"><view class="step-no">3</view><view class="step-copy">依次记录出现的七个生肖，再把结果填入下方。</view></view>
+    </view>
+    <button wx:if="{{!operated}}" class="btn-seal confirm-btn record-action" bindtap="onOperationComplete">我已转出七个生肖</button>
+  </view>
+
+  <view class="answer-area record-field" wx:if="{{operated && !solved}}">
+    <view class="answer-label">转盘显示的七个生肖</view>
+    <input class="answer-input" value="{{answerInput}}" bindinput="onInput" placeholder="输入七个生肖，用顿号分隔" maxlength="40" />
+    <button class="hint-btn" bindtap="onHint">操作提示</button>
+    <view class="hint-copy note-hand" wx:if="{{hintText}}">{{hintText}}</view>
+    <view class="wrong-tip" wx:if="{{wrongTip}}">{{wrongTip}}</view>
+    <button class="btn-seal confirm-btn record-action" bindtap="onConfirm">核 对 转 盘 结 果</button>
+    <button class="skip-btn note-hand olive" bindtap="onSkip">转盘先不转了，往下走</button>
+  </view>
+
+  <view class="prop-card archive-sheet" wx:if="{{showHandoff}}">
+    <view class="prop-label archive-tab">道具收尾</view>
+    <view class="prop-title serif">收好转盘</view>
+    <view class="archive-rule"></view>
+    <view class="archive-steps">
+      <view class="step-row"><view class="step-copy">可是这些喷泉怎么喷出的水呢？</view></view>
+      <view class="step-row"><view class="step-copy">水力钟在眼前，水源却不在水池里。地图上面我看到了蓄水楼，或许喷泉正是靠它喷水。</view></view>
+    </view>
+    <button class="btn-seal confirm-btn record-action" bindtap="onNext" disabled="{{advancing}}">前往蓄水楼</button>
+  </view>
+  </scroll-view>
+
+  <history-card
+    wx:if="{{showHistory}}"
+    visible="{{showHistory}}"
+    title="十二兽首 · 回归纪实"
+    source="国家文物局公开资料"
+    lines="{{historyLines}}"
+    corner-number="{{cardNumber}}"
+    show-corner="{{showCardNumber}}"
+    btn-text="继续"
+    bind:next="onHistoryNext"
+    bind:close="onCloseHistory"
+  />
+</view>

@@ -1,0 +1,123 @@
+<nav-back />
+<!-- v1.3.1 手账：左侧活页装订孔列（移到 .page 外，避免 flex 容器影响 fixed 定位） -->
+<view class="binder"></view>
+<view class="page page-shell paper-grain paper-real">
+  <!-- v1.3.1 手账：真实吊牌素材 + 叠字编号（右上角，避让返回按钮与胶囊） -->
+  <view class="page-tag">
+    <image class="page-tag-img" src="/plate21/module/assets/img/stickers/st-hang-tag-01.png" mode="aspectFit" />
+    <view class="page-tag-no serif">No.000</view>
+  </view>
+
+  <!-- 上 1/3：已授权 AI 主视觉（邮票齿孔框 + 双框 + 角花 + 胶带贴角 + 微倾斜） -->
+  <view class="hero">
+    <view class="perfo-frame hero-perfo tilt-l">
+      <view class="tape" style="left:40rpx;top:4rpx;transform:rotate(-4deg);"></view>
+      <!-- v1.3.1 手账：邮戳贴纸（压在主视觉右上角） -->
+      <image class="sticker-postmark" src="/plate21/module/assets/img/stickers/st-postmark-01.png" mode="aspectFit" />
+      <view class="img-ph hero-img double-frame">
+        <view class="corner tl"></view>
+        <view class="corner tr"></view>
+        <view class="corner bl"></view>
+        <view class="corner br"></view>
+        <image class="hero-photo" src="/plate21/module/assets/img/IMG-RUNTIME-COVER.jpg" mode="aspectFill" />
+      </view>
+    </view>
+    <view class="hatch-divider hero-hatch"></view>
+    <!-- v1.3 手账：考察者手记批注（图框下缘左侧） -->
+    <view class="note-hand hero-note" style="transform: rotate(-2deg);">闻有第二十一图，未见。</view>
+    <!-- v1.3 手账：朱砂日期章（盖在主视觉右下角） -->
+    <view class="stamp-date cover-stamp">
+      <view>乾隆四十六年</view>
+      <view>1781</view>
+    </view>
+  </view>
+
+  <!-- 中部：拱券顶饰 + 书名 + 金色细分隔线 + 朱砂方印 -->
+  <view class="middle">
+    <view class="arch"></view>
+    <view class="title serif">西洋楼铜版图</view>
+    <view class="title-line"></view>
+    <view class="seal">
+      <view class="seal-text kaiti">第二十</view>
+      <view class="seal-text kaiti">一图</view>
+    </view>
+  </view>
+
+  <!-- 下部按钮区：考察凭证票根卡（撕票锯齿 + 缝线内框） -->
+  <view class="torn-divider"></view>
+  <view class="entry">
+    <!-- v1.3.1 手账：干花标本贴纸（压在票根卡左侧下方） -->
+    <image class="sticker-botanical" src="/plate21/module/assets/img/stickers/st-botanical-02.png" mode="aspectFit" />
+    <view class="card-ticket stitched entry-card">
+      <view class="entry-meta kaiti">考察凭证 · 第貳拾壹號 · 建档 {{archiveDate}}</view>
+      <view class="actions">
+        <button wx:if="{{loading}}" class="btn-line record-action" disabled>正在调取档案……</button>
+        <block wx:else>
+        <block wx:if="{{!hasRecord}}">
+          <view id="coachStart" class="coach-hit">
+            <button class="btn-seal record-action" bindtap="onStart" disabled="{{navigating}}">{{navigating ? '正在开启……' : '开 始 考 察'}}</button>
+          </view>
+        </block>
+        <block wx:else>
+          <view id="coachStart" class="coach-hit">
+            <button class="btn-seal record-action" bindtap="onContinue" disabled="{{navigating}}">{{navigating ? '正在调取……' : (completed ? '查 看 考 察 报 告' : '继 续 考 察')}}</button>
+          </view>
+          <button class="btn-line restart" bindtap="onRestart">重新考察</button>
+        </block>
+        </block>
+      </view>
+    </view>
+    <view class="ticket-edge"></view>
+  </view>
+
+  <!-- 底部小字入口 -->
+  <view class="foot-links">
+    <view id="coachHandbook" class="coach-hit">
+      <button class="link" bindtap="onHandbook">
+        <image class="link-icon" src="/plate21/module/assets/img/icons/ic-notebook-pen-ink.png" mode="aspectFit" />
+        <text>考察手册</text>
+      </button>
+    </view>
+    <view class="link-dot"></view>
+    <view id="coachHelp" class="coach-hit">
+      <button class="link" bindtap="onShowHelp">玩法说明</button>
+    </view>
+  </view>
+</view>
+
+<!-- 重新考察确认：避免误触清空现场照片和完整进度。 -->
+<view wx:if="{{showRestartConfirm}}" class="restart-mask" bindtap="onCancelRestart">
+  <view class="restart-card card-archive" catchtap="noop">
+    <view class="restart-kicker">ARCHIVE RESET · 档案重建</view>
+    <view class="restart-title serif">确认重新考察？</view>
+    <view class="archive-rule"></view>
+    <view class="restart-copy">这会清除全程进度、八张日期卡、现场照片、署名与报告记录。此操作无法撤销。</view>
+    <view class="restart-actions">
+      <button class="btn-seal restart-keep" bindtap="onCancelRestart" disabled="{{restarting}}">保留当前记录</button>
+      <button class="btn-line restart-confirm" bindtap="onConfirmRestart" disabled="{{restarting}}">{{restarting ? '正在重新建立档案……' : '确认重新考察'}}</button>
+    </view>
+  </view>
+</view>
+
+<coach-spot
+  class="coach-host"
+  style="top: {{coachWin.top}}px; left: {{coachWin.left}}px; width: {{coachWin.windowWidth}}px; height: {{coachWin.windowHeight}}px;"
+  visible="{{showCoach}}"
+  closing="{{coachClosing}}"
+  index="{{coachIndex}}"
+  total="{{coachSteps.length}}"
+  step="{{coachStep}}"
+  hole="{{coachHole}}"
+  win="{{coachWin}}"
+  bind:next="onCoachNext"
+  bind:skip="onCoachSkip"
+/>
+
+<play-guide
+  id="playGuide"
+  visible="{{showGuide}}"
+  mode="browse"
+  closing="{{guideClosing}}"
+  bind:next="onGuideNext"
+  bind:skip="onGuideSkip"
+/>

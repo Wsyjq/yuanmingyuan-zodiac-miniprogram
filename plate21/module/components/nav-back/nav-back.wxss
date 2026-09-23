@@ -1,0 +1,30 @@
+.nav-back {
+  position: fixed;
+  left: 24rpx;
+  z-index: 100;
+}
+
+.circle {
+  width: 72rpx;
+  height: 72rpx;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(247, 244, 236, 0.92);
+  border: 2rpx solid rgba(70, 56, 42, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 3rpx 6rpx rgba(70, 56, 42, 0.2));
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.circle:active {
+  transform: scale(0.94);
+  opacity: 0.85;
+}
+
+/* 左箭头：Lucide arrow-left 线条图标（墨） */
+.arrow {
+  width: 32rpx;
+  height: 32rpx;
+}

@@ -1,0 +1,24 @@
+page{background:var(--paper)}
+.page{height:100%;overflow:hidden;box-sizing:border-box;padding:calc(144rpx + env(safe-area-inset-top)) 44rpx 84rpx 60rpx;position:relative}
+.title{color:var(--patina);font-size:42rpx;font-weight:700;letter-spacing:4rpx}
+.tag-no-fixed{position:absolute;top: 88rpx; right: 210rpx}
+.title-div{margin:20rpx 0 28rpx}
+.lead{font-size:32rpx;line-height:1.8;color:var(--ink);margin-bottom:36rpx}
+.prop-card{margin-top:56rpx;padding:56rpx 34rpx 26rpx}
+.prop-label{white-space:nowrap}
+.prop-title{color:var(--ink-deep);font-size:40rpx;font-weight:700;line-height:1.5}
+.step-row{display:flex;align-items:flex-start;padding:16rpx 0}
+.step-no{width:46rpx;height:46rpx;line-height:46rpx;text-align:center;border:2rpx solid var(--ink-deep);border-radius:50%;font-family:"Courier New",monospace;font-size:22rpx;flex:none;margin-right:20rpx;color:var(--ink-deep)}
+.step-copy{font-size:28rpx;line-height:1.65;padding-top:2rpx;color:var(--ink)}
+.answer-area{margin-top:38rpx}
+.answer-label{font-size:26rpx;color:var(--ink60);letter-spacing:.1em;margin-bottom:16rpx}
+.answer-input{display:block;width:100%;height:90rpx;box-sizing:border-box;padding:0 8rpx;border:0;border-bottom:4rpx solid var(--ink-deep);border-radius:0;background:transparent;color:var(--ink-deep);font-family:"STSong","SimSun",serif;font-size:34rpx;outline:none}
+.hint-btn{display:inline-block;width:auto;min-height:0;line-height:1.4;margin:22rpx 0 8rpx;padding:14rpx 22rpx;border:2rpx dashed var(--olive);border-radius:0;background:rgba(111,114,72,.04);color:var(--olive);font-size:26rpx}
+.hint-btn:after{border:0}
+.hint-copy{font-size:28rpx;line-height:1.65;color:var(--olive);padding:14rpx 4rpx}
+.wrong-tip{font-size:26rpx;line-height:1.6;color:var(--cinnabar);margin-top:16rpx}
+.confirm-btn{width:100%;margin-top:30rpx}
+
+/* V2.1 可跳通道 */
+.skip-btn { display: block; width: auto; min-height: 0; line-height: 1.6; margin: 14rpx auto 0; padding: 6rpx 10rpx; border: 0; border-bottom: 2rpx dotted currentColor; border-radius: 0; background: transparent; font-size: 26rpx; }
+.skip-btn::after { border: 0; }

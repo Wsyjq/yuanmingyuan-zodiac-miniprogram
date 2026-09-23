@@ -1,0 +1,8 @@
+<view class="entry">
+  <image class="shot" src="/assets/host/entry-screen.png" mode="scaleToFill" />
+  <view class="hit enter" bindtap="goPlate21"></view>
+  <view class="hit map" bindtap="goAtlas"></view>
+  <view class="hit archive" bindtap="goArchive"></view>
+  <view class="hit book" bindtap="goHandbook"></view>
+  <view wx:if="{{revisitReady}}" class="hit revisit" bindtap="goRevisit"></view>
+</view>

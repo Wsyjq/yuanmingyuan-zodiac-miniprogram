@@ -1,0 +1,9 @@
+{
+  "desc": "第二十一图 sitemap",
+  "rules": [
+    {
+      "action": "allow",
+      "page": "*"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+<!-- V2.2 人声块：名牌（含方位标注与逐句播放小圆钮）+ 成段台词 + 可选脚注 -->
+<view class="db-block">
+  <view class="db-head">
+    <view class="db-speaker serif">{{speaker}}</view>
+    <view wx:if="{{aside}}" class="db-aside note-hand olive">{{aside}}</view>
+    <audio-clip wx:if="{{clipSrc}}" class="db-play" src="{{clipSrc}}" label="听这句" icon="{{true}}" />
+  </view>
+  <view class="db-text kaiti">{{text}}</view>
+  <view wx:if="{{note}}" class="db-note note-hand">{{note}}</view>
+</view>

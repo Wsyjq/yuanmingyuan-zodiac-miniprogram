@@ -1,0 +1,20 @@
+<view class="gate">
+  <view class="card">
+    <view class="kicker">西洋楼铜版图 · 实景解谜</view>
+    <view class="title">第二十一图 · 完整考察</view>
+    <view class="line">沿路八处：入口、谐奇趣、黄花阵、方外观、海晏堂、蓄水楼、大水法、雨果</view>
+    <view class="line">集齐日期卡，留下这一次的第二十一图</view>
+    <view class="dash"></view>
+    <block wx:if="{{state !== 'unavailable'}}">
+      <view class="label">门票</view>
+      <view class="price">{{priceText}}</view>
+      <view class="note">一次解锁，此账号长期有效。不含景区门票。</view>
+      <view class="pay {{purchasing ? 'busy' : ''}}" bindtap="onUnlock">{{purchasing ? '正在支付……' : '支付'}}</view>
+    </block>
+    <block wx:else>
+      <view class="note">完整版暂未开放购买，可先返回。</view>
+    </block>
+  </view>
+  <view class="foot">持票进场。走不完的那天，档案会等你回来。</view>
+  <view class="back" bindtap="onBackHome">返回</view>
+</view>

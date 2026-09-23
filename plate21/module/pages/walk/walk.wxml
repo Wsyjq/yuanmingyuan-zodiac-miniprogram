@@ -1,0 +1,221 @@
+<view class="page-shell walk">
+  <view wx:if="{{view.sideMap}}" class="edge">
+    <button id="coachMap" class="edge-btn" bindtap="onOpenMap">地图</button>
+    <button wx:if="{{view.sideProgress}}" id="coachProgress" class="edge-btn" bindtap="onOpenProgress">进程</button>
+  </view>
+  <view wx:elif="{{view.sideProgress}}" class="edge">
+    <button id="coachProgress" class="edge-btn" bindtap="onOpenProgress">进程</button>
+  </view>
+
+  <scroll-view wx:if="{{view.kind !== 'nav'}}" class="sheet" scroll-y="{{true}}">
+    <view class="page-no">{{view.pageId}}</view>
+    <view wx:for="{{view.lines}}" wx:key="index" class="line kaiti">{{item}}</view>
+    <view wx:if="{{view.terms.length}}" class="terms">
+      <button
+        wx:for="{{view.terms}}"
+        wx:key="key"
+        class="term"
+        data-key="{{item.key}}"
+        bindtap="onTerm"
+      >{{item.label}}</button>
+    </view>
+    <image wx:if="{{view.portrait}}" class="portrait" src="{{view.portrait}}" mode="widthFix" data-key="sl10" bindtap="onTerm" />
+    <image wx:if="{{view.teacher}}" class="portrait" src="{{view.teacher}}" mode="widthFix" />
+    <view wx:if="{{view.fountain}}" class="fountain">
+      <view class="jet"></view>
+      <view class="pool"></view>
+    </view>
+    <view wx:if="{{view.propPrompt}}" class="prop note-hand">{{view.propPrompt}}</view>
+    <view wx:for="{{view.revealLines}}" wx:key="index" class="line kaiti">{{item}}</view>
+
+    <view wx:if="{{view.nfc}}" class="nfc">
+      <view class="note-hand">贴片播出{{view.nfcLine}}。没有贴片就直接听，这一步不是门。</view>
+      <button class="choice" bindtap="onDirectListen">没有贴片，直接听</button>
+      <view wx:if="{{view.nfcStatus}}" class="note-hand">{{view.nfcStatus}}</view>
+    </view>
+    <view wx:if="{{view.nfcAside}}" class="prop note-hand">{{view.nfcAside}}</view>
+
+    <view wx:if="{{view.spots.length}}" class="spots">
+      <view
+        wx:for="{{view.spots}}"
+        wx:key="id"
+        class="spot {{item.on ? 'on' : ''}}"
+        data-id="{{item.id}}"
+        bindtap="onSpot"
+      >
+        <image src="{{item.src}}" mode="aspectFill" />
+        <text>{{item.title}}</text>
+      </view>
+    </view>
+    <image wx:if="{{view.photo && view.spots.length}}" class="shot" src="{{view.photo}}" mode="widthFix" />
+    <view wx:if="{{view.spotDetail}}" class="line kaiti">{{view.spotDetail}}</view>
+
+    <view wx:if="{{view.figures.length}}" class="figures">
+      <button
+        wx:for="{{view.figures}}"
+        wx:key="label"
+        class="figure {{item.selected ? 'on' : ''}}"
+        data-value="{{item.label}}"
+        bindtap="onChoose"
+      >
+        <image src="{{item.src}}" mode="aspectFill" />
+        <text>{{item.label}}</text>
+      </button>
+    </view>
+
+    <view wx:if="{{view.beasts.length}}" class="beasts">
+      <button
+        wx:for="{{view.beasts}}"
+        wx:key="branch"
+        class="beast {{item.on ? 'on' : ''}} {{view.beastFinale ? 'finale' : ''}}"
+        style="{{view.beastFinale ? item.delayStyle : ''}}"
+        data-branch="{{item.branch}}"
+        bindtap="onBeast"
+      >
+        <text class="beast-name">{{item.name}}首</text>
+        <text class="beast-range">{{item.branch}}时 {{item.range}}</text>
+      </button>
+      <button wx:if="{{!view.beastFinale}}" class="choice" bindtap="onNoonWatch">看正午十二像一起喷</button>
+    </view>
+
+    <view wx:if="{{view.board}}" class="board">
+      <view class="note-hand">先点一件，再点它该回去的位置。放错了可以改。</view>
+      <button
+        wx:for="{{view.board.pieces}}"
+        wx:key="id"
+        class="choice {{item.on ? 'on' : ''}}"
+        data-id="{{item.id}}"
+        bindtap="onPiece"
+      >{{item.text}}</button>
+      <button
+        wx:for="{{view.board.slots}}"
+        wx:for-item="slot"
+        wx:key="id"
+        class="choice slot"
+        data-id="{{slot.id}}"
+        bindtap="onSlot"
+      >{{slot.text}}</button>
+    </view>
+
+    <button
+      wx:for="{{view.choices}}"
+      wx:key="label"
+      class="choice {{item.selected ? 'on' : ''}}"
+      data-value="{{item.label}}"
+      bindtap="onChoose"
+    >{{item.label}}</button>
+
+    <button
+      wx:for="{{view.toggles}}"
+      wx:key="key"
+      class="choice {{item.on ? 'on' : ''}}"
+      data-key="{{item.key}}"
+      bindtap="onToggle"
+    >{{item.label}}</button>
+
+    <view wx:for="{{view.inputs}}" wx:key="key" class="field">
+      <view class="field-label">{{item.label}}</view>
+      <input
+        class="field-input"
+        value="{{item.value}}"
+        data-key="{{item.key}}"
+        bindinput="onField"
+      />
+    </view>
+
+    <button wx:if="{{view.spots.length}}" class="choice" bindtap="onShoot">对着这一处拍一张</button>
+
+    <block wx:if="{{view.letterRead}}">
+      <button class="choice" bindtap="onPrev">查看上一位的留言</button>
+      <view wx:if="{{view.prevNote}}" class="line kaiti">{{view.prevNote}}</view>
+    </block>
+    <block wx:if="{{view.letterLeave}}">
+      <view class="field">
+        <view class="field-label">留下一句话</view>
+        <input class="field-input" data-key="leaveText" value="{{view.leaveText}}" bindinput="onField" />
+      </view>
+      <button class="choice" bindtap="onLeaveText">留下这句话</button>
+      <button class="choice" bindtap="onLeavePhoto">留下一张照片</button>
+      <view class="field">
+        <view class="field-label">希望他再看一眼的地方</view>
+        <input class="field-input" data-key="wish" value="{{view.wish}}" bindinput="onField" />
+      </view>
+      <button class="choice" bindtap="onLeaveWish">留下这个心愿</button>
+      <view wx:if="{{view.leftAck}}" class="note-hand">{{view.leftAck}}</view>
+      <image wx:if="{{view.photo}}" class="shot" src="{{view.photo}}" mode="widthFix" />
+    </block>
+    <view wx:if="{{view.again}}" class="again note-hand">还没对上，再看一次。</view>
+  </scroll-view>
+
+  <view wx:else class="nav-page">
+    <view class="nav-kicker">往下一站</view>
+    <view class="nav-title">{{view.nav.title}}</view>
+    <view class="nav-distance">约 {{view.nav.distanceMeters}} 米</view>
+    <button class="choice" bindtap="onNavigate">开始导航</button>
+  </view>
+
+  <view class="dock">
+    <button wx:if="{{view.showSkip}}" id="coachSkip" class="skip-btn dock-skip" bindtap="onSkip">{{view.skipLabel}}</button>
+    <button wx:if="{{view.primary}}" id="coachGo" class="btn-seal dock-go" bindtap="onPrimary">{{view.primary}}</button>
+  </view>
+
+  <view wx:if="{{showMap}}" class="mask" bindtap="onCloseMap">
+    <view class="panel" catchtap="noop">
+      <view class="panel-title">这一带</view>
+      <button
+        wx:for="{{mapSites}}"
+        wx:key="id"
+        class="choice"
+        data-lat="{{item.latitude}}"
+        data-lng="{{item.longitude}}"
+        data-name="{{item.name}}"
+        bindtap="onMapSite"
+      >{{item.name}}</button>
+      <button class="choice" bindtap="onCloseMap">关上</button>
+    </view>
+  </view>
+
+  <view wx:if="{{showProgress}}" class="mask" bindtap="onCloseProgress">
+    <view class="panel panel-wide" catchtap="noop">
+      <view class="panel-title">游览进程</view>
+      <view wx:for="{{progressRows}}" wx:key="id" class="progress-block">
+        <button class="choice" data-row="{{item.id}}" bindtap="onProgressRow">{{item.title}} · {{item.state}}</button>
+        <button
+          wx:for="{{item.puzzles}}"
+          wx:for-item="puzzle"
+          wx:key="playId"
+          class="choice sub"
+          data-page="{{puzzle.reopenPageId}}"
+          bindtap="onProgressPlay"
+        >{{puzzle.label}} · {{puzzle.state}}</button>
+      </view>
+      <button class="choice" bindtap="onCloseProgress">关上</button>
+    </view>
+  </view>
+
+  <view wx:if="{{card}}" class="mask" bindtap="onCardClose">
+    <view class="panel" catchtap="noop">
+      <view class="panel-title">{{card.title}}</view>
+      <image wx:if="{{card.image}}" class="card-fig" src="{{card.image}}" mode="widthFix" />
+      <view wx:if="{{card.caption}}" class="note-hand">{{card.caption}}</view>
+      <view wx:for="{{card.lines}}" wx:key="index" class="line kaiti">{{item}}</view>
+      <view wx:if="{{card.source}}" class="note-hand">〔来源〕{{card.source}}</view>
+      <button wx:if="{{card.more}}" class="choice" bindtap="onCardMore">再听一层</button>
+      <button class="choice" bindtap="onCardClose">关上</button>
+    </view>
+  </view>
+
+  <coach-spot
+    class="coach-host"
+    style="top: {{coachWin.top}}px; left: {{coachWin.left}}px; width: {{coachWin.windowWidth}}px; height: {{coachWin.windowHeight}}px;"
+    visible="{{showCoach}}"
+    closing="{{coachClosing}}"
+    index="{{coachIndex}}"
+    total="{{coachSteps.length}}"
+    step="{{coachStep}}"
+    hole="{{coachHole}}"
+    win="{{coachWin}}"
+    bind:next="onCoachNext"
+    bind:skip="onCoachSkip"
+  />
+</view>

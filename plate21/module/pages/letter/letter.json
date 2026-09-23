@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "bgm-ambience": "../../components/bgm-ambience/bgm-ambience"
+  },
+  "navigationBarTitleText": "次日之信",
+  "disableScroll": true
+}

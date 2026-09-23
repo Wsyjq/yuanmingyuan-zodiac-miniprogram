@@ -1,0 +1,42 @@
+/* dialogue-block：台词条，档案页里的「人声」 */
+.db-block {
+  margin: 30rpx 0;
+  padding: 24rpx 28rpx 20rpx;
+  background: rgba(74, 64, 46, 0.045);
+  border-left: 6rpx solid rgba(122, 104, 66, 0.5);
+  border-radius: 4rpx;
+}
+
+.db-head {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 12rpx;
+}
+
+.db-speaker {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #4a402e;
+  letter-spacing: 4rpx;
+}
+
+.db-aside { font-size: 24rpx; }
+
+.db-text {
+  font-size: 31rpx;
+  line-height: 1.9;
+  color: #3d3627;
+  text-align: justify;
+}
+
+/* 逐句播放小圆钮靠右，与名牌同行（V2.2 分页轮：去条状按钮） */
+.db-play {
+  margin-left: auto;
+}
+
+.db-note {
+  margin-top: 10rpx;
+  font-size: 23rpx;
+  color: rgba(74, 64, 46, 0.62);
+}

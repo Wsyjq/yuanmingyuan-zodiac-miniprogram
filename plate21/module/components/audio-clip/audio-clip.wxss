@@ -1,0 +1,144 @@
+/* audio-clip：墨线小播放条，与档案手账风格同源 */
+.ac-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 14rpx;
+  padding: 6rpx 0;
+}
+
+.ac-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  margin: 0;
+  padding: 6rpx 18rpx;
+  background: transparent;
+  border: 2rpx solid rgba(74, 64, 46, 0.55);
+  border-radius: 999rpx;
+  line-height: 1.5;
+  font-size: 24rpx;
+  color: #4a402e;
+}
+
+.ac-btn::after { border: none; }
+
+.ac-icon {
+  width: 26rpx;
+  height: 26rpx;
+  opacity: 0.75;
+}
+
+.ac-label { letter-spacing: 2rpx; }
+
+.ac-track {
+  width: 120rpx;
+  height: 4rpx;
+  background: rgba(74, 64, 46, 0.18);
+  border-radius: 2rpx;
+  overflow: hidden;
+}
+
+.ac-compact .ac-track { display: none; }
+
+.ac-track-fill {
+  height: 100%;
+  background: rgba(74, 64, 46, 0.6);
+  border-radius: 2rpx;
+}
+
+/* icon 模式：名牌行内小圆钮（dialogue-block 逐句播放），不占正文宽度 */
+.ac-iconbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 52rpx;
+  height: 52rpx;
+  border: 2rpx solid rgba(74, 64, 46, 0.5);
+  border-radius: 50%;
+  background: rgba(247, 244, 236, 0.75);
+  box-sizing: border-box;
+}
+.ac-iconbtn:active {
+  transform: scale(0.92);
+  opacity: 0.85;
+}
+.ac-iconbtn.on {
+  background: rgba(74, 64, 46, 0.14);
+  border-color: rgba(74, 64, 46, 0.8);
+}
+.ac-iconbtn-img {
+  width: 24rpx;
+  height: 24rpx;
+  margin-left: 3rpx;
+  opacity: 0.78;
+}
+.ac-iconbtn-pause {
+  display: flex;
+  gap: 7rpx;
+}
+.ac-iconbtn-bar {
+  width: 6rpx;
+  height: 20rpx;
+  background: #4a402e;
+  border-radius: 2rpx;
+}
+
+/* dock 形态：右下悬浮、可伸缩。展开=胶囊播放条（播放/暂停+进度+收起），
+   收起=小圆钮（在播时描边变铜绿）。底距 150rpx：避开 novel 翻页条与各页底栏；
+   层级低于底部弹层/史料卡/导览面板。 */
+.ac-dock-bar {
+  position: fixed;
+  right: 26rpx;
+  bottom: calc(150rpx + env(safe-area-inset-bottom));
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  padding: 12rpx 16rpx;
+  background: rgba(247, 244, 236, 0.96);
+  border: 2rpx solid rgba(74, 64, 46, 0.55);
+  border-radius: 999rpx;
+  box-shadow: 0 8rpx 22rpx rgba(70, 56, 42, 0.24);
+  box-sizing: border-box;
+}
+.ac-dock-track {
+  width: 140rpx;
+}
+.ac-dock-fold {
+  flex-shrink: 0;
+  width: 44rpx;
+  height: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(74, 64, 46, 0.6);
+  font-size: 30rpx;
+  line-height: 1;
+}
+.ac-dock-fold:active {
+  opacity: 0.6;
+}
+.ac-dock-dot {
+  position: fixed;
+  right: 26rpx;
+  bottom: calc(150rpx + env(safe-area-inset-bottom));
+  z-index: 70;
+  width: 76rpx;
+  height: 76rpx;
+  border: 2rpx solid rgba(74, 64, 46, 0.55);
+  border-radius: 50%;
+  background: rgba(247, 244, 236, 0.94);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  box-shadow: 0 6rpx 18rpx rgba(70, 56, 42, 0.22);
+}
+.ac-dock-dot:active {
+  transform: scale(0.93);
+}
+.ac-dock-dot.on {
+  border-color: rgba(74, 107, 100, 0.85);
+  background: rgba(74, 107, 100, 0.12);
+}

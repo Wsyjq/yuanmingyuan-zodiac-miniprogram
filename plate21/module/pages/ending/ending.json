@@ -1,0 +1,6 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "stamp-toast": "../../components/stamp-toast/stamp-toast"
+  }
+}

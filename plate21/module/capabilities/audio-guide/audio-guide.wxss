@@ -1,0 +1,208 @@
+/* 语音导览：悬浮入口 + 底部讲解面板 */
+.ag-fab {
+  position: fixed;
+  right: 26rpx;
+  bottom: calc(168rpx + env(safe-area-inset-bottom));
+  z-index: 96;
+  width: 88rpx;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 2rpx solid var(--brass);
+  border-radius: 50%;
+  background: rgba(247, 244, 236, 0.94);
+  box-shadow: 0 6rpx 18rpx rgba(70, 56, 42, 0.22);
+}
+.ag-fab image {
+  width: 44rpx;
+  height: 44rpx;
+  flex-shrink: 0;
+}
+.ag-fab:active { transform: scale(0.94); }
+
+.ag-panel {
+  position: fixed;
+  left: 24rpx;
+  right: 24rpx;
+  bottom: 28rpx;
+  z-index: 114;
+  max-height: 62vh;
+  display: flex;
+  flex-direction: column;
+  padding: 26rpx 28rpx;
+  background: var(--paper);
+  border: 2rpx solid rgba(70, 56, 42, 0.55);
+  border-radius: 10rpx;
+  box-shadow: 0 14rpx 40rpx rgba(46, 31, 13, 0.32);
+  animation: ag-up 0.26s ease both;
+}
+@keyframes ag-up {
+  from { transform: translateY(40rpx); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.ag-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+.ag-head-copy {
+  min-width: 0;
+  flex: 1;
+}
+.ag-kicker {
+  font-family: "Courier New", monospace;
+  font-size: 18rpx;
+  letter-spacing: 3rpx;
+  color: var(--coffee);
+}
+.ag-kicker-sub {
+  margin-top: 4rpx;
+  font-size: 20rpx;
+  letter-spacing: 2rpx;
+  color: var(--ink60);
+  line-height: 1.5;
+}
+.ag-title {
+  margin-top: 8rpx;
+  font-size: 30rpx;
+  letter-spacing: 2rpx;
+  color: var(--ink-deep);
+  word-break: break-word;
+}
+.ag-close {
+  width: 52rpx;
+  height: 52rpx;
+  font-size: 32rpx;
+  color: var(--ink60);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ag-player {
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+  margin-top: 18rpx;
+}
+.ag-play {
+  padding: 10rpx 30rpx;
+  border: 2rpx solid var(--cinnabar);
+  border-radius: 6rpx;
+  color: var(--cinnabar);
+  font-size: 24rpx;
+  letter-spacing: 4rpx;
+}
+.ag-track {
+  flex: 1;
+  height: 6rpx;
+  background: rgba(70, 56, 42, 0.14);
+  border-radius: 3rpx;
+  overflow: hidden;
+}
+.ag-track-fill {
+  height: 100%;
+  background: var(--patina);
+  transition: width 0.3s linear;
+}
+.ag-pending {
+  margin-top: 18rpx;
+  color: var(--olive);
+  font-size: 24rpx;
+}
+
+.ag-script {
+  margin-top: 16rpx;
+  min-height: 0;
+  max-height: 34vh;
+}
+.ag-line {
+  padding: 10rpx 2rpx;
+  font-size: 27rpx;
+  line-height: 1.9;
+  color: var(--ink);
+}
+.ag-line + .ag-line { border-top: 1rpx dashed rgba(138, 122, 96, 0.28); }
+
+/* v2 深讲层：永远折叠的可选展开区 */
+.ag-deep {
+  margin-top: 18rpx;
+  border-top: 1rpx solid rgba(70, 56, 42, 0.25);
+  padding-top: 16rpx;
+}
+.ag-deep-toggle {
+  width: 100%;
+  padding: 12rpx 0;
+  border: 2rpx dashed var(--brass);
+  border-radius: 8rpx;
+  color: var(--coffee);
+  font-size: 24rpx;
+  letter-spacing: 3rpx;
+  background: transparent;
+}
+.ag-deep-toggle::after { border: none; }
+.ag-deep-script {
+  max-height: 26vh;
+  margin-top: 12rpx;
+  padding-top: 10rpx;
+  border-top: 1rpx dashed rgba(138, 122, 96, 0.28);
+}
+/* 前人明信片：单张、匿名、不可交互 */
+.ag-guest {
+  margin-top: 14rpx;
+  padding: 18rpx 22rpx;
+  background: rgba(233, 222, 196, 0.55);
+  border: 2rpx solid rgba(166, 58, 46, 0.35);
+  border-radius: 8rpx;
+}
+.ag-guest-tag {
+  font-family: "Courier New", monospace;
+  font-size: 18rpx;
+  letter-spacing: 3rpx;
+  color: var(--cinnabar);
+}
+.ag-guest-text {
+  margin-top: 10rpx;
+  font-size: 28rpx;
+  line-height: 1.85;
+  color: var(--ink);
+}
+
+/* 全局音频开关行（BGM/人声，与手册页同状态源） */
+.ag-switches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  margin-top: 20rpx;
+}
+.ag-switch {
+  flex: 1;
+  min-width: 240rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12rpx 20rpx;
+  border: 2rpx solid var(--dash);
+  border-radius: 999rpx;
+  background: rgba(247, 244, 236, 0.6);
+}
+.ag-switch.on {
+  border-color: var(--patina);
+}
+.ag-switch-name {
+  font-size: 22rpx;
+  letter-spacing: 2rpx;
+  color: var(--ink);
+}
+.ag-switch-state {
+  font-size: 20rpx;
+  letter-spacing: 2rpx;
+  color: var(--ink60);
+}
+.ag-switch.on .ag-switch-state {
+  color: var(--patina);
+}

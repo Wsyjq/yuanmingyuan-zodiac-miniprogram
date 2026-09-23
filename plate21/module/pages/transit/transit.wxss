@@ -1,0 +1,270 @@
+/* P03 站间过渡 */
+/* ---------- 墨晕转场（设计文档 §1.5：墨晕染开 800–1000ms） ---------- */
+.ink-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 90;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, rgba(70, 56, 42, 0.96) 0%, rgba(70, 56, 42, 0.9) 42%, rgba(70, 56, 42, 0) 75%);
+  animation: ink-in 0.9s ease forwards;
+}
+@keyframes ink-in {
+  0% { transform: scale(0); opacity: 1; }
+  55% { transform: scale(2.4); opacity: 1; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+.page {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 220rpx 40rpx 80rpx 92rpx; /* 左侧 92rpx = 40 + 52 让位 .binder */
+  display: flex;
+  flex-direction: column;
+}
+
+/* 归档编号标签（右上角，避让返回按钮与胶囊） */
+.page-no {
+  position: absolute;
+  top: 88rpx; right: 210rpx;
+}
+
+/* ---------- 路线标题 ---------- */
+.route-arch {
+  margin: 0 auto 24rpx;
+}
+.route {
+  font-size: 40rpx;
+  font-weight: 700;
+  letter-spacing: 4rpx;
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 32rpx;
+}
+
+/* ---------- 已授权 AI 路线推进图 ---------- */
+.map {
+  position: relative;
+  width: 100%;
+  max-width: 670rpx;
+  aspect-ratio: 67 / 48;
+  height: auto;
+  min-height: 420rpx;
+  box-sizing: border-box;
+  margin: 0 auto;
+  background: var(--paper2);
+  border: 2rpx solid rgba(70, 56, 42, 0.5);
+}
+.map::after {
+  content: "";
+  position: absolute;
+  left: 6rpx;
+  right: 6rpx;
+  top: 6rpx;
+  bottom: 6rpx;
+  border: 1rpx solid rgba(70, 56, 42, 0.35);
+  pointer-events: none;
+}
+/* v1.3.1：邮戳贴纸压在地图右上角，像盖在地图上的行程章 */
+.map-postmark {
+  position: absolute;
+  top: -32rpx;
+  right: -24rpx;
+  width: 200rpx;
+  height: 130rpx;
+  transform: rotate(8deg);
+  opacity: 0.9;
+  z-index: 9;
+  pointer-events: none;
+  filter: drop-shadow(0 3rpx 6rpx rgba(70, 56, 42, 0.22));
+}
+/* AI 地图线描铺满容器，点位/连线叠在其上。 */
+.map-bg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.55;
+  z-index: 0;
+  pointer-events: none;
+  /* 单色铜版画叠在 paper2 底上，用 multiply 让排线融入纸色 */
+  mix-blend-mode: multiply;
+}
+.map-tag {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 14rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.map-tag-code {
+  font-size: 24rpx;
+  color: var(--ink60);
+  letter-spacing: 4rpx;
+}
+.map-tag-desc {
+  font-size: 22rpx;
+  color: var(--ink60);
+  margin-top: 8rpx;
+}
+/* 站点连线：走过/未走的段为墨色细线，当前段铜绿加粗 */
+.line {
+  position: absolute;
+  height: 2rpx;
+  background: var(--ink60);
+  opacity: 0.5;
+  transform-origin: left center;
+}
+.line-now {
+  height: 6rpx;
+  background: var(--patina);
+  opacity: 1;
+}
+/* 黄铜圆点（纯 CSS 铜钉质感） */
+.dot-wrap {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+.dot {
+  position: absolute;
+  left: -11rpx;
+  top: -11rpx;
+  width: 22rpx;
+  height: 22rpx;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.75), var(--brass) 55%, var(--coffee));
+  box-shadow: 0 2rpx 6rpx rgba(70, 56, 42, 0.25);
+}
+/* INT-405：已过点变暗（铜绿实心，表示已抵达） */
+.dot-wrap.done .dot {
+  background: var(--patina);
+  opacity: 0.55;
+}
+/* INT-405：已过点打勾图标 */
+.dot-check {
+  position: absolute;
+  left: -20rpx;
+  top: -40rpx;
+  width: 40rpx;
+  height: 40rpx;
+  opacity: 0.85;
+}
+/* INT-405：当前目标点呼吸高亮（铜绿光晕脉动，提示"前往此处"） */
+.dot-wrap.cur .dot {
+  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.85), var(--patina) 55%, var(--patina));
+  animation: dot-pulse 1.6s ease-in-out infinite;
+}
+@keyframes dot-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0rpx rgba(74, 107, 100, 0.5);
+  }
+  50% {
+    transform: scale(1.18);
+    box-shadow: 0 0 0 8rpx rgba(74, 107, 100, 0);
+  }
+}
+.dot-wrap.cur .dot-name {
+  color: var(--patina);
+  font-weight: 600;
+}
+.dot-pin {
+  position: absolute;
+  left: 18rpx;
+  top: -18rpx;
+  width: 26rpx;
+  height: 26rpx;
+}
+
+.dot-name {
+  position: absolute;
+  left: -80rpx;
+  top: 18rpx;
+  width: 160rpx;
+  text-align: center;
+  font-size: 20rpx;
+  color: var(--ink60);
+  letter-spacing: 1rpx;
+}
+
+/* 考察者手记批注：贴主图右下页边 */
+.map-note {
+  width: 100%;
+  max-width: 670rpx;
+  box-sizing: border-box;
+  margin: 20rpx auto 0;
+  text-align: right;
+  padding-right: 12rpx;
+}
+
+/* ---------- 该段环境叙事 ---------- */
+.narr {
+  margin-top: 40rpx;
+  padding: 0 24rpx;
+}
+.narr-text {
+  font-size: 30rpx;
+  line-height: 1.9;
+  color: var(--ink);
+  animation: narr-in 0.5s ease 0.5s both;
+}
+@keyframes narr-in {
+  from { opacity: 0; transform: translateY(16rpx); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- 继续前往 ---------- */
+.next-btn {
+  margin: auto auto 0;
+  width: 100%;
+  max-width: 400rpx;
+}
+
+/* v2 顺路支线入口卡 */
+.side-entry {
+  position: relative;
+  width: 100%;
+  max-width: var(--content-max);
+  box-sizing: border-box;
+  margin-top: 26rpx;
+  padding: 24rpx 28rpx;
+  border: 2rpx dashed rgba(74, 107, 100, 0.75);
+  background: rgba(74, 107, 100, 0.08);
+}
+.side-tag {
+  font-family: "Courier New", monospace;
+  font-size: 18rpx;
+  letter-spacing: 3rpx;
+  color: var(--patina);
+}
+.side-title {
+  margin-top: 8rpx;
+  font-size: 30rpx;
+  color: var(--ink-deep);
+}
+.side-hook {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  line-height: 1.7;
+  color: var(--ink60);
+}
+.side-done {
+  margin-top: 10rpx;
+  font-size: 22rpx;
+}
+.side-arrow {
+  position: absolute;
+  right: 24rpx;
+  top: 50%;
+  margin-top: -24rpx;
+  font-size: 40rpx;
+  color: var(--patina);
+}
