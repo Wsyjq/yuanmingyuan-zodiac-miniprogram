@@ -1,0 +1,91 @@
+<view class="page-shell walk">
+  <view wx:if="{{view.sideMap}}" class="edge">
+    <button class="edge-btn" bindtap="onOpenMap">地图</button>
+    <button wx:if="{{view.sideProgress}}" class="edge-btn" bindtap="onOpenProgress">进程</button>
+  </view>
+  <view wx:elif="{{view.sideProgress}}" class="edge">
+    <button class="edge-btn" bindtap="onOpenProgress">进程</button>
+  </view>
+
+  <scroll-view wx:if="{{view.kind !== 'nav'}}" class="sheet" scroll-y="{{true}}">
+    <view class="page-no">{{view.pageId}}</view>
+    <view wx:for="{{view.lines}}" wx:key="index" class="line kaiti">{{item}}</view>
+    <view wx:if="{{view.propPrompt}}" class="prop note-hand">{{view.propPrompt}}</view>
+    <view wx:for="{{view.revealLines}}" wx:key="index" class="line kaiti">{{item}}</view>
+
+    <button
+      wx:for="{{view.choices}}"
+      wx:key="label"
+      class="choice {{item.selected ? 'on' : ''}}"
+      data-value="{{item.label}}"
+      bindtap="onChoose"
+    >{{item.label}}</button>
+
+    <button
+      wx:for="{{view.toggles}}"
+      wx:key="key"
+      class="choice {{item.on ? 'on' : ''}}"
+      data-key="{{item.key}}"
+      bindtap="onToggle"
+    >{{item.label}}</button>
+
+    <view wx:for="{{view.inputs}}" wx:key="key" class="field">
+      <view class="field-label">{{item.label}}</view>
+      <input
+        class="field-input"
+        value="{{item.value}}"
+        data-key="{{item.key}}"
+        bindinput="onField"
+      />
+    </view>
+
+    <button wx:if="{{view.pageId === 'H4'}}" class="choice" bindtap="onShoot">拍一张</button>
+    <view wx:if="{{view.again}}" class="again note-hand">还没对上，再看一次。</view>
+  </scroll-view>
+
+  <view wx:else class="nav-page">
+    <view class="nav-kicker">往下一站</view>
+    <view class="nav-title">{{view.nav.title}}</view>
+    <view class="nav-distance">约 {{view.nav.distanceMeters}} 米</view>
+    <button class="choice" bindtap="onNavigate">开始导航</button>
+  </view>
+
+  <view class="dock">
+    <button wx:if="{{view.showSkip}}" class="skip-btn dock-skip" bindtap="onSkip">{{view.skipLabel}}</button>
+    <button wx:if="{{view.primary}}" class="btn-seal dock-go" bindtap="onPrimary">{{view.primary}}</button>
+  </view>
+
+  <view wx:if="{{showMap}}" class="mask" bindtap="onCloseMap">
+    <view class="panel" catchtap="noop">
+      <view class="panel-title">这一带</view>
+      <button
+        wx:for="{{mapSites}}"
+        wx:key="id"
+        class="choice"
+        data-lat="{{item.latitude}}"
+        data-lng="{{item.longitude}}"
+        data-name="{{item.name}}"
+        bindtap="onMapSite"
+      >{{item.name}}</button>
+      <button class="choice" bindtap="onCloseMap">关上</button>
+    </view>
+  </view>
+
+  <view wx:if="{{showProgress}}" class="mask" bindtap="onCloseProgress">
+    <view class="panel panel-wide" catchtap="noop">
+      <view class="panel-title">游览进程</view>
+      <view wx:for="{{progressRows}}" wx:key="id" class="progress-block">
+        <button class="choice" data-row="{{item.id}}" bindtap="onProgressRow">{{item.title}} · {{item.state}}</button>
+        <button
+          wx:for="{{item.puzzles}}"
+          wx:for-item="puzzle"
+          wx:key="playId"
+          class="choice sub"
+          data-page="{{puzzle.reopenPageId}}"
+          bindtap="onProgressPlay"
+        >{{puzzle.label}} · {{puzzle.state}}</button>
+      </view>
+      <button class="choice" bindtap="onCloseProgress">关上</button>
+    </view>
+  </view>
+</view>

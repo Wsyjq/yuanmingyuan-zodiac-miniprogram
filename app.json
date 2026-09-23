@@ -10,6 +10,7 @@
       "root": "plate21/module",
       "pages": [
         "pages/gate/gate",
+        "pages/walk/walk",
         "pages/cover/cover",
         "pages/prologue/prologue",
         "pages/s1-decode/s1-decode",

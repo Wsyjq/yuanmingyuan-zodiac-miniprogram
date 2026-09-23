@@ -97,7 +97,7 @@ test('gate: 已解锁（本地缓存命中）直接检票放行 cover', async ()
   })
   assert.deepEqual(result.errors, [])
   assert.equal(result.data.state, 'paid')
-  assert.ok(seen.some((url) => url.indexOf('/pages/cover/cover') >= 0), '应放行到 cover')
+  assert.ok(seen.some((url) => url.indexOf('/pages/walk/walk') >= 0), '应放行到主线')
 })
 
 test('gate: 权益仅存宿主侧（无本地缓存）也能查到并放行', async () => {
@@ -114,7 +114,7 @@ test('gate: 权益仅存宿主侧（无本地缓存）也能查到并放行', as
   })
   assert.deepEqual(result.errors, [])
   assert.equal(result.data.state, 'paid')
-  assert.ok(seen.some((url) => url.indexOf('/pages/cover/cover') >= 0))
+  assert.ok(seen.some((url) => url.indexOf('/pages/walk/walk') >= 0))
 })
 
 // ---------------- cover 深链守卫 ----------------
