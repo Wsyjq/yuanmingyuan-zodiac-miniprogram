@@ -8,7 +8,7 @@
   display: flex;
   align-items: center;
   padding: 12rpx 28rpx 10rpx;
-  background: linear-gradient(155deg, #FBF9F3, var(--paper2));
+  background: linear-gradient(155deg, #F6F0E0, var(--paper2));
   border: 2rpx solid rgba(46, 31, 13, 0.68);
   border-left: 7rpx solid var(--brass);
   border-radius: 3rpx 7rpx 4rpx 5rpx;

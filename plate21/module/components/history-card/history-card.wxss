@@ -22,7 +22,7 @@
   padding: 0 48rpx 48rpx;
   background:
     repeating-linear-gradient(0deg, transparent 0, transparent 47rpx, rgba(122, 92, 62, 0.025) 48rpx, transparent 49rpx),
-    linear-gradient(155deg, #FBF9F3, var(--paper2));
+    linear-gradient(155deg, #F6F0E0, var(--paper2));
   box-shadow: 0 16rpx 48rpx rgba(46, 31, 13, 0.32);
   animation: card-in 0.3s ease;
 }
@@ -58,7 +58,7 @@
   text-align: center;
   font-size: 32rpx;
   font-weight: 700;
-  color: #F7F4EC;
+  color: #F4EDDC;
   background: #A63A2E;
   border-radius: 50%;
   box-shadow: 0 2rpx 6rpx rgba(166, 58, 46, 0.35);

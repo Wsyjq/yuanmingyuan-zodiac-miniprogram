@@ -6,19 +6,19 @@
  * 仅此处定义颜色/字体变量；页面与组件统一引用，不要散落写死色值。
  * ============================================================ */
 page {
-  /* 色彩系统 · 档案风（2026-09-22：干净档案纸白 + 蓝黑墨 + 朱印，不做旧不发黄） */
-  --paper: #F7F4EC;      /* 档案纸白：全局页面底色（干净米白，近 #FBFAF6 的暖白） */
-  --paper2: #EFE9DC;     /* 浅档一档：卡片底、抽屉底 */
-  --paper3: #E4DDCC;     /* 浅档深档：浮层、覆盖层 */
-  --ink: #2C3038;        /* 蓝黑墨：正文主文本、排线（档案墨水色） */
-  --ink-deep: #191C22;   /* 重墨：大标题、重要框线、铜版排线 */
-  --ink60: #6E6A60;      /* 灰墨：次要文本、来源标注 */
+  /* 色彩系统 · 手帐风：轻微泛黄的旧纸 + 暖褐墨，不用档案纸白和蓝黑墨 */
+  --paper: #F4EDDC;      /* 旧纸黄：全局页面底色 */
+  --paper2: #EBE1CB;     /* 浅棕一档：卡片底、抽屉底 */
+  --paper3: #DED1B4;     /* 灰米深档：浮层、覆盖层 */
+  --ink: #46382A;        /* 暖褐墨：正文主文本、排线 */
+  --ink-deep: #2E1F0D;   /* 重墨：大标题、重要框线 */
+  --ink60: #8A7A60;      /* 褐墨淡：次要文本、来源标注 */
   --patina: #4A6B64;     /* 铜绿：史料卡标题、已解锁、可交互提示 */
   --olive: #6F7248;      /* 暗橄榄绿：编号标签、注释、和纸胶带 */
   --coffee: #7A5C3E;     /* 咖色：票据正文、次级强调 */
   --brass: #A98F5F;      /* 旧金（亚光）：描金线、铜钉、进度标记 */
   --cinnabar: #A63A2E;   /* 朱砂：印章、日期章、确认按钮（全 App 唯一红，≤2%） */
-  --dash: #BDB6A4;       /* 虚线灰：拖放目标位、纹样缺失位轮廓 */
+  --dash: #C0B49A;       /* 虚线灰：拖放目标位、纹样缺失位轮廓 */
   --night: #23282E;      /* 夜景墨蓝：拍照页底、图片预览遮罩 */
   --binder-width: 32rpx;
   --binder-reserve: 20rpx;
@@ -88,23 +88,19 @@ button {
   line-height: normal;
 }
 button::after { border: none; }
-/* 主按钮：扁平档案签，色值与描边对齐页面 token，不用实物照片 */
+/* 主按钮：朱砂描边方印，手帐印章，不用档案签底图 */
 .btn-seal {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 18rpx 56rpx;
-  border: 0;
+  border: 3rpx solid var(--cinnabar);
   color: var(--cinnabar);
-  background-color: transparent;
-  background-image: url("/plate21/module/assets/img/ui/btn-label-seal.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 100% 100%;
+  background: transparent;
   font-family: "STSong", "SimSun", serif;
   font-size: 30rpx;
   letter-spacing: 8rpx;
-  border-radius: 0;
+  border-radius: 6rpx;
   min-height: 88rpx;
   transition: transform 0.15s ease, opacity 0.15s ease;
 }
@@ -112,57 +108,48 @@ button::after { border: none; }
   transform: scale(0.94);
   opacity: 0.85;
 }
-/* 禁用态：保留档案签底图，只压暗朱砂字——压住微信 UA 的灰底白盒默认样式 */
 button.btn-seal[disabled] {
-  background-color: transparent;
-  background-image: url("/plate21/module/assets/img/ui/btn-label-seal.png");
+  background: transparent;
   color: rgba(166, 58, 46, 0.45);
   opacity: 0.6;
 }
 
-/* 次按钮：牛皮纸吊牌 */
+/* 次按钮：褐墨细线描边 */
 .btn-line {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 18rpx 40rpx 18rpx 88rpx;
-  border: 0;
+  padding: 14rpx 44rpx;
+  border: 1rpx solid rgba(70, 56, 42, 0.5);
   color: var(--ink);
-  background-color: transparent;
-  background-image: url("/plate21/module/assets/img/ui/btn-label-ink.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 100% 100%;
+  background: transparent;
   font-size: 28rpx;
   letter-spacing: 4rpx;
-  border-radius: 0;
-  min-height: 96rpx;
-  filter: drop-shadow(0 4rpx 8rpx rgba(70, 56, 42, 0.16));
+  border-radius: 4rpx;
+  min-height: 88rpx;
   transition: transform 0.15s ease, opacity 0.15s ease;
 }
 .btn-line:active {
-  transform: scale(0.97);
-  opacity: 0.86;
+  transform: scale(0.96);
+  opacity: 0.8;
 }
 button.btn-line[disabled] {
-  background-color: transparent;
-  background-image: url("/plate21/module/assets/img/ui/btn-label-ink.png");
+  background: transparent;
   color: rgba(70, 56, 42, 0.45);
   opacity: 0.6;
 }
 
-/* 跳过/轻操作：橄榄和纸胶带 */
+/* 跳过：橄榄和纸胶带，不是白纸封签 */
 button.skip-btn {
-  color: var(--paper);
-  background-color: transparent;
-  background-image: url("/plate21/module/assets/img/ui/btn-label-skip.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 100% 100%;
+  color: var(--olive);
+  background: rgba(111, 114, 72, 0.22);
+  background-image: none;
+  border: 0;
   text-decoration: none;
   min-height: 64rpx;
-  padding: 10rpx 36rpx;
-  filter: drop-shadow(0 3rpx 6rpx rgba(70, 56, 42, 0.14));
+  padding: 8rpx 28rpx;
+  border-radius: 4rpx;
+  transform: rotate(-1.5deg);
 }
 
 /* ---------- 弹层离场动画（INT-301，v1.4.0-b3） ---------- */
@@ -204,22 +191,22 @@ button.skip-btn {
       transparent 14rpx
     ),
     radial-gradient(ellipse at center, transparent 52%, rgba(122, 92, 62, 0.10) 100%),
-    linear-gradient(160deg, #FBF9F3 0%, var(--paper) 55%, #EFE9DA 100%);
+    linear-gradient(160deg, #F6F0E0 0%, var(--paper) 55%, #EFE5CE 100%);
 }
 
 /* ---------- 手账元素（设计文档 §1.6，v1.3 新增） ---------- */
-/* 档号签：档案归档气质的「No.」小签，蓝黑墨细框 + 打字机等宽字（档案风） */
+/* 编号标签：手帐「No.」小签，橄榄绿细框 */
 .tag-no {
   display: inline-flex;
   align-items: center;
   padding: 4rpx 18rpx;
-  border: 1rpx solid var(--ink60);
-  color: var(--ink);
-  font-family: "Courier New", "PingFang SC", monospace;
+  border: 1rpx solid var(--olive);
+  color: var(--olive);
+  font-family: "STSong", "SimSun", serif;
   font-size: 22rpx;
-  letter-spacing: 2rpx;
-  border-radius: 2rpx;
-  background: rgba(255, 255, 255, 0.45);
+  letter-spacing: 4rpx;
+  border-radius: 3rpx;
+  background: rgba(111, 114, 72, 0.06);
 }
 
 /* 日期章：朱砂双圈圆章，微微倾斜，营造「盖章归档」感。
@@ -254,21 +241,20 @@ button.skip-btn {
   pointer-events: none;
 }
 
-/* 档案封条：白纸细墨边的封签条，微旋转贴在照片或卡片顶边（档案风：不用彩色胶带）。
- * 容器需 position:relative。 */
+/* 和纸胶带：半透明橄榄条，微旋转贴在照片或卡片顶边。容器需 position:relative。 */
 .tape {
   position: absolute;
   width: 180rpx;
   height: 44rpx;
-  background: rgba(252, 250, 244, 0.94);
-  border: 1rpx solid rgba(44, 48, 56, 0.28);
+  background: rgba(111, 114, 72, 0.32);
+  border: 0;
   transform: rotate(-3deg);
-  box-shadow: 0 2rpx 6rpx rgba(70, 56, 42, 0.08);
+  box-shadow: 0 2rpx 6rpx rgba(70, 56, 42, 0.12);
   z-index: 12;
   pointer-events: none;
 }
 .tape.brass {
-  border-color: rgba(166, 58, 46, 0.4);
+  background: rgba(169, 143, 95, 0.38);
 }
 
 /* 票据锯齿边：卡片下缘的撕票锯齿（径向渐变圆齿）。
