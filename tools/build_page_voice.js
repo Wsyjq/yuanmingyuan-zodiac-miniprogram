@@ -10,6 +10,7 @@
 const fs = require('fs')
 const path = require('path')
 const novelPages = require('../plate21/module/utils/novel-pages')
+const CONTENT = require('../plate21/module/content')
 
 const ROOT = path.resolve(__dirname, '..')
 const MANIFEST = path.join(ROOT, 'tools', 'voice_manifest.json')
@@ -147,8 +148,8 @@ function buildClips() {
     if (c) clips.push(c)
   }
 
-  const prologueJs = read('prologue/prologue.js')
-  const prologueItems = parseParagraphItems(prologueJs, 'paragraphs')
+  // 已外置页的文案从 content 注册表直接取（不再正则解析页面源码）
+  const prologueItems = CONTENT.prologue.paragraphs
   const prologuePages = novelPages.buildPages(prologueItems)
   prologuePages.forEach((page, i) => {
     add('narr-prologue-p' + String(i + 1).padStart(2, '0'), pageTextFromItems(page), 'prologue sheet ' + (i + 1))
@@ -188,15 +189,17 @@ function buildClips() {
 
   add('narr-s2-blend', wxmlTexts('s2-blend', 'lead kaiti'), 's2-blend')
 
-  const patJs = read('s2-pattern/s2-pattern.js')
-  const patWxml = read('s2-pattern/s2-pattern.wxml')
+  const patFinale = CONTENT['s2-pattern'].finale
   add('narr-s2-pattern', wxmlTexts('s2-pattern', 'lead kaiti'), 's2-pattern')
+  // 收尾段文案全部来自 content（含 wallParts 拼句）；顺序与历史 manifest 一致
   add('narr-s2-pattern-finale', [
-    ...parseStrArray(patJs, 'FINALE_LEAD'),
-    parseConstStr(patJs, 'FINALE_QUOTE'),
-    parseConstStr(patJs, 'FINALE_BRIDGE'),
-    ...parseStrArray(patJs, 'FINALE_TAIL'),
-    ...[...patWxml.matchAll(/class="novel-p">([^<{][^<]*)<\/view>/g)].map((x) => x[1].trim()).filter(Boolean)
+    ...patFinale.lead,
+    patFinale.quote,
+    patFinale.bridge,
+    ...patFinale.tail,
+    patFinale.voiceShift,
+    CONTENT['s2-pattern'].wallParts.map((p) => p.t).join(''),
+    patFinale.closing
   ], 's2-pattern finale')
 
   add('narr-s3-comic', wxmlTexts('s3-comic', 'novel-p').slice(0, 3).concat(
@@ -244,7 +247,7 @@ function main() {
   man.clips = kept.concat(clips)
   man._meta = man._meta || {}
   man._meta.narr_split = 'per-screen v3 ' + new Date().toISOString().slice(0, 10)
-  man._meta.source_of_truth = 'plate21/module/pages（当前上屏文案）；一屏一条 narr-*'
+  man._meta.source_of_truth = 'plate21/module/content（已外置页：prologue/s2 四页）+ plate21/module/pages（其余页当前上屏文案）；一屏一条 narr-*'
   fs.writeFileSync(MANIFEST, JSON.stringify(man, null, 2) + '\n')
   console.log('narr clips: ' + clips.length)
   clips.forEach((c) => {

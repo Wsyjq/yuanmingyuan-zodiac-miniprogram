@@ -21,6 +21,7 @@ D:/kc/ymy
       ├─ contracts/adapter-api.js   # Host Adapter 契约 v1.4.0
       ├─ adapters/local-adapter.js  # 开发期 Adapter（wx.Storage 实现）
       ├─ store/session.js           # 模块侧唯一数据入口（见 §4）
+      ├─ content/                   # 剧情文案注册表（单点维护，见 §3 末）
       ├─ capabilities/              # 导引地图、语音导览等
       ├─ components/                # 分包通用组件（见 §3）
       └─ pages/<页面名>/            # 21 个生产页；ending 为仓库保留页
@@ -202,6 +203,14 @@ this.selectComponent('#stamp').show('考察记录已保存')
 ### 3.6 ~~prop-drawer —— 道具包抽屉~~（v1.5.0 已移除）
 
 > **v1.5.0 移除**：6 件道具（隐语对照表、工牌拓本卡、砖纹卡、薄白纸、2B铅笔、考察手册）是**真实物理道具**，玩家手上有实物，小程序内不再虚拟显示。prop-drawer 组件、各页 `<prop-drawer>` 挂载、PROP_ITEMS 常量均已删除。需要玩家操作实物道具的环节，由 TaskBanner / 叙事段文字引导（如 s1-decode"取出《隐语对照表》与工牌拓本卡，逐词比对"）。详见 `docs/v1.5.0-实体道具引导规格.md`。
+
+### 3.7 content/ —— 剧情文案注册表（单点维护）
+
+优化剧情只改 `content/<页>.js`，页面逻辑与 WXML 不动。页面侧 `const content = require('../../content/<页>')`，把文案字段铺进 data；工具链（`tools/build_page_voice.js`、`tools/audit_voice_sync.py`）也从注册表取文案，改字后重跑 `node tools/build_page_voice.js` 再配音即可。
+
+已外置（试点）：`prologue`、`s2-quiz`、`s2-reveal`、`s2-blend`、`s2-pattern`。其余页面文案仍在各自页面文件里，迁移时照同格式：字段名与页面 data 键一致，`parts` 段的 `g` 键史料卡挂点原样保留，`puzzleId` / `clips` / `next` 一并收进配置。
+
+配套公共行为 `utils/quiz-host.js`：单选答题页（attempt-ladder 判分 + 史料卡揭晓 + 后续旁白）的通用流程，页面 `behaviors: [quizHost]` 后只需保留自己的 `onLoad`（进度恢复）与 `onNext`（转场）。首个使用方 s2-quiz；dashuifa / s3-comic / waypoint 的同型答题可逐步迁入。
 
 ---
 

@@ -471,7 +471,7 @@
   margin-top: 20rpx;
   padding: 8rpx 28rpx;
   border: 2rpx solid rgba(70, 56, 42, 0.4);
-  background: rgba(229, 213, 184, 0.55);
+  background: rgba(247, 244, 236, 0.55);
 }
 .audio-set-row {
   display: flex;

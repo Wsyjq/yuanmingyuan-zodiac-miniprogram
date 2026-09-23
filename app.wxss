@@ -6,19 +6,19 @@
  * 仅此处定义颜色/字体变量；页面与组件统一引用，不要散落写死色值。
  * ============================================================ */
 page {
-  /* 色彩系统 · 褐色档案风（2026-09-21 调深：奶油旧纸 → 马尼拉档案纸） */
-  --paper: #E5D5B8;      /* 马尼拉纸：全局页面底色（牛皮档案袋的暖褐） */
-  --paper2: #D9C8A9;     /* 牛皮卡一档：卡片底、抽屉底 */
-  --paper3: #C9B18C;     /* 牛皮纸深档：浮层、覆盖层 */
-  --ink: #3B2E20;        /* 深褐墨：正文主文本、排线 */
-  --ink-deep: #241708;   /* 重墨：大标题、重要框线、铜版排线 */
-  --ink60: #7A6A53;      /* 做旧棕：次要文本、来源标注 */
+  /* 色彩系统 · 档案风（2026-09-22：干净档案纸白 + 蓝黑墨 + 朱印，不做旧不发黄） */
+  --paper: #F7F4EC;      /* 档案纸白：全局页面底色（干净米白，近 #FBFAF6 的暖白） */
+  --paper2: #EFE9DC;     /* 浅档一档：卡片底、抽屉底 */
+  --paper3: #E4DDCC;     /* 浅档深档：浮层、覆盖层 */
+  --ink: #2C3038;        /* 蓝黑墨：正文主文本、排线（档案墨水色） */
+  --ink-deep: #191C22;   /* 重墨：大标题、重要框线、铜版排线 */
+  --ink60: #6E6A60;      /* 灰墨：次要文本、来源标注 */
   --patina: #4A6B64;     /* 铜绿：史料卡标题、已解锁、可交互提示 */
   --olive: #6F7248;      /* 暗橄榄绿：编号标签、注释、和纸胶带 */
   --coffee: #7A5C3E;     /* 咖色：票据正文、次级强调 */
   --brass: #A98F5F;      /* 旧金（亚光）：描金线、铜钉、进度标记 */
   --cinnabar: #A63A2E;   /* 朱砂：印章、日期章、确认按钮（全 App 唯一红，≤2%） */
-  --dash: #B4A380;       /* 虚线褐：拖放目标位、纹样缺失位轮廓 */
+  --dash: #BDB6A4;       /* 虚线灰：拖放目标位、纹样缺失位轮廓 */
   --night: #23282E;      /* 夜景墨蓝：拍照页底、图片预览遮罩 */
   --binder-width: 32rpx;
   --binder-reserve: 20rpx;
@@ -204,22 +204,22 @@ button.skip-btn {
       transparent 14rpx
     ),
     radial-gradient(ellipse at center, transparent 52%, rgba(122, 92, 62, 0.10) 100%),
-    linear-gradient(160deg, #EDDFC0 0%, var(--paper) 55%, #D9C6A0 100%);
+    linear-gradient(160deg, #FBF9F3 0%, var(--paper) 55%, #EFE9DA 100%);
 }
 
 /* ---------- 手账元素（设计文档 §1.6，v1.3 新增） ---------- */
-/* 编号标签：档案归档气质的「No.」小签，橄榄绿细框 */
+/* 档号签：档案归档气质的「No.」小签，蓝黑墨细框 + 打字机等宽字（档案风） */
 .tag-no {
   display: inline-flex;
   align-items: center;
   padding: 4rpx 18rpx;
-  border: 1rpx solid var(--olive);
-  color: var(--olive);
-  font-family: "STSong", "SimSun", serif;
+  border: 1rpx solid var(--ink60);
+  color: var(--ink);
+  font-family: "Courier New", "PingFang SC", monospace;
   font-size: 22rpx;
-  letter-spacing: 4rpx;
-  border-radius: 3rpx;
-  background: rgba(111, 114, 72, 0.06);
+  letter-spacing: 2rpx;
+  border-radius: 2rpx;
+  background: rgba(255, 255, 255, 0.45);
 }
 
 /* 日期章：朱砂双圈圆章，微微倾斜，营造「盖章归档」感。
@@ -254,20 +254,21 @@ button.skip-btn {
   pointer-events: none;
 }
 
-/* 和纸胶带：半透明橄榄/旧金色条，微旋转贴在照片或卡片顶边。
- * 正式胶带纹理见素材清单 TEX-02，此处为纯色兜底。容器需 position:relative。 */
+/* 档案封条：白纸细墨边的封签条，微旋转贴在照片或卡片顶边（档案风：不用彩色胶带）。
+ * 容器需 position:relative。 */
 .tape {
   position: absolute;
   width: 180rpx;
   height: 44rpx;
-  background: rgba(111, 114, 72, 0.32);
+  background: rgba(252, 250, 244, 0.94);
+  border: 1rpx solid rgba(44, 48, 56, 0.28);
   transform: rotate(-3deg);
-  box-shadow: 0 2rpx 6rpx rgba(70, 56, 42, 0.12);
+  box-shadow: 0 2rpx 6rpx rgba(70, 56, 42, 0.08);
   z-index: 12;
   pointer-events: none;
 }
 .tape.brass {
-  background: rgba(169, 143, 95, 0.38);
+  border-color: rgba(166, 58, 46, 0.4);
 }
 
 /* 票据锯齿边：卡片下缘的撕票锯齿（径向渐变圆齿）。

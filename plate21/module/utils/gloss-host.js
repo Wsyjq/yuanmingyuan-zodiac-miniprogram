@@ -3,7 +3,7 @@
 //       components/history-card（弹层；卡内 parts 段的 g 键也走同一 onGlossary）。
 // 用法：behaviors: [glossHost]；wxml 里放一张术语弹层：
 //   <history-card wx:if="{{gloss}}" visible="{{!!gloss}}" title="{{gloss.title}}"
-//     source="{{gloss.source}}" lines="{{gloss.lines}}" btn-text="返 回"
+//     source="{{gloss.source}}" lines="{{gloss.lines}}" btn-text="学到了"
 //     bind:next="onGlossClose" bind:close="onGlossClose" />
 const slCards = require('./sl-cards')
 

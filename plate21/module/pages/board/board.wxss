@@ -84,7 +84,7 @@
   max-width: 620rpx;
   box-sizing: border-box;
   padding: 30rpx 32rpx 26rpx;
-  background: rgba(229, 213, 184, 0.72);
+  background: rgba(247, 244, 236, 0.72);
 }
 .board-mine {
   margin-top: 40rpx;
@@ -199,7 +199,7 @@
   color: var(--patina);
   border: 2rpx solid var(--dash);
   border-radius: 999rpx;
-  background: rgba(229, 213, 184, 0.55);
+  background: rgba(247, 244, 236, 0.55);
 }
 .board-link:active {
   color: var(--ink);
@@ -263,12 +263,12 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  background: rgba(229, 213, 184, 0.5);
+  background: rgba(247, 244, 236, 0.5);
   border: 2rpx solid var(--dash);
   border-radius: 8rpx;
 }
 .jr-panel.jr-on {
-  background: rgba(229, 213, 184, 0.85);
+  background: rgba(247, 244, 236, 0.85);
   border-color: var(--patina);
 }
 .jr-node {

@@ -56,7 +56,7 @@
   height: 52rpx;
   border: 2rpx solid rgba(74, 64, 46, 0.5);
   border-radius: 50%;
-  background: rgba(229, 213, 184, 0.75);
+  background: rgba(247, 244, 236, 0.75);
   box-sizing: border-box;
 }
 .ac-iconbtn:active {
@@ -96,7 +96,7 @@
   align-items: center;
   gap: 14rpx;
   padding: 12rpx 16rpx;
-  background: rgba(229, 213, 184, 0.96);
+  background: rgba(247, 244, 236, 0.96);
   border: 2rpx solid rgba(74, 64, 46, 0.55);
   border-radius: 999rpx;
   box-shadow: 0 8rpx 22rpx rgba(70, 56, 42, 0.24);
@@ -128,7 +128,7 @@
   height: 76rpx;
   border: 2rpx solid rgba(74, 64, 46, 0.55);
   border-radius: 50%;
-  background: rgba(229, 213, 184, 0.94);
+  background: rgba(247, 244, 236, 0.94);
   display: flex;
   align-items: center;
   justify-content: center;

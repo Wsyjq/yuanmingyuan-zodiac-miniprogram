@@ -1,6 +1,6 @@
 /**
  * history-card —— 史料卡弹层（设计文档 §4.2，采风修订版扩展）
- * 呈现【史料〔来源〕】：档案著录卡样式，底部滑入。
+ * 呈现【史料〔来源〕】：档案著录卡样式，居中弹入（遮罩压暗其余画面）。
  *
  * props:
  *   visible       Boolean
@@ -45,7 +45,7 @@ Component({
   },
 
   methods: {
-    // INT-301：关闭走离场动画——先 closing 态播放 0.25s 滑出，再 triggerEvent 让页面卸载
+    // INT-301：关闭走离场动画——先 closing 态播放 0.25s 淡出，再 triggerEvent 让页面卸载
     onClose() {
       if (this.data.closing) return
       this.setData({ closing: true })
