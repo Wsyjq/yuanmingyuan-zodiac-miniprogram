@@ -1,79 +1,91 @@
 'use strict'
 
-// 唯一改 pageId 的地方。每次返回新对象，不改入参。
 const { createRun } = require('./contract')
 const pages = require('./pages')
-
+function copy(value) { return JSON.parse(JSON.stringify(value)) }
+function error(code, message) { const err = new Error(message); err.code = code; return err }
+function pageOf(id) {
+  if (!pages.byId[id]) throw error('UNKNOWN_PAGE', '未知页面：' + id)
+  return pages.byId[id]
+}
 function cloneRun(run) {
-  return {
-    pageId: run.pageId,
-    sites: Object.assign({}, run.sites),
-    puzzles: Object.assign({}, run.puzzles),
-    editionNo: run.editionNo,
-    signedAt: run.signedAt
-  }
-}
-
-function pageOf(pageId) {
-  const page = pages.byId[pageId]
-  if (!page) throw new Error('unknown page: ' + pageId)
-  return page
-}
-
-function puzzleSkipTo(playId) {
-  const list = pages.list
-  for (let i = 0; i < list.length; i++) {
-    if (list[i].playId === playId) return list[i].skipTo
-  }
-  return ''
-}
-
-// 下一页换了 siteId，或没有下一页，才是该站最后一页。
-// 走路页和下一段正文共用目标站的 siteId，完成走路页不标 done。
-function isLastOfSite(page) {
-  if (!page.siteId) return false
-  const nxt = page.next ? pages.byId[page.next] : null
-  return !nxt || nxt.siteId !== page.siteId
-}
-
-function enter(run, pageId) {
-  const page = pageOf(pageId)
-  if (page.revealOf && run.puzzles[page.revealOf] === 'skipped') {
-    const dest = puzzleSkipTo(page.revealOf)
-    if (dest && dest !== pageId) return enter(run, dest)
-  }
-  const next = cloneRun(run)
-  next.pageId = page.id
-  if (page.siteId && next.sites[page.siteId] !== 'skipped') {
-    next.sites[page.siteId] = 'active'
-  }
+  // UI 草稿、媒体引用和宿主扩展字段穿过每次纯函数转换。
+  const next = Object.assign(createRun(), copy(run || {}))
+  ;['sites', 'puzzles', 'visited', 'unlocked', 'completedPages', 'uiByPage', 'flags'].forEach(function (key) {
+    next[key] = Object.assign({}, next[key])
+  })
   return next
 }
-
-function complete(run, pageId) {
-  const page = pageOf(pageId)
+function canEnter(run, id) {
+  const page = pages.byId[id]
+  if (!page || !run) return false
+  if (id.indexOf('LT') === 0 && (!run.completedAt || !run.letterAvailable)) return false
+  if (page.revealOf && ['solved', 'assisted'].indexOf((run.puzzles || {})[page.revealOf]) < 0) return false
+  return !!((run.unlocked || {})[id] || (run.visited || {})[id])
+}
+function isReview(run) { return run.pageId !== run.resumePageId }
+function enter(run, id) {
+  pageOf(id)
+  if (!canEnter(run, id)) throw error('PAGE_LOCKED', '此页尚未解锁')
   const next = cloneRun(run)
-  if (isLastOfSite(page)) next.sites[page.siteId] = 'done'
-  next.pageId = page.next
+  const page = pages.byId[id]
+  next.pageId = id
+  next.visited[id] = true
+  if (id === next.resumePageId && page.siteId && !next.sites[page.siteId]) next.sites[page.siteId] = 'active'
   return next
 }
-
-function skip(run, pageId) {
-  const page = pageOf(pageId)
+function resume(run) { return enter(run, run.resumePageId) }
+function isLastOfSite(page, target) {
+  return !!page.siteId && (!pages.byId[target] || pages.byId[target].siteId !== page.siteId)
+}
+function moveFrontier(next, target) {
+  if (!target) return next
+  pageOf(target)
+  next.resumePageId = target
+  next.unlocked[target] = true
+  return enter(next, target)
+}
+function reviewMove(run, target) {
+  // 回看不解锁答案、不覆盖跳过、不改变已完成站点或恢复点。
+  return target && canEnter(run, target) ? enter(run, target) : cloneRun(run)
+}
+function assertCurrent(run, id) {
+  if (run.pageId !== id) throw error('NOT_CURRENT_PAGE', '只能操作正在显示的页面')
+}
+function complete(run, id, options) {
+  const page = pageOf(id)
+  assertCurrent(run, id)
+  if (isReview(run)) return reviewMove(run, page.next)
   const next = cloneRun(run)
-  if (page.kind === 'nav') {
-    if (page.siteId) next.sites[page.siteId] = 'skipped'
-    next.pageId = page.skipTo
+  // FN4 完成由 session.sign 落库；来信由可信时间校验后另行开放。
+  if (page.kind === 'sign') return next
+  next.completedPages[id] = true
+  if (page.playId) next.puzzles[page.playId] = options && options.assisted ? 'assisted' : 'solved'
+  if (isLastOfSite(page, page.next) && next.sites[page.siteId] !== 'skipped') next.sites[page.siteId] = 'done'
+  if (!page.next) {
+    if (id.indexOf('LT') === 0) next.letterRead = true
     return next
   }
-  if (page.playId) next.puzzles[page.playId] = 'skipped'
-  next.pageId = page.skipTo
-  return next
+  return moveFrontier(next, page.next)
 }
-
-module.exports = {
-  createRun: createRun,
-  enter: enter,
-  complete: complete,
-  skip: skip
+function skip(run, id) {
+  const page = pageOf(id)
+  assertCurrent(run, id)
+  if (!page.skipTo) throw error('NOT_SKIPPABLE', '此页没有跳过入口')
+  if (isReview(run)) return reviewMove(run, page.skipTo)
+  const next = cloneRun(run)
+  if (page.kind === 'nav' && page.siteId) next.sites[page.siteId] = 'skipped'
+  else {
+    if (page.playId && ['solved', 'assisted'].indexOf(next.puzzles[page.playId]) < 0) next.puzzles[page.playId] = 'skipped'
+    if (isLastOfSite(page, page.skipTo) && next.sites[page.siteId] !== 'skipped') next.sites[page.siteId] = 'done'
+  }
+  return moveFrontier(next, page.skipTo)
 }
+function openLetter(run) {
+  if (!run.completedAt || !run.letterAvailable) throw error('LETTER_LOCKED', '来信尚未开放')
+  const next = cloneRun(run)
+  next.unlocked.LT1 = true
+  if (next.resumePageId === 'FN4') return moveFrontier(next, 'LT1')
+  return enter(next, 'LT1')
+}
+module.exports = { createRun, cloneRun, canEnter, isReview, enter, resume, complete, skip, openLetter }

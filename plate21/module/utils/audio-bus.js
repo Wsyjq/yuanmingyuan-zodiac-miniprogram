@@ -23,7 +23,8 @@ function isActive(player) {
 function unregister(player) {
   var i = players.indexOf(player)
   if (i !== -1) players.splice(i, 1)
-  if (active === player) release()
+  mutedByActivate = mutedByActivate.filter(function (p) { return p !== player })
+  if (active === player) release(player, { resumeBgm: false })
 }
 
 // 开播前调用：其余在播的暂停（记住被压下的 BGM，供恢复）。
@@ -47,21 +48,33 @@ function activate(player) {
 }
 
 // 播放结束/暂停时调用：恢复被这路压下的氛围 BGM。
-function release() {
+function release(player, options) {
+  if (player && active !== player) return
   active = null
   var toResume = mutedByActivate
   mutedByActivate = []
+  if (options && options.resumeBgm === false) return
   toResume.forEach(function (bgm) {
+    if (players.indexOf(bgm) === -1) return
     try { bgm.resume() } catch (e) { /* 忽略单个恢复失败 */ }
   })
 }
 
 // 开关关闭时按类别急停（返回 true 表示该 player 属于该类别且被停了）。
 function stopKind(kind) {
+  mutedByActivate = mutedByActivate.filter(function (p) { return p.kind !== kind })
   players.forEach(function (p) {
     if (p.kind === kind && p.isPlaying && p.isPlaying()) {
       try { p.pause() } catch (e) { /* 忽略 */ }
     }
+  })
+}
+
+function pauseAll() {
+  active = null
+  mutedByActivate = []
+  players.slice().forEach(function (p) {
+    try { p.pause() } catch (e) { /* A detached player must not prevent silence. */ }
   })
 }
 
@@ -71,5 +84,6 @@ module.exports = {
   activate: activate,
   release: release,
   isActive: isActive,
-  stopKind: stopKind
+  stopKind: stopKind,
+  pauseAll: pauseAll
 }

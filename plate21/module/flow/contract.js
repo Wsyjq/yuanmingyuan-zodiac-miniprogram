@@ -1,7 +1,6 @@
 'use strict'
 
-// 主线六模块的共同契约。各工作树只改自己的目录，都读这一份。
-// 内容原文以 docs/飞书分页接入方案.md 为准，结构以 docs/主线模块技术设计.md 为准。
+// V3 主线契约。pageId 是显示位置；resumePageId 是唯一当前恢复点。
 
 const SITE_IDS = [
   'gate',
@@ -36,10 +35,22 @@ const PAGE_KINDS = ['read', 'puzzle', 'nav', 'sign', 'letter']
 function createRun() {
   return {
     pageId: 'P1',
+    resumePageId: 'P1',
+    visited: { P1: true },
+    unlocked: { P1: true },
+    completedPages: {},
     sites: {},
     puzzles: {},
+    uiByPage: {},
+    flags: {},
+    name: '',
     editionNo: null,
-    signedAt: null
+    signedAt: null,
+    completedAt: null,
+    completedTimeSource: null,
+    letterAvailable: false,
+    letterOpenedAt: null,
+    letterRead: false
   }
 }
 
@@ -47,5 +58,6 @@ module.exports = {
   SITE_IDS,
   PLAY_IDS,
   PAGE_KINDS,
+  PUZZLE_STATES: ['unvisited', 'solved', 'assisted', 'skipped'],
   createRun
 }

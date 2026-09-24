@@ -142,3 +142,9 @@
   border-color: rgba(74, 107, 100, 0.85);
   background: rgba(74, 107, 100, 0.12);
 }
+
+/* Keep controls reachable on narrow screens; no fixed-height clipping. */
+.ac-wrap { flex-wrap: wrap; max-width: 100%; box-sizing: border-box; }
+.ac-dock-bar { max-width: calc(100vw - 52rpx); flex-wrap: wrap; }
+.ac-action { padding: 6rpx 12rpx; font-size: 22rpx; }
+.ac-segment { font-size: 22rpx; color: #4a402e; }

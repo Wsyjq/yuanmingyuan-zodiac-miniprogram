@@ -1,7 +1,1 @@
-{
-  "navigationBarTitleText": "第二十一图",
-  "disableScroll": true,
-  "usingComponents": {
-    "coach-spot": "../../components/coach-spot/coach-spot"
-  }
-}
+{"navigationBarTitleText":"第廿一图 · 现场考察","disableScroll":true,"usingComponents":{"audio-clip":"../../components/audio-clip/audio-clip","water-clock":"../../components/water-clock/water-clock"}}

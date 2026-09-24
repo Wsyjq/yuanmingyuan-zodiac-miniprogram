@@ -1,10 +1,10 @@
 'use strict'
 
 function dateKeyFromTimestamp(timestamp) {
-  const date = new Date(Number(timestamp))
-  return String(date.getFullYear()) +
-    String(date.getMonth() + 1).padStart(2, '0') +
-    String(date.getDate()).padStart(2, '0')
+  const date = new Date(Number(timestamp) + 8 * 3600000)
+  return String(date.getUTCFullYear()) +
+    String(date.getUTCMonth() + 1).padStart(2, '0') +
+    String(date.getUTCDate()).padStart(2, '0')
 }
 
 function isValidDateKey(value) {
@@ -13,8 +13,8 @@ function isValidDateKey(value) {
   const year = Number(key.slice(0, 4))
   const month = Number(key.slice(4, 6))
   const day = Number(key.slice(6, 8))
-  const date = new Date(year, month - 1, day)
-  return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day
+  const date = new Date(Date.UTC(year, month - 1, day))
+  return date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day
 }
 
 function parts(value) {

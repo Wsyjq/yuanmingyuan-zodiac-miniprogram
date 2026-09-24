@@ -1,5 +1,6 @@
 {
-  "navigationStyle": "custom",
+  "navigationStyle": "default",
+  "navigationBarTitleText": "我的第二十一图",
   "usingComponents": {},
-  "disableScroll": true
+  "disableScroll": false
 }

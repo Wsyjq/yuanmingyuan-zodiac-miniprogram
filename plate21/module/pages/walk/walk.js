@@ -1,498 +1,295 @@
+'use strict'
+const entry = require('../../utils/game-entry')
 const session = require('../../store/session')
-const coachHost = require('../../capabilities/play-guide/coach-host')
 const engine = require('../../flow/engine')
 const pages = require('../../flow/pages')
+const screen = require('../../flow/screen')
 const play = require('../../play/index')
 const cue = require('../../audio/cue')
 const progress = require('../../progress/build')
-const { screen, PIECES } = require('../../flow/screen')
-const nav = require('../../capabilities/map/nav-model')
-const sessionDate = require('../../utils/session-date')
 const cards = require('../../utils/sl-cards')
-const nfcListen = require('../../capabilities/nfc/listen')
+const settings = require('../../utils/audio-settings')
+const audioBus = require('../../utils/audio-bus')
+const audioSrc = require('../../utils/audio-src')
+const nfc = require('../../capabilities/nfc/listen')
 const nfcLaunch = require('../../capabilities/nfc/launch')
-
-const STORE_KEY = 'plate21-mainline-run'
-
-// 当天署名停在 FN4。署名日早于今天才进 LT1。引擎不看日期。
-function letterIsDue(run, now) {
-  if (!run || run.pageId !== 'FN4' || !run.signedAt) return false
-  const today = sessionDate.dateKeyFromTimestamp(now == null ? Date.now() : now)
-  const signed = sessionDate.dateKeyFromTimestamp(run.signedAt)
-  return today > signed
+const photos = require('../../utils/photo-records')
+const clock = require('../../play/water-clock')
+const bridge = require('../../host/bridge')
+const resources = require('../../host/resources')
+const HINTS = {
+  'quiz-direction': '对照地图上长春园与西洋楼的位置，找出它所在的方位。',
+  'quiz-envelope': '把信封封口处与信背面的半个字拼在一起，从左到右读。',
+  'quiz-lantern': '想一想，迷宫中央的亭子与游乐活动有什么关系？',
+  'quiz-pattern': '观察转折相接、可以连续延伸的墙面纹样，再与四张图比较。',
+  'quiz-height': '喷泉的水压与蓄水位置的高度差有关。',
+  'place-animals': '看铜版图：一组在中央，一组围绕中央，另一组位于池的两端。'
 }
-
-const COACH_START = [
-  {
-    flag: 'coachWalkGoAt',
-    selector: '#coachGo',
-    tag: '往下翻',
-    tap: '继续',
-    body: '这一页看完了，点底下朱红的钮往前。',
-    skipIfMissing: true
-  },
-  {
-    flag: 'coachWalkSkipAt',
-    selector: '#coachSkip',
-    tag: '先去园里',
-    tap: '先去园里',
-    body: '序章可以整段跳过。点浅色这颗，直接到入口。',
-    skipIfMissing: true
-  }
-]
-
-const COACH_SITE = [
-  {
-    flag: 'coachWalkPuzzleAt',
-    selector: '#coachSkip',
-    tag: '这处可以不做',
-    tap: '这题先跳过',
-    body: '不想做就点浅色这颗。跳过不会把答案揭出来。',
-    skipIfMissing: true
-  },
-  {
-    flag: 'coachWalkMapAt',
-    selector: '#coachMap',
-    tag: '打开地图',
-    tap: '地图',
-    body: '人在点位里时，点侧边这颗看周围。站与站之间那一页本身就是导航。',
-    skipIfMissing: true
-  },
-  {
-    flag: 'coachWalkProgressAt',
-    selector: '#coachProgress',
-    tag: '看进程',
-    tap: '进程',
-    body: '看哪些点去过、哪些地方跳过了。点一项可以回去。',
-    skipIfMissing: true
-  }
-]
-
+const STATUS = { draft: '草稿', private: '仅自己可见', unavailable: '公开服务尚未接入，私人稿已保留', failed: '提交未确认，可重试', submitted: '已收到投稿，等待处理', published: '已公开', rejected: '未获公开', withdrawn: '已撤回' }
+function clone(value) { return JSON.parse(JSON.stringify(value)) }
+function ds(e, key) { return e.currentTarget.dataset[key] }
+function fmt(at) { const d = new Date(Number(at) + 8 * 3600000); return d.toISOString().slice(0, 10) }
+function errorText(err) { return err && (err.message || err.errMsg) || '操作未完成，请重试' }
 Page({
-  behaviors: [coachHost],
-  data: {
-    view: null,
-    progressRows: [],
-    showProgress: false,
-    showMap: false,
-    mapSites: [],
-    card: null
+  data: { loading: true, busy: false, error: '', pageVisible: true, screen: {}, ui: {}, rows: [], records: [],
+    narrClips: [], voiceEnabled: false, drawer: '', card: null, waterClockState: {}, clockPlaying: false,
+    soundSrc: nfc.SOUND, relayItems: [], relayState: 'idle', contributions: [], archives: [], scrollTop: 0 },
+  async onLoad(query) {
+    this.query = query || {}; this.sessionId = this.query.sessionId || ''; this.ui = {}; this._active = true
+    this._settings = (value) => { if (this._active) this.setData({ voiceEnabled: value.voice }) }
+    settings.subscribe(this._settings)
+    await this.load()
   },
-
-  onLoad(options) {
-    this.pageQuery = options || {}
-    const self = this
-    session.init({}).then(function () {
-      return session.checkPremiumUnlocked()
-    }).then(function (unlocked) {
-      if (!unlocked) {
-        wx.redirectTo({ url: self.lockedUrl() })
-        return
-      }
-      self.boot()
-    }).catch(function () {
-      wx.redirectTo({ url: self.lockedUrl() })
-    })
-  },
-
-  lockedUrl() {
-    return nfcLaunch.parse(this.pageQuery) ? nfcLaunch.gateUrl() : '/pages/ticket/ticket'
-  },
-
-  boot() {
-    let run = engine.createRun()
+  async load() {
+    this.setData({ loading: true, error: '' })
     try {
-      const saved = wx.getStorageSync(STORE_KEY)
-      if (saved && saved.pageId && pages.byId[saved.pageId]) run = saved
-    } catch (err) {}
-    if (letterIsDue(run)) run = Object.assign({}, run, { pageId: 'LT1' })
-    this.run = engine.enter(run, run.pageId)
-    this.ui = {}
-    const launch = nfcLaunch.parse(this.pageQuery)
-    if (launch && this.run.pageId !== 'X1') {
-      this.ui.nfcAside = '这张贴是谐奇趣的。走到那一页再听，这一下不算过关。'
-    }
+      await entry.init(this.query)
+      if (this.sessionId && !session.getArchive(this.sessionId)) throw new Error('找不到这份已完成作品')
+      let current = this.snapshot()
+      if (this.query.entry === 'letter') {
+        const state = await session.getLetterState(this.sessionId)
+        if (!state.available) throw new Error('来信将在完成考察后的下一个北京时间自然日开放')
+        if (current.run.resumePageId === 'FN4') await session.openLetter(this.sessionId)
+        else await session.resume(this.sessionId)
+      } else await session.resume(this.sessionId)
+      current = this.snapshot()
+      if (nfcLaunch.parse(this.query)) {
+        if (engine.canEnter(current.run, 'X1')) await session.navigate('X1', { sessionId: this.sessionId })
+        else this.setData({ notice: '已识别谐奇趣贴片。请从当前进度继续；到谐奇趣后可直接听音乐。' })
+      }
+      this.restore()
+      this.setData({ loading: false })
+    } catch (err) { this.setData({ loading: false, error: errorText(err) }) }
+  },
+  snapshot() { return this.sessionId ? session.getArchive(this.sessionId) : session.getSnapshot() },
+  restore() {
+    const snap = this.snapshot()
+    if (!snap) return
+    this.run = snap.run
+    this.ui = clone(this.run.uiByPage[this.run.pageId] || {})
+    if (this.run.pageId === 'HY1') this.ui.waterClock = clock.createState(this.ui.waterClock)
+    this.setData({ scrollTop: this.ui.scrollTop || 0, error: '' })
     this.render()
-    if (launch && this.run.pageId === 'X1') this.markHeard('贴片已经靠近')
-    this.coachFor(this.run.pageId)
+    if (this.run.pageId === 'LT6') this.loadRelay()
   },
-
-  coachFor(pageId) {
-    if (pageId === 'P1') this.scheduleCoach(COACH_START, 500)
-    if (pageId === 'E1') this.scheduleCoach(COACH_SITE, 500)
-  },
-
   render() {
-    const view = screen(this.run, this.ui)
-    const built = progress.buildProgress(this.run, pages.byId)
-    const labels = {
-      'quiz-direction': '方位',
-      'listen-nfc': '贴片',
-      'quiz-envelope': '信封',
-      'quiz-lantern': '灯会',
-      'prop-flip': '翻图',
-      'photo-pavilion': '拍照',
-      'quiz-pattern': '花纹',
-      'quiz-hour': '时辰',
-      'prop-dial': '转盘',
-      'quiz-height': '高低',
-      'place-animals': '归位'
-    }
-    const progressRows = built.rows.map(function (row) {
-      return Object.assign({}, row, {
-        puzzles: (row.puzzles || []).map(function (puzzle) {
-          return Object.assign({}, puzzle, { label: labels[puzzle.playId] || puzzle.playId })
-        })
+    const snap = this.snapshot()
+    if (!snap || !this._active) return
+    this.run = snap.run
+    const page = pages.byId[this.run.pageId]
+    const model = (screen.buildScreen || screen.screen)(this.run, Object.assign({}, this.ui, {
+      relay: { status: this.data.relayState, records: this.data.relayItems, viewed: this.ui.relayViewed, submitStatus: this.ui.submitStatus }, records: snap.records, contributions: snap.contributions
+    }))
+    model.portrait = resources.resolve(model.portrait, 'asset'); model.teacher = resources.resolve(model.teacher, 'asset')
+    model.figures.forEach((item, i) => { item.src = resources.resolve(item.src, 'asset'); item.label = '图样' + (i + 1) })
+    model.spots.forEach((item) => { item.src = resources.resolve(item.src, 'asset') })
+    if (model.board) { model.board.pieces.forEach((p) => { p.text = p.label + (p.placed ? ' · 已放下' : '') }); model.board.slots.forEach((s) => { s.text = s.label + (s.piece ? ' · ' + s.piece : '') }) }
+    const field = snap.records.filter((r) => r.purpose === 'field')
+    const view = progress.buildProgress(this.run)
+    const unlockedCards = []
+    Object.keys(this.run.visited).forEach((id) => {
+      require('../../flow/glossary').termsFor(id).forEach((term) => {
+        if (!unlockedCards.some((x) => x.key === term.key)) unlockedCards.push(term)
       })
     })
-    this.setData({
-      view: view,
-      card: this.cardView(),
-      progressRows: progressRows,
-      mapSites: nav.listSites()
+    this.setData({ screen: model, pageId: page.id, playId: page.playId, ui: clone(this.ui),
+      completed: !!this.run.completedAt, review: engine.isReview(this.run),
+      rows: view.rows.map((r) => Object.assign({}, r, { openPageId: view.openPageId(r.id) })),
+      records: field, photoCount: field.filter((r) => r.kind === 'photo').length,
+      narrClips: cue.clipsFor(page, Object.assign({}, this.run, { uiByPage: Object.assign({}, this.run.uiByPage, { [page.id]: this.ui }) })),
+      voiceEnabled: settings.get().voice, soundSrc: resources.resolve(nfc.SOUND, 'audio'), waterClockState: this.ui.waterClock || {},
+      clockPlaying: !!(this.ui.waterClock && this.ui.waterClock.playing),
+      historyCards: unlockedCards, hasHint: !!HINTS[page.playId], hint: this.ui.hint ? HINTS[page.playId] : '',
+      contributions: snap.contributions.map((c) => Object.assign({}, c, { label: STATUS[c.status] || c.status })),
+      archives: session.getArchives().map((a) => ({ id: a.sessionId, name: a.run.name, date: fmt(a.run.completedAt) })),
+      syncState: snap.sync && snap.sync.status || 'local', isDemo: bridge.getConfig().mode === 'demo'
     })
-    this.progressOpen = built.openPageId
     this.syncNfc()
   },
-
-  cardView() {
-    const found = cards.get(this.ui.cardKey)
-    if (!found) return null
-    return {
-      title: String(found.title || '').replace(/^SL-\d+\s*·\s*/, ''),
-      source: found.source,
-      image: found.image || '',
-      caption: found.caption || '',
-      lines: found.layers,
-      more: false
-    }
+  async persist() {
+    if (!this.run) return
+    const pageId = this.run.pageId
+    const patch = clone(this.ui)
+    if (session.saveDraft) return session.saveDraft(pageId, patch, this.sessionId)
+    const current = this.snapshot()
+    return session.saveRun(Object.assign({}, current.run, { uiByPage: Object.assign({}, current.run.uiByPage, { [pageId]: patch }) }), this.sessionId)
   },
-
-  syncNfc() {
-    const page = pages.byId[this.run.pageId]
-    if (!page || page.playId !== 'listen-nfc') {
-      this.stopNfc()
-      return
-    }
-    if (this.nfcOn) return
-    this.nfcOn = true
-    const self = this
-    this.nfcHandle = nfcListen.start({
-      onTag: function () { self.markHeard('贴片读到了，声景在放') },
-      onStatus: function (status) {
-        if (status === 'unsupported') self.ui.nfcStatus = '这台手机读不了贴片，可以直接听'
-        else if (status === 'foreign') self.ui.nfcStatus = '这张贴片不是谐奇趣的'
-        else self.ui.nfcStatus = status
-        self.render()
-      }
-    })
+  draft(patch, redraw) {
+    Object.assign(this.ui, patch)
+    if (redraw !== false) this.render()
+    this.persist().catch((err) => { if (this._active) this.setData({ error: '记录未保存：' + errorText(err) }) })
   },
-
-  stopNfc() {
-    this.nfcOn = false
-    if (this.nfcHandle) {
-      this.nfcHandle.stop()
-      this.nfcHandle = null
-    }
+  async action(fn) {
+    if (this.data.busy) return
+    this.setData({ busy: true, error: '' })
+    try { await this.persist(); await fn(); this.restore() }
+    catch (err) { this.setData({ error: errorText(err) }) }
+    finally { if (this._active) this.setData({ busy: false }) }
   },
-
-  markHeard(status) {
-    this.ui.heard = true
-    this.ui.nfcStatus = status
-    this.playSound()
-    this.render()
-  },
-
-  playSound() {
-    if (typeof wx === 'undefined' || typeof wx.createInnerAudioContext !== 'function') return
-    if (this.audio) {
-      try { this.audio.stop() } catch (err) {}
-    }
-    const audio = wx.createInnerAudioContext()
-    audio.src = nfcListen.SOUND
-    audio.play()
-    this.audio = audio
-  },
-
-  persist() {
-    try { wx.setStorageSync(STORE_KEY, this.run) } catch (err) {}
-  },
-
-  go(nextRun) {
-    this.ui = {}
-    this.run = engine.enter(nextRun, nextRun.pageId)
-    this.persist()
-    this.setData({ showProgress: false, showMap: false })
-    this.render()
-    this.coachFor(this.run.pageId)
-  },
-
-  onChoose(e) {
-    this.ui.choice = e.currentTarget.dataset.value
-    this.ui.again = false
-    this.render()
-  },
-
-  onToggle(e) {
-    const key = e.currentTarget.dataset.key
-    this.ui[key] = !this.ui[key]
-    this.ui.again = false
-    this.render()
-  },
-
-  onField(e) {
-    this.ui[e.currentTarget.dataset.key] = e.detail.value
-    this.ui.again = false
-    this.render()
-  },
-
-  noop() {},
-
+  onShow() { this._active = true; this.setData({ pageVisible: true }); if (this.run) this.restore() },
+  onHide() { this.setData({ pageVisible: false }); audioBus.pauseAll(); this.stopNfc(); if (this.run) this.persist().catch(() => {}) },
+  onUnload() { clearTimeout(this._scrollTimer); this.onHide(); this._active = false; settings.unsubscribe(this._settings) },
+  onScroll(e) { this.ui.scrollTop = Math.max(0, Number(e.detail.scrollTop) || 0); clearTimeout(this._scrollTimer); this._scrollTimer = setTimeout(() => this.persist().catch(() => {}), 250) },
+  onInput(e) { this.draft({ [ds(e, 'key')]: e.detail.value, again: false }, false) },
+  onChoice(e) { if (!this.data.review) this.draft({ choice: ds(e, 'id'), optionId: ds(e, 'id'), again: false }) },
+  onSpot(e) { this.draft({ spot: ds(e, 'id') }) },
+  onHint() { this.draft({ hint: true }); session.viewHint(this.data.playId, 1) },
+  onArrived() { this.draft({ arrived: true }) },
+  onVoice(e) { settings.set('voice', !!e.detail.value) },
+  onMuteAll() { settings.set('voice', false); audioBus.pauseAll(); this.setData({ pageVisible: false }); wx.nextTick(() => this.setData({ pageVisible: true })) },
   onPrimary() {
-    const page = pages.byId[this.run.pageId]
-    if (!page) return
-    if (page.playId === 'prop-flip' && !this.ui.flipped) {
-      this.ui.flipped = true
-      this.render()
-      return
-    }
-    if (page.playId) {
-      const result = play.submit(page.playId, this.action())
-      if (result.status === 'again') {
-        this.ui.again = true
-        this.render()
+    this.action(async () => {
+      const page = pages.byId[this.run.pageId]
+      if (this.data.review) {
+        if (page.next && engine.canEnter(this.run, page.next)) await session.navigate(page.next, { sessionId: this.sessionId })
+        else await session.resume(this.sessionId)
         return
       }
-      if (result.status === 'solved') {
-        const marked = Object.assign({}, this.run, {
-          puzzles: Object.assign({}, this.run.puzzles, { [page.playId]: 'solved' })
-        })
-        this.go(engine.complete(marked, page.id))
-        return
+      if (page.kind === 'sign') {
+        if (!this.run.completedAt) await session.sign(this.ui.name)
+        this.onReport(); return
       }
-    }
-    if (page.kind === 'sign') {
-      this.run = Object.assign({}, this.run, { signedAt: Date.now() })
-      this.persist()
-      wx.showToast({ title: '明天再来看那封信', icon: 'none' })
-      return
-    }
-    if (!page.next) return
-    this.go(engine.complete(this.run, page.id))
-  },
-
-  onSkip() {
-    const page = pages.byId[this.run.pageId]
-    if (!page || !page.skipTo) return
-    this.go(engine.skip(this.run, page.id))
-  },
-
-  onMapSite(e) {
-    const data = e.currentTarget.dataset
-    wx.openLocation({
-      latitude: Number(data.lat),
-      longitude: Number(data.lng),
-      name: data.name,
-      scale: 16
+      let assisted = !!this.ui.hint
+      if (page.playId) {
+        if (page.playId === 'prop-flip' && !this.ui.flipped) { this.draft({ flipped: true }); return }
+        let answer = { optionId: this.ui.optionId || this.ui.choice, value: this.ui.text, played: this.ui.heard,
+          confirmed: page.playId === 'prop-flip' ? this.ui.flipped : this.ui.confirmed,
+          waterClock: this.ui.waterClock }
+        if (page.playId === 'photo-pavilion') {
+          if (!this.ui.arrived) { this.draft({ again: true, feedback: '到达中心亭后，请先确认到达。' }); return }
+          const records = this.snapshot().records.filter((r) => r.purpose === 'field' && (r.siteId === 'maze' || !r.siteId))
+          answer.count = records.filter((r) => r.kind === 'photo' || r.kind === 'text' && r.text.trim()).length
+          if (!records.some((r) => r.kind === 'photo')) assisted = true
+        }
+        if (page.playId === 'place-animals') {
+          const p = this.ui.placed || {}; answer = { deer: p.deer === 'center', dogs: p.dogs === 'ring', beasts: p.beasts === 'ends' }
+        }
+        if (play.submit(page.playId, answer).status !== 'solved') {
+          this.draft({ again: true, feedback: '还没有完成这一项。可以再试一次、查看提示，或选择跳过。' }); return
+        }
+      }
+      if (page.id === 'LT6' && this.data.relayItems.length) { this.ui.relayViewed = true; await this.persist() }
+      if (page.id === 'LT7' && (this.ui.relayText || this.ui.relayPath)) await this.saveRelayDraft('private')
+      await session.completePage(page.id, { sessionId: this.sessionId, assisted })
+      if (page.id === 'LT8') this.onReport()
     })
   },
-
-  onNavigate() {
-    const view = this.data.view
-    if (!view || !view.nav) return
-    const to = view.nav.to
-    wx.openLocation({
-      latitude: to.latitude,
-      longitude: to.longitude,
-      name: to.name,
-      scale: 16
+  onSkip() { this.action(() => session.skipPage(this.run.pageId, { sessionId: this.sessionId })) },
+  onResume() { this.action(() => session.resume(this.sessionId)) },
+  onBack() {
+    this.action(async () => {
+      const index = pages.list.findIndex((p) => p.id === this.run.pageId)
+      for (let i = index - 1; i >= 0; i--) {
+        if (engine.canEnter(this.run, pages.list[i].id)) { await session.navigate(pages.list[i].id, { sessionId: this.sessionId }); return }
+      }
+      await this.exit()
     })
   },
-
-  onOpenMap() {
-    this.setData({ showMap: true, showProgress: false })
+  onOpenPage(e) { const id = ds(e, 'page'); if (!id) return; this.setData({ drawer: '' }); this.action(() => session.navigate(id, { sessionId: this.sessionId })) },
+  onDrawer(e) { this.setData({ drawer: ds(e, 'name') || '', card: null }); audioBus.pauseAll() },
+  onCloseDrawer() { this.setData({ drawer: '', card: null }) },
+  noop() {},
+  onOpenCard(e) {
+    const key = ds(e, 'key'); const card = cards.get ? cards.get(key) : cards.SL_CARDS[key]
+    if (!card) return
+    const required = { sl07: 'quiz-lantern', sl12: 'quiz-hour', sl14: 'place-animals' }[key]
+    const status = this.run.puzzles[required]
+    const locked = !!required && status !== 'solved' && status !== 'assisted'
+    this.setData({ drawer: 'history', card: Object.assign({}, card, { key, image: resources.resolve(card.image, 'asset'), layers: locked ? card.layers.slice(0, key === 'sl07' ? 1 : 0) : card.layers,
+      answerHidden: locked, years: locked ? [] : card.years || [] }) })
   },
-
-  onCloseMap() {
-    this.setData({ showMap: false })
+  onPreview(e) { const src = ds(e, 'src'); if (src) wx.previewImage({ current: src, urls: [src] }) },
+  onAddPhoto(e) {
+    this.action(async () => { await photos.pickRecord({ purpose: 'field', siteId: this.run.pageId === 'H4' ? 'maze' : pages.byId[this.run.pageId].siteId, spot: this.ui.spot, text: '', id: e && ds(e, 'id') || undefined }, this.sessionId) })
   },
-
-  onOpenProgress() {
-    this.render()
-    this.setData({ showProgress: true, showMap: false })
-  },
-
-  onCloseProgress() {
-    this.setData({ showProgress: false })
-  },
-
-  onProgressRow(e) {
-    const pageId = this.progressOpen(e.currentTarget.dataset.row)
-    if (!pageId) return
-    this.go(Object.assign({}, this.run, { pageId: pageId }))
-  },
-
-  onProgressPlay(e) {
-    const pageId = e.currentTarget.dataset.page
-    if (!pageId) return
-    this.go(Object.assign({}, this.run, { pageId: pageId }))
-  },
-
-  action() {
-    const placed = this.ui.placed || {}
-    const animals = {}
-    PIECES.forEach(function (piece) {
-      animals[piece.id] = placed[piece.id] === piece.slot
+  onDeleteRecord(e) { this.action(() => session.deleteRecord(ds(e, 'id'), this.sessionId)) },
+  onSaveNote() {
+    this.action(async () => {
+      if (!String(this.ui.note || '').trim()) throw new Error('请先写下观察记录')
+      await session.saveRecord({ purpose: 'field', kind: 'text', siteId: 'maze', text: this.ui.note, status: 'private' }, this.sessionId)
+      this.ui.note = ''; await this.persist()
     })
-    return {
-      value: this.ui.choice || this.ui.text || '',
-      played: !!this.ui.heard,
-      confirmed: true,
-      count: this.ui.count || 0,
-      hour14: (this.ui.hour14 || '').trim(),
-      noon: (this.ui.noon || '').trim(),
-      deer: animals.deer,
-      dogs: animals.dogs,
-      beasts: animals.beasts
-    }
   },
-
-  onSpot(e) {
-    this.ui.spot = e.currentTarget.dataset.id
-    this.ui.again = false
-    this.render()
-  },
-
-  onBeast(e) {
-    this.ui.beast = e.currentTarget.dataset.branch
-    this.ui.noonWatch = false
-    this.render()
-  },
-
-  onNoonWatch() {
-    this.ui.noonWatch = true
-    this.ui.beast = ''
-    this.render()
-  },
-
-  onPiece(e) {
-    this.ui.selectedPiece = e.currentTarget.dataset.id
-    this.ui.again = false
-    this.render()
-  },
-
+  onConfirmDial(e) { this.draft({ confirmed: e.detail.value.length > 0 }) },
+  onPiece(e) { if (!this.data.review) this.draft({ selectedPiece: ds(e, 'id') }) },
   onSlot(e) {
-    const pieceId = this.ui.selectedPiece
-    if (!pieceId) return
-    const slotId = e.currentTarget.dataset.id
-    const placed = Object.assign({}, this.ui.placed)
-    Object.keys(placed).forEach(function (key) {
-      if (placed[key] === slotId) delete placed[key]
-    })
-    placed[pieceId] = slotId
-    this.ui.placed = placed
-    this.ui.selectedPiece = ''
-    this.ui.again = false
+    if (!this.ui.selectedPiece || this.data.review) return
+    const placed = Object.assign({}, this.ui.placed); const slot = ds(e, 'id')
+    Object.keys(placed).forEach((key) => { if (placed[key] === slot) delete placed[key] })
+    placed[this.ui.selectedPiece] = slot; this.draft({ placed, selectedPiece: '', again: false })
+  },
+  onFade(e) { this.draft({ fountainProgress: Number(e.detail.value) }) },
+  onWaterClockChange(e) {
+    this.ui.waterClock = e.detail.state
+    this.setData({ waterClockState: e.detail.state, clockPlaying: !!e.detail.state.playing })
+    this.persist().catch((err) => this.setData({ error: errorText(err) }))
+  },
+  onWaterClockComplete(e) { this.draft({ waterClock: e.detail.state }) },
+  syncNfc() {
+    if (this.run.pageId !== 'X1' || !this.data.pageVisible) { this.stopNfc(); return }
+    if (this._nfcStarting || this._nfc) return
+    this._nfcStarting = true
+    this._nfc = nfc.start({ onTag: () => { const player = this.selectComponent('#soundscape'); if (player && this.data.pageVisible) player.onReplay() },
+      onStatus: (status) => this.setData({ nfcStatus: status === 'unsupported' ? '此设备未启用贴片读取，可直接听。' : '贴片未读到，可直接听。' }) })
+    this._nfcStarting = false
+  },
+  stopNfc() { if (this._nfc) this._nfc.stop(); this._nfc = null },
+  onHeard() { this.draft({ heard: true }) },
+  onSoundError() { this.setData({ nfcStatus: '音乐暂时无法播放，可重试或跳过，不影响后续。' }) },
+  async loadRelay() {
+    this.setData({ relayState: 'loading' })
+    const result = await session.listContributions({ sessionId: this.sessionId })
+    if (!this._active) return
+    this.setData({ relayState: result.status === 'available' ? result.items.length ? 'ready' : 'empty' : result.status, relayItems: result.items || [] })
     this.render()
   },
-
-  onDirectListen() {
-    this.markHeard('直接在听')
+  onRelayKind(e) { if (!this.ui.relayRecordId) this.draft({ relayKind: ds(e, 'kind') }) },
+  async saveRelayDraft(status) {
+    const kind = this.ui.relayKind || 'text'
+    if (kind === 'photo' && !this.ui.relayPath) throw new Error('请先选择一张照片')
+    if (kind !== 'photo' && !String(this.ui.relayText || '').trim()) throw new Error('请先写下内容')
+    const record = await session.saveRecord({ id: this.ui.relayRecordId || undefined, purpose: 'relay', kind,
+      text: this.ui.relayText || '', filePath: this.ui.relayPath || '', status }, this.sessionId)
+    this.ui.relayRecordId = record.id; this.ui.relaySaved = true; await this.persist(); return record
   },
-
-  onTerm(e) {
-    this.ui.cardKey = e.currentTarget.dataset.key
-    this.ui.cardLayer = 1
-    this.render()
-  },
-
-  onCardMore() {
-    this.ui.cardLayer = (this.ui.cardLayer || 1) + 1
-    this.render()
-  },
-
-  onCardClose() {
-    this.ui.cardKey = ''
-    this.render()
-  },
-
-  onPrev() {
-    const self = this
-    session.listBoardMessages({ limit: 1 }).then(function (res) {
-      const note = res && res.messages && res.messages[0]
-      self.ui.prevNote = note ? note.from + '：' + note.text : '还没有经审核的上一位留言'
-      self.render()
-    }).catch(function () {
-      self.ui.prevNote = '留言这会儿打不开'
-      self.render()
+  onRelayPhoto() {
+    this.action(async () => {
+      const record = await photos.pickRecord({ purpose: 'relay', text: this.ui.relayText || '', id: this.ui.relayRecordId || undefined }, this.sessionId)
+      Object.assign(this.ui, { relayKind: 'photo', relayRecordId: record.id, relayPath: record.filePath, relaySaved: true }); await this.persist()
     })
   },
-
-  onLeaveText() {
-    const text = String(this.ui.leaveText || '').trim()
-    if (!text) {
-      this.ui.leftAck = '先写一句'
-      this.render()
-      return
-    }
-    this.submitLeave(text)
-  },
-
-  onLeaveWish() {
-    const text = String(this.ui.wish || '').trim()
-    if (!text) {
-      this.ui.leftAck = '写一个你希望他再看一眼的地方'
-      this.render()
-      return
-    }
-    this.submitLeave('替我再看一眼：' + text)
-  },
-
-  onLeavePhoto() {
-    const self = this
-    this.shoot(function (path) {
-      self.ui.photo = path
-      self.submitLeave('今天在遗址拍下的一张照片。')
+  onRelayConsent(e) { this.draft({ consent: e.detail.value.length > 0 }) },
+  onSaveRelay() { this.action(async () => { await this.saveRelayDraft('private') }) },
+  onSubmitRelay() {
+    this.action(async () => {
+      if (!this.ui.consent) throw new Error('请先选择是否同意公开；也可以仅私人保存')
+      const record = await this.saveRelayDraft('private')
+      const result = await session.submitContribution(record.id, { consent: true, sessionId: this.sessionId })
+      this.ui.submitStatus = result.status; await this.persist()
     })
   },
-
-  submitLeave(text) {
-    const self = this
-    session.submitBoardMessage(text).then(function () {
-      self.ui.leftAck = '已收下。审核通过后，才会出现在下一位的信里。'
-      self.render()
-    }).catch(function () {
-      self.ui.leftAck = '这会儿没送出去'
-      self.render()
+  onRefreshContribution(e) { this.action(() => session.getContribution(ds(e, 'id'), this.sessionId)) },
+  onWithdraw(e) {
+    this.action(async () => {
+      const result = await session.withdrawContribution(ds(e, 'id'), this.sessionId)
+      if (result.status !== 'withdrawn') throw new Error('尚未收到撤回回执，请重试')
     })
   },
-
-  onShoot() {
-    const self = this
-    this.shoot(function (path) {
-      self.ui.photo = path
-      self.ui.count = (self.ui.count || 0) + 1
-      self.ui.again = false
-      self.render()
-    })
+  onNewRelay() { this.draft({ relayRecordId: '', relayText: '', relayPath: '', relayKind: 'text', relaySaved: false, consent: false, submitStatus: '' }) },
+  onReport(e) {
+    const id = e && e.currentTarget ? ds(e, 'id') : this.sessionId || this.snapshot().sessionId
+    wx.navigateTo({ url: '/plate21/module/pages/report/report?sessionId=' + encodeURIComponent(id || this.snapshot().sessionId) })
   },
-
-  shoot(done) {
-    if (typeof wx === 'undefined' || typeof wx.chooseImage !== 'function') return
-    wx.chooseImage({
-      count: 1,
-      sizeType: ['compressed'],
-      sourceType: ['camera', 'album'],
-      success: function (res) {
-        done(res.tempFilePaths && res.tempFilePaths[0])
-      }
-    })
+  onRestart() {
+    wx.showModal({ title: '开始新的考察？', content: '已完成的作品会保留。当前未完成的考察将重新开始。', success: (res) => {
+      if (res.confirm) this.action(async () => { await session.restart(); this.sessionId = ''; this.query = {}; this.setData({ drawer: '' }); wx.redirectTo({ url: '/plate21/module/pages/walk/walk' }) })
+    } })
   },
-
-  onUnload() {
-    this.stopNfc()
-    if (this.audio) {
-      try { this.audio.stop() } catch (err) {}
-    }
-  }
+  async exit() {
+    const result = await session.exit('user')
+    if (result.status === 'exited') return
+    if (bridge.getConfig().mode === 'demo' && typeof getCurrentPages === 'function' && getCurrentPages().length > 1) wx.navigateBack()
+    else this.setData({ notice: '考察已保存，可以从小程序返回按钮离开。' })
+  },
+  onExit() { this.action(() => this.exit()) }
 })

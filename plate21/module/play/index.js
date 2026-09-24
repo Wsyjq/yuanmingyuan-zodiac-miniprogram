@@ -4,6 +4,7 @@
 // propPrompt 只摘 docs/飞书分页接入方案.md 里已有的提示，不描写道具外观。
 
 const { PLAY_IDS } = require('../flow/contract')
+const waterClock = require('./water-clock')
 
 const DIRECTION_OPTIONS = ['西北', '东南', '西南', '东北']
 const HEIGHT_OPTIONS = ['高', '低']
@@ -14,11 +15,30 @@ const LANTERN_OPTIONS = [
   '作为皇子们的秘密议事厅，以防外人窃听。'
 ]
 
+// IDs are the persisted answer contract. Exact labels are accepted only for old UI callers.
+const CHOICES = {
+  'quiz-direction': ['nw', 'se', 'sw', 'ne'].map(function (id, i) { return { id: id, label: DIRECTION_OPTIONS[i] } }),
+  'quiz-lantern': ['defense', 'library', 'lantern', 'council'].map(function (id, i) { return { id: id, label: LANTERN_OPTIONS[i] } }),
+  'quiz-height': [{ id: 'high', label: '高' }, { id: 'low', label: '低' }],
+  'quiz-pattern': [
+    { id: 'wanzi', label: '万字纹' }, { id: 'shell', label: '贝壳纹' },
+    { id: 'scroll', label: '卷草纹' }, { id: 'basket', label: '花篮纹' }
+  ]
+}
+
+function choiceIs(playId, action, answerId) {
+  const choices = CHOICES[playId] || []
+  if (Object.prototype.hasOwnProperty.call(action, 'optionId')) {
+    return action.optionId === answerId && choices.some(function (item) { return item.id === action.optionId })
+  }
+  return choices.some(function (item) { return item.id === answerId && action.value === item.label })
+}
+
 const PLAYS = {
   'quiz-direction': {
     propPrompt: '打开地图再做方位题',
     fields: [{ name: 'value', type: 'choice', options: DIRECTION_OPTIONS }],
-    solved: function (action) { return action.value === '东北' }
+    solved: function (action) { return choiceIs('quiz-direction', action, 'ne') }
   },
   'listen-nfc': {
     propPrompt: '提示用音乐贴片',
@@ -36,7 +56,7 @@ const PLAYS = {
     propPrompt: '',
     fields: [{ name: 'value', type: 'choice', options: LANTERN_OPTIONS }],
     solved: function (action) {
-      return typeof action.value === 'string' && action.value.includes('灯会')
+      return choiceIs('quiz-lantern', action, 'lantern')
     }
   },
   'prop-flip': {
@@ -54,15 +74,12 @@ const PLAYS = {
   'quiz-pattern': {
     propPrompt: '选出看到的花纹',
     fields: [{ name: 'value', type: 'choice' }],
-    solved: function (action) { return action.value === '万字纹' }
+    solved: function (action) { return choiceIs('quiz-pattern', action, 'wanzi') }
   },
   'quiz-hour': {
     propPrompt: '',
-    fields: [
-      { name: 'hour14', type: 'text' },
-      { name: 'noon', type: 'text' }
-    ],
-    solved: function (action) { return action.hour14 === '羊' && action.noon === '马' }
+    fields: [{ name: 'waterClock', type: 'water-clock' }],
+    solved: function (action) { return waterClock.isComplete(action.waterClock) }
   },
   'prop-dial': {
     propPrompt: '提示使用转盘',
@@ -72,7 +89,7 @@ const PLAYS = {
   'quiz-height': {
     propPrompt: '提示看特刊',
     fields: [{ name: 'value', type: 'choice', options: HEIGHT_OPTIONS }],
-    solved: function (action) { return action.value === '高' }
+    solved: function (action) { return choiceIs('quiz-height', action, 'high') }
   },
   'place-animals': {
     propPrompt: '提示对照《大水法南面》',
@@ -130,5 +147,6 @@ function submit(playId, action) {
 
 module.exports = {
   start: start,
-  submit: submit
+  submit: submit,
+  CHOICES: CHOICES
 }

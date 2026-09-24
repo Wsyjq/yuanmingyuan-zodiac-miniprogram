@@ -1,145 +1,75 @@
-<!-- v1.3.1 手账：左侧活页装订孔列（移到 .page 外，避免 flex 影响 fixed） -->
-<view class="binder"></view>
-<view class="page page-shell paper-grain paper-real">
-<scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
-  
-  <view class="title serif">西洋楼铜版图 · 第二十一图</view>
-  <view class="subtitle">考察记录生成完成 · {{editionLabel}} · 非馆藏原件</view>
-  <view class="archive-rule report-rule"></view>
+<view class="report-page">
+  <view wx:if="{{loading}}" class="notice">正在翻开你的考察档案……</view>
+  <view wx:elif="{{loadError}}" class="notice error">
+    <view>{{loadError}}</view><button class="report-button" bindtap="onRetryLoad">重新读取</button>
+  </view>
+  <block wx:elif="{{model}}">
+    <view class="eyebrow">FIELD ARCHIVE · 个人考察档案</view>
+    <view class="report-title">我的第二十一图</view>
+    <view class="report-subtitle">{{model.completed ? '考察已经完成，这份作品仍可以补充。' : '这是一份考察草稿，完成后会保留署名与日期。'}}</view>
+    <view class="identity"><text>{{model.name}}</text><text>{{model.dateLabel}}</text></view>
 
-  <!-- 万字纹画框（邮票齿孔框 + 角花）+ 完整第 21 图预览 -->
-  <view class="frame perfo-frame">
-    <view class="corner tl"></view>
-    <view class="corner tr"></view>
-    <view class="corner bl"></view>
-    <view class="corner br"></view>
-    <!-- v1.3.1 手账：长尾夹贴纸压在画框左上角，像夹住档案 -->
-    
-    <view class="stamp-date frame-stamp">
-      <text>考察之日</text>
-      <text>{{today}}</text>
+    <view class="artwork-section">
+      <view wx:if="{{generating}}" class="notice">正在把你的照片和观察编入作品……</view>
+      <image wx:for="{{previewImages}}" wx:key="filePath" class="artwork-preview" src="{{item.filePath}}" mode="widthFix" data-index="{{index}}" bindtap="onPreviewArtwork" aria-label="预览个人作品第{{item.number}}页" />
+      <view wx:if="{{!previewImages.length && !generating}}" class="empty-art">作品还未生成。你的记录已经保存在下方。</view>
+      <view class="small-note">底图为遗址示意线稿；照片只来自你留下的现场记录。{{sheetCount > 1 ? '记录较多，作品会分成 ' + sheetCount + ' 页，完整保留每条记录。' : ''}}</view>
+      <view wx:if="{{exportWarning}}" class="notice">{{exportWarning}}</view>
+      <view class="button-row">
+        <button class="report-button primary" bindtap="onSave" disabled="{{generating || saving || busy}}">{{saving ? '保存中…' : (savedCount && savedCount === previewImages.length ? '已保存到相册' : '保存到相册')}}</button>
+        <button class="report-button" bindtap="onRegenerate" disabled="{{generating || saving || busy}}">重新生成</button>
+      </view>
+      <view wx:if="{{saving || savedCount}}" class="small-note">已保存 {{savedCount}} / {{sheetCount}} 页</view>
+      <view wx:if="{{saveError}}" class="notice error">{{saveError}}</view>
+      <button wx:if="{{canOpenAlbumSettings}}" class="report-button" bindtap="onOpenAlbumSettings">打开相册权限设置</button>
     </view>
-    <view class="frame-inner">
-      <view class="canvas report-artwork">
-        <image class="canvas-bg" src="/plate21/module/assets/img/IMG-RUNTIME-PLATE.jpg" mode="aspectFill" />
-        <view class="layer layer-l2">
-          <view class="l2-frame"><view class="l2-inner"></view></view>
+
+    <view class="section">
+      <view class="section-title">八站记录</view>
+      <view class="stations">
+        <view wx:for="{{model.stations}}" wx:key="id" class="station"><text>{{item.label}}</text><text class="station-status {{item.status}}">{{item.stateLabel}}</text></view>
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">我的现场照片 <text class="count">{{model.photos.length}}</text></view>
+      <view wx:if="{{!model.photos.length}}" class="small-note">还没有现场照片。可以补上一张，也可以保留文字作品。</view>
+      <view class="photos">
+        <view wx:for="{{model.photos}}" wx:key="id" class="photo-card">
+          <image wx:if="{{item.filePath}}" class="field-photo" src="{{item.filePath}}" mode="aspectFill" data-id="{{item.id}}" bindtap="onPreviewPhoto" aria-label="预览{{item.title}}照片" />
+          <view wx:else class="field-photo missing-photo">照片待补充</view>
+          <view class="photo-label">{{item.title}}</view>
+          <view class="record-actions"><button data-id="{{item.id}}" bindtap="onReplacePhoto" disabled="{{busy || generating || saving}}">替换</button><button data-id="{{item.id}}" bindtap="onDeleteRecord" disabled="{{busy || generating || saving}}">删除</button></view>
         </view>
-        <view class="layer layer-l5">
-          <view class="l5-box">
-            <text class="l5-line kaiti">这一次的考察</text>
-            <text class="l5-name kaiti">{{name}}</text>
-          </view>
-        </view>
       </view>
     </view>
-  </view>
 
-  <view class="field-record archive-sheet">
-    <view class="field-head">
-      <view>
-        <view class="field-kicker">FIELD RECORD · S2-3</view>
-        <view class="field-title serif">亭下考察记录</view>
-      </view>
-      <view class="field-count">已记 {{photoCount}} / 4 处</view>
-    </view>
-    <view class="archive-rule"></view>
-    <view class="field-grid">
-      <view wx:for="{{fieldPhotos}}" wx:key="key" class="field-photo" data-key="{{item.key}}" bindtap="onPreviewPhoto" role="button" aria-label="预览{{item.title}}现场照片">
-        <image wx:if="{{item.photoPath}}" class="field-image" src="{{item.photoPath}}" mode="aspectFill" lazy-load="{{true}}" />
-        <view wx:else class="field-missing">待补录</view>
-        <view class="field-caption"><text>{{item.no}}</text>{{item.title}}</view>
+    <view class="section">
+      <view class="section-title">观察笔记 <text class="count">{{model.texts.length}}</text></view>
+      <view wx:if="{{!model.texts.length}}" class="small-note">你记住了什么，或还有什么想再看一眼？</view>
+      <view wx:for="{{model.texts}}" wx:key="id" class="text-record">
+        <view class="photo-label">{{item.title}}</view><text class="record-body" selectable>{{item.text}}</text>
+        <view class="record-actions"><button data-id="{{item.id}}" bindtap="onEditText" disabled="{{busy || generating || saving}}">修改</button><button data-id="{{item.id}}" bindtap="onDeleteRecord" disabled="{{busy || generating || saving}}">删除</button></view>
       </view>
     </view>
-    <view class="field-note">本区只收录玩家实际拍摄照片；参考图不会进入报告。</view>
-    <button wx:if="{{photoCount < 4}}" class="btn-line repair-btn" bindtap="onRepairPhotos">返回现场照片页补录</button>
-  </view>
 
-  <!-- v2 回响区：明信片投递 + 次日之信入口（finale 后出现） -->
-  <view wx:if="{{finale}}" class="echo-zone">
-    <view class="field-head">
-      <view>
-        <view class="field-kicker">ECHO · 回响</view>
-        <view class="field-title serif">明信片 · 一句话</view>
-      </view>
-    </view>
-    <view class="archive-rule"></view>
-    <view class="echo-question kaiti">一样东西放在哪儿，才算被保住了？</view>
-
-    <block wx:if="{{!messageSubmitted}}">
-      <textarea
-        class="echo-input kaiti"
-        value="{{messageText}}"
-        maxlength="50"
-        placeholder="想写就写，不写也可以空着带走"
-        bindinput="onMessageInput"
-      />
-      <view class="echo-tools">
-        <view class="echo-consent" bindtap="onConsentToggle" role="button" aria-label="切换匿名引用授权">
-          <view class="echo-check {{messageConsent ? 'on' : ''}}"></view>
-          <text>愿意被匿名引用，下一位考察者可能读到</text>
-        </view>
-        <view class="echo-count">{{messageText.length}}/50</view>
-      </view>
-      <button class="btn-line echo-submit" bindtap="onSubmitMessage" disabled="{{messageSubmitting}}">
-        {{messageSubmitting ? '投递中……' : '投进信箱'}}
-      </button>
-    </block>
-
-    <view wx:else class="echo-sent card-ticket">
-      <view class="echo-sent-text kaiti">{{submittedText}}</view>
-      <view class="echo-sent-note note-hand olive">已存入第21图的档案。下一位来到这里的人，会读到你写的那一句。</view>
-      <button class="btn-line echo-edit" bindtap="onEditMessage">重写这张明信片</button>
+    <view class="section editor" id="recordEditor">
+      <view class="section-title">{{editingTextId ? '修改这条观察' : '补充一条记录'}}</view>
+      <picker mode="selector" range="{{siteOptions}}" range-key="label" value="{{siteIndex}}" bindchange="onSiteChange"><view class="site-picker">关联地点：{{siteOptions[siteIndex].label}} <text>⌄</text></view></picker>
+      <textarea class="note-input" value="{{draftText}}" bindinput="onTextInput" maxlength="500" auto-height placeholder="写下自己的观察；也可以只补充照片。" aria-label="个人观察笔记" />
+      <view class="small-note counter">{{draftText.length}} / 500</view>
+      <view class="button-row"><button class="report-button primary" bindtap="onSaveText" disabled="{{busy || generating || saving}}">{{busy ? '保存中…' : '保存文字'}}</button><button class="report-button" bindtap="onAddPhoto" disabled="{{busy || generating || saving}}">补充照片</button></view>
+      <button wx:if="{{editingTextId}}" class="report-button" bindtap="onCancelEdit" disabled="{{busy}}">取消修改</button>
+      <view wx:if="{{recordError}}" class="notice error">{{recordError}}</view>
+      <view class="small-note">这些是你的私人记录。补充、替换或删除不会改变原完成日期，也不会把跳过的站点改成已完成。</view>
     </view>
 
-    <!-- 留言簿入口：写发生在通关当天剧情末尾（用户 2026-09-18 拍板）；次日回访只负责读 -->
-    <view class="letter-entry board-entry" bindtap="onOpenBoard" role="button" aria-label="留言簿入口">
-      <view class="letter-entry-wax board-entry-wax">留</view>
-      <view class="letter-entry-main">
-        <view class="letter-entry-title serif">留言簿 · 给后来的人</view>
-        <view class="letter-entry-sub kaiti">{{boardSubmitted ? '你的那句话已在档案里，去看看大家的话' : '走完了，给下一个来的人留一句话'}}</view>
-      </view>
-      <view class="letter-entry-arrow">›</view>
+    <view wx:if="{{model.completed}}" class="section letter-card">
+      <view class="section-title">{{letterAvailable ? '来信已可启封' : '一封稍后来到的信'}}</view>
+      <view class="letter-message">{{letterChecking ? '正在确认来信状态……' : letterMessage}}</view>
+      <button class="report-button" bindtap="onOpenLetter" disabled="{{letterOpening || letterChecking}}">{{letterOpening ? '正在启封…' : (letterAvailable ? '阅读来信' : '检查来信')}}</button>
     </view>
-
-    <view class="letter-entry {{letterReady ? '' : 'sealed'}}" bindtap="onOpenLetter" role="button" aria-label="次日之信入口">
-      <view class="letter-entry-wax">封</view>
-      <view class="letter-entry-main">
-        <view class="letter-entry-title serif">{{letterReady ? '有一封信在等你' : '明日启封'}}</view>
-        <view class="letter-entry-sub kaiti">{{letterReady ? '来自那个还在整理档案的人' : '明天，这里会有一封写给你的信'}}</view>
-      </view>
-      <view wx:if="{{letterReady}}" class="letter-entry-arrow">›</view>
-    </view>
-  </view>
-
-  <view class="meta">绘制者 {{name}} · 绘制时间 {{today}}</view>
-  <view class="note-hand olive frame-note" style="transform: rotate(-1.5deg);">中间那块空着的，就是你站着的位置。</view>
-
-  <view class="actions">
-    <button class="btn-seal act-btn finish-btn" bindtap="onFinish" disabled="{{completing}}">{{completing ? '正在完成考察……' : (completed ? '返回考察模块首页' : '完成考察并返回首页')}}</button>
-    <button class="btn-line act-btn" bindtap="onSave" disabled="{{saving}}">
-      <image wx:if="{{!saving}}" class="act-icon" src="/plate21/module/assets/img/icons/ic-download-ink.png" mode="aspectFit" />
-      <text>{{saving ? '保存中……' : '保存到相册'}}</text>
-    </button>
-    <button class="btn-line act-btn" bindtap="onCollect" disabled="{{collected}}">{{collected ? '已收入考察手册' : '收入考察手册'}}</button>
-    <button class="btn-line act-btn" bindtap="onOpenHandbook">回看考察手册</button>
-    <button class="btn-line act-btn" bindtap="onRubbingHint">拓印提示</button>
-  </view>
-  <view wx:if="{{saveError}}" class="save-recovery record-field">
-    <view class="save-error">{{saveError}}</view>
-    <button wx:if="{{canOpenAlbumSettings}}" class="btn-line settings-btn" bindtap="onOpenAlbumSettings">打开权限设置</button>
-  </view>
-
-  <!-- 拓印提示：轻提示条 + 剧情文字 -->
-  <view wx:if="{{showRubbing}}" class="rubbing">
-    <view class="rubbing-tip">提示 · 手册最后的折页留着一方空白</view>
-    <view class="rubbing-panel card-ticket">
-      <view class="rubbing-text">翻开考察手册最后的折页，那里留着一方空白，边缘印着细弱的万字纹……数字版归数字记录，纸上的痕迹，归这一路真实做过的动作。</view>
-    </view>
-    <view class="ticket-edge"></view>
-  </view>
-
-</scroll-view>
-  <!-- 离屏导出画布（不参与布局，尺寸为导出分辨率基准像素） -->
-  <canvas type="2d" id="reportCanvas" class="offscreen" style="width: 700px; height: 1120px;"></canvas>
+    <button class="report-button return-button" bindtap="onReturn" disabled="{{busy || saving}}">返回考察</button>
+  </block>
+  <canvas type="2d" id="reportCanvas" class="export-canvas" style="width:700px;height:2000px;" />
 </view>

@@ -9,6 +9,7 @@ function card(title, layers, figure) {
   const out = {
     title: String(title || '').replace(/^SL-\d+\s*·\s*/, ''),
     source: '',
+    years: Array.from(new Set((layers.join(' ').match(/\b(?:17|18|19|20)\d{2}\b/g) || []))),
     layers: layers,
     lines: layers
   }

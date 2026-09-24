@@ -1,682 +1,603 @@
-/**
- * 模块侧唯一数据入口 —— v2 会话状态、串行 mutation、卡片账本与存档迁移。
- */
+'use strict'
 
-const adapter = require('../adapters/local-adapter')
+const engine = require('../flow/engine')
+const pages = require('../flow/pages')
+const bridge = require('../host/bridge')
+const local = require('../adapters/local-adapter')
 const contract = require('../contracts/adapter-api')
-const progressFlow = require('./progress-flow')
-const sessionDate = require('../utils/session-date')
-const cloudSync = require('./cloud-sync')
 
-const OUTBOX_KEY = 'plate21_pending_mutations'
-const MAX_CONFLICT_RETRIES = 3
-
-let snapshot = null
-let pendingMutations = readOutbox()
-let mutationChain = Promise.resolve()
-let moduleEnterEmitted = false
-
-function readOutbox() {
-  try {
-    const stored = wx.getStorageSync(OUTBOX_KEY)
-    return Array.isArray(stored) ? stored : []
-  } catch (err) {
-    return []
+let envelope = null
+let storageKey = ''
+let initPromise = null
+let chain = Promise.resolve()
+let flushPromise = null
+let generation = 0
+const listeners = []
+function clone(value) { return value == null ? value : JSON.parse(JSON.stringify(value)) }
+function now() {
+  const clock = bridge.getConfig().now
+  return typeof clock === 'function' ? Number(clock()) : Date.now()
+}
+function id(prefix) { return prefix + '-' + now().toString(36) + '-' + Math.random().toString(36).slice(2, 11) }
+function fault(code, message) { const err = new Error(message); err.code = code; return err }
+function unavailable(reason) { return { available: false, status: 'unavailable', reason: reason } }
+function failure(err) {
+  return { available: false, status: err && err.code === 'CAPABILITY_UNAVAILABLE' ? 'unavailable' : 'failed',
+    reason: err && (err.code || err.message) || 'request_failed' }
+}
+function configure(input) {
+  bridge.configure(input)
+  generation++
+  envelope = null; storageKey = ''; initPromise = null; chain = Promise.resolve(); flushPromise = null
+}
+function fresh(userId, archives) {
+  const at = now()
+  return { schemaVersion: 3, sessionId: id('run'), revision: 0, userId: userId,
+    createdAt: at, updatedAt: at, run: engine.createRun(), records: [], contributions: [],
+    archives: archives || [], sync: { status: 'local' } }
+}
+function validateSnapshot(value, userId) {
+  if (!value || value.schemaVersion !== 3 || value.userId !== userId || !value.sessionId ||
+      !value.run || !pages.byId[value.run.resumePageId] || !pages.byId[value.run.pageId] ||
+      !Array.isArray(value.records) || !Array.isArray(value.contributions) || !Array.isArray(value.archives)) {
+    throw fault('INVALID_SNAPSHOT', '存档格式或用户不匹配，原存档未被覆盖')
   }
-}
-
-function persistOutbox() {
-  try {
-    if (pendingMutations.length) wx.setStorageSync(OUTBOX_KEY, pendingMutations)
-    else wx.removeStorageSync(OUTBOX_KEY)
-  } catch (err) {
-    console.warn('[plate21] 待补发队列持久化失败', err && err.message)
-  }
-}
-
-function uuid() {
-  return 'op-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10)
-}
-
-function clone(value) {
-  return JSON.parse(JSON.stringify(value))
-}
-
-function migrateSnapshot(input) {
-  const original = input || {}
-  const next = clone(original)
-  const legacy = next.schemaVersion !== contract.SESSION_SCHEMA_VERSION
-  const hadPuzzleState = Object.keys(next.puzzles || {}).length > 0
-  const baseTime = next.createdAt || next.updatedAt || Date.now()
-
-  next.schemaVersion = contract.SESSION_SCHEMA_VERSION
-  next.sessionDate = sessionDate.isValidDateKey(next.sessionDate)
-    ? next.sessionDate
-    : sessionDate.dateKeyFromTimestamp(baseTime)
-  next.createdAt = next.createdAt || baseTime
-  next.updatedAt = next.updatedAt || baseTime
-  next.stations = Object.assign({ s1: false, s2: false, s3: false, s4: false }, next.stations)
-  next.puzzles = next.puzzles || {}
-  next.cards = next.cards || {}
-  next.records = next.records || []
-  next.flags = next.flags || {}
-  next.finale = !!next.finale
-
-  if (legacy) {
-    if (next.finale || next.stations.s4) {
-      next.stations.s1 = true
-      next.stations.s2 = true
-      next.stations.s3 = true
-    } else if (next.stations.s3) {
-      next.stations.s1 = true
-      next.stations.s2 = true
-    } else if (next.stations.s2) {
-      next.stations.s1 = true
+  value.archives.forEach(function (archive) {
+    if (!archive || archive.archives || archive.userId !== userId || !archive.run || !archive.run.completedAt) {
+      throw fault('INVALID_ARCHIVE', '完成档案格式不正确')
     }
-
-    let collected = 0
-    if (next.finale || next.stations.s4) collected = 8
-    else if (next.stations.s3) collected = 7
-    else if (next.stations.s2) collected = 4
-
-    for (let i = 0; i < collected; i++) {
-      const cardId = contract.CARD_ORDER[i]
-      next.cards[cardId] = next.cards[cardId] || {
-        cardId: cardId,
-        position: i,
-        digit: next.sessionDate.charAt(i),
-        collectedAt: next.updatedAt
-      }
-    }
-    delete next.flags.cardNumbers
-  }
-
-  for (const [cardId, card] of Object.entries(next.cards || {})) {
-    if (!progressFlow.isValidPuzzle(cardId) || next.puzzles[cardId]) continue
-    next.puzzles[cardId] = {
-      completedAt: card.collectedAt || next.updatedAt,
-      payload: { migratedFromCard: true }
-    }
-  }
-  if (next.stations.s1 && !next.puzzles['s1-decode']) {
-    next.puzzles['s1-decode'] = { completedAt: next.updatedAt, payload: { migratedFromStation: true } }
-  }
-  if (next.stations.s4 && !next.puzzles['s4-password']) {
-    next.puzzles['s4-password'] = { completedAt: next.updatedAt, payload: { migratedFromStation: true } }
-  }
-
-  next.checkpoint = progressFlow.deriveCheckpoint(next, {
-    preferEvidence: legacy || !hadPuzzleState
   })
-  return { snapshot: next, changed: JSON.stringify(next) !== JSON.stringify(original) }
+  return value
 }
-
-function normalizeMutationResult(result) {
-  if (result && result.snapshot && typeof result.applied === 'boolean') return result
-  return { snapshot: result, applied: true, conflict: false }
+function archiveOf(snap) {
+  const archive = clone(snap)
+  delete archive.archives; delete archive.sync
+  return archive
 }
-
-function acceptSnapshot(snap) {
-  const migrated = migrateSnapshot(snap)
-  snapshot = migrated.snapshot
-  return snapshot
+function syncArchive(snap) {
+  if (!snap.run.completedAt) return
+  const item = archiveOf(snap)
+  const index = snap.archives.findIndex(function (a) { return a.sessionId === snap.sessionId })
+  if (index < 0) snap.archives.push(item)
+  else snap.archives[index] = item
 }
-
-function sendWithRetry(input, attempt) {
-  return adapter.updateSession(input).then(function (raw) {
-    const result = normalizeMutationResult(raw)
-    if (result.snapshot) acceptSnapshot(result.snapshot)
-    if (!result.conflict) {
-      return { snapshot: snapshot, applied: !!result.applied, conflict: false }
+function targetOf(snap, sessionId) {
+  if (!sessionId || sessionId === snap.sessionId) return snap
+  const item = snap.archives.find(function (a) { return a.sessionId === sessionId })
+  if (!item) throw fault('ARCHIVE_NOT_FOUND', '找不到这份完成档案')
+  return item
+}
+function getSnapshot() { return envelope ? clone(envelope.snapshot) : null }
+function getRun() { const snap = getSnapshot(); return snap && snap.run }
+function getArchives() { return envelope ? clone(envelope.snapshot.archives) : [] }
+function getArchive(sessionId) {
+  if (!envelope) return null
+  const snap = envelope.snapshot
+  if (sessionId === snap.sessionId && snap.run.completedAt) return archiveOf(snap)
+  return clone(snap.archives.find(function (a) { return a.sessionId === sessionId }) || null)
+}
+function write(next) { local.save(storageKey, next); envelope = next }
+function persist(snap) {
+  snap.revision = (envelope.snapshot.revision || 0) + 1
+  snap.updatedAt = now()
+  syncArchive(snap)
+  const next = clone(envelope)
+  next.snapshot = snap
+  if (bridge.getConfig().mode === 'host') {
+    snap.sync = { status: bridge.available('saveSession') ? 'pending' : 'unavailable' }
+    const op = { operationId: id('save'), snapshot: clone(snap) }
+    // 保留可能已经发出的首条操作；尚未发送的尾部全量快照可被最新版本替换。
+    next.pending = next.pending.length ? [next.pending[0], op] : [op]
+  } else snap.sync = { status: 'local' }
+  write(next)
+  return getSnapshot()
+}
+async function flushLoop(token) {
+  if (!envelope || bridge.getConfig().mode !== 'host') return getSnapshot()
+  if (!bridge.available('saveSession')) return getSnapshot()
+  while (envelope.pending.length) {
+    const op = envelope.pending[0]
+    if (op.expectedRevision === undefined) {
+      const prepared = clone(envelope)
+      prepared.pending[0].expectedRevision = prepared.remoteRevision == null ? null : prepared.remoteRevision
+      write(prepared)
     }
-    if (attempt >= MAX_CONFLICT_RETRIES || !snapshot) {
-      return { snapshot: snapshot, applied: false, conflict: true }
-    }
-    input.expectedRevision = snapshot.revision
-    return sendWithRetry(input, attempt + 1)
-  })
-}
-
-function removePending(mutation) {
-  const idx = pendingMutations.indexOf(mutation)
-  if (idx >= 0) pendingMutations.splice(idx, 1)
-  persistOutbox()
-}
-
-function flushPendingInternal() {
-  if (!snapshot || pendingMutations.length === 0) return Promise.resolve()
-  const queue = pendingMutations.slice()
-  return queue.reduce(function (chain, mutation) {
-    return chain.then(function () {
-      mutation.expectedRevision = snapshot.revision
-      return sendWithRetry(mutation, 0).then(function (status) {
-        if (status.applied) removePending(mutation)
-      }).catch(function (err) {
-        console.warn('[plate21] updateSession 补发失败，保留在队列中', err)
+    const current = envelope.pending[0]
+    try {
+      const res = await bridge.call('saveSession', {
+        userId: envelope.snapshot.userId, snapshot: clone(current.snapshot),
+        expectedRevision: current.expectedRevision, operationId: current.operationId
       })
-    })
-  }, Promise.resolve())
-}
-
-function submit(command) {
-  if (!snapshot) return Promise.resolve({ snapshot: null, applied: false })
-  return flushPendingInternal().then(function () {
-    const input = {
-      sessionId: snapshot.sessionId,
-      expectedRevision: snapshot.revision,
-      operationId: uuid(),
-      command: command
-    }
-    return sendWithRetry(input, 0).catch(function (err) {
-      console.warn('[plate21] updateSession 失败，已暂存待补发', err)
-      if (!pendingMutations.some(function (item) { return item.operationId === input.operationId })) {
-        pendingMutations.push(input)
-        persistOutbox()
+      // 宿主换账号/重新配置时，旧请求不能写入新用户存档。
+      if (token !== generation) return null
+      if (res && res.conflict) {
+        const conflict = clone(envelope); conflict.snapshot.sync = { status: 'conflict', reason: 'revision_conflict' }
+        write(conflict); return getSnapshot()
       }
-      return { snapshot: snapshot, applied: false, queued: true }
-    })
-  })
+      if (!res || res.acknowledged !== true || !Number.isInteger(res.revision) || res.revision < 0) throw fault('INVALID_SAVE_ACK', '宿主没有返回存档回执')
+      const next = clone(envelope)
+      next.remoteRevision = res.revision
+      next.pending.shift()
+      next.snapshot.sync = { status: next.pending.length ? 'pending' : 'synced', remoteRevision: res.revision }
+      write(next)
+    } catch (err) {
+      if (token !== generation) return null
+      const next = clone(envelope)
+      next.snapshot.sync = { status: 'failed', reason: err.code || 'save_failed' }
+      write(next)
+      return getSnapshot()
+    }
+  }
+  return getSnapshot()
 }
-
-function mutateStatus(command) {
-  const task = mutationChain.then(function () {
-    return submit(command)
-  }).then(function (status) {
-    if (status && status.snapshot) cloudSync.push(status.snapshot)
-    return status
-  })
-  mutationChain = task.catch(function () {})
+function flushInternal() {
+  if (flushPromise) return flushPromise
+  const token = generation
+  const task = flushLoop(token)
+  flushPromise = task
+  function clear() { if (flushPromise === task) flushPromise = null }
+  task.then(clear, clear)
   return task
 }
-
-function mutate(command) {
-  return mutateStatus(command).then(function (status) {
-    return status.snapshot
-  })
-}
-
-function finishInit(input) {
-  pendingMutations = pendingMutations.filter(function (mutation) {
-    return mutation && mutation.sessionId === snapshot.sessionId
-  })
-  persistOutbox()
-  if (!moduleEnterEmitted) {
-    moduleEnterEmitted = true
-    emit({
-      name: 'module_enter',
-      source: input && input.scene || '',
-      resume: progressFlow.deriveCheckpoint(snapshot) !== 'prologue',
-      schemaVersion: snapshot.schemaVersion
-    })
-  }
-  return snapshot
-}
-
-function settleCloud(input) {
-  return cloudSync.pull().then(function (remote) {
-    if (remote && snapshot && Number(remote.updatedAt) > Number(snapshot.updatedAt || 0)) {
-      snapshot = migrateSnapshot(remote).snapshot
-    }
-    cloudSync.push(snapshot)
-    return finishInit(input)
-  }).catch(function () {
-    return finishInit(input)
-  })
-}
-
-function init(input) {
-  return adapter.getIdentity().catch(function (err) {
-    console.warn('[plate21] getIdentity 失败，匿名游玩', err)
-    return { userId: 'anonymous' }
-  }).then(function () {
-    return adapter.startOrResumeSession(input || {})
-  }).then(function (snap) {
-    const migration = migrateSnapshot(snap)
-    snapshot = migration.snapshot
-    if (!migration.changed) return settleCloud(input)
-
-    const mutation = {
-      sessionId: snap.sessionId,
-      expectedRevision: snap.revision,
-      operationId: uuid(),
-      command: { type: 'migrate_snapshot', snapshot: migration.snapshot }
-    }
-    return sendWithRetry(mutation, 0).then(function () {
-      return settleCloud(input)
-    }).catch(function (err) {
-      console.warn('[plate21] 存档迁移落库失败，本次以内存迁移结果继续', err)
-      return settleCloud(input)
-    })
-  })
-}
-
-function getSnapshot() {
-  return snapshot
-}
-
-function completeStation(station, record, options) {
-  if (!snapshot) {
-    return init({}).then(function () { return completeStation(station, record, options) })
-  }
-  const rec = Object.assign({}, record || {})
-  rec.station = station
-  rec.recordType = rec.recordType || contract.STATION_RECORD_TYPE[station]
-  rec.completedAt = rec.completedAt || Date.now()
-  const wasComplete = !!(snapshot.stations && snapshot.stations[station])
-  const command = { type: 'complete_station', station: station, record: rec }
-  if (options && options.checkpoint) command.checkpoint = options.checkpoint
-  return mutateStatus(command).then(function (status) {
-    if (!status.snapshot || !status.snapshot.stations || !status.snapshot.stations[station]) {
-      throw new Error('站点进度尚未落库')
-    }
-    if (!wasComplete) emit({ name: 'station_completed', station: station })
-    return status.snapshot
-  })
-}
-
-function collectCard(cardId) {
-  if (!snapshot) return Promise.resolve(null)
-  const position = contract.CARD_ORDER.indexOf(cardId)
-  if (position < 0) {
-    console.warn('[plate21] 未知 cardId，忽略收集', cardId)
-    return Promise.resolve(snapshot)
-  }
-  if (snapshot.cards && snapshot.cards[cardId]) return Promise.resolve(snapshot)
-  return mutateStatus({
-    type: 'collect_card',
-    card: {
-      cardId: cardId,
-      position: position,
-      digit: snapshot.sessionDate.charAt(position),
-      collectedAt: Date.now()
-    }
-  }).then(function (status) {
-    const snap = status.snapshot
-    if (!snap || !snap.cards || !snap.cards[cardId]) throw new Error('日期卡尚未落库')
-    emit({ name: 'card_collected', cardId: cardId, position: position })
-    return snap
-  })
-}
-
-function completePuzzle(puzzleId, payload, options) {
-  if (!progressFlow.isValidPuzzle(puzzleId)) {
-    return Promise.reject(new Error('未知 puzzleId: ' + puzzleId))
-  }
-  if (!snapshot) {
-    return init({}).then(function () { return completePuzzle(puzzleId, payload, options) })
-  }
-  const before = snapshot || {}
-  const command = {
-    type: 'complete_puzzle',
-    puzzleId: puzzleId,
-    completedAt: Date.now(),
-    payload: payload || {}
-  }
-  if (options && options.collectCard) {
-    const position = contract.CARD_ORDER.indexOf(puzzleId)
-    if (position >= 0) {
-      const lockedDate = sessionDate.isValidDateKey(before.sessionDate)
-        ? before.sessionDate
-        : sessionDate.dateKeyFromTimestamp(Date.now())
-      command.card = {
-        cardId: puzzleId,
-        position: position,
-        digit: lockedDate.charAt(position),
-        collectedAt: Date.now()
+function scheduleFlush() { flushInternal().catch(function () {}) }
+async function initialize(entry) {
+  const config = bridge.getConfig()
+  let context = { userId: config.userId || (config.mode === 'demo' ? 'demo' : '') }
+  if (bridge.available('getContext')) context = Object.assign(context, await bridge.call('getContext', entry || {}))
+  if (!context.userId) throw fault('IDENTITY_REQUIRED', '正式接入需要宿主提供稳定用户标识')
+  const userId = String(context.userId)
+  storageKey = local.keyFor(config.mode, userId)
+  let cached = local.load(storageKey)
+  if (cached) validateSnapshot(cached.snapshot, userId)
+  if (config.mode === 'host' && bridge.available('loadSession')) {
+    try {
+      const remote = await bridge.call('loadSession', { userId: userId })
+      if (remote && remote.snapshot && (!cached || !cached.pending.length)) {
+        if (!Number.isInteger(remote.revision) || remote.revision < 0) throw fault('INVALID_SNAPSHOT', '宿主存档缺少有效版本')
+        const value = validateSnapshot(clone(remote.snapshot), userId)
+        if (!cached || Number(remote.revision) >= Number(cached.remoteRevision || 0)) {
+          cached = { snapshot: value, pending: [], remoteRevision: remote.revision }
+          cached.snapshot.sync = { status: 'synced', remoteRevision: remote.revision }
+        }
       }
+    } catch (err) {
+      if (err.code === 'INVALID_SNAPSHOT' || err.code === 'INVALID_ARCHIVE') throw err
+      if (cached) cached.snapshot.sync = { status: 'failed', reason: err.code || 'load_failed' }
     }
   }
-  if (options && options.station) {
-    command.station = options.station
-    command.record = Object.assign({}, options.record || {}, {
-      station: options.station,
-      recordType: options.record && options.record.recordType || contract.STATION_RECORD_TYPE[options.station],
-      completedAt: options.record && options.record.completedAt || Date.now()
-    })
+  if (!cached) cached = { snapshot: fresh(userId), pending: [], remoteRevision: null }
+  // 冷启动回到权威断点；不把上次的回看页当成新进度。
+  cached.snapshot.run = engine.resume(cached.snapshot.run)
+  write(cached)
+  if (config.mode === 'host' && !cached.pending.length && cached.snapshot.sync.status !== 'synced') persist(clone(cached.snapshot))
+  await flushInternal()
+  emit({ name: 'module_enter', source: entry && entry.source || '' })
+  return getSnapshot()
+}
+function init(entry) {
+  if (initPromise) return initPromise
+  if (envelope) return Promise.resolve(getSnapshot())
+  initPromise = initialize(entry).then(function (result) { initPromise = null; return result }, function (err) { initPromise = null; throw err })
+  return initPromise
+}
+function serial(work) {
+  const task = chain.then(function () { return init({}) }).then(work)
+  chain = task.catch(function () {})
+  return task
+}
+function mutate(change) {
+  return serial(async function () {
+    const next = clone(envelope.snapshot)
+    const result = await change(next)
+    persist(next)
+    // 本地持久化就是 UI 写入的等待边界；慢宿主同步在独立单队列中补发。
+    scheduleFlush()
+    return result === undefined ? getSnapshot() : clone(result)
+  })
+}
+function flush() { return serial(flushInternal) }
+const FLOW_FIELDS = ['pageId', 'resumePageId', 'visited', 'unlocked', 'completedPages', 'sites', 'puzzles', 'letterRead']
+const LIFE_FIELDS = ['name', 'signedAt', 'completedAt', 'completedTimeSource', 'completedUtcOffsetMinutes',
+  'editionNo', 'letterAvailable', 'letterOpenedAt', 'letterVerifiedAt', 'letterAnchorAt', 'letterAnchorSource', 'completionNotice']
+function checkedRun(before, incoming) {
+  if (!incoming || !pages.byId[incoming.pageId]) throw fault('UNKNOWN_PAGE', '未知页面')
+  let navigation = engine.cloneRun(before)
+  if (incoming.resumePageId !== before.resumePageId) {
+    if (engine.isReview(before)) throw fault('INVALID_PROGRESS', '回看不能修改恢复点')
+    const page = pages.byId[before.pageId]
+    const choseSkip = page.skipTo && incoming.resumePageId === page.skipTo &&
+      (page.kind === 'nav' ? incoming.sites && incoming.sites[page.siteId] === 'skipped'
+        : page.playId ? incoming.puzzles && incoming.puzzles[page.playId] === 'skipped' : true)
+    navigation = choseSkip ? engine.skip(before, before.pageId) : engine.complete(before, before.pageId,
+      { assisted: !!(page.playId && incoming.puzzles && incoming.puzzles[page.playId] === 'assisted') })
+    if (navigation.resumePageId !== incoming.resumePageId || navigation.pageId !== incoming.pageId) {
+      throw fault('INVALID_PROGRESS', '存档只能推进到当前页的有效下一步')
+    }
+  } else if (incoming.pageId !== before.pageId) navigation = engine.enter(before, incoming.pageId)
+  else if (incoming.letterRead && before.pageId === 'LT8') navigation = engine.complete(before, 'LT8')
+  const result = Object.assign(engine.cloneRun(before), clone(incoming))
+  FLOW_FIELDS.forEach(function (key) { result[key] = clone(navigation[key]) })
+  LIFE_FIELDS.forEach(function (key) {
+    if (before[key] === undefined) delete result[key]
+    else result[key] = clone(before[key])
+  })
+  return result
+}
+function saveRun(run, sessionId) {
+  return mutate(function (snap) {
+    const target = targetOf(snap, sessionId)
+    target.run = checkedRun(target.run, run)
+    if (target !== snap) return target
+  })
+}
+function saveDraft(pageId, patch, sessionId) {
+  return mutate(function (snap) {
+    const target = targetOf(snap, sessionId)
+    if (!engine.canEnter(target.run, pageId)) throw fault('PAGE_LOCKED', '不能为未解锁页面写草稿')
+    target.run.uiByPage[pageId] = Object.assign({}, target.run.uiByPage[pageId] || {}, clone(patch || {}))
+    if (target !== snap) return target
+  })
+}
+async function navigate(pageId, options) {
+  if (String(pageId).indexOf('LT') === 0) {
+    const state = await getLetterState(options && options.sessionId)
+    if (!state.available) throw fault('LETTER_LOCKED', '来信尚未开放：' + state.reason)
   }
-  if (options && options.checkpoint) command.checkpoint = options.checkpoint
-  const wasComplete = !!(before.puzzles && before.puzzles[puzzleId])
-  const hadCard = !!(command.card && before.cards && before.cards[puzzleId])
-  return mutateStatus(command).then(function (status) {
-    const snap = status.snapshot || {}
-    if (!snap.puzzles || !snap.puzzles[puzzleId]) throw new Error('谜题进度尚未落库')
-    if (command.card && (!snap.cards || !snap.cards[puzzleId])) throw new Error('日期卡尚未落库')
-    if (command.station && (!snap.stations || !snap.stations[command.station])) throw new Error('站点进度尚未落库')
-    if (command.checkpoint && progressFlow.normalizeCheckpoint(snap.checkpoint) !== progressFlow.normalizeCheckpoint(command.checkpoint)) {
-      throw new Error('断点进度尚未落库')
-    }
-    if (!wasComplete && snap.puzzles[puzzleId]) {
-      emit({ name: 'puzzle_completed', puzzle: puzzleId, attempts: Number(payload && payload.attempts) || 1 })
-    }
-    if (command.card && !hadCard && snap.cards[puzzleId]) {
-      emit({ name: 'card_collected', cardId: puzzleId, position: command.card.position })
-    }
-    return status.snapshot
+  return mutate(function (snap) {
+    const target = targetOf(snap, options && options.sessionId)
+    if (pageId === 'LT1' && target.run.resumePageId === 'FN4') target.run = engine.openLetter(target.run)
+    else target.run = engine.enter(target.run, pageId)
+    if (pageId.indexOf('LT') === 0 && !target.run.letterOpenedAt) target.run.letterOpenedAt = now()
+    if (target !== snap) return target
   })
 }
-
-function setCheckpoint(checkpoint) {
-  const normalized = progressFlow.normalizeCheckpoint(checkpoint)
-  if (!normalized) return Promise.reject(new Error('未知 checkpoint: ' + checkpoint))
-  if (!snapshot) return init({}).then(function () { return setCheckpoint(normalized) })
-  return mutateStatus({ type: 'set_checkpoint', checkpoint: normalized }).then(function (status) {
-    if (!status.snapshot || progressFlow.normalizeCheckpoint(status.snapshot.checkpoint) !== normalized) {
-      throw new Error('断点进度尚未落库')
-    }
-    return status.snapshot
+function resume(sessionId) {
+  return mutate(function (snap) {
+    const target = targetOf(snap, sessionId)
+    target.run = engine.resume(target.run)
+    if (target !== snap) return target
   })
 }
-
-function getPuzzle(puzzleId, snap) {
-  const current = snap || snapshot || {}
-  return current.puzzles && current.puzzles[puzzleId] || null
-}
-
-function isPuzzleComplete(puzzleId, snap) {
-  return !!getPuzzle(puzzleId, snap)
-}
-
-function getCardDigits(snap) {
-  const current = snap || snapshot || {}
-  const cards = current.cards || {}
-  return contract.CARD_ORDER.map(function (cardId) {
-    return cards[cardId] ? String(cards[cardId].digit) : ''
+function completePage(pageId, options) {
+  return mutate(function (snap) {
+    const target = targetOf(snap, options && options.sessionId)
+    target.run = engine.complete(target.run, pageId, options)
+    if (target !== snap) return target
   })
 }
-
-function getCardDigit(cardId, snap) {
-  const position = contract.CARD_ORDER.indexOf(cardId)
-  if (position < 0) return ''
-  const current = snap || snapshot || {}
-  const cards = current.cards || {}
-  if (cards[cardId]) return String(cards[cardId].digit)
-  const lockedDate = sessionDate.isValidDateKey(current.sessionDate)
-    ? current.sessionDate
-    : sessionDate.dateKeyFromTimestamp(Date.now())
-  return lockedDate.charAt(position)
-}
-
-function sign(name) {
-  if (!snapshot) return init({}).then(function () { return sign(name) })
-  return mutateStatus({ type: 'sign', name: name }).then(function (status) {
-    if (!status.snapshot || status.snapshot.name !== name) throw new Error('署名尚未落库')
-    return status.snapshot
+function skipPage(pageId, options) {
+  return mutate(function (snap) {
+    const target = targetOf(snap, options && options.sessionId)
+    target.run = engine.skip(target.run, pageId)
+    if (target !== snap) return target
   })
 }
-
-function completeFinale() {
-  if (!snapshot) return init({}).then(completeFinale)
-  return mutateStatus({ type: 'complete_finale' }).then(function (status) {
-    if (!status.snapshot || !status.snapshot.finale) throw new Error('终章进度尚未落库')
-    return status.snapshot
-  })
-}
-
-function completeExperience() {
-  if (!snapshot) return init({}).then(completeExperience)
-  const flags = snapshot.flags || {}
-  if (flags.experienceCompletedAt) return Promise.resolve(snapshot)
-  const completedAt = Date.now()
-  return setFlag('experienceCompletedAt', completedAt).then(function (next) {
-    emit({ name: 'module_completed', completedAt: completedAt })
-    return next
-  })
-}
-
-function setFlag(key, value) {
-  if (!snapshot) return init({}).then(function () { return setFlag(key, value) })
-  return mutateStatus({ type: 'set_flag', key: key, value: value }).then(function (status) {
-    if (!status.snapshot || !status.snapshot.flags || status.snapshot.flags[key] === undefined) {
-      throw new Error('标记进度尚未落库')
-    }
-    return status.snapshot
-  })
-}
-
-// —— 留言簿（UGC，契约 v1.3.0）：写走 adapter（宿主机检+人工审），读走 adapter 展示池 ——
-
-function submitBoardMessage(text) {
-  const value = String(text || '').trim().slice(0, contract.BOARD_MESSAGE_MAX_LEN)
-  if (!value) return Promise.reject(new Error('留言为空'))
-  if (!snapshot) return init({}).then(function () { return submitBoardMessage(text) })
-  return Promise.resolve()
-    .then(function () {
-      return adapter.submitBoardMessage({ sessionId: snapshot.sessionId, text: value })
-    })
-    .catch(function (err) {
-      console.warn('[plate21] submitBoardMessage 不可用，回落本地保存（不公开展示）', err)
-      capabilityFallback('submitBoardMessage', 'adapter_failed')
-      return { status: 'pending_review', fallback: true }
-    })
-    .then(function (res) {
-      return setFlag('boardDraft', value)
-        .then(function () { return setFlag('boardSubmittedAt', Date.now()) })
-        .then(function () {
-          emit({ name: 'board_message_submitted', moderation: res.status })
-          return res
-        })
-    })
-}
-
-function listBoardMessages(options) {
-  const limit = (options && options.limit) || 6
-  return Promise.resolve()
-    .then(function () {
-      return adapter.listBoardMessages({ sessionId: snapshot && snapshot.sessionId, limit: limit })
-    })
-    .catch(function (err) {
-      console.warn('[plate21] listBoardMessages 不可用，回落官方种子池', err)
-      capabilityFallback('listBoardMessages', 'adapter_failed')
-      const seeds = require('../capabilities/board/seeds')
-      return {
-        messages: seeds.pickBoardMessages(snapshot && snapshot.sessionId, limit).map(function (m) {
-          return { text: m.text, from: m.from, date: m.date, source: 'official_seed' }
-        })
-      }
-    })
-}
-
-// —— 门票付费（gate，契约 v1.4.0）：权益以宿主订单为准，本地 flags.premiumUnlockedAt 只是缓存 ——
-
-const PREMIUM_FLAG = 'premiumUnlockedAt'
-
-// 权益查询：本地缓存命中直接放行；未命中查宿主（模拟器=storage envelope），
-// unlocked 时回写缓存。退款收回发生在下次冷启动查询。
-function checkPremiumUnlocked() {
-  const snap = snapshot || {}
-  if (snap.flags && snap.flags[PREMIUM_FLAG]) return Promise.resolve(true)
-  return Promise.resolve()
-    .then(function () {
-      return adapter.checkEntitlement({ sessionId: snap.sessionId })
-    })
-    .then(function (res) {
-      if (res && res.unlocked) {
-        return setFlag(PREMIUM_FLAG, res.unlockedAt || Date.now()).then(function () { return true })
-      }
-      return false
-    })
-    .catch(function (err) {
-      console.warn('[plate21] checkEntitlement 不可用，按未解锁处理', err)
-      capabilityFallback('checkEntitlement', 'adapter_failed')
-      return false
-    })
-}
-
-// 购买：paid 落缓存（权威在宿主库）；unavailable 返回给门页隐藏入口。
-function purchaseUnlock(sku) {
-  if (!snapshot) return init({}).then(function () { return purchaseUnlock(sku) })
-  emit({ name: 'purchase_initiated', sku: sku || 'plate21_full' })
-  return Promise.resolve()
-    .then(function () {
-      return adapter.requestPayment({ sessionId: snapshot.sessionId, sku: sku || 'plate21_full' })
-    })
-    .catch(function (err) {
-      console.warn('[plate21] requestPayment 不可用', err)
-      capabilityFallback('requestPayment', 'adapter_failed')
-      return { status: 'unavailable' }
-    })
-    .then(function (res) {
-      if (res && res.status === 'paid') {
-        return setFlag(PREMIUM_FLAG, Date.now())
-          .then(function () {
-            emit({ name: 'purchase_completed', sku: sku || 'plate21_full' })
-            return res
-          })
-      }
-      return res
-    })
-}
-
-function claimEdition() {
-  if (!snapshot) return Promise.resolve(null)
-  return adapter.claimEdition({
-    sessionId: snapshot.sessionId,
-    name: snapshot.name || ''
-  }).then(function (res) {
-    if (snapshot) snapshot.editionNo = res.editionNo
-    return res.editionNo
-  }).catch(function (err) {
-    console.warn('[plate21] claimEdition 失败，落款显示"第 — 版"', err)
-    return null
-  })
-}
-
-function recognizeScene(scene, attempt, image) {
-  return adapter.recognizeScene({ scene: scene, attempt: attempt, image: image }).then(function (res) {
-    const result = res || { available: false, pass: false, failReason: 'unknown' }
-    emit({ name: 'photo_check', scene: scene, attempt: attempt, available: result.available !== false, pass: result.available !== false && !!result.pass })
-    return result
-  }).catch(function (err) {
-    console.warn('[plate21] recognizeScene 不可用，继续使用玩家照片', err)
-    emit({ name: 'photo_check', scene: scene, attempt: attempt, available: false, pass: false })
-    return { available: false, pass: false, failReason: 'unknown' }
-  })
-}
-
-function saveMedia(input) {
-  return adapter.saveMedia(input).catch(function (err) {
-    console.warn('[plate21] saveMedia 失败，跳过宿主侧留存', err)
-    capabilityFallback('saveMedia', 'adapter_failed')
-    return null
-  })
-}
-
-function viewPuzzle(puzzleId) {
-  emit({ name: 'puzzle_viewed', puzzle: puzzleId })
-}
-
-function attemptPuzzle(puzzleId, attempt, result, inputMode) {
-  emit({
-    name: 'puzzle_attempted',
-    puzzle: puzzleId,
-    attempt: Number(attempt) || 1,
-    result: result ? 'correct' : 'incorrect',
-    inputMode: inputMode || 'tap'
-  })
-}
-
-function viewHint(puzzleId, hintLevel) {
-  emit({ name: 'hint_viewed', puzzle: puzzleId, hintLevel: Number(hintLevel) || 1 })
-}
-
-function capabilityFallback(capability, reason) {
-  emit({ name: 'capability_fallback', capability: capability, reason: reason || 'unknown' })
-}
-
-const eventListeners = []
-
-function onEvent(fn) {
-  if (typeof fn === 'function') eventListeners.push(fn)
-}
-
-function emit(event) {
-  const e = Object.assign({}, event || {})
-  if (!e.ts) e.ts = Date.now()
-  if (snapshot) {
-    if (!e.sessionId) e.sessionId = snapshot.sessionId
-    if (!e.checkpoint) e.checkpoint = progressFlow.deriveCheckpoint(snapshot)
-    if (e.completed === undefined) {
-      e.completed = !!(snapshot.flags && snapshot.flags.experienceCompletedAt)
-    }
-  }
+async function trustedTime(sessionId) {
+  if (bridge.getConfig().mode === 'demo') return { now: now(), source: 'demo_device', offset: 480 }
   try {
-    adapter.emitEvent(e)
-  } catch (err) {
-    console.warn('[plate21] emitEvent 异常', err)
+    const res = await bridge.call('getTrustedTime', { sessionId: sessionId })
+    if (!res || res.trusted !== true || !Number.isFinite(res.now) || res.now <= 0) return unavailable('invalid_time_ack')
+    return { now: res.now, source: 'host', offset: Number.isFinite(res.utcOffsetMinutes) ? res.utcOffsetMinutes : 480 }
+  } catch (err) { return failure(err) }
+}
+function nextDay(at, offset) { return (Math.floor((at + offset * 60000) / 86400000) + 1) * 86400000 - offset * 60000 }
+async function notifyCompleteInternal() {
+  const snap = envelope.snapshot
+  if (!snap.run.completedAt) return
+  if (snap.run.completionNotice && snap.run.completionNotice.status === 'acknowledged') return
+  let result
+  if (!bridge.available('onComplete')) result = unavailable('onComplete')
+  else {
+    try {
+      const ack = await bridge.call('onComplete', { sessionId: snap.sessionId, completedAt: snap.run.completedAt,
+        operationId: 'complete:' + snap.sessionId })
+      result = ack && ack.acknowledged === true ? { status: 'acknowledged' } : { status: 'failed', reason: 'invalid_completion_ack' }
+    } catch (err) { result = failure(err) }
   }
-  eventListeners.forEach(function (fn) {
-    try { fn(e) } catch (err) {
-      console.warn('[plate21] 事件订阅者异常', err && err.message)
+  const next = clone(envelope.snapshot); next.run.completionNotice = result; persist(next)
+}
+function sign(name) {
+  return serial(async function () {
+    let snap = clone(envelope.snapshot)
+    if (snap.run.pageId !== 'FN4' || snap.run.resumePageId !== 'FN4') throw fault('NOT_AT_FINALE', '请在署名页完成考察')
+    if (!snap.run.completedAt) {
+      const time = await trustedTime(snap.sessionId)
+      snap.run.name = String(name || '').trim().slice(0, 40) || '无名氏'
+      snap.run.signedAt = now()
+      snap.run.completedAt = time.now || snap.run.signedAt
+      snap.run.completedTimeSource = time.source || 'device_unverified'
+      snap.run.completedUtcOffsetMinutes = time.offset == null ? 480 : time.offset
+      snap.run.completedPages.FN4 = true
+      persist(snap)
+      emit({ name: 'module_completed', completedAt: snap.run.completedAt })
     }
+    await notifyCompleteInternal()
+    await flushInternal()
+    return getSnapshot()
   })
 }
-
-function cleanupSavedPhotos(snap) {
-  if (!snap || !wx.removeSavedFile) return Promise.resolve()
-  const flags = snap.flags || {}
-  const paths = new Set()
-  ;[flags.s2PhotoDraft, flags.s2PhotoRecord].forEach(function (record) {
-    ;[record && record.photos, record && record.localPhotos].forEach(function (photos) {
-      for (const filePath of Object.values(photos || {})) {
-        if (filePath && !/^https?:\/\//i.test(filePath)) paths.add(filePath)
+function restart() {
+  return mutate(function (snap) {
+    syncArchive(snap)
+    const next = fresh(snap.userId, clone(snap.archives))
+    Object.keys(snap).forEach(function (key) { delete snap[key] })
+    Object.assign(snap, next)
+  })
+}
+function getLetterState(sessionId) {
+  return serial(async function () {
+    const target = targetOf(envelope.snapshot, sessionId)
+    if (!target.run.completedAt) return { available: false, reason: 'not_completed', timeSource: null, unlockAt: null }
+    if (target.run.letterAvailable) return { available: true, reason: 'verified_cached',
+      timeSource: target.run.letterTimeSource || target.run.completedTimeSource,
+      unlockAt: target.run.letterUnlockAt || nextDay(target.run.completedAt, target.run.completedUtcOffsetMinutes || 0) }
+    const time = await trustedTime(target.sessionId)
+    if (!time.now) return Object.assign({}, time, { available: false, timeSource: null, unlockAt: null })
+    // 离线完成没有可信完成日期：第一次取得宿主时间时确定起算日，不能用改设备时间提前放行。
+    let completedAt = target.run.letterAnchorAt || target.run.completedAt
+    const needsAnchor = bridge.getConfig().mode === 'host' && target.run.completedTimeSource !== 'host' && !target.run.letterAnchorAt
+    if (needsAnchor) completedAt = time.now
+    const unlockAt = nextDay(completedAt, time.offset)
+    const available = time.now >= unlockAt
+    if (available || needsAnchor) {
+      const next = clone(envelope.snapshot)
+      const selected = targetOf(next, sessionId)
+      if (needsAnchor) {
+        // 保留原始完成日期；可信来信起算日另存，补图或校时不篡改完成档案。
+        selected.run.letterAnchorAt = completedAt
+        selected.run.letterAnchorSource = 'host'
       }
-    })
+      selected.run.letterUnlockAt = unlockAt
+      selected.run.letterTimeSource = time.source
+      if (available) {
+        selected.run.letterAvailable = true
+        selected.run.letterVerifiedAt = time.now
+        selected.run.unlocked.LT1 = true
+      }
+      persist(next); await flushInternal()
+    }
+    return { available: available, reason: available ? 'available' : 'not_due', timeSource: time.source, unlockAt: unlockAt }
   })
-  return Promise.all([...paths].map(function (filePath) {
-    return new Promise(function (resolve) {
-      wx.removeSavedFile({ filePath: filePath, success: resolve, fail: resolve })
-    })
-  })).then(function () {})
 }
+async function openLetter(sessionId) { return navigate('LT1', { sessionId: sessionId }) }
+function setFlag(key, value) { return mutate(function (snap) { snap.run.flags[key] = clone(value) }) }
 
-function reset() {
-  const previous = snapshot
-  snapshot = null
-  pendingMutations = []
-  persistOutbox()
-  mutationChain = Promise.resolve()
-  return cleanupSavedPhotos(previous)
-    .catch(function (err) {
-      console.warn('[plate21] 清理现场照片失败，继续重置会话', err)
-    })
-    .then(function () { return adapter.resetSession() })
-    .then(function (snap) { return acceptSnapshot(snap) })
+function recordTarget(snap, input, sessionId) { return targetOf(snap, sessionId || input && input.sessionId) }
+function saveRecord(input, sessionId) {
+  return mutate(function (snap) {
+    const target = recordTarget(snap, input, sessionId)
+    const value = clone(input || {})
+    if (['photo', 'text', 'wish'].indexOf(value.kind) < 0 || ['field', 'relay'].indexOf(value.purpose) < 0) {
+      throw fault('INVALID_RECORD', '记录类型或用途无效')
+    }
+    const index = value.id ? target.records.findIndex(function (r) { return r.id === value.id }) : -1
+    if (value.id && index < 0) throw fault('RECORD_NOT_FOUND', '找不到原记录')
+    const previous = index >= 0 ? target.records[index] : {}
+    const record = Object.assign({}, previous, value, { id: previous.id || id('record'), sessionId: target.sessionId,
+      createdAt: previous.createdAt || value.createdAt || now(), updatedAt: now(),
+      status: value.status || previous.status || 'private' })
+    if (contract.RECORD_STATUSES.indexOf(record.status) < 0) throw fault('INVALID_RECORD_STATUS', '私人记录只能是草稿或已保存')
+    record.text = String(record.text || '').slice(0, contract.BOARD_MESSAGE_MAX_LEN)
+    if (index < 0) target.records.push(record)
+    else target.records[index] = record
+    return record
+  })
 }
-
+function updateContributionDraft(input, sessionId) {
+  return saveRecord(Object.assign({}, input, { purpose: 'relay', status: 'draft' }), sessionId)
+}
+function deleteRecord(recordId, sessionId) {
+  return serial(async function () {
+    const snap = clone(envelope.snapshot)
+    const target = targetOf(snap, sessionId)
+    const index = target.records.findIndex(function (record) { return record.id === recordId })
+    if (index < 0) throw fault('RECORD_NOT_FOUND', '找不到原记录')
+    const filePath = target.records[index].filePath
+    target.records.splice(index, 1)
+    target.contributions.forEach(function (c) { if (c.recordId === recordId && c.record) delete c.record.filePath })
+    // 公开副本必须另行取得撤回回执；删私人稿不会谎称公开内容已经撤回。
+    const result = { id: recordId, deleted: true, publicCopyUnaffected: target.contributions.some(function (c) {
+      return c.recordId === recordId && (c.status === 'submitted' || c.status === 'published')
+    }) }
+    persist(snap)
+    await flushInternal()
+    const all = [envelope.snapshot].concat(envelope.snapshot.archives)
+    const referenced = filePath && all.some(function (item) { return item.records.some(function (r) { return r.filePath === filePath }) })
+    if (filePath && !referenced && !/^https?:/.test(filePath)) {
+      if (typeof wx !== 'undefined' && typeof wx.removeSavedFile === 'function') {
+        result.fileCleanup = await new Promise(function (resolve) {
+          wx.removeSavedFile({ filePath: filePath, success: function () { resolve('removed') }, fail: function () { resolve('failed') } })
+        })
+      } else result.fileCleanup = 'unavailable'
+    } else result.fileCleanup = referenced ? 'referenced' : 'not_needed'
+    return result
+  })
+}
+async function saveMedia(input) {
+  const value = input || {}
+  const filePath = value.filePath || value.tempFilePath
+  if (!filePath) return { available: false, status: 'failed', reason: 'file_required' }
+  if (!value.upload) return local.saveLocalMedia(filePath)
+  if (!bridge.available('uploadMedia')) return unavailable('uploadMedia')
+  await init({})
+  try {
+    const res = await bridge.call('uploadMedia', { sessionId: value.sessionId || envelope && envelope.snapshot.sessionId,
+      filePath: filePath, kind: value.kind || 'photo', operationId: value.operationId || id('media') })
+    if (!res || !res.mediaId) return { available: false, status: 'failed', reason: 'invalid_upload_ack' }
+    return { available: true, status: 'uploaded', mediaId: String(res.mediaId), url: res.url || '' }
+  } catch (err) { return failure(err) }
+}
+function findContribution(snap, contributionId, sessionId) {
+  const target = targetOf(snap, sessionId)
+  const item = target.contributions.find(function (c) { return c.id === contributionId })
+  if (!item) throw fault('CONTRIBUTION_NOT_FOUND', '找不到投稿记录')
+  return { target: target, item: item }
+}
+function submitContribution(recordId, options) {
+  const opts = options || {}
+  return serial(async function () {
+    if (opts.consent !== true) throw fault('CONSENT_REQUIRED', '公开投稿需要单独同意')
+    let snap = clone(envelope.snapshot)
+    let target = targetOf(snap, opts.sessionId)
+    const record = target.records.find(function (r) { return r.id === recordId })
+    if (!record) throw fault('RECORD_NOT_FOUND', '找不到原记录')
+    if (record.purpose !== 'relay') throw fault('PRIVATE_RECORD', '现场私人记录不能直接公开投稿')
+    if (record.kind !== 'photo' && !String(record.text || '').trim()) throw fault('EMPTY_RECORD', '请先写下内容')
+    let item = target.contributions.slice().reverse().find(function (c) { return c.recordId === recordId && c.status !== 'withdrawn' })
+    const changed = item && ['kind', 'filePath', 'text'].some(function (key) { return item.record[key] !== record[key] })
+    if (item && (['submitted', 'published'].indexOf(item.status) >= 0 || (item.status === 'rejected' && !changed))) return clone(item)
+    // 明确被拒后可以修改重投；尚未请求公开提交的失败草稿也可另建新操作。
+    if (item && changed && (item.status === 'rejected' || !item.attemptedAt)) item = null
+    if (!item) {
+      item = { id: id('contribution'), recordId: recordId, sessionId: target.sessionId, createdAt: now(),
+        operationId: id('submit'), status: 'failed', reason: 'not_sent', consentAt: now(), record: clone(record) }
+      // 私人稿的任意媒体字段不能充当公开投稿的上传回执。
+      delete item.record.mediaId; delete item.record.url
+      target.contributions.push(item)
+    } else {
+      // 失败请求保留相同的幂等键与提交内容，避免超时后的重复发布。
+      if (changed && item.attemptedAt) {
+        throw fault('UNCERTAIN_SUBMISSION', '先确认上次投稿结果，再修改后重投')
+      }
+      if (!item.attemptedAt) {
+        item.record = clone(record)
+        delete item.record.mediaId; delete item.record.url
+      }
+    }
+    persist(snap)
+    const contributionId = item.id
+    let result
+    if (!bridge.available('submitContribution')) result = unavailable('submitContribution')
+    else {
+      if (record.kind === 'photo' && !item.record.mediaId) {
+        const uploaded = await saveMedia({ filePath: record.filePath, kind: 'photo', upload: true,
+          sessionId: target.sessionId, operationId: 'media:' + item.id })
+        if (uploaded.status !== 'uploaded') result = uploaded
+        else {
+          item.record.mediaId = uploaded.mediaId; item.record.url = uploaded.url
+          snap = clone(envelope.snapshot)
+          Object.assign(findContribution(snap, contributionId, opts.sessionId).item.record, { mediaId: uploaded.mediaId, url: uploaded.url })
+          persist(snap)
+        }
+      }
+      if (!result) {
+        snap = clone(envelope.snapshot)
+        const sending = findContribution(snap, contributionId, opts.sessionId).item
+        sending.attemptedAt = sending.attemptedAt || now()
+        persist(snap)
+        try {
+          const publicRecord = { kind: item.record.kind, text: item.record.text || '', mediaId: item.record.mediaId || '', url: item.record.url || '' }
+          const res = await bridge.call('submitContribution', { sessionId: target.sessionId, record: publicRecord,
+            operationId: item.operationId, consent: true })
+          if (!res || !res.receiptId || ['submitted', 'published', 'rejected'].indexOf(res.status) < 0) {
+            result = { status: 'failed', reason: 'invalid_submission_ack' }
+          } else result = { status: res.status, receiptId: String(res.receiptId), reason: res.reason || '', acknowledgedAt: now() }
+        } catch (err) { result = failure(err) }
+      }
+    }
+    snap = clone(envelope.snapshot)
+    const saved = findContribution(snap, contributionId, opts.sessionId).item
+    Object.assign(saved, result, { updatedAt: now() })
+    persist(snap); await flushInternal()
+    return clone(saved)
+  })
+}
+function getContribution(contributionId, sessionId) {
+  return serial(async function () {
+    const found = findContribution(envelope.snapshot, contributionId, sessionId).item
+    if (found.status === 'withdrawn') return clone(found)
+    if (!bridge.available('getContribution')) return clone(found)
+    let res
+    try { res = await bridge.call('getContribution', { sessionId: found.sessionId, receiptId: found.receiptId || '', operationId: found.operationId }) }
+    catch (err) { return Object.assign(clone(found), { refreshStatus: failure(err).status }) }
+    if (!res || !res.receiptId || (found.receiptId && res.receiptId !== found.receiptId) || ['submitted', 'published', 'rejected', 'withdrawn'].indexOf(res.status) < 0) {
+      return Object.assign(clone(found), { refreshStatus: 'failed' })
+    }
+    const next = clone(envelope.snapshot)
+    const item = findContribution(next, contributionId, sessionId).item
+    Object.assign(item, { receiptId: String(res.receiptId), status: res.status, reason: res.reason || '', updatedAt: now() })
+    persist(next); await flushInternal()
+    return clone(item)
+  })
+}
+function withdrawContribution(contributionId, sessionId) {
+  return serial(async function () {
+    const current = findContribution(envelope.snapshot, contributionId, sessionId).item
+    if (current.status === 'withdrawn') return clone(current)
+    if (!current.receiptId) return Object.assign(clone(current), { withdrawalStatus: 'unavailable' })
+    let res
+    try {
+      res = await bridge.call('withdrawContribution', { sessionId: current.sessionId, receiptId: current.receiptId,
+        operationId: 'withdraw:' + current.id })
+    } catch (err) { return Object.assign(clone(current), { withdrawalStatus: failure(err).status }) }
+    if (!res || res.acknowledged !== true || res.status !== 'withdrawn' || res.receiptId !== current.receiptId) {
+      return Object.assign(clone(current), { withdrawalStatus: 'failed' })
+    }
+    const next = clone(envelope.snapshot)
+    const item = findContribution(next, contributionId, sessionId).item
+    item.status = 'withdrawn'; item.withdrawnAt = now()
+    persist(next); await flushInternal()
+    return clone(item)
+  })
+}
+async function listContributions(options) {
+  const opts = options || {}
+  if (!bridge.available('listContributions')) return Object.assign(unavailable('listContributions'), { items: [] })
+  try {
+    const res = await bridge.call('listContributions', { sessionId: opts.sessionId || envelope && envelope.snapshot.sessionId,
+      limit: Math.max(1, Math.min(20, Number(opts.limit) || 6)) })
+    if (!res || !Array.isArray(res.items)) return { status: 'failed', reason: 'invalid_list_ack', items: [] }
+    return { available: true, status: 'available', items: res.items.filter(function (item) {
+      return item && item.status === 'published' && ['photo', 'text', 'wish'].indexOf(item.kind) >= 0
+    }).map(function (item) { return { id: item.id, kind: item.kind, text: item.text || '', url: item.url || '',
+      from: '一位考察者', status: 'published' } }) }
+  } catch (err) { return Object.assign(failure(err), { items: [] }) }
+}
+function claimEdition() {
+  return serial(async function () {
+    if (!envelope.snapshot.run.completedAt) return unavailable('not_completed')
+    if (envelope.snapshot.run.editionNo != null) return { status: 'available', editionNo: envelope.snapshot.run.editionNo }
+    if (!bridge.available('claimEdition')) return unavailable('claimEdition')
+    let res
+    try { res = await bridge.call('claimEdition', { sessionId: envelope.snapshot.sessionId, operationId: 'edition:' + envelope.snapshot.sessionId }) }
+    catch (err) { return failure(err) }
+    if (!res || res.scope !== 'global' || res.editionNo == null) return { status: 'failed', reason: 'invalid_edition_ack' }
+    const next = clone(envelope.snapshot); next.run.editionNo = res.editionNo; persist(next); await flushInternal()
+    return { status: 'available', editionNo: res.editionNo }
+  })
+}
+async function exit(reason) {
+  await init({})
+  await flush()
+  const snap = getSnapshot()
+  emit({ name: 'module_exit', reason: reason || 'back' })
+  if (!bridge.available('exit')) return unavailable('exit')
+  try {
+    const ack = await bridge.call('exit', { sessionId: snap.sessionId, completed: !!snap.run.completedAt, reason: reason || 'back' })
+    return ack && ack.acknowledged === true ? { status: 'exited' } : { status: 'failed', reason: 'invalid_exit_ack' }
+  } catch (err) { return failure(err) }
+}
+function emit(event) {
+  const input = event || {}
+  const e = { name: input.name, ts: now(), sessionId: envelope && envelope.snapshot.sessionId }
+  ;['source', 'reason', 'puzzle', 'attempt', 'result', 'inputMode', 'hintLevel', 'capability', 'completedAt'].forEach(function (key) {
+    if (input[key] !== undefined) e[key] = input[key]
+  })
+  if (bridge.available('emitEvent')) bridge.call('emitEvent', e).catch(function () {})
+  listeners.slice().forEach(function (listener) { try { listener(clone(e)) } catch (err) {} })
+}
+function onEvent(listener) {
+  if (typeof listener !== 'function') return function () {}
+  listeners.push(listener)
+  return function () { const index = listeners.indexOf(listener); if (index >= 0) listeners.splice(index, 1) }
+}
 module.exports = {
-  init: init,
-  getSnapshot: getSnapshot,
-  completeStation: completeStation,
-  completePuzzle: completePuzzle,
-  setCheckpoint: setCheckpoint,
-  getPuzzle: getPuzzle,
-  isPuzzleComplete: isPuzzleComplete,
-  completeFinale: completeFinale,
-  completeExperience: completeExperience,
-  collectCard: collectCard,
-  getCardDigit: getCardDigit,
-  getCardDigits: getCardDigits,
-  setFlag: setFlag,
-  submitBoardMessage: submitBoardMessage,
-  listBoardMessages: listBoardMessages,
-  checkPremiumUnlocked: checkPremiumUnlocked,
-  purchaseUnlock: purchaseUnlock,
-  sign: sign,
-  claimEdition: claimEdition,
-  recognizeScene: recognizeScene,
-  saveMedia: saveMedia,
-  viewPuzzle: viewPuzzle,
-  attemptPuzzle: attemptPuzzle,
-  viewHint: viewHint,
-  capabilityFallback: capabilityFallback,
-  emit: emit,
-  onEvent: onEvent,
-  reset: reset
-}
-
-// 成就系统挂在事件流上（achievements 不 require session，无循环依赖）。
-try {
-  require('./achievements').attach(module.exports)
-} catch (err) {
-  console.warn('[plate21] 成就系统挂载失败', err && err.message)
+  configure, init, getSnapshot, getRun, getArchives, getArchive, saveRun, saveDraft, navigate, resume, completePage, skipPage,
+  sign, restart, reset: restart, getLetterState, openLetter, saveRecord, updateContributionDraft, deleteRecord,
+  saveMedia, submitContribution, getContribution, withdrawContribution, listContributions, claimEdition, flush, exit,
+  setFlag, emit, onEvent,
+  viewPuzzle: function (puzzle) { emit({ name: 'puzzle_viewed', puzzle: puzzle }) },
+  attemptPuzzle: function (puzzle, attempt, result, inputMode) { emit({ name: 'puzzle_attempted', puzzle, attempt, result: result ? 'correct' : 'incorrect', inputMode }) },
+  viewHint: function (puzzle, hintLevel) { emit({ name: 'hint_viewed', puzzle, hintLevel }) },
+  capabilityFallback: function (capability, reason) { emit({ name: 'capability_fallback', capability, reason }) }
 }

@@ -1,7 +1,7 @@
 /**
  * audio-settings —— 独立音频开关（产品定位 2026-09-10：文字音频相辅相成 + 独立音频开关）。
  *
- * 两个开关，各自独立、默认全开、本地持久化（设备级偏好，不进剧情进度）：
+ * 两个开关各自独立；新设备讲述默认关闭，由玩家选择，本地持久化：
  *   bgm    背景音乐（站点氛围曲）
  *   voice  人声讲述（台词/旁白/语音导览的播放按钮；关闭后退回纯文稿阅读态）
  *
@@ -14,13 +14,13 @@ var STORAGE_KEY = 'plate21_audio_settings'
 var listeners = []
 var cached = null
 
-var DEFAULTS = { bgm: true, voice: true }
+var DEFAULTS = { bgm: true, voice: false }
 
 function read() {
   if (cached) return cached
   var saved = null
   try { saved = wx.getStorageSync(STORAGE_KEY) } catch (e) { /* 存储不可用则用默认 */ }
-  cached = { bgm: true, voice: true }
+  cached = { bgm: DEFAULTS.bgm, voice: DEFAULTS.voice }
   if (saved && typeof saved === 'object') {
     if (typeof saved.bgm === 'boolean') cached.bgm = saved.bgm
     if (typeof saved.voice === 'boolean') cached.voice = saved.voice
@@ -34,12 +34,13 @@ function persist(next) {
 }
 
 function get() {
-  return read()
+  var cur = read()
+  return { bgm: cur.bgm, voice: cur.voice }
 }
 
 function set(key, value) {
   var cur = read()
-  if (!(key in cur) || cur[key] === value) return cur
+  if ((key !== 'bgm' && key !== 'voice') || cur[key] === !!value) return get()
   var next = { bgm: cur.bgm, voice: cur.voice }
   next[key] = !!value
   persist(next)

@@ -1,42 +1,23 @@
-<!-- 语音播放条：src 为空/出错/对应开关关闭即整体隐藏（文稿阅读态不受影响）。
-     icon=true 为名牌行小圆钮（台词逐句播放用）；条状为页内内容音频用；
-     dock=true 为页级讲述的悬浮可伸缩形态（右下胶囊条 ⇄ 小圆钮）。 -->
-<block wx:if="{{src && !failed && enabled}}">
-  <view
-    wx:if="{{icon}}"
-    class="ac-iconbtn {{playing ? 'on' : ''}}"
-    bindtap="onToggle"
-    role="button"
-    aria-label="{{playing ? '暂停' : label}}"
-  >
-    <image wx:if="{{!playing}}" class="ac-iconbtn-img" src="/plate21/module/assets/img/icons/ic-play-ink.png" mode="aspectFit" />
+<!-- Missing/unapproved clips render nothing. Enabling narration never starts it. -->
+<block wx:if="{{hasAudio && active}}">
+  <view wx:if="{{!enabled}}" class="ac-wrap {{dock ? 'ac-dock-bar' : ''}}">
+    <button class="ac-btn" bindtap="onMute">{{kind === 'bgm' ? '开启音乐' : '开启讲述'}}</button>
+  </view>
+  <view wx:elif="{{icon}}" class="ac-iconbtn {{playing ? 'on' : ''}}" bindtap="onToggle" role="button" aria-label="{{loading ? '取消加载' : (failed ? '重试播放' : (playing ? '暂停' : label))}}">
+    <text wx:if="{{loading}}">…</text>
+    <text wx:elif="{{failed}}">↻</text>
+    <image wx:elif="{{!playing}}" class="ac-iconbtn-img" src="/plate21/module/assets/img/icons/ic-play-ink.png" mode="aspectFit" />
     <view wx:else class="ac-iconbtn-pause"><view class="ac-iconbtn-bar"></view><view class="ac-iconbtn-bar"></view></view>
   </view>
-  <block wx:elif="{{dock}}">
-    <view wx:if="{{dockOpen}}" id="coachListen" class="ac-dock-bar">
-      <button class="ac-btn" bindtap="onToggle" aria-label="{{playing ? '暂停' : label}}">
-        <image wx:if="{{!playing}}" class="ac-icon" src="/plate21/module/assets/img/icons/ic-play-ink.png" mode="aspectFit" />
-        <view wx:else class="ac-iconbtn-pause"><view class="ac-iconbtn-bar"></view><view class="ac-iconbtn-bar"></view></view>
-        <text class="ac-label">{{playing ? '暂停' : label}}</text>
-      </button>
-      <button class="ac-mute" bindtap="onMute">{{muted ? '开声音' : '静音'}}</button>
-      <view class="ac-track ac-dock-track"><view class="ac-track-fill" style="width: {{progress}}%;"></view></view>
-      <view class="ac-dock-fold" bindtap="onDockFold" role="button" aria-label="收起播放条">⌄</view>
-    </view>
-    <view wx:else class="ac-dock-dot {{playing ? 'on' : ''}}" bindtap="onDockOpen" role="button" aria-label="展开播放条">
-      <image wx:if="{{!playing}}" class="ac-iconbtn-img" src="/plate21/module/assets/img/icons/ic-play-ink.png" mode="aspectFit" />
-      <view wx:else class="ac-iconbtn-pause"><view class="ac-iconbtn-bar"></view><view class="ac-iconbtn-bar"></view></view>
-    </view>
-  </block>
-  <view wx:else id="coachListen" class="ac-wrap {{compact ? 'ac-compact' : ''}}">
-    <button class="ac-btn" bindtap="onToggle" aria-label="{{playing ? '暂停' : label}}">
-      <image wx:if="{{!playing}}" class="ac-icon" src="/plate21/module/assets/img/icons/ic-play-ink.png" mode="aspectFit" />
-      <view wx:else class="ac-iconbtn-pause"><view class="ac-iconbtn-bar"></view><view class="ac-iconbtn-bar"></view></view>
-      <text class="ac-label">{{playing ? '暂停' : label}}</text>
-    </button>
+  <view wx:elif="{{dock && !dockOpen}}" class="ac-dock-dot {{playing ? 'on' : ''}}" bindtap="onDockOpen" role="button" aria-label="展开播放条">
+    <image class="ac-iconbtn-img" src="/plate21/module/assets/img/icons/ic-play-ink.png" mode="aspectFit" />
+  </view>
+  <view wx:else id="coachListen" class="ac-wrap {{compact ? 'ac-compact' : ''}} {{dock ? 'ac-dock-bar' : ''}}">
+    <button class="ac-btn" bindtap="onToggle">{{loading ? '取消加载' : (failed ? '重试播放' : (playing ? '暂停' : label))}}</button>
     <view class="ac-track"><view class="ac-track-fill" style="width: {{progress}}%;"></view></view>
+    <text wx:if="{{segmentCount > 1}}" class="ac-segment">{{segmentIndex + 1}}/{{segmentCount}}</text>
+    <button class="ac-btn ac-action" bindtap="onReplay">重播</button>
+    <button wx:if="{{kind !== 'clip'}}" class="ac-btn ac-action" bindtap="onMute">静音</button>
+    <view wx:if="{{dock}}" class="ac-dock-fold" bindtap="onDockFold" role="button" aria-label="收起播放条">⌄</view>
   </view>
 </block>
-<view wx:if="{{src && !failed && !enabled}}" class="ac-dock-bar">
-  <button class="ac-mute" bindtap="onMute">开声音</button>
-</view>

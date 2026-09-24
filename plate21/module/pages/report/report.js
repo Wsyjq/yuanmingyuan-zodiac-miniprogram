@@ -1,436 +1,297 @@
-// P15 考察报告（成果页）：第 21 图成品展示 + 保存相册 + 拓印提示
-// 定格口径（V2.1）：《西洋楼铜版图·第二十一图》/ 今日对读。非馆藏原件。/ 绘制者 / 绘制时间。
-const session = require('../../store/session')
-const fieldRecord = require('../../store/field-record')
-const sessionDate = require('../../utils/session-date')
+'use strict'
 
-// 离屏画布逻辑尺寸（导出分辨率基准，与屏幕 rpx 无关）
-const CW = 700
-const CH = 1120
-const REPORT_PLATE_SRC = '/plate21/module/assets/img/IMG-RUNTIME-PLATE.jpg'
+const session = require('../../store/session')
+const gameEntry = require('../../utils/game-entry')
+const renderer = require('../../utils/report-renderer')
+const { normalizePhoto } = require('../../utils/photo-pipeline')
+const WALK = '/plate21/module/pages/walk/walk'
+const SITE_OPTIONS = [{ id: '', label: '现场记录（不指定地点）' }].concat(renderer.SITES)
+
+function invoke(name, options) {
+  return new Promise(function (resolve, reject) {
+    if (typeof wx[name] !== 'function') return reject(new Error(name + '_unavailable'))
+    let settled = false
+    const timer = setTimeout(function () {
+      if (!settled) { settled = true; reject(new Error(name + '_timeout')) }
+    }, 15000)
+    function done(callback, value) {
+      if (settled) return
+      settled = true; clearTimeout(timer); callback(value)
+    }
+    try {
+      wx[name](Object.assign({}, options, {
+        success: function (value) { done(resolve, value) },
+        fail: function (error) { done(reject, error) }
+      }))
+    } catch (error) { done(reject, error) }
+  })
+}
+function errorText(error) { return String(error && (error.errMsg || error.message || error.code) || '') }
+function cancelled(error) { return /cancel/i.test(errorText(error)) }
 
 Page({
   data: {
-    name: '',
-    editionLabel: '今日对读',
-    today: '',
-    showRubbing: false,
-    saving: false,
-    saveError: '',
-    canOpenAlbumSettings: false,
-    collected: false,
-    completed: false,
-    completing: false,
-    finale: false,
-    letterReady: false,
-    boardSubmitted: false,
-    messageText: '',
-    messageConsent: true,
-    messageSubmitted: false,
-    submittedText: '',
-    messageSubmitting: false,
-    fieldPhotos: fieldRecord.photosFromSnapshot(),
-    photoCount: 0
+    loading: true, loadError: '', model: null, siteOptions: SITE_OPTIONS, siteIndex: 0,
+    draftText: '', editingTextId: '', busy: false, recordError: '',
+    generating: false, saving: false, previewImages: [], saveError: '',
+    savedCount: 0, exportWarning: '', canOpenAlbumSettings: false,
+    letterAvailable: false, letterChecking: false, letterOpening: false,
+    letterMessage: '', sheetCount: 1
   },
 
-  onLoad() {
-    if (session.getSnapshot()) this.refreshSnapshot()
-    else session.init({}).then(() => this.refreshSnapshot())
+  onLoad: function (options) {
+    this._requestedSessionId = options && options.sessionId ? String(options.sessionId) : ''
+    this._unloaded = false
+    this._loadPromise = this.loadArchive()
+    return this._loadPromise
   },
-
-  onShow() {
-    if (session.getSnapshot()) this.refreshSnapshot()
+  onReady: function () { this._ready = true; this._maybeGenerate() },
+  onShow: function () {
+    if (this._loadedOnce && !this._loadPromise) return this.loadArchive()
   },
+  onUnload: function () { this._unloaded = true },
+  update: function (patch) { if (!this._unloaded) this.setData(patch) },
 
-  refreshSnapshot() {
-    const snap = session.getSnapshot() || {}
-    const flags = snap.flags || {}
-    const fieldPhotos = fieldRecord.photosFromSnapshot(snap)
-    const todayKey = sessionDate.dateKeyFromTimestamp(Date.now())
-    const sessionDay = sessionDate.isValidDateKey(snap.sessionDate) ? snap.sessionDate : todayKey
-    const finale = !!snap.finale
-    this.setData({
-      name: snap.name || '无名氏',
-      editionLabel: snap.editionNo ? ('第 ' + snap.editionNo + ' 版') : '今日对读',
-      today: sessionDate.formatDateKey(snap.sessionDate),
-      collected: !!flags.collectedReport,
-      completed: !!flags.experienceCompletedAt,
-      fieldPhotos: fieldPhotos,
-      photoCount: fieldPhotos.filter(function (photo) { return !!photo.photoPath }).length,
-      finale: finale,
-      letterReady: (finale || !!flags.experienceCompletedAt) && todayKey > sessionDay,
-      boardSubmitted: !!flags.boardSubmittedAt,
-      messageSubmitted: !!flags.messageSubmittedAt,
-      submittedText: flags.messageDraft || '',
-      messageText: flags.messageDraft || ''
-    })
+  loadArchive: async function () {
+    this.update({ loading: true, loadError: '' })
+    try {
+      await gameEntry.init({ source: 'report', sessionId: this._requestedSessionId })
+      this.refresh(true)
+      this._loadedOnce = true
+    } catch (error) {
+      this.update({ loading: false, loadError: error.code === 'ARCHIVE_NOT_FOUND' ? '找不到这份档案，请返回考察入口重试。' : '档案暂时无法读取，请重试。' })
+    } finally { this._loadPromise = null }
   },
+  onRetryLoad: function () { return this.loadArchive() },
 
-  onPreviewPhoto(e) {
-    const key = e.currentTarget.dataset.key
-    const current = this.data.fieldPhotos.find(function (photo) { return photo.key === key })
-    const urls = this.data.fieldPhotos.map(function (photo) { return photo.photoPath }).filter(Boolean)
-    if (current && current.photoPath && urls.length) {
-      wx.previewImage({ current: current.photoPath, urls: urls })
+  readTarget: function () {
+    const current = session.getSnapshot()
+    if (!current) throw new Error('snapshot_unavailable')
+    if (!this._requestedSessionId || this._requestedSessionId === current.sessionId) return current
+    const archive = session.getArchive(this._requestedSessionId)
+    if (!archive) { const error = new Error('archive_not_found'); error.code = 'ARCHIVE_NOT_FOUND'; throw error }
+    return archive
+  },
+  refresh: function (checkLetter) {
+    try {
+      const target = this.readTarget()
+      this._sessionId = target.sessionId
+      this._target = target
+      const model = renderer.buildModel(target)
+      const fingerprint = JSON.stringify(model)
+      const changed = fingerprint !== this._fingerprint
+      this._fingerprint = fingerprint
+      this.update({ model: model, loading: false, loadError: '', sheetCount: renderer.buildSheets(model).length })
+      if (changed) {
+        this._renderedFingerprint = ''
+        this.update({ previewImages: [], savedCount: 0, exportWarning: '', saveError: '' })
+        this._maybeGenerate()
+      }
+      if (checkLetter) this.checkLetter()
+    } catch (error) {
+      this.update({ loading: false, loadError: '找不到这份档案，请返回考察入口重试。' })
     }
   },
 
-  onRepairPhotos() {
-    wx.navigateTo({ url: '/plate21/module/pages/s2-blend/s2-blend?mode=repair' })
+  checkLetter: async function () {
+    if (!this.data.model || !this.data.model.completed || this.data.letterChecking) return
+    const sessionId = this._sessionId
+    this.update({ letterChecking: true })
+    try {
+      const result = await session.getLetterState(sessionId)
+      if (this._sessionId !== sessionId) return
+      this.update({ letterAvailable: !!result.available,
+        letterMessage: result.available ? '一封来自档案整理者的信，正在等你。'
+          : result.reason === 'not_due' ? '完成考察后的下一个自然日，这封信可以启封。'
+            : '来信开放时间需要联网校验；考察作品可以继续查看。' })
+    } catch (error) { this.update({ letterAvailable: false, letterMessage: '来信状态暂时无法读取，稍后可以再试。' }) }
+    finally { this.update({ letterChecking: false }) }
+  },
+  onOpenLetter: async function () {
+    if (this.data.letterOpening || !this.data.model || !this.data.model.completed) return
+    this.update({ letterOpening: true })
+    try {
+      await session.openLetter(this._sessionId)
+      await invoke('redirectTo', { url: WALK + '?sessionId=' + encodeURIComponent(this._sessionId) + '&entry=letter' })
+    } catch (error) {
+      this.update({ letterMessage: error.code === 'LETTER_LOCKED' ? '这封信尚未开放，或需要联网确认时间。到期后仍可从这里进入。' : '来信暂时无法打开，请重试。' })
+    } finally { this.update({ letterOpening: false }) }
+  },
+  onReturn: function () {
+    return invoke('redirectTo', { url: WALK + (this._sessionId ? '?sessionId=' + encodeURIComponent(this._sessionId) : '') })
+      .catch(() => this.update({ saveError: '暂时无法返回考察，请使用左上角返回后重试。' }))
   },
 
-  // 「保存到相册」：canvas 离屏合成 → 导出 → 存相册（权限被拒仅 toast）
-  onSave() {
-    if (this.data.saving) return
-    this.setData({ saving: true, saveError: '', canOpenAlbumSettings: false })
-    wx.createSelectorQuery().in(this)
-      .select('#reportCanvas')
-      .fields({ node: true, size: true })
-      .exec(async (res) => {
-        if (!res || !res[0] || !res[0].node) {
-          this.setSaveFailure('canvas_unavailable')
-          return
-        }
-        const canvas = res[0].node
-        const ctx = canvas.getContext('2d')
-        let dpr = 2
-        try {
-          const info = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync()
-          dpr = Math.min(2, Math.max(1, Number(info.pixelRatio) || 1))
-        } catch (e) { /* 用默认 dpr */ }
-        canvas.width = CW * dpr
-        canvas.height = CH * dpr
-        ctx.scale(dpr, dpr)
-        // INT-201：异步载入玩家现场照片，完成后再导出。
-        try {
-          await this.drawReport(ctx, canvas)
-        } catch (e) {
-          // 照片加载失败时 drawReport 内部使用待补录色块，不阻断。
-          console.warn('[report] drawReport warning', e && e.message)
-        }
-        wx.canvasToTempFilePath({
-          canvas: canvas,
-          success: (r) => {
-            wx.saveImageToPhotosAlbum({
-              filePath: r.tempFilePath,
-              success: () => {
-                this.setData({ saving: false, saveError: '', canOpenAlbumSettings: false })
-                wx.showToast({ title: '已保存到相册', icon: 'none' })
-                session.saveMedia({ type: 'report', image: { filePath: r.tempFilePath }, meta: { editionLabel: this.data.editionLabel } })
-                session.emit({ name: 'report_saved', destination: 'album', success: true, editionLabel: this.data.editionLabel })
-              },
-              fail: (error) => this.setSaveFailure('album', error)
-            })
-          },
-          fail: (error) => this.setSaveFailure('canvas_export', error)
+  onSiteChange: function (event) {
+    const index = Number(event.detail.value)
+    this.update({ siteIndex: Number.isInteger(index) && SITE_OPTIONS[index] ? index : 0 })
+  },
+  onTextInput: function (event) { this.update({ draftText: event.detail.value, recordError: '' }) },
+  onEditText: function (event) {
+    const record = this.data.model.texts.find(function (item) { return item.id === event.currentTarget.dataset.id })
+    if (!record) return
+    this.update({ editingTextId: record.id, draftText: record.text,
+      siteIndex: Math.max(0, SITE_OPTIONS.findIndex(function (site) { return site.id === record.siteId })) })
+    if (wx.pageScrollTo) wx.pageScrollTo({ selector: '#recordEditor', duration: 200 })
+  },
+  onCancelEdit: function () { this.update({ editingTextId: '', draftText: '', recordError: '' }) },
+  recordLocked: function () { return this.data.busy || this.data.saving || this.data.generating || !this.data.model },
+  onSaveText: async function () {
+    if (this.recordLocked()) return
+    const text = String(this.data.draftText || '').trim()
+    if (!text) { this.update({ recordError: '先写下一点观察，再保存这条记录。' }); return }
+    this.update({ busy: true, recordError: '' })
+    try {
+      await session.saveRecord({ id: this.data.editingTextId || undefined, kind: 'text', purpose: 'field',
+        text: text.slice(0, 500), siteId: SITE_OPTIONS[this.data.siteIndex].id, status: 'private' }, this._sessionId)
+      this.update({ editingTextId: '', draftText: '' })
+      this.refresh(false)
+    } catch (error) { this.update({ recordError: '文字记录没有保存成功，原内容仍保留，请重试。' }) }
+    finally { this.update({ busy: false }); this._maybeGenerate() }
+  },
+
+  choosePhoto: async function () {
+    if (typeof wx.chooseMedia === 'function') {
+      const result = await invoke('chooseMedia', { count: 1, mediaType: ['image'], sourceType: ['camera', 'album'], sizeType: ['compressed'] })
+      const file = result.tempFiles && result.tempFiles[0]
+      return { filePath: file && file.tempFilePath, fileSize: file && file.size }
+    }
+    const result = await invoke('chooseImage', { count: 1, sizeType: ['compressed'], sourceType: ['camera', 'album'] })
+    return { filePath: result.tempFilePaths && result.tempFilePaths[0], fileSize: result.tempFiles && result.tempFiles[0] && result.tempFiles[0].size }
+  },
+  onAddPhoto: function () { return this.savePhoto('') },
+  onReplacePhoto: function (event) { return this.savePhoto(event.currentTarget.dataset.id) },
+  savePhoto: async function (recordId) {
+    if (this.recordLocked()) return
+    const previous = recordId ? this.data.model.photos.find(function (item) { return item.id === recordId }) : null
+    if (recordId && !previous) return
+    this.update({ busy: true, recordError: '' })
+    try {
+      const chosen = await this.choosePhoto()
+      if (!chosen.filePath) throw new Error('empty_photo')
+      const photo = await normalizePhoto(chosen.filePath, { fileSize: chosen.fileSize })
+      if (!photo.path || photo.withinBudget === false) throw new Error('photo_too_large')
+      const media = await session.saveMedia({ filePath: photo.path, upload: false })
+      const filePath = media && (media.localPath || media.filePath)
+      if (!media || media.status !== 'local' || !filePath) throw new Error('photo_not_persisted')
+      await session.saveRecord({ id: recordId || undefined, kind: 'photo', purpose: 'field', filePath: filePath,
+        siteId: previous ? previous.siteId : SITE_OPTIONS[this.data.siteIndex].id, status: 'private',
+        width: photo.width, height: photo.height }, this._sessionId)
+      this.refresh(false)
+    } catch (error) {
+      if (!cancelled(error)) this.update({ recordError: /too_large/.test(errorText(error))
+        ? '这张照片较大，暂时无法保存。可以换一张，或先留下文字。'
+        : '照片未能保存在设备中，原记录没有被替换。请重试，或先留下文字。' })
+    } finally { this.update({ busy: false }); this._maybeGenerate() }
+  },
+  onPreviewPhoto: function (event) {
+    const photos = this.data.model.photos.filter(function (photo) { return !!photo.filePath })
+    const selected = photos.find(function (photo) { return photo.id === event.currentTarget.dataset.id })
+    if (!selected) return
+    return invoke('previewImage', { current: selected.filePath, urls: photos.map(function (photo) { return photo.filePath }) })
+      .catch(() => this.update({ recordError: '这张照片暂时无法打开，可以替换后重试。' }))
+  },
+  onDeleteRecord: async function (event) {
+    if (this.recordLocked()) return
+    const recordId = event.currentTarget.dataset.id
+    const record = this.data.model.photos.concat(this.data.model.texts).find(function (item) { return item.id === recordId })
+    if (!record) return
+    this.update({ busy: true, recordError: '' })
+    try {
+      const choice = await invoke('showModal', { title: '删除这条私人记录？', content: '考察完成日期和站点进度不会改变。', confirmText: '删除', confirmColor: '#843c2d' })
+      if (!choice.confirm) return
+      await session.deleteRecord(recordId, this._sessionId)
+      if (this.data.editingTextId === recordId) this.onCancelEdit()
+      this.refresh(false)
+    } catch (error) { this.update({ recordError: '记录暂时无法删除，请重试。' }) }
+    finally { this.update({ busy: false }); this._maybeGenerate() }
+  },
+
+  _maybeGenerate: function () {
+    if (this._ready && !this._unloaded && this.data.model && !this.data.busy && !this.data.generating &&
+        this._renderedFingerprint !== this._fingerprint) this.generateArtwork().catch(function () {})
+  },
+  canvasNode: function () {
+    const page = this
+    return new Promise(function (resolve, reject) {
+      let settled = false
+      const timer = setTimeout(function () { if (!settled) { settled = true; reject(new Error('canvas_unavailable')) } }, 5000)
+      try {
+        wx.createSelectorQuery().in(page).select('#reportCanvas').fields({ node: true, size: true }).exec(function (result) {
+          if (settled) return
+          settled = true; clearTimeout(timer)
+          if (result && result[0] && result[0].node) resolve(result[0].node)
+          else reject(new Error('canvas_unavailable'))
         })
-      })
-  },
-
-  setSaveFailure(stage, error) {
-    const message = String(error && error.errMsg || error && error.message || '')
-    const denied = /auth deny|auth denied|authorize|permission/i.test(message)
-    const cancelled = /cancel/i.test(message)
-    const saveError = denied
-      ? '没有相册写入权限。可打开设置授权后再次保存。'
-      : cancelled
-        ? '已取消保存，报告仍保留在小程序中。'
-        : stage === 'canvas_unavailable'
-          ? '当前设备无法创建报告画布，请稍后重试或截屏留存。'
-          : '报告导出失败，请稍后重试。'
-    this.setData({ saving: false, saveError: saveError, canOpenAlbumSettings: denied })
-    session.emit({
-      name: 'report_saved',
-      destination: 'album',
-      success: false,
-      failureReason: denied ? 'permission_denied' : cancelled ? 'cancelled' : stage
+      } catch (error) { settled = true; clearTimeout(timer); reject(error) }
     })
-    wx.showToast({ title: cancelled ? '已取消保存' : '报告未保存', icon: 'none' })
   },
-
-  onOpenAlbumSettings() {
-    if (wx.openSetting) wx.openSetting({})
-  },
-
-  // 离屏绘制：第二十一图、玩家四张现场照片、题跋和著录信息。
-  async drawReport(ctx, canvas) {
-    const name = this.data.name
-    // 旧纸底
-    ctx.fillStyle = '#F7F4EC'
-    ctx.fillRect(0, 0, CW, CH)
-    // 万字纹画框（双线）
-    ctx.strokeStyle = '#46382A'
-    ctx.lineWidth = 3
-    ctx.strokeRect(20, 20, CW - 40, CH - 40)
-    ctx.lineWidth = 1
-    ctx.strokeRect(32, 32, CW - 64, CH - 64)
-    // 画题
-    ctx.fillStyle = '#46382A'
-    ctx.textAlign = 'center'
-    ctx.font = '700 30px STSong, SimSun, serif'
-    ctx.fillText('西洋楼铜版图·第二十一图', CW / 2, 84)
-    // L1 题跋横条（V2.1 副行：今日对读，非馆藏原件）
-    ctx.fillStyle = '#EBE1CB'
-    ctx.strokeStyle = '#46382A'
-    ctx.lineWidth = 1
-    ctx.fillRect(50, 110, CW - 100, 60)
-    ctx.strokeRect(50, 110, CW - 100, 60)
-    ctx.fillStyle = '#46382A'
-    ctx.font = '15px STKaiti, KaiTi, serif'
-    ctx.fillText('今日对读。非馆藏原件。', CW / 2, 145)
-
-    const loadImage = (src) => new Promise((resolve) => {
-      if (!src || !canvas || typeof canvas.createImage !== 'function') return resolve(null)
-      const img = canvas.createImage()
-      img.onload = function () {
-        img.onload = null
-        img.onerror = null
-        resolve(img)
+  generateArtwork: async function () {
+    if (this.data.generating) return null
+    if (!this.data.model) throw new Error('archive_unavailable')
+    this.update({ generating: true, saveError: '', exportWarning: '' })
+    const fingerprint = this._fingerprint
+    const sheets = renderer.buildSheets(this.data.model)
+    const images = [], missing = []
+    try {
+      const canvas = await this.canvasNode()
+      for (const sheet of sheets) {
+        if (this._unloaded || this._fingerprint !== fingerprint) throw new Error('report_changed')
+        let ctx = canvas.getContext('2d')
+        const layout = renderer.measure(ctx, sheet)
+        canvas.width = renderer.WIDTH * 2
+        canvas.height = layout.height * 2
+        ctx = canvas.getContext('2d'); ctx.scale(2, 2)
+        const result = await renderer.draw(ctx, canvas, sheet, layout)
+        missing.push.apply(missing, result.missingPhotos)
+        const image = await invoke('canvasToTempFilePath', { canvas: canvas, fileType: 'jpg', quality: 0.92,
+          destWidth: renderer.WIDTH * 2, destHeight: layout.height * 2 })
+        if (!image.tempFilePath) throw new Error('empty_export')
+        images.push({ filePath: image.tempFilePath, number: sheet.number })
       }
-      img.onerror = function () {
-        img.onload = null
-        img.onerror = null
-        resolve(null)
+      if (this._unloaded || this._fingerprint !== fingerprint) throw new Error('report_changed')
+      this._renderedFingerprint = fingerprint
+      this.update({ previewImages: images, savedCount: 0,
+        exportWarning: missing.length ? '有 ' + missing.length + ' 张照片暂时无法读取，作品已标记占位；原记录仍保留，可替换照片后重新生成。' : '' })
+      return images
+    } catch (error) {
+      this.update({ saveError: /canvas_unavailable/.test(errorText(error)) ? '当前设备暂时无法生成作品，请重试。记录和考察进度仍然保留。' : '作品暂时未能生成，请重试。记录和考察进度仍然保留。' })
+      throw error
+    } finally { this.update({ generating: false }) }
+  },
+  onRegenerate: function () {
+    if (this.data.generating || this.data.busy || this.data.saving) return
+    this._renderedFingerprint = ''
+    return this.generateArtwork().catch(function () {})
+  },
+  onPreviewArtwork: function (event) {
+    const images = this.data.previewImages
+    const index = Number(event.currentTarget.dataset.index) || 0
+    if (!images[index]) return
+    return invoke('previewImage', { current: images[index].filePath, urls: images.map(function (image) { return image.filePath }) })
+      .catch(() => this.update({ saveError: '预览暂时无法打开，可以重新生成后再试。' }))
+  },
+  onSave: async function () {
+    if (this.data.saving || this.data.generating || this.data.busy || !this.data.model) return
+    this.update({ saving: true, saveError: '', canOpenAlbumSettings: false })
+    try {
+      if (this._renderedFingerprint !== this._fingerprint || !this.data.previewImages.length) await this.generateArtwork()
+      const images = this.data.previewImages
+      if (!images.length) throw new Error('empty_export')
+      // If saving sheet 2 fails, a retry continues from sheet 2 instead of duplicating sheet 1.
+      for (let i = this.data.savedCount; i < images.length; i++) {
+        await invoke('saveImageToPhotosAlbum', { filePath: images[i].filePath })
+        this.update({ savedCount: i + 1 })
       }
-      img.src = src
-    })
-
-    function drawPlaceholder(c, x, y, w, h, label) {
-      if (c.setLineDash) c.setLineDash([6, 4])
-      c.fillStyle = '#EBE1CB'
-      c.strokeStyle = '#C0B49A'
-      c.lineWidth = 1.5
-      c.fillRect(x, y, w, h)
-      c.strokeRect(x, y, w, h)
-      if (c.setLineDash) c.setLineDash([])
-      c.fillStyle = '#8A7A60'
-      c.textAlign = 'center'
-      c.font = '13px sans-serif'
-      c.fillText(label, x + w / 2, y + h / 2 + 5)
-    }
-
-    function drawArchivePlate(c, x, y, w, h) {
-      c.save()
-      c.translate(x, y)
-      c.scale(w / 560, h / 400)
-      c.fillStyle = '#E8DABD'
-      c.fillRect(0, 0, 560, 400)
-
-      c.strokeStyle = 'rgba(70,56,42,0.18)'
-      c.lineWidth = 1
-      for (let line = -300; line < 700; line += 22) {
-        c.beginPath()
-        c.moveTo(line, 0)
-        c.lineTo(line + 300, 400)
-        c.stroke()
-      }
-
-      c.strokeStyle = '#46382A'
-      c.lineWidth = 3
-      c.beginPath()
-      c.moveTo(90, 170)
-      c.bezierCurveTo(145, 65, 415, 65, 470, 170)
-      c.stroke()
-      c.strokeRect(70, 168, 420, 150)
-
-      ;[145, 280, 415].forEach(function (center) {
-        c.beginPath()
-        c.arc(center, 245, 48, Math.PI, 0)
-        c.lineTo(center + 48, 306)
-        c.lineTo(center - 48, 306)
-        c.closePath()
-        c.stroke()
-      })
-
-      c.strokeStyle = '#4A6B64'
-      c.lineWidth = 2
-      ;[-1, 0, 1].forEach(function (offset) {
-        c.beginPath()
-        c.moveTo(280, 292)
-        c.lineTo(280 + offset * 52, 350)
-        c.stroke()
-      })
-      c.strokeStyle = '#46382A'
-      c.strokeRect(155, 344, 250, 30)
-
-      c.strokeStyle = 'rgba(166,58,46,0.5)'
-      c.lineWidth = 2
-      c.beginPath()
-      c.arc(475, 65, 31, 0, Math.PI * 2)
-      c.stroke()
-      c.fillStyle = 'rgba(70,56,42,0.62)'
-      c.font = '28px Times New Roman, serif'
-      c.textAlign = 'left'
-      c.fillText('XXI', 36, 58)
-      c.restore()
-    }
-
-    function drawCover(c, image, x, y, width, height) {
-      const imageWidth = Number(image && (image.naturalWidth || image.width)) || 0
-      const imageHeight = Number(image && (image.naturalHeight || image.height)) || 0
-      if (!imageWidth || !imageHeight) {
-        c.drawImage(image, x, y, width, height)
-        return
-      }
-      const targetRatio = width / height
-      const sourceRatio = imageWidth / imageHeight
-      let sourceX = 0
-      let sourceY = 0
-      let sourceWidth = imageWidth
-      let sourceHeight = imageHeight
-      if (sourceRatio > targetRatio) {
-        sourceWidth = imageHeight * targetRatio
-        sourceX = (imageWidth - sourceWidth) / 2
-      } else {
-        sourceHeight = imageWidth / targetRatio
-        sourceY = (imageHeight - sourceHeight) / 2
-      }
-      c.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, x, y, width, height)
-    }
-
-    function drawContain(c, image, x, y, width, height) {
-      const imageWidth = Number(image && (image.naturalWidth || image.width)) || 0
-      const imageHeight = Number(image && (image.naturalHeight || image.height)) || 0
-      if (!imageWidth || !imageHeight) {
-        c.drawImage(image, x, y, width, height)
-        return
-      }
-      const scale = Math.min(width / imageWidth, height / imageHeight)
-      const drawWidth = imageWidth * scale
-      const drawHeight = imageHeight * scale
-      c.drawImage(image, x + (width - drawWidth) / 2, y + (height - drawHeight) / 2, drawWidth, drawHeight)
-    }
-
-    let plateImage = await loadImage(REPORT_PLATE_SRC)
-    if (plateImage) drawContain(ctx, plateImage, 70, 190, 560, 400)
-    else drawArchivePlate(ctx, 70, 190, 560, 400)
-    plateImage = null
-    // L2 边框（虚线矩形）
-    ctx.strokeStyle = '#A98F5F'
-    ctx.lineWidth = 2
-    ctx.strokeRect(60, 180, CW - 120, 420)
-    ctx.lineWidth = 1
-    ctx.strokeRect(70, 190, CW - 140, 400)
-
-    ctx.textAlign = 'left'
-    ctx.fillStyle = '#46382A'
-    ctx.font = '700 20px STSong, SimSun, serif'
-    ctx.fillText('现场四图考察记录', 60, 642)
-    ctx.fillStyle = '#8A7A60'
-    ctx.font = '12px sans-serif'
-    ctx.fillText('以下均为考察者现场拍摄', 60, 664)
-
-    const photoW = 278
-    const photoH = 145
-    for (let index = 0; index < this.data.fieldPhotos.length; index += 1) {
-      const photo = this.data.fieldPhotos[index]
-      const x = 60 + (index % 2) * 302
-      const y = 684 + Math.floor(index / 2) * 184
-      let image = await loadImage(photo.photoPath)
-      if (image) drawCover(ctx, image, x, y, photoW, photoH)
-      else drawPlaceholder(ctx, x, y, photoW, photoH, '待补录')
-      image = null
-      ctx.strokeStyle = '#A98F5F'
-      ctx.lineWidth = 1
-      ctx.strokeRect(x, y, photoW, photoH)
-      ctx.fillStyle = '#46382A'
-      ctx.textAlign = 'left'
-      ctx.font = '13px sans-serif'
-      ctx.fillText(photo.no + '  ' + photo.title, x, y + photoH + 20)
-    }
-
-    // L5 落款 + 署名在照片解码结束后绘制，避免异步图像覆盖著录信息。
-    ctx.textAlign = 'right'
-    ctx.fillStyle = '#46382A'
-    ctx.font = '18px STKaiti, KaiTi, serif'
-    ctx.fillText('绘制者：' + name, CW - 82, 540)
-    ctx.fillStyle = '#A63A2E'
-    ctx.font = '22px STKaiti, KaiTi, serif'
-    ctx.fillText('今日对读', CW - 82, 572)
-
-    ctx.textAlign = 'center'
-    ctx.fillStyle = '#8A7A60'
-    ctx.font = '14px sans-serif'
-    ctx.fillText('绘制时间：' + this.data.today, CW / 2, 1078)
+      session.emit({ name: 'report_saved', result: 'saved' })
+      if (!this._unloaded) wx.showToast({ title: '已保存到相册', icon: 'none' })
+    } catch (error) {
+      const denied = /auth deny|auth denied|authorize|permission/i.test(errorText(error))
+      this.update({ canOpenAlbumSettings: denied, saveError: denied ? '相册权限未开启。可打开权限设置，然后继续保存。'
+        : cancelled(error) ? '已取消保存。作品和考察记录仍保留在这里。'
+          : '作品未能全部保存，请重试。已保存的页不会重复保存，考察完成状态不受影响。' })
+      session.emit({ name: 'report_saved', result: 'failed', reason: denied ? 'permission_denied' : 'save_failed' })
+    } finally { this.update({ saving: false }) }
   },
-
-  // 「收入考察手册」INT-202：真正写入 session，handbook 据此显示缩略
-  onCollect() {
-    if (this.data.collected) return
-    session.setFlag('collectedReport', true).then(() => {
-      this.setData({ collected: true })
-      wx.showToast({ title: '已收入考察手册', icon: 'none' })
-    }).catch(function () { wx.showToast({ title: '收入失败，请重试', icon: 'none' }) })
-  },
-
-  // 「拓印提示」：轻提示条 + 剧情文字
-  onRubbingHint() {
-    this.setData({ showRubbing: true })
-  },
-
-  onOpenHandbook() {
-    wx.navigateTo({ url: '/plate21/module/pages/handbook/handbook' })
-  },
-
-  // —— v2 回响区：明信片投递（开放题不评判，仅落档）——
-  onMessageInput(e) {
-    this.setData({ messageText: e.detail.value })
-  },
-
-  onConsentToggle() {
-    this.setData({ messageConsent: !this.data.messageConsent })
-  },
-
-  onSubmitMessage() {
-    const text = (this.data.messageText || '').trim()
-    if (!text) {
-      wx.showToast({ title: '写下那句话，再投进信箱', icon: 'none' })
-      return
-    }
-    if (this.data.messageSubmitting) return
-    this.setData({ messageSubmitting: true })
-    session.setFlag('messageDraft', text)
-      .then(() => session.setFlag('messageConsentAnonymous', this.data.messageConsent))
-      .then(() => session.setFlag('messageSubmittedAt', Date.now()))
-      .then(() => {
-        this.setData({ messageSubmitting: false, messageSubmitted: true, submittedText: text })
-        wx.showToast({ title: '已投进信箱', icon: 'none' })
-      })
-      .catch(() => {
-        this.setData({ messageSubmitting: false })
-        wx.showToast({ title: '投递失败，请重试', icon: 'none' })
-      })
-  },
-
-  onEditMessage() {
-    this.setData({ messageSubmitted: false, messageText: this.data.submittedText })
-  },
-
-  onOpenLetter() {
-    if (!this.data.letterReady) {
-      wx.showToast({ title: '明日启封', icon: 'none' })
-      return
-    }
-    wx.navigateTo({ url: '/plate21/module/pages/letter/letter' })
-  },
-
-  // 留言簿：通关当天剧情末尾的「写」入口（次日回访链路只负责读）
-  onOpenBoard() {
-    wx.navigateTo({ url: '/plate21/module/pages/board/board' })
-  },
-
-  onFinish() {
-    if (this.data.completing) return
-    this.setData({ completing: true })
-    session.completeExperience().then(() => {
-      session.emit({ name: 'module_exit' })
-      wx.reLaunch({
-        url: '/pages/index/index',
-        fail: () => this.setData({ completing: false })
-      })
-    }).catch(() => {
-      this.setData({ completing: false })
-      wx.showToast({ title: '完成状态保存失败，请重试', icon: 'none' })
-    })
-  }
+  onOpenAlbumSettings: function () { if (wx.openSetting) wx.openSetting({}) }
 })
