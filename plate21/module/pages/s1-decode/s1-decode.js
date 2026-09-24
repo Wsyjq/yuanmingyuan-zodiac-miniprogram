@@ -1,3 +1,4 @@
+const statusBarBeh = require('../../utils/status-bar')
 // 第一站 · 西洋楼入口（飞书 v3 rev4379 §西洋楼入口）：
 // 到站导语 → 地图判方位（长春园四选一，答案 d 东北）→ 揭晓叙述。
 // 文案与选项按飞书原文；页面保留 puzzleId「s1-decode」与既有存档/检查点兼容。
@@ -16,7 +17,7 @@ const OPTIONS = [
 ]
 
 Page({
-  behaviors: [coachHost, glossHost],
+  behaviors: [statusBarBeh, coachHost, glossHost],
   data: {
     narrSrc: audioSrc.clip('narr-s1-arrive'),
     options: OPTIONS,

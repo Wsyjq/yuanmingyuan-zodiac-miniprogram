@@ -69,12 +69,12 @@
 
   <!-- 底部次级链接 -->
   <view class="host-foot">
-    <view class="foot-link" catchtap="noop">
+    <view class="foot-link" catchtap="goHandbook">
       <image class="foot-icon" src="/assets/host/ic-notebook-pen-ink.png" mode="aspectFit" />
       <text>考察手册</text>
     </view>
     <view class="foot-dot"></view>
-    <view class="foot-link" catchtap="noop">关于</view>
+    <view class="foot-link foot-muted">关于</view>
   </view>
 
   <!-- 考察者手记批注（页边手写） -->

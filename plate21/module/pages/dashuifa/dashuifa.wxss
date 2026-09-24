@@ -1,7 +1,7 @@
 /* v2 大水法留白站：静默页刻意接近空白 */
 .page-no {
   position: absolute;
-  top: 88rpx; right: 210rpx;
+  top: calc(var(--sbh, 20px) + 8px); right: 210rpx;
   z-index: 2;
 }
 .dsf-page {

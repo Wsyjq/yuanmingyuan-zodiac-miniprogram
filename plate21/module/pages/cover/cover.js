@@ -1,3 +1,4 @@
+const statusBarBeh = require('../../utils/status-bar')
 // P00 封面 / 入口（设计文档 §5-P00）
 // 进入时 init 会话恢复进度；按快照决定「开始考察」或「继续考察 + 重新考察」。
 // 门票守卫（2026-09-18）：深链直达 cover 时自查权益，未解锁 redirect 回 gate 门页。
@@ -20,7 +21,7 @@ function windowSize() {
 }
 
 Page({
-  behaviors: [coachHost],
+  behaviors: [statusBarBeh, coachHost],
   data: {
     hasRecord: false,
     completed: false,
@@ -43,8 +44,6 @@ Page({
         }
         const hasRecord = this.hasProgress(snap)
         const completed = this.isCompleted(snap)
-        const steps = playGuide.coverSteps(hasRecord, completed)
-        const showCoach = playGuide.shouldShow(snap) && !hasRecord
         this.setData({
           hasRecord: hasRecord,
           completed: completed,
@@ -52,12 +51,8 @@ Page({
           loading: false,
           navigating: false
         })
-        if (showCoach) {
-          playGuide.resetTour()
-          const self = this
-          const kick = function () { self.beginCoach(steps, null) }
-          if (wx.nextTick) wx.nextTick(kick)
-          else setTimeout(kick, 0)
+        if (playGuide.shouldShow(snap) && !hasRecord) {
+          session.setFlag(playGuide.FLAG, Date.now()).catch(function () {})
         }
       })
     }).catch(() => {
@@ -67,10 +62,29 @@ Page({
   },
 
   onShow() {
+    this.refreshEntry()
+  },
+
+  onHide() {
     this.setData({ navigating: false })
   },
 
+  refreshEntry() {
+    const snap = session.getSnapshot()
+    this.setData({
+      navigating: false,
+      loading: false,
+      hasRecord: this.hasProgress(snap),
+      completed: this.isCompleted(snap),
+      archiveDate: sessionDate.formatArchiveDate(snap && snap.sessionDate)
+    })
+  },
+
   hasProgress(snap) {
+    try {
+      const run = wx.getStorageSync('plate21-mainline-run')
+      if (run && run.pageId) return true
+    } catch (err) {}
     if (!snap) return false
     if (progressFlow.deriveCheckpoint(snap) !== 'prologue') return true
     if (Object.keys(snap.puzzles || {}).length || Object.keys(snap.cards || {}).length) return true
@@ -102,7 +116,11 @@ Page({
   goPrologue() {
     if (this.data.navigating) return
     this.setData({ navigating: true })
-    wx.navigateTo({ url: PROLOGUE_URL, fail: () => this.setData({ navigating: false }) })
+    const self = this
+    wx.navigateTo({
+      url: PROLOGUE_URL,
+      fail: function () { self.setData({ navigating: false }) }
+    })
   },
 
   onContinue() {
@@ -113,7 +131,14 @@ Page({
       this.setData({ showCoach: false, coachHole: null })
     }
     this.setData({ navigating: true })
-    wx.navigateTo({ url: this.resumeUrl(), fail: () => this.setData({ navigating: false }) })
+    const self = this
+    const url = this.data.completed
+      ? '/plate21/module/pages/report/report'
+      : this.resumeUrl()
+    wx.navigateTo({
+      url: url,
+      fail: function () { self.setData({ navigating: false }) }
+    })
   },
 
   onRestart() {

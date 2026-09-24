@@ -9,5 +9,5 @@
     <view class="note">一次解锁，此账号长期有效。不含景区门票。</view>
     <button class="unlock" hover-class="unlock-hover" disabled="{{busy}}" bindtap="onUnlock">{{label}}</button>
   </view>
-  <button class="back" hover-class="back-hover" disabled="{{busy}}" bindtap="onBack">返回</button>
+  <button class="back" hover-class="back-hover" disabled="{{busy}}" bindtap="onBack">退出</button>
 </view>

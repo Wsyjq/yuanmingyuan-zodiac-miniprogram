@@ -1,5 +1,7 @@
 {
   "usingComponents": {},
   "navigationBarTitleText": "留言簿",
+  "navigationBarBackgroundColor": "#F4EDDC",
+  "navigationBarTextStyle": "black",
   "disableScroll": true
 }

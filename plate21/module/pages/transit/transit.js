@@ -1,3 +1,4 @@
+const statusBarBeh = require('../../utils/status-bar')
 // 站间过渡。v3 主线：入口→谐奇趣→黄花阵→方外观→海晏堂→蓄水楼→大水法→雨果。
 // 旧 leg 名仍可打开，落到新的下一段，避免旧存档卡死。
 // 转场正文取飞书 v3「剧情内容」离站句。散页不再挂主链。
@@ -57,7 +58,7 @@ const LEGS = {
     from: '大水法',
     to: '雨果雕像',
     seg: 6,
-    text: '都没了，一场火过后，这些都没了……',
+    text: '画面里的猎狗、铜鹿和水流终于全部归位。我抬起头，想再和眼前的遗址对照一次。可这一回，我突然不知道该从哪里开始对照了。',
     sides: [],
     next: '/plate21/module/pages/s4-timeline/s4-timeline'
   }
@@ -120,7 +121,7 @@ function mapModel() {
 }
 
 Page({
-  behaviors: [coachHost],
+  behaviors: [statusBarBeh, coachHost],
   data: {
     leg: null,
     sides: [],

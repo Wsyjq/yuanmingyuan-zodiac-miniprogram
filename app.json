@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/index/index",
-    "pages/ticket/ticket"
+    "pages/ticket/ticket",
+    "pages/index/index"
   ],
   "usingComponents": {
     "archive-illustration": "/components/archive-illustration/archive-illustration"
@@ -12,7 +12,6 @@
       "name": "module",
       "pages": [
         "pages/gate/gate",
-        "pages/walk/walk",
         "pages/cover/cover",
         "pages/prologue/prologue",
         "pages/s1-decode/s1-decode",
@@ -34,6 +33,7 @@
         "pages/archive/archive",
         "pages/atlas/atlas",
         "pages/letter/letter",
+        "pages/ending/ending",
         "pages/board/board"
       ]
     },
@@ -96,6 +96,18 @@
       "pages": [
         "pages/hold/hold"
       ]
+    },
+    {
+      "root": "voice-k",
+      "pages": [
+        "pages/hold/hold"
+      ]
+    },
+    {
+      "root": "voice-l",
+      "pages": [
+        "pages/hold/hold"
+      ]
     }
   ],
   "preloadRule": {
@@ -111,6 +123,12 @@
         "voice-a"
       ]
     },
+    "plate21/module/pages/waypoint/waypoint": {
+      "network": "all",
+      "packages": [
+        "voice-f"
+      ]
+    },
     "plate21/module/pages/s2-quiz/s2-quiz": {
       "network": "all",
       "packages": [
@@ -120,19 +138,19 @@
     "plate21/module/pages/s2-reveal/s2-reveal": {
       "network": "all",
       "packages": [
-        "voice-c"
+        "voice-b"
       ]
     },
     "plate21/module/pages/s2-blend/s2-blend": {
       "network": "all",
       "packages": [
-        "voice-h"
+        "voice-b"
       ]
     },
     "plate21/module/pages/s2-pattern/s2-pattern": {
       "network": "all",
       "packages": [
-        "voice-g"
+        "voice-b"
       ]
     },
     "plate21/module/pages/s3-comic/s3-comic": {
@@ -179,9 +197,9 @@
     }
   },
   "window": {
-    "backgroundColor": "#F4EFE3",
+    "backgroundColor": "#F4EDDC",
     "backgroundTextStyle": "dark",
-    "navigationBarBackgroundColor": "#F4EFE3",
+    "navigationBarBackgroundColor": "#F4EDDC",
     "navigationBarTextStyle": "black"
   },
   "requiredPrivateInfos": ["getLocation"],

@@ -2,26 +2,32 @@
 <nav-back />
 <page-overlays />
 <bgm-ambience />
-<view class="page page-shell paper-grain paper-real">
-  <view class="binder"></view>
+<view class="page page-shell task-shell paper-grain" style="--sbh: {{statusBarHeight}}px">
   <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
-  <view class="title serif">黄花阵名字的由来</view>
-  <view class="lead kaiti">可是这又和“黄花”有什么关系呢？</view>
-  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
+  <view class="task-kicker">黄花阵 · 本题</view>
+  <view class="task-lead kaiti">可是这又和“黄花”有什么关系呢？</view>
+  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" autoplay="{{true}}" kind="voice" label="听 · 本页讲述" />
 
-  <view class="answer" wx:if="{{!solved}}" bindtap="onFlip">
-    <view class="flip-card">
-      <view class="kaiti">实体道具 · 黄花阵图</view>
-      <view class="flip-face">正面。点这里翻到背面。</view>
+  <view class="prop-prompt clip-card double-frame" wx:if="{{!solved}}">
+    <view class="prop-label tag-no">线下道具 · 实体黄花阵图</view>
+    <view class="prop-title serif">翻到背面看答案</view>
+    <view class="prop-steps">
+      <view class="prop-step"><text class="step-no">1</text><text class="step-copy">从道具袋取出实体「黄花阵」图卡。</text></view>
+      <view class="prop-step"><text class="step-no">2</text><text class="step-copy">按图卡本身的提示翻到背面。</text></view>
+      <view class="prop-step"><text class="step-no">3</text><text class="step-copy">看清背面答案后，点下方按钮揭晓。</text></view>
     </view>
+    <view class="prop-note note-hand olive">实体道具在手上翻；本页只提示步骤，不画图卡。</view>
   </view>
 
   <view wx:if="{{solved && !showHistory}}" class="followup">
-    <view class="lead">由于宫女们手持黄色彩绸扎成的莲花灯，所以这个迷宫也得名黄花阵。</view>
-    <view class="lead">这迷宫看上去很难走？我也要试试看，也许黄花阵的中央，还有什么我值得考察的东西呢。</view>
-    <button class="btn-seal" bindtap="onNext">进 阵</button>
+    <view class="task-lead">由于宫女们手持黄色彩绸扎成的莲花灯，所以这个迷宫也得名黄花阵。</view>
+    <view class="task-lead">这迷宫看上去很难走？我也要试试看，也许黄花阵的中央，还有什么我值得考察的东西呢。</view>
   </view>
   </scroll-view>
+  <view class="task-dock">
+    <button wx:if="{{!solved}}" class="btn-seal" bindtap="onFlip">我已翻到背面</button>
+    <button wx:elif="{{solved && !showHistory}}" class="btn-seal" bindtap="onNext" disabled="{{advancing}}">{{advancing ? '正在前往……' : '进阵'}}</button>
+  </view>
 
   <history-card
     wx:if="{{showHistory}}"

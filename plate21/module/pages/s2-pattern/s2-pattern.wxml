@@ -2,19 +2,12 @@
 <nav-back />
 <page-overlays />
 <bgm-ambience />
-<view class="page page-shell paper-grain paper-real">
-  <view class="binder"></view>
-
-  <!-- ============ 编号区 ============ -->
-  
-
+<view class="page page-shell task-shell paper-grain" style="--sbh: {{statusBarHeight}}px">
   <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
-  <!-- ============ 标题区 ============ -->
-  <view class="title serif">黄花阵花纹观察</view>
-  <view class="hatch-divider title-div"></view>
-  <view class="lead kaiti">{{lead}}</view>
-  <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">{{actStrip}}</text></view>
-  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
+  <view class="task-kicker">黄花阵 · 本题</view>
+  <view class="task-lead kaiti">{{lead}}</view>
+  <view class="task-lead">{{actStrip}}</view>
+  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" autoplay="{{true}}" kind="voice" label="听 · 本页讲述" />
 
   <!-- ============ 主图区（4 花纹格子）============ -->
   <view class="grid" wx:if="{{!solved && !skipped}}">
@@ -33,39 +26,17 @@
       <view wx:if="{{picked === item.key}}" class="cell-pin">✓</view>
     </view>
   </view>
-
-  <!-- ============ 注释区（考察者手记）============ -->
-
-
-  <view wx:if="{{nudge}}" class="hint kaiti">{{nudge}}</view>
-
-  <!-- ============ 日期区（朱砂日期章 = 真实记录证据）============ -->
-  <view class="date-row">
-    <view class="stamp-date mini">
-      <view>西洋楼</view>
-      <view>{{today}}</view>
-    </view>
-    <view class="note-hand date-note">考察记录 · 第二站</view>
-  </view>
-
-  <!-- ============ 操作区：举纸对照后「我认出了」；可跳 ============ -->
-  <block wx:if="{{!solved && !skipped}}">
-    <button
-      class="btn-seal {{!picked ? 'btn-disabled' : ''}}"
-      bindtap="onConfirm"
-      disabled="{{!picked}}"
-    >提交</button>
-
-  </block>
-
-  <!-- ============ 收尾：飞书 v3 原文（不可跳）============ -->
-  <view wx:if="{{showFinale}}" class="reveal-block">
-    <view class="novel-p">{{finaleReveal}}</view>
-    <view class="novel-p"><gloss-text parts="{{wallParts}}" bind:glossary="onGlossary" /></view>
-    <view class="novel-p">{{finaleClosing}}</view>
-    <button class="btn-seal" bindtap="onGoS3" disabled="{{advancing}}">{{advancing ? '正在保存……' : '前往方外观'}}</button>
+<view wx:if="{{showFinale}}" class="reveal-block">
+    <view class="task-lead">{{finaleReveal}}</view>
+    <view class="task-lead"><gloss-text parts="{{wallParts}}" bind:glossary="onGlossary" /></view>
+    <view class="task-lead">{{finaleClosing}}</view>
   </view>
   </scroll-view>
+  <view class="task-dock">
+    <view wx:if="{{nudge && !solved && !skipped}}" class="hint">{{nudge}}</view>
+    <button wx:if="{{!solved && !skipped}}" class="btn-seal" bindtap="onConfirm" disabled="{{!picked}}">提交</button>
+    <button wx:elif="{{showFinale}}" class="btn-seal" bindtap="onGoS3" disabled="{{advancing}}">{{advancing ? '正在保存……' : '前往方外观'}}</button>
+  </view>
 
   <history-card
     wx:if="{{showHistory}}"

@@ -1,7 +1,9 @@
 <nav-back />
 <view class="page">
   <view class="title">路线地图</view>
-  <map class="map" longitude="{{center.longitude}}" latitude="{{center.latitude}}" scale="15" markers="{{markers}}" polyline="{{polyline}}" enable-rotate="{{false}}"></map>
+  <view class="map-wrap">
+    <map class="map" longitude="{{center.longitude}}" latitude="{{center.latitude}}" scale="15" markers="{{markers}}" polyline="{{polyline}}" enable-rotate="{{false}}"></map>
+  </view>
   <scroll-view scroll-y class="list">
     <view wx:for="{{sites}}" wx:key="id" class="row {{item.opened ? '' : 'locked'}}" data-id="{{item.id}}" bindtap="onOpen">
       <text class="name">{{item.name}}</text>

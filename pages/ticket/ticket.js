@@ -67,11 +67,14 @@ Page({
 
   onLoad(options) {
     this.entry = options || {}
+    if (paid.alreadyPaid(readEnvelope())) {
+      this.onUnlock()
+    }
   },
 
   onShow() {
+    if (this.data.busy) return
     this.setData({
-      busy: false,
       label: paid.alreadyPaid(readEnvelope()) ? '进入考察' : '解锁完整考察'
     })
   },
@@ -102,8 +105,10 @@ Page({
 
   onBack() {
     if (this.data.busy) return
-    wx.navigateBack({
-      fail: function () { wx.reLaunch({ url: '/pages/index/index' }) }
-    })
+    if (typeof wx.exitMiniProgram === 'function') {
+      wx.exitMiniProgram()
+      return
+    }
+    wx.navigateBack({ fail: function () {} })
   }
 })

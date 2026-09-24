@@ -1,0 +1,1600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>第廿一图 · 主线画板（版痕 · 铜版画图录）</title>
+<style>
+:root{
+  --paper:#F2EBDB; --paper-hi:#FAF6EC;
+  --ink:#2B2118; --ink-2:#6B5C48; --ink-3:#9C8E76;
+  --rule:#C8BCA2;
+  --cinnabar:#A63A2E; --patina:#4A6B64;
+  /* 手机可视区：844 − 状态44 − 导航40 − 底栏72 ≈ 688 */
+  --stage-h: 688px;
+}
+*{box-sizing:border-box;margin:0;padding:0;border-radius:0}
+html,body{height:100%}
+body{
+  display:flex;gap:16px;align-items:flex-start;justify-content:center;
+  background:#2B2118;color:var(--ink);
+  font-family:"STFangsong","FangSong","FangSong_GB2312","STSong","SimSun",serif;
+  font-size:14px;line-height:1.85;padding:16px;
+}
+button,input{font:inherit;color:inherit;background:none;border:0}
+button{cursor:pointer}
+.serif,.title,.kicker,.plateno,.seal-btn,.cover-title,.cap,.station-no{
+  font-family:"STSong","Songti SC","SimSun",serif;
+}
+.handnote{
+  font-family:"STKaiti","KaiTi","STXingkai",serif;
+}
+
+/* ---------- 手机壳 ---------- */
+.shell{
+  width:390px;height:844px;flex:0 0 auto;position:relative;overflow:hidden;
+  border-radius:28px;
+  box-shadow:0 18px 48px rgba(0,0,0,.5),0 0 0 10px #1c150c,0 0 0 12px #4a3d2c;
+  background:var(--paper);
+  background-image:linear-gradient(168deg,#F5EFE0 0%,var(--paper) 52%,#EDE4CF 100%);
+}
+.status{
+  position:absolute;top:0;left:0;right:0;height:44px;z-index:20;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 18px;font-size:12px;font-weight:600;color:#1c1c1c;pointer-events:none;
+}
+.nav{
+  position:absolute;top:44px;left:0;right:0;height:40px;z-index:20;
+  display:flex;align-items:center;justify-content:center;
+  font-family:"STSong","Songti SC","SimSun",serif;
+  font-size:14px;letter-spacing:5px;color:var(--ink);
+  border-bottom:1px solid var(--rule);
+  background:rgba(250,246,236,.86);
+}
+.nav .back{
+  position:absolute;left:10px;top:50%;transform:translateY(-50%);
+  width:32px;height:32px;line-height:30px;text-align:center;
+  font-size:22px;color:var(--ink-2);font-family:"STSong","SimSun",serif;
+}
+.nav .plateno{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  font-size:10px;letter-spacing:2px;color:var(--ink-3);
+}
+.stage{
+  position:absolute;top:84px;left:0;right:0;bottom:72px;z-index:10;
+  overflow:auto;padding:14px 18px 16px;
+  -webkit-overflow-scrolling:touch;
+}
+.stage.fit{overflow:hidden}
+.stage::-webkit-scrollbar{width:0}
+.dock{
+  position:absolute;left:0;right:0;bottom:0;height:72px;z-index:20;
+  display:flex;align-items:center;gap:10px;padding:10px 18px;
+  border-top:1px solid var(--rule);
+  background:rgba(250,246,236,.94);
+}
+.dock .seal-btn,.dock .ghost-btn{flex:1}
+
+/* ---------- 图版 .plate：唯一签名容器 ---------- */
+/* 外框 1rpx rule + 内框 2rpx ink（雕版压痕）+ 四角 L 形定位标 */
+.plate{
+  position:relative;background:var(--paper-hi);
+  border:1px solid var(--rule);
+  padding:16px 14px 12px;margin:12px 0;
+  box-shadow:0 2px 8px rgba(43,33,24,.08);
+}
+.plate::before{
+  content:"";position:absolute;inset:4px;border:2px solid var(--ink);pointer-events:none;
+}
+.plate::after{
+  content:"";position:absolute;inset:-6px;pointer-events:none;
+  background:
+    linear-gradient(var(--ink),var(--ink)) left top/9px 1px no-repeat,
+    linear-gradient(var(--ink),var(--ink)) left top/1px 9px no-repeat,
+    linear-gradient(var(--ink),var(--ink)) right top/9px 1px no-repeat,
+    linear-gradient(var(--ink),var(--ink)) right top/1px 9px no-repeat,
+    linear-gradient(var(--ink),var(--ink)) left bottom/9px 1px no-repeat,
+    linear-gradient(var(--ink),var(--ink)) left bottom/1px 9px no-repeat,
+    linear-gradient(var(--ink),var(--ink)) right bottom/9px 1px no-repeat,
+    linear-gradient(var(--ink),var(--ink)) right bottom/1px 9px no-repeat;
+}
+.plate > *{position:relative;z-index:1}
+/* 图注行 */
+.cap{
+  display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  margin-top:10px;padding-top:7px;border-top:1px solid var(--rule);
+  font-size:11px;letter-spacing:1.5px;color:var(--ink-3);
+}
+.cap .no{letter-spacing:2px;color:var(--ink-3)}
+/* 史料卡变体：左侧 patina 竖线 + 术语链接 */
+.sheet-src{border-left:2px solid var(--patina);padding-left:12px}
+.sheet-src .kicker{color:var(--patina)}
+.gt{color:var(--patina);border-bottom:1px dashed var(--patina);cursor:pointer}
+
+/* ---------- .sheet 说明纸：仅顶线 ---------- */
+.sheet{
+  border-top:1px solid var(--rule);
+  padding:12px 0 4px;margin:12px 0;
+}
+
+/* ---------- 按钮（直角） ---------- */
+.seal-btn{
+  background:var(--ink);color:var(--paper-hi);
+  font-family:"STSong","Songti SC","SimSun",serif;
+  font-size:15px;letter-spacing:6px;
+  padding:13px 22px;width:100%;text-align:center;
+  border:1px solid var(--ink);
+}
+.seal-btn:active{opacity:.82;transform:scale(.98)}
+.seal-btn[disabled]{opacity:.34}
+.ghost-btn{
+  background:none;color:var(--ink-2);border:1px solid var(--rule);
+  font-family:"STFangsong","FangSong","STSong",serif;
+  font-size:14px;letter-spacing:3px;
+  padding:11px 20px;width:100%;text-align:center;
+}
+.ghost-btn:active{opacity:.75}
+.ghost-btn[disabled]{opacity:.34}
+
+/* ---------- 落印：全场唯一表演动效 ---------- */
+.seal-mark{
+  position:absolute;right:14px;bottom:38px;z-index:3;
+  width:54px;height:54px;border:2px solid var(--cinnabar);color:var(--cinnabar);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:"STSong","Songti SC","SimSun",serif;
+  font-size:13px;letter-spacing:1px;line-height:1.15;text-align:center;
+  background:rgba(250,246,236,.55);
+  animation:sealDrop .34s cubic-bezier(.2,.85,.3,1) both;
+}
+.seal-mark::after{
+  content:"";position:absolute;inset:-4px;border:1px solid rgba(166,58,46,.28);border-radius:50%;
+}
+@keyframes sealDrop{
+  0%{transform:scale(1.7) rotate(-16deg);opacity:0;filter:blur(1.2px)}
+  60%{opacity:1;filter:blur(0)}
+  100%{transform:scale(1) rotate(-7deg);opacity:1}
+}
+
+/* ---------- 排版 ---------- */
+.kicker{font-size:11px;letter-spacing:4px;color:var(--ink-2);margin-bottom:6px}
+.title{
+  font-family:"STSong","Songti SC","SimSun",serif;
+  font-size:21px;font-weight:700;letter-spacing:3px;line-height:1.35;
+  color:var(--ink);margin-bottom:8px;
+}
+.lead{font-size:14px;line-height:1.95;margin-bottom:10px;color:var(--ink)}
+.para{font-size:14px;line-height:1.95;margin-bottom:10px;color:var(--ink)}
+.quote{
+  border-left:2px solid var(--ink-2);padding:2px 0 2px 14px;margin:12px 0;
+  color:var(--ink-2);letter-spacing:.5px;
+}
+.hl{border-left:2px solid var(--cinnabar);padding:2px 0 2px 14px;color:var(--ink)}
+.rule{border-top:1px solid var(--rule);margin:14px 0}
+.tiny{font-size:11.5px;line-height:1.7;color:var(--ink-3)}
+.src{font-size:11px;color:var(--ink-3);margin-top:8px;letter-spacing:.5px}
+.handnote{
+  border-left:1px solid var(--ink-3);padding:2px 0 2px 12px;
+  margin:14px 0;font-size:13px;line-height:1.7;color:var(--ink-2);
+}
+.plateno{font-size:11px;letter-spacing:2.5px;color:var(--ink-3)}
+.center{text-align:center}
+.mt{margin-top:10px}.mb{margin-bottom:8px}
+
+/* 站头条 */
+.badge-row{
+  display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  padding-bottom:8px;border-bottom:1px solid var(--rule);margin-bottom:12px;
+}
+.station-no{font-size:11px;letter-spacing:2px;color:var(--ink-3)}
+.prog{display:flex;gap:5px;margin:2px 0 12px}
+.prog i{width:16px;height:2px;background:var(--rule);display:block}
+.prog i.on{background:var(--ink)}
+
+/* 步骤 / 选项 / 输入 */
+.steps{margin:8px 0}
+.step{display:flex;gap:10px;align-items:baseline;padding:5px 0;border-bottom:1px solid rgba(200,188,162,.5)}
+.step i{
+  font-family:"STSong","SimSun",serif;font-style:normal;
+  width:16px;height:16px;line-height:15px;text-align:center;
+  border:1px solid var(--ink-2);font-size:10px;color:var(--ink-2);flex:none;
+}
+.opts{margin:10px 0}
+.opt{
+  display:flex;gap:12px;align-items:baseline;
+  padding:11px 12px;margin-bottom:8px;
+  border:1px solid var(--rule);background:var(--paper-hi);
+}
+.opt .k{
+  font-family:"STSong","SimSun",serif;font-size:13px;letter-spacing:1px;
+  color:var(--ink-2);flex:none;
+}
+.opt.on{border-color:var(--cinnabar);box-shadow:inset 3px 0 0 var(--cinnabar)}
+.opt.on .k{color:var(--cinnabar)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.chip{
+  border:1px solid var(--rule);background:var(--paper-hi);
+  padding:10px 10px;font-size:13px;line-height:1.5;
+}
+.chip.on{border-color:var(--cinnabar);box-shadow:inset 3px 0 0 var(--cinnabar)}
+.fill{
+  display:block;width:100%;padding:9px 4px;
+  border-bottom:1px solid var(--ink-2);
+  font-family:"STFangsong","FangSong","STSong",serif;font-size:15px;
+  letter-spacing:1px;outline:none;background:none;
+}
+.fill::placeholder{color:var(--ink-3)}
+.sign-row{display:flex;flex-direction:column;gap:10px;margin:8px 0}
+.sign-row label{
+  font-family:"STSong","SimSun",serif;font-size:11px;letter-spacing:2px;color:var(--ink-3);
+}
+.links{display:flex;gap:10px;margin-top:14px}
+.links span{
+  flex:1;border:1px solid var(--rule);padding:9px 0;text-align:center;
+  font-family:"STSong","SimSun",serif;font-size:12px;letter-spacing:3px;color:var(--ink-2);
+}
+
+/* 图占位 */
+.img-ph{
+  display:flex;align-items:center;justify-content:center;
+  min-height:80px;border:1px dashed var(--rule);
+  color:var(--ink-3);font-family:"STSong","SimSun",serif;
+  font-size:11px;letter-spacing:2px;background:rgba(237,228,207,.4);
+}
+
+/* 地图转点 */
+.mapbox{
+  position:relative;height:220px;border:1px solid var(--rule);
+  background:linear-gradient(160deg,#F3ECDB,#EAE0C8);overflow:hidden;
+}
+.mapbox .route{
+  position:absolute;left:10%;top:78%;width:80%;height:1px;
+  background:var(--ink-2);transform:rotate(-34deg);transform-origin:left center;
+}
+.mapbox .pin{
+  position:absolute;width:7px;height:7px;border:1px solid var(--ink-2);
+  background:var(--paper-hi);transform:translate(-50%,-50%);
+}
+.mapbox .pin.done{background:var(--ink-2)}
+.mapbox .pin.hot{
+  width:11px;height:11px;background:var(--cinnabar);border-color:var(--cinnabar);
+}
+.mapbox .lbl{
+  position:absolute;transform:translate(4px,-50%);
+  font-family:"STSong","SimSun",serif;font-size:10px;letter-spacing:1px;
+  color:var(--ink-2);white-space:nowrap;
+}
+.sitelist{
+  display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:10px;
+  font-family:"STSong","SimSun",serif;font-size:11px;letter-spacing:1px;color:var(--ink-3);
+}
+.sitelist .cur{color:var(--cinnabar)}
+.sitelist .done{color:var(--ink-2)}
+
+/* 归位玩法 */
+.parts{display:flex;gap:8px;margin:10px 0}
+.part{
+  flex:1;border:1px solid var(--ink-2);padding:9px 4px;text-align:center;
+  font-family:"STSong","SimSun",serif;font-size:12px;letter-spacing:1px;color:var(--ink);
+}
+.part.used{opacity:.3;pointer-events:none}
+.slots{display:flex;gap:8px;margin:10px 0}
+.slot{
+  flex:1;min-height:58px;border:1px dashed var(--rule);
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  font-size:11.5px;line-height:1.5;color:var(--ink-3);padding:6px;
+}
+.slot.full{border-style:solid;border-color:var(--ink-2);color:var(--ink)}
+.layers{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.layer{
+  border-bottom:1px solid var(--rule);padding:6px 0;
+  font-family:"STSong","SimSun",serif;font-size:12px;letter-spacing:1.5px;color:var(--ink-2);
+}
+
+/* 封面 */
+.cover-wrap{
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  padding:26px 8px 12px;text-align:center;
+}
+.cover-title{
+  font-size:30px;letter-spacing:12px;color:var(--ink);font-weight:700;line-height:1.3;
+}
+.cover-sub{
+  font-family:"STSong","SimSun",serif;font-size:13px;letter-spacing:6px;color:var(--ink-2);
+}
+.cover-seal{
+  width:78px;height:78px;border:2px solid var(--cinnabar);color:var(--cinnabar);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:"STSong","Songti SC","SimSun",serif;
+  font-size:17px;letter-spacing:2px;line-height:1.2;
+  transform:rotate(-7deg);
+}
+.cred{font-family:"STSong","SimSun",serif;font-size:11px;letter-spacing:2px;color:var(--ink-3)}
+
+/* 转场路线条 */
+.route-note{
+  display:flex;align-items:center;justify-content:space-between;
+  font-family:"STSong","SimSun",serif;font-size:12px;letter-spacing:3px;color:var(--ink-2);
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+  padding:10px 4px;margin:12px 0;
+}
+.route-note .arrow{color:var(--ink-3)}
+
+/* 翻页器 */
+.pager{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:14px;padding-top:10px;border-top:1px solid var(--rule);
+  font-family:"STSong","SimSun",serif;font-size:11px;letter-spacing:2px;color:var(--ink-3);
+}
+.pager .dot{display:flex;gap:4px}
+.pager .dot i{width:12px;height:2px;background:var(--rule);display:block}
+.pager .dot i.on{background:var(--ink)}
+
+/* 字数反馈 */
+[data-feedback]{min-height:18px;margin-top:8px;font-size:11.5px;color:var(--ink-3)}
+
+/* ---------- 侧栏目录 ---------- */
+.side{
+  width:280px;flex:0 0 auto;color:#E8E0D0;font-size:12.5px;line-height:1.6;
+  padding:8px 4px;max-height:920px;overflow:auto;
+}
+.side h3{
+  font-family:"STSong","SimSun",serif;font-size:15px;letter-spacing:3px;
+  margin-bottom:10px;color:#EFE7D6;
+}
+.side ol{list-style:none}
+.side li button{
+  display:block;width:100%;text-align:left;padding:6px 8px;border-radius:4px;
+  font-family:"STFangsong","FangSong","STSong",serif;
+  color:#CFC4AC;font-size:12.5px;
+}
+.side li button:hover{background:rgba(255,255,255,.06)}
+.side li button.on{background:rgba(166,58,46,.28);color:#F3ECDB}
+.side .type{
+  display:inline-block;width:22px;color:#9C8E76;
+  font-family:"STSong","SimSun",serif;font-size:10px;letter-spacing:1px;
+}
+.side .hint{margin-top:14px;padding-top:12px;border-top:1px solid rgba(200,188,162,.25);font-size:11.5px}
+.side .hint .ok{color:#A8B89A;margin-bottom:4px}
+.side .hint .no{color:#C08A7E;margin-bottom:4px}
+[hidden]{display:none !important}
+</style>
+</head>
+<body>
+
+<div class="shell" id="shell">
+  <div class="status"><span>9:41</span><span>●●●● 5G ▮</span></div>
+  <div class="nav" id="nav">
+    <button class="back" id="backBtn" title="返回">‹</button>
+    <span id="navTitle">第廿一图</span>
+    <span class="plateno" id="navTag">第貳拾壹號</span>
+  </div>
+  <div class="stage" id="stage"></div>
+  <div class="dock" id="dock"></div>
+</div>
+
+<aside class="side">
+  <h3>第廿一图 · 图录分页</h3>
+  <ol id="toc"></ol>
+  <div class="hint">
+    <div class="ok">✓ 版痕图录：.plate 图版框（雕版压痕+四角标）· .sheet 说明纸 · seal-btn / ghost-btn 直角</div>
+    <div class="ok">✓ 三声部：宋（题名/按钮）· 仿宋（正文）· 楷（手记 ≤1/页）· 全局 border-radius:0</div>
+    <div class="no">✗ 禁：胶带 回形针 邮戳 干花 装订孔 撕纸 圆形章 吊牌 排线 每屏装饰 >1</div>
+    <div class="no">✗ 禁：旧档案类名 · 噪点 · multiply · 做旧滤镜 ·「一场火过后」</div>
+    <div style="margin-top:6px">三类页型：谜题（导语+题同屏）· 正文（流式）· 地图转点（单页，图为主角）</div>
+    <div style="margin-top:6px">分页：390×844 可视高 ~688px 自动装页；整块不拆段。</div>
+    <div style="margin-top:6px;color:#c4b89a">源：定稿/第廿一图v3-docx.txt · 链路：app.json · 实体道具只提示不展示</div>
+  </div>
+</aside>
+
+<script>
+const PHONE = { w: 390, stageH: 688, pageBudget: 600, firstBudget: 560, mergeInt: 640, pzFirst: 620, pzPage: 640 };
+
+function estLines(text, charsPerLine){
+  const n = Array.from(String(text||'')).length;
+  return Math.max(1, Math.ceil(n / charsPerLine));
+}
+function estBlockH(b){
+  switch(b.t){
+    case 'kicker': return 22;
+    case 'title': return 34;
+    case 'rule': case 'hatch': return 15;
+    case 'lead': return estLines(b.text, 21) * 27 + 12;
+    case 'para': return estLines(b.text, 21) * 27 + 12;
+    case 'quote': return estLines(b.text, 18) * 27 + 30;
+    case 'hl': return estLines(b.text, 20) * 27 + 26;
+    case 'tiny': return estLines(b.text, 24) * 19 + 8;
+    case 'src': return 20;
+    case 'note': return 34;
+    case 'steps': return (b.items||[]).length * 28 + 14;
+    case 'opts4': return (b.options||[]).length * 52 + 22;
+    case 'opts2': return (b.options||[]).length * 50 + 18;
+    case 'chips': return 132;
+    case 'grid4': return 132;
+    case 'map': return 120;
+    case 'img': return (b.h||80) + 42;
+    case 'photo': return (b.h||90) + 58;
+    case 'slots': return 118;
+    case 'layers': return (b.items||[]).length * 30 + 22;
+    case 'sign': return 190;
+    case 'links': return 44;
+    case 'stamp': return 30;
+    case 'cover': return 300;
+    case 'interactive': return b.h || 200;
+    case 'spacer': return b.h || 8;
+    case 'navMap': return 320;
+    case 'openLetter': return 150;
+    case 'letterBtns': return 170;
+    case 'badge': return 30;
+    case 'prog': return 16;
+    default: return 40;
+  }
+}
+
+/* ---------- 块 → HTML ---------- */
+function plateWrap(inner, capLeft, capRight){
+  return `<div class="plate">${inner}<div class="cap"><span>${capLeft||''}</span><span class="no">${capRight||''}</span></div></div>`;
+}
+
+function blockHTML(b){
+  const esc = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  switch(b.t){
+    case 'kicker': return `<div class="kicker">${esc(b.text)}</div>`;
+    case 'title': return `<div class="title">${esc(b.text)}</div>`;
+    case 'rule': case 'hatch': return `<div class="rule"></div>`;
+    case 'lead': return `<p class="lead">${esc(b.text)}</p>`;
+    case 'para': return `<p class="para">${esc(b.text)}</p>`;
+    case 'quote': return `<p class="quote">${esc(b.text).replace(/\n/g,'<br>')}</p>`;
+    case 'hl': return `<p class="para hl">${esc(b.text)}</p>`;
+    case 'tiny': return `<div class="tiny">${esc(b.text)}</div>`;
+    case 'src': return `<div class="src">${esc(b.text)}</div>`;
+    case 'note': return `<div class="handnote">${esc(b.text)}</div>`;
+    case 'steps':
+      return `<div class="steps">${(b.items||[]).map((x,i)=>`<div class="step"><i>${i+1}</i>${esc(x)}</div>`).join('')}</div>`;
+    case 'stepsCheck':
+      return `<div class="steps">${(b.items||[]).map(x=>`<div class="step"><i>✓</i>${esc(x)}</div>`).join('')}</div>`;
+    case 'card': {
+      const kids = (b.blocks||[]);
+      const hasImg = kids.some(x => x.t==='img' || x.t==='photo' || x.t==='perfo' || x.t==='map');
+      const inner = kids.map(blockHTML).join('');
+      const head = kids[0] && kids[0].t === 'kicker' ? kids[0].text : '';
+      const isSrc = /史料/.test(head||'');
+      if (hasImg) return plateWrap(inner, head || '图版', '图版');
+      return `<div class="sheet${isSrc?' sheet-src':''}">${inner}</div>`;
+    }
+    case 'double':
+      return plateWrap((b.blocks||[]).map(blockHTML).join(''), '图版', '对照位');
+    case 'opts4': case 'opts2':
+      return `<div class="opts" data-quiz="${b.quiz||''}">${(b.options||[]).map(o=>
+        `<div class="opt" data-k="${o.k}"><span class="k">${o.k}</span>${esc(o.text)}</div>`).join('')}</div>
+        <div data-feedback></div>`;
+    case 'chips':
+      return `<div class="grid2" data-quiz="${b.quiz||''}">${(b.options||[]).map(o=>
+        `<div class="chip" data-k="${o.k}">${esc(o.text)}<br><span class="tiny">${esc(o.sub||'')}</span></div>`).join('')}</div>
+        <div data-feedback></div>`;
+    case 'grid4':
+      return `<div class="grid2" data-capture>${(b.options||[]).map(o=>
+        `<div class="chip" data-p="${o.k}">${esc(o.text)}<br><span class="tiny">${esc(o.sub||'')}</span></div>`).join('')}</div>
+        <div data-feedback></div>`;
+    case 'map':
+      return `<div class="mapbox">
+        <div class="route"></div>
+        <div class="pin hot" style="left:62%;top:28%"></div><div class="lbl" style="left:62%;top:28%">西洋楼</div>
+        <div class="pin" style="left:40%;top:55%"></div><div class="lbl" style="left:40%;top:55%">圆明园</div>
+        <div class="pin" style="left:78%;top:48%"></div><div class="lbl" style="left:78%;top:48%">长春园</div>
+        <div class="pin" style="left:55%;top:78%"></div><div class="lbl" style="left:55%;top:78%">绮春园</div>
+      </div>`;
+    case 'navMap': {
+      const names = ['入口','谐奇趣','黄花阵','方外观','海晏堂','蓄水楼','大水法','雨果'];
+      const cur = b.cur || 1;
+      const pins = names.map((n,i)=>{
+        const x = 8 + i*11.5, y = 84 - i*9.6;
+        const cls = (i+1===cur) ? 'pin hot' : (i+1<cur ? 'pin done' : 'pin');
+        return `<div class="${cls}" style="left:${x}%;top:${y}%"></div><div class="lbl" style="left:${x}%;top:${y}%">${n}</div>`;
+      }).join('');
+      const list = names.map((n,i)=>{
+        const cls = (i+1===cur) ? 'cur' : (i+1<cur ? 'done' : '');
+        return `<span class="${cls}">${i+1<=cur?'●':'○'} ${n}</span>`;
+      }).join('');
+      return plateWrap(
+        `<div class="mapbox"><div class="route"></div>${pins}</div><div class="sitelist">${list}</div>`,
+        esc(b.note || '纸上路线'),
+        '图 · 线路'
+      );
+    }
+    case 'img':
+      return plateWrap(`<div class="img-ph" style="min-height:${b.h||80}px">${esc(b.text||'图占位')}</div>`, '图版', '占位');
+    case 'photo':
+      return plateWrap(
+        `<div class="img-ph" style="min-height:${b.h||90}px">${esc(b.text||'图占位')}</div>${b.note?`<div class="handnote">${esc(b.note)}</div>`:''}`,
+        '图版', '图注'
+      );
+    case 'perfo':
+      return plateWrap(`<div class="img-ph" style="min-height:${b.h||140}px">${esc(b.text||'铜版画')}</div>`, '图版 · 铜版画', '图版');
+    case 'slots':
+      return `<div class="parts" data-parts>
+        <button class="part" data-p="1">梅花鹿</button>
+        <button class="part" data-p="2">十只猎狗</button>
+        <button class="part" data-p="3">卷尾铜兽</button>
+      </div>
+      <div class="slots" data-slots>
+        <div class="slot" data-s="1">喷水池中央<br>（空）</div>
+        <div class="slot" data-s="2">环绕梅花鹿<br>（空）</div>
+        <div class="slot" data-s="3">水池东西两端<br>（空）</div>
+      </div>
+      <div class="tiny">先点构件，再点位置（或直接点空位）。提示：鹿在水池中间。</div>
+      <div data-feedback></div>`;
+    case 'layers':
+      return `<div class="layers">${(b.items||[]).map(x=>`<div class="layer">${esc(x)}</div>`).join('')}</div>
+        <div class="center title" style="font-size:16px;margin-top:6px">${esc(b.caption||'')}</div>`;
+    case 'sign':
+      return `<div class="sign-row">
+        <label>绘制者</label><input class="fill" placeholder="写下你的名字" id="signName">
+        <label>绘制日期</label><input class="fill" placeholder="2026-09-24" readonly>
+        <label>版本编号</label><input class="fill" placeholder="第 N 版" readonly>
+      </div>
+      <div class="plateno center mt">今日对读 · 丙午</div>`;
+    case 'links':
+      return `<div class="links"><span>考察手册</span><span>玩法说明</span></div>`;
+    case 'stamp':
+      return `<div class="plateno center">${esc(b.text||'丙午 · 2026')}</div>`;
+    case 'cover':
+      return `<div class="cover-wrap">
+        <div class="plateno">图录 · 第貳拾壹號</div>
+        <div class="cover-seal">第二十<br>一图</div>
+        <div class="cover-title">西洋楼铜版图</div>
+        <div class="cover-sub">实景解谜 · 图版廿一</div>
+        <div class="cred">建档日期 · 2026-09-24</div>
+        ${plateWrap(`<div class="img-ph" style="min-height:140px">铜版画主视觉 · 占位</div>`, '图版 · 主视觉', '图版')}
+        <div class="handnote">二十幅之外，闻有第廿一图——未见。</div>
+        ${blockHTML({t:'links'})}
+      </div>`;
+    case 'transitFig':
+      return `<div class="route-note"><span>${esc(b.text)}</span><span class="arrow">→</span></div>`;
+    case 'prog':
+      return `<div class="prog">${[0,1,2,3,4,5,6,7].map(i=>`<i class="${i<=b.step?'on':''}"></i>`).join('')}</div>`;
+    case 'badge':
+      return `<div class="badge-row"><div class="kicker">${esc(b.left)}</div><div class="station-no">${esc(b.right)}</div></div>`;
+    case 'fill':
+      return `<div class="tiny mb">${esc(b.label||'')}</div>
+        <input class="fill" data-fill="${b.key||''}" placeholder="${esc(b.ph||'')}" autocomplete="off">`;
+    case 'fillPair':
+      return `<div class="tiny mb">${esc(b.l1)}</div>
+        <input class="fill" data-fill="${b.k1}" placeholder="${esc(b.p1)}" autocomplete="off">
+        <div class="tiny mb mt">${esc(b.l2)}</div>
+        <input class="fill" data-fill="${b.k2}" placeholder="${esc(b.p2)}" autocomplete="off">
+        <div data-feedback></div>`;
+    case 'textAnswer':
+      return `<input class="fill mt" data-answer="${b.key}" placeholder="${esc(b.ph||'写下站名')}" autocomplete="off">
+        <div data-feedback></div>`;
+    case 'btn':
+      return `<button class="ghost-btn" ${b.attr||''}>${esc(b.text)}</button>`;
+    case 'interactive':
+      return `<div data-interact="${b.kind}"></div>`;
+    case 'openLetter':
+      return `<div class="plate center" data-open>
+        <div class="kicker">点击打开最后一封信</div>
+        <button class="seal-btn mt" data-reveal-letter style="margin-top:10px">打 开 这 封 信</button>
+      </div>
+      <div data-letter-body hidden>
+        ${plateWrap(`<div class="img-ph" style="min-height:80px">老师 · 肖像 · 占位</div>`, '图版 · 老师', '图版')}
+      </div>`;
+    case 'letterBtns':
+      return `<div class="opts">
+        <button class="ghost-btn">留下文字</button>
+        <button class="ghost-btn">留下照片</button>
+        <button class="ghost-btn">留下心愿</button>
+      </div>`;
+    case 'revealZone':
+      return `<div data-reveal-slot></div>`;
+    default:
+      return b.html || '';
+  }
+}
+
+/* ---------- 装页：整块不拆；三类页型各有规则 ---------- */
+function packPages(blocks, opts){
+  const budget = (opts && opts.budget) || PHONE.pageBudget;
+  let first = (opts && opts.firstBudget) || PHONE.firstBudget;
+  if (opts && opts.mergeInteractive){ first = Math.max(first, PHONE.pzFirst); }
+  const mergeInt = !!(opts && opts.mergeInteractive); // 谜题页：导语+题可同屏
+  const pages = [];
+  let page = [];
+  let used = 0;
+  let cap = first;
+  function flush(){ if (page.length){ pages.push(page); page = []; used = 0; cap = budget; } }
+  for (const b of blocks){
+    if (b.t === 'forceBreak'){ flush(); continue; }
+    const h = estBlockH(b);
+    if (b.t === 'interactive'){
+      // 谜题页：导语块与题合计仍装得下就合页；否则题独占
+      if (mergeInt && page.length && used + h <= PHONE.mergeInt){
+        page.push(b); used += h; continue;
+      }
+      flush();
+      page.push(b);
+      flush();
+      continue;
+    }
+    if (page.length && used + h > cap) flush();
+    page.push(b); used += h;
+  }
+  flush();
+  return pages.length ? pages : [[]];
+}
+
+
+function injectInteractive(blocks, kind){
+  const map = {
+    s1map: `
+      ${blockHTML({t:'card',blocks:[
+        {t:'kicker',text:'地图 · 四选一'},
+        {t:'para',text:'我打开了地图，从上面可以看出来西洋楼的地理位置。西洋楼在圆明三园中的长春园（　）部'},
+        {t:'map'},
+        {t:'opts4',quiz:'s1',options:[
+          {k:'A',text:'西北'},{k:'B',text:'东南'},{k:'C',text:'西南'},{k:'D',text:'东北'}
+        ]}
+      ]})}
+      ${blockHTML({t:'revealZone'})}`,
+    s2purpose: `
+      ${blockHTML({t:'card',blocks:[
+        {t:'kicker',text:'四选一'},
+        {t:'para',text:'我不禁好奇，这迷宫的修建目的是'},
+        {t:'opts4',quiz:'s2p',options:[
+          {k:'A',text:'作为军事防御工事，用于迷惑和阻挡入侵的敌人。'},
+          {k:'B',text:'作为皇家藏书楼，利用复杂路径保护珍贵书籍。'},
+          {k:'C',text:'作为中秋节的皇家娱乐场所，举办“迷宫灯会”游戏。'},
+          {k:'D',text:'作为皇子们的秘密议事厅，以防外人窃听。'}
+        ]}
+      ]})}
+      ${blockHTML({t:'revealZone'})}`,
+    s2name: `
+      ${blockHTML({t:'card',blocks:[
+        {t:'kicker',text:'线下道具 · 实体黄花阵图'},
+        {t:'steps',items:['从道具袋取出实体「黄花阵」图卡。','按图卡本身的提示翻到背面。','看清背面答案后，点下方按钮揭晓。']},
+        {t:'tiny',text:'本页只提示操作；图卡拿在手里翻，不在屏幕里画。'}
+      ]})}
+      ${blockHTML({t:'revealZone'})}`,
+    s2blend: `
+      ${blockHTML({t:'para',text:'你能找到这座亭子建筑风格中西结合的具体体现吗，找到后请拍照记录你的考察结果'})}
+      ${blockHTML({t:'grid4',options:[
+        {k:'1',text:'穹顶与飞檐',sub:'西式穹顶，压着中式八角飞檐。'},
+        {k:'2',text:'檐角立兽',sub:'八个檐角上的小型立兽。'},
+        {k:'3',text:'莲座宝瓶',sub:'莲座托着西洋宝瓶花苞。'},
+        {k:'4',text:'双天鹅与蝙蝠',sub:'弧形基座上的双天鹅，胸腹藏着蝙蝠纹。'}
+      ]})}
+      ${blockHTML({t:'revealZone'})}`,
+    s2pattern: `
+      ${blockHTML({t:'para',text:'这一路墙上反复出现的，是下面哪一种？'})}
+      ${blockHTML({t:'chips',quiz:'s2w',options:[
+        {k:'A',text:'万字纹',sub:'卐字不到头，万寿无疆'},
+        {k:'B',text:'贝壳饰',sub:'扇形放射，卷叶环绕'},
+        {k:'C',text:'卷草饰',sub:'卷曲枝条彼此对称'},
+        {k:'D',text:'花篮饰',sub:'花束盛于西式饰篮'}
+      ]})}
+      ${blockHTML({t:'revealZone'})}`,
+    s3hour: `
+      ${blockHTML({t:'card',blocks:[
+        {t:'kicker',text:'观看 · 喷水示意'},
+        {t:'stepsCheck',items:['鼠首先报子时','水线转向牛首','日影逼近正中','十二水位同时亮起']},
+        {t:'para',text:'14 时（未时）由哪个生肖喷水？正午有哪些兽首喷水？'},
+        {t:'fillPair',l1:'14 时生肖',k1:'s3a',p1:'写生肖，如羊',l2:'正午',k2:'s3b',p2:'马，或全部 / 十二'},
+        {t:'tiny',text:'一天十二个时辰，每个时辰两个小时。14 时落在未时；正午，是午时。'}
+      ]})}
+      ${blockHTML({t:'revealZone'})}`,
+    s3zodiac: `
+      ${blockHTML({t:'card',blocks:[
+        {t:'kicker',text:'步骤'},
+        {t:'steps',items:['取出实体七纹样转盘，保持中心连接件平放。','按照转盘自身的图示说明对齐并转动纹样。','依次记录出现的七个生肖，再把结果填入下方。']},
+        {t:'tiny',text:'实体道具在手上操作；本页只回填结果，不画转盘。'},
+        {t:'fill',label:'转盘显示的七个生肖',key:'zodiac',ph:'输入七个生肖，用顿号分隔'},
+        {t:'tiny',text:'没有转盘，往下走 →'}
+      ]})}
+      ${blockHTML({t:'revealZone'})}`,
+    s3water: `
+      ${blockHTML({t:'card',blocks:[
+        {t:'kicker',text:'步骤 · 水显纸'},
+        {t:'steps',items:['将水显纸平放在干燥、平整的表面。','用微湿的工具缓慢涂过纸面，让隐藏内容逐渐显现。','看清兽首名称后，把结果填入下方。']},
+        {t:'tiny',text:'实体道具在手上操作；本页只回填结果。只需湿润纸面，不要浸泡；远离手机和其他纸质资料。'},
+        {t:'fill',label:'水显纸上的答案',key:'water',ph:'请输入兽首名称'},
+        {t:'tiny',text:'纸先不湿了，往下走 →'}
+      ]})}
+      ${blockHTML({t:'revealZone'})}`,
+    xsh: `
+      ${blockHTML({t:'card',blocks:[
+        {t:'kicker',text:'二选一 · 翻特刊'},
+        {t:'para',text:'蓄水楼为了方便供水，通常会建得比较'},
+        {t:'opts2',quiz:'xsh',options:[{k:'A',text:'高'},{k:'B',text:'低'}]},
+        {t:'tiny',text:'提示阶梯：没有电泵。 / 要高过喷口。'}
+      ]})}
+      ${blockHTML({t:'revealZone'})}`,
+    dsHunt: `
+      ${blockHTML({t:'card',blocks:[
+        {t:'kicker',text:'玩法 · 构件归位'},
+        {t:'para',text:'请将《西洋楼铜版图·大水法南面》的铜版画和眼前遗址进行对照。先点一个构件，再点它原来的位置。'},
+        {t:'slots'}
+      ]})}
+      ${blockHTML({t:'revealZone'})}`,
+    xqAudio: `
+      ${blockHTML({t:'card',blocks:[
+        {t:'kicker',text:'音画 · NFC'},
+        {t:'para',text:'喷泉声、少数民族音乐和西洋音乐。'},
+        {t:'hatch'},
+        {t:'btn',text:'播 放 音 画',attr:'data-audio'},
+        {t:'tiny',text:'听完后进入站尾拼站名'}
+      ]})}
+      ${blockHTML({t:'revealZone'})}`,
+    xqText: `
+      ${blockHTML({t:'card',blocks:[
+        {t:'kicker',text:'站尾 · 拼站名'},
+        {t:'para',text:'如此悠扬动耳的音乐，真不愧“谐奇趣”三字之名。'},
+        {t:'para',text:'下一站要到哪里去呢？我一时没有了头绪。'},
+        {t:'steps',items:['翻开日记，看它把你往哪一站引。','再拿信封：封口处一半字，背面一半字。','两半拼起来，把站名写在下面。']},
+        {t:'tiny',text:'提示：信封的封口处和信的背面都有一半的字，拼接起来看一下！'},
+        {t:'textAnswer',key:'xq',ph:'写下站名（黄花阵）'}
+      ]})}
+      ${blockHTML({t:'revealZone'})}`
+  };
+  return map[kind] || '';
+}
+
+/* ---------- 屏幕定义：blocks + pages 预装 / 动态 ---------- */
+
+const SCREENS = [
+  {
+    id:'cover', ptype:'cover', title:'封面', tag:'P00',
+    blocks:[{t:'cover'}],
+    dock:{ type:'go', id:'prologue', label:'开 始 考 察' }
+  },
+  {
+    id:'prologue', ptype:'narrative', title:'序章 · 档案', tag:'P01', pager:true,
+    /* 每段一个块，由 packPages 按手机高重切（不再用固定 pack 1–5） */
+    blocks:[
+      {t:'kicker',text:'序章'},
+      {t:'title',text:'档案室'},
+      {t:'hatch'},
+      {t:'para',text:'从历史系毕业以后，我在博物馆做了两年研究助理。大多数时候，都是在图书馆整理馆藏档案、核对图录还有补录那些没人愿意细看的编号和出处。前几天，我整理到一批圆明园档案，顺手翻开了《西洋楼铜版图》的著录条目。'},
+      {t:'para',text:'《西洋楼铜板图》绘制于乾隆四十六年至五十一年（1781–1786），全套共二十幅，记录了当时西洋楼主要建筑与水法景观的面貌。'},
+      {t:'card',tilt:'l',tape:1,blocks:[
+        {t:'kicker',text:'史料 · 铜版图'},
+        {t:'para',text:'乾隆年间宫廷铜版画，共二十幅。伊兰泰起稿，造办处刻成。'},
+        {t:'src',text:'〔来源〕故宫 · 造办处活计档'}
+      ]},
+      {t:'kicker',text:'序章'},
+      {t:'title',text:'小纸片'},
+      {t:'hatch'},
+      {t:'para',text:'但吸引我的是，档案里还夹着一张小纸片，上面写了一行小字：'},
+      {t:'quote',text:'闻有第二十一图，未见。'},
+      {t:'para',text:'字迹潦草，像是随手记下的传闻。之前做助理时偶尔我也曾想过，是否会有更多的画作目前没有被记录下来呢。这引起了我的兴趣。'},
+      {t:'photo',text:'DJ-01 小纸片 · 占位',h:80,note:'随手记下的传闻……',tilt:'r'},
+      {t:'kicker',text:'序章'},
+      {t:'title',text:'问老师'},
+      {t:'hatch'},
+      {t:'para',text:'我拿着那张卡片去问老师，想确认他以前有没有听说过《西洋楼铜版图》还存在“第二十一幅”。他接过卡片，看了好一会儿，又翻到背面确认了一遍，神情明显有些疑惑。老师说，十几年前这批圆明园档案就是他亲手整理的，可他完全不记得见过这张卡片。我试着猜，会不会只是当年夹在别的材料里，被漏了过去。老师没有马上回答，只是又看了一遍那行字。见他也说不出原因，我只能先把这件事记在心里，重新把视线落回档案上。'},
+      {t:'kicker',text:'序章'},
+      {t:'title',text:'未完成的档案袋'},
+      {t:'hatch'},
+      {t:'para',text:'我继续翻阅那份残缺的档案，突然在附件夹中发现了一份尚未整理完成的考察资料。牛皮纸档案袋已经发黄，右上角贴着一张很普通的白色标签：'},
+      {t:'quote',text:'西洋楼现场考察资料\n未完成'},
+      {t:'para',text:'里面有一封信、一张手绘路线图、几张空白记录页，以及几件用于现场记录的工具。'},
+      {t:'para',text:'这下就更奇怪了。一两张纸片可以是遗漏，可这样完整的一套考察资料，为什么一直没有被发现？'},
+      {t:'kicker',text:'序章'},
+      {t:'title',text:'旧日记'},
+      {t:'hatch'},
+      {t:'para',text:'我拆开档案袋，里面还有一本旧日记，其中写着：'},
+      {t:'quote',text:'“寻廿一图。旧闻有迹，余尝往寻；所得未尽，留俟后人。——丙午年于西洋楼”'},
+      {t:'card',blocks:[
+        {t:'kicker',text:'袋内清点'},
+        {t:'steps',items:['一封信','一张手绘路线图','几张空白记录页','几件用于现场记录的工具','一本旧日记']}
+      ]},
+      {t:'kicker',text:'序章'},
+      {t:'title',text:'丙午年？？'},
+      {t:'hatch'},
+      {t:'para',text:'丙午年？？'},
+      {t:'para',text:'西洋楼的始建时间是 1747 年，而今年恰恰又是丙午年，那么，在西洋楼建成之后的丙午年有：'},
+      {t:'opts2',quiz:'bingwu',options:[
+        {k:'A',text:'1786'},{k:'B',text:'1846'},{k:'C',text:'1906'},{k:'D',text:'1966'},{k:'E',text:'2026'}
+      ]},
+      {t:'para',text:'这之后的丙午年有 1786、1846、1906、1966 和 2026 这 5 个年份。'},
+      {t:'hl',text:'没有署名，没有具体日期，这份档案愈发引起了我的兴趣。他到底又发现了什么东西呢？我决定带着这份档案前往现场，为这个传言寻找一个答案。'}
+    ],
+    dock:{ type:'pager', lastGo:'s1', lastLabel:'前往西洋楼入口' }
+  },
+  {
+    id:'s1', ptype:'puzzle', title:'西洋楼入口', tag:'S1',
+    blocks:[
+      {t:'badge',left:'西洋楼入口 · 本题',right:'站 1 / 8'},
+      {t:'prog',step:0},
+      {t:'title',text:'西洋楼入口'},
+      {t:'lead',text:'来到了西洋楼入口，我从背包里面取出档案袋，还有那份地图，决定按照上面手绘的路线图走。'},
+      {t:'hatch'},
+      {t:'interactive',kind:'s1map',h:360}
+    ],
+    reveals:[
+      {t:'card',blocks:[
+        {t:'kicker',text:'揭晓'},
+        {t:'para',text:'西洋楼沿着长春园的北界东西展开。虽然叫“楼”，但它不是一栋楼，而是一组楼殿、喷泉和庭园的总称。谐奇趣、方外观、大水法……今天我将一一踏足，去找寻第二十一幅图的线索。'},
+        {t:'para',text:'档案袋里还有几张西洋楼的铜版画，或许我在现场中能对应起来这几幅铜版画对应的建筑名字，以及现在长什么样。'}
+      ]}
+    ],
+    dock:{ type:'submit', kind:'s1', nextId:'transit1', nextLabel:'前往谐奇趣' }
+  },
+  {
+    id:'transit1', ptype:'map', title:'入口→谐奇趣', tag:'T1',
+    blocks:[
+      {t:'kicker',text:'站间 · 转场'},
+      {t:'title',text:'西洋楼入口 → 谐奇趣'},
+      {t:'navMap',cur:2,note:'纸上路线 · 由西向东'},
+      {t:'quote',text:'按照路线图走进入口，就来到了谐奇趣。'},
+      {t:'torn'},
+      {t:'card',tilt:'l',blocks:[{t:'kicker',text:'顺路散页'},{t:'note',text:'暂无夹页 · 主链直连'}]}
+    ],
+    dock:{ type:'go', id:'xq', label:'继 续' }
+  },
+  {
+    id:'xq', ptype:'puzzle', title:'谐奇趣', tag:'S·A',
+    /* 分段 forceBreak 保手机一屏；interactive 独占页 */
+    blocks:[
+      {t:'badge',left:'谐奇趣 · 音画',right:'站 2 / 8'},
+      {t:'prog',step:1},
+      {t:'title',text:'谐奇趣'},
+      {t:'lead',text:'按照路线图走进入口，就来到了谐奇趣。我记得这是西洋楼景区建成的第一座欧式建筑，也是中国皇家园林史上首座西洋建筑。主楼前后都曾设有水法，这里还曾用于演奏中西音乐。怪不得叫“谐奇趣”，要是能听听当时的音乐就好了。'},
+      {t:'photo',text:'谐奇趣南面 · 铜版画对照位',h:64,note:'首座西洋建筑（docx 有）',tilt:'r'},
+      {t:'interactive',kind:'xqAudio',h:180},
+      {t:'interactive',kind:'xqText',h:260}
+    ],
+    reveals:[
+      {t:'card',blocks:[
+        {t:'kicker',text:'揭晓'},
+        {t:'para',text:'原来线索在这里上！下一站的去处很明确了：黄花阵。'}
+      ]}
+    ],
+    dock:{ type:'staged', stages:[
+      {id:'audio', label:'听 完 了'},
+      {id:'xq', label:'提 交'},
+      {id:'go:transit2', label:'继续前往黄花阵'}
+    ]}
+  },
+  {
+    id:'transit2', ptype:'map', title:'谐奇趣→黄花阵', tag:'T2',
+    blocks:[
+      {t:'kicker',text:'站间 · 转场'},
+      {t:'title',text:'谐奇趣 → 黄花阵'},
+      {t:'navMap',cur:3,note:'北折 · 入阵'},
+      {t:'quote',text:'原来线索在这里上！下一站的去处很明确了：黄花阵。'}
+    ],
+    dock:{ type:'go', id:'s2purpose', label:'继 续' }
+  },
+  {
+    id:'s2purpose', ptype:'puzzle', title:'黄花阵 · 目的', tag:'S2a',
+    blocks:[
+      {t:'badge',left:'黄花阵 · 本题',right:'站 3 / 8'},
+      {t:'prog',step:2},
+      {t:'title',text:'黄花阵'},
+      {t:'lead',text:'到了黄花阵的入口处，眼前景观让我有些震惊——一个皇家宫苑中竟有一座迷宫！可是皇家宫苑中为什么会有一座迷宫呢？'},
+      {t:'interactive',kind:'s2purpose',h:340}
+    ],
+    reveals:[
+      {t:'card',blocks:[
+        {t:'kicker',text:'史料 · 中秋灯会'},
+        {t:'para',text:'每逢中秋之夜，皇帝会坐在阵中心的凉亭里，观赏宫女们在迷宫路径中奔跑嬉戏。最先到达中心的人会得到皇帝的赏赐。'}
+      ]},
+      {t:'card',blocks:[
+        {t:'kicker',text:'引导'},
+        {t:'para',text:'原来，这个黄花阵是皇帝用来观赏宫女在迷宫路径中奔跑嬉戏的。好嘛，这下不出门就有游乐场了！可是这又和“黄花”有什么关系呢？'}
+      ]}
+    ],
+    dock:{ type:'submit', kind:'s2p', nextId:'s2name', nextLabel:'继 续' }
+  },
+  {
+    id:'s2name', ptype:'puzzle', title:'黄花阵 · 翻面', tag:'S2b',
+    blocks:[
+      {t:'kicker',text:'黄花阵 · 道具翻面'},
+      {t:'title',text:'名字的由来'},
+      {t:'lead',text:'可是这又和“黄花”有什么关系呢？'},
+      {t:'interactive',kind:'s2name',h:280}
+    ],
+    reveals:[
+      {t:'card',blocks:[
+        {t:'kicker',text:'揭晓'},
+        {t:'para',text:'由于宫女们手持黄色彩绸扎成的莲花灯，所以这个迷宫也得名黄花阵。'},
+        {t:'para',text:'这迷宫看上去很难走？我也要试试看，也许黄花阵的中央，还有什么我值得考察的东西呢。'}
+      ]}
+    ],
+    dock:{ type:'flip', nextId:'s2blend', nextLabel:'进 阵' }
+  },
+  {
+    id:'s2blend', ptype:'puzzle', title:'中心亭 · 观察', tag:'S2c',
+    blocks:[
+      {t:'badge',left:'黄花阵 · 中心亭',right:'站 3 / 8'},
+      {t:'prog',step:2},
+      {t:'title',text:'中西结合的观察'},
+      {t:'lead',text:'终于到了中心亭了，融合了中西审美，好别致的亭子！'},
+      {t:'interactive',kind:'s2blend',h:300}
+    ],
+    reveals:[
+      {t:'card',tape:'brass',blocks:[
+        {t:'kicker',text:'史料卡 · 收尾'},
+        {t:'para',text:'西学东渐后的皇家审美转译。'},
+        {t:'para',text:'西洋楼黄花阵中心亭，西式穹顶与中式八角飞檐并存；'},
+        {t:'para',text:'檐角立兽、莲座宝瓶、双天鹅间暗藏的蝙蝠纹——'},
+        {t:'para',text:'西方形制与中式吉祥寓意的叠加，是清宫石匠的本土化改造。'}
+      ]}
+    ],
+    dock:{ type:'submit', kind:'blend', nextId:'s2pattern', nextLabel:'继 续' }
+  },
+  {
+    id:'s2pattern', ptype:'puzzle', title:'墙体花纹', tag:'S2d',
+    blocks:[
+      {t:'kicker',text:'黄花阵 · 花纹'},
+      {t:'title',text:'万字纹？'},
+      {t:'lead',text:'原来这些花纹也有这般讲究！我记得从黄花阵迷宫入口这一路走来，我看到了好多花纹'},
+      {t:'interactive',kind:'s2pattern',h:280}
+    ],
+    reveals:[
+      {t:'card',blocks:[
+        {t:'kicker',text:'揭晓'},
+        {t:'para',text:'这些墙上的花纹是万字纹，“卐字不到头”“万寿无疆”，好寓意啊！虽说墙体和亭子都并不是乾隆年间留下的原墙的，但却让“万寿无疆”的吉祥寓意和皇家游乐的场景得以重现。'}
+      ]},
+      {t:'card',blocks:[
+        {t:'kicker',text:'收尾 · 指向方外观'},
+        {t:'para',text:'走出迷宫，我又翻开那册铜版图。刚才那座中心亭已经让我第一次意识到，所谓“西洋楼”，并不完全是西洋的，而是中西结合的集大成者。而下一幅图更奇怪——方外观。西式的两层楼体上，压着中国式重檐屋顶，建筑里还出现了阿拉伯文字。我要亲自去看看。'}
+      ]}
+    ],
+    dock:{ type:'submit', kind:'s2w', nextId:'fw', nextLabel:'前往方外观' }
+  },
+  {
+    id:'fw', ptype:'narrative', title:'方外观', tag:'S·C',
+    blocks:[
+      {t:'badge',left:'方外观 · 见证',right:'站 4 / 8'},
+      {t:'prog',step:3},
+      {t:'title',text:'方外观'},
+      {t:'lead',text:'现在的方外观只剩下部分台基和石构，不过档案中的铜版图还保存着它原本的样子：两层西式楼体、半环形石阶，上面却盖着中国传统样式的重檐屋顶，内部曾设置阿拉伯文碑刻。'},
+      {t:'para',text:'可是西式楼体、中式屋顶、阿拉伯文碑刻，为什么会同时出现在一座建筑里？'},
+      {t:'double',blocks:[{t:'img',text:'容妃画像显现 · 占位',h:72}]},
+      {t:'card',tilt:'r',tape:1,blocks:[
+        {t:'kicker',text:'点五竹亭'},
+        {t:'note',text:'方外观的对面便是“五竹亭”'},
+        {t:'hatch'},
+        {t:'steps',items:['对照五竹亭残基与铜版画「竹亭北面」']}
+      ]},
+      {t:'forceBreak'},
+      {t:'para',text:'这里，后来又留下了不少与乾隆、容妃有关的故事。哪些可以得到史料印证，哪些只是后来人的想象，如今已经很难一一分清。离开五竹亭时，我回头看了一眼。这里留下的故事很安静——一座礼拜的建筑，一组亭子，还有一些真假难辨的旧闻。'},
+      {t:'para',text:'真假难辨的旧闻？这第二十一幅铜版画或许也算是真假难辨的旧闻吧，到现在为止，我还没有任何收获。来不及多想了，我决定继续往东走。'}
+    ],
+    dock:{ type:'go', id:'transit3', label:'下一站：海晏堂' }
+  },
+  {
+    id:'transit3', ptype:'map', title:'方外观→海晏堂', tag:'T3',
+    blocks:[
+      {t:'kicker',text:'站间 · 转场'},
+      {t:'title',text:'方外观 → 海晏堂'},
+      {t:'navMap',cur:5,note:'东行 · 水法核心'},
+      {t:'quote',text:'下一站：海晏堂。'}
+    ],
+    dock:{ type:'go', id:'s3hour', label:'继 续' }
+  },
+  {
+    id:'s3hour', ptype:'puzzle', title:'海晏堂 · 水力钟', tag:'S3a',
+    blocks:[
+      {t:'badge',left:'海晏堂 · 时辰',right:'站 5 / 8'},
+      {t:'prog',step:4},
+      {t:'title',text:'海晏堂'},
+      {t:'lead',text:'海晏堂，名字取自“河清海晏”一词，寓意天下太平。池周分布十二兽首铜像代表十二时辰，依次喷水构成报时系统。十二兽首分别代表不同时辰？这是怎么实现的呢？'},
+      {t:'interactive',kind:'s3hour',h:360}
+    ],
+    reveals:[
+      {t:'card',blocks:[
+        {t:'kicker',text:'揭晓'},
+        {t:'para',text:'答案确认后，画面里的十二生肖一个接一个亮起，到了正午，十二道水流同时喷出。'},
+        {t:'para',text:'昔日竟然如此壮观，可如今却只剩下断壁残垣。这些兽首流离失所，有七尊归来了，但还有五尊不知所踪。'}
+      ]},
+      {t:'card',blocks:[
+        {t:'kicker',text:'转盘花纹匹配 · 线下道具'},
+        {t:'steps',items:['取出实体「海晏堂时辰盘」（DJ-11）。','按盘面花纹对齐图样，解锁信息。','对齐结果记在心里，下一页回填生肖。']},
+        {t:'tiny',text:'本页只提示操作；转盘是实体道具，不在屏幕里画。'}
+      ]}
+    ],
+    dock:{ type:'submit', kind:'s3', nextId:'s3zodiac', nextLabel:'继 续' }
+  },
+  {
+    id:'s3zodiac', ptype:'puzzle', title:'兽首 · 回归', tag:'S3b',
+    blocks:[
+      {t:'kicker',text:'海晏堂 · 生肖转盘'},
+      {t:'title',text:'七尊归来'},
+      {t:'lead',text:'如果带着生肖转盘，转出七个生肖再填在下面。没有转盘也可以先往下走。'},
+      {t:'interactive',kind:'s3zodiac',h:340}
+    ],
+    reveals:[
+      {t:'card',blocks:[
+        {t:'kicker',text:'史料 · 十二兽首'},
+        {t:'para',text:'截至目前，十二生肖兽首中共有 7 尊已回归祖国，分别是：牛、虎、猴、猪、鼠、兔、马。其余龙、蛇、羊、鸡、狗 5 尊至今下落不明。'}
+      ]},
+      {t:'card',blocks:[
+        {t:'kicker',text:'收尾 · 指向蓄水楼'},
+        {t:'para',text:'可是这些喷泉怎么喷出的水呢？水力钟在眼前，水源却不在水池里。地图上面我看到了蓄水楼，或许喷泉正是靠它喷水。'}
+      ]}
+    ],
+    dock:{ type:'submit', kind:'zodiac', nextId:'s3water', nextLabel:'前往水显纸' }
+  },
+  {
+    id:'s3water', ptype:'puzzle', title:'水显纸 · 马首', tag:'S3c',
+    blocks:[
+      {t:'kicker',text:'海晏堂 · 道具'},
+      {t:'title',text:'水显纸'},
+      {t:'lead',text:'正午轮到马首喷水。档案里夹的那张纸认水——蘸点水，看它显出谁来。'},
+      {t:'interactive',kind:'s3water',h:320}
+    ],
+    reveals:[
+      {t:'card',blocks:[
+        {t:'kicker',text:'史料 · 马首'},
+        {t:'para',text:'马首铜像曾流失海外，后由澳门爱国企业家何鸿燊先生出资购回。'}
+      ]},
+      {t:'card',blocks:[
+        {t:'kicker',text:'收尾'},
+        {t:'para',text:'纸遇水，马首显出来了——正午那一尊。把纸晾干收好。'},
+        {t:'para',text:'往东看，几根残柱已经戳在视线尽头，档案的下一页就在那儿。'}
+      ]}
+    ],
+    dock:{ type:'submit', kind:'water', nextId:'xushuilou', nextLabel:'水显纸已收好，往东走' }
+  },
+  {
+    id:'xushuilou', ptype:'puzzle', title:'蓄水楼', tag:'S·D',
+    blocks:[
+      {t:'badge',left:'蓄水楼 · 水法',right:'站 6 / 8'},
+      {t:'prog',step:5},
+      {t:'title',text:'蓄水楼'},
+      {t:'lead',text:'原来喷泉的水，靠的就是这座蓄水楼。这里是海晏堂北面的高台蓄水，不是谐奇趣西北那座。刚才在海晏堂看见兽首喷水，水源在这里。可是为什么能把水提高呢？特刊里似乎有线索'},
+      {t:'interactive',kind:'xsh',h:280}
+    ],
+    reveals:[
+      {t:'card',blocks:[
+        {t:'kicker',text:'揭晓 · 喷泉原理'},
+        {t:'para',text:'抬高蓄水，用高度差换成水压，再从喷嘴喷出。'},
+        {t:'para',text:'原来所谓“水法”，并不是凭空出现的奇观。先把水送到高处，再利用高度差获得水压，眼前那些看似华丽的喷泉背后，其实是一整套工程系统。'}
+      ]}
+    ],
+    dock:{ type:'submit', kind:'xsh', nextId:'dashuifa', nextLabel:'前往大水法' }
+  },
+  {
+    id:'dashuifa', ptype:'puzzle', title:'大水法 · 归位', tag:'S·E',
+    blocks:[
+      {t:'badge',left:'大水法 · 对照归位',right:'站 7 / 8'},
+      {t:'prog',step:6},
+      {t:'title',text:'大水法'},
+      {t:'lead',text:'顺着档案上的路线继续往前，大水法遗址逐渐出现在眼前。和海晏堂相比，这里的遗迹看起来更直观一些。高大的石构还留在原地，但只看现在的样子，还是很难想象它当年到底是什么样的。在小学课文中圆明园的插图，也就是这里的实拍图。'},
+      {t:'double',blocks:[{t:'img',text:'《大水法南面》铜版画 · 对照位',h:52}]},
+      {t:'interactive',kind:'dsHunt',h:300}
+    ],
+    reveals:[
+      {t:'card',tape:1,blocks:[
+        {t:'kicker',text:'揭晓 · 猎狗逐鹿'},
+        {t:'para',text:'大水法中央原有一只铜制梅花鹿，鹿角喷水；周围十只铜猎狗同时向鹿喷水，组成“猎狗逐鹿”的场景，喷水池东西两端还设有大型卷尾铜兽。水流、雕塑和建筑共同组成了一整套动态景观。'},
+        {t:'para',text:'原来这些动物并不是随便摆在喷泉里的装饰。鹿站在中间，猎狗围在周围，水流一喷起来，周围十只铜猎狗同时向鹿喷水，组成“猎狗逐鹿”的场景。而对面的观水法，正是皇帝当年观赏喷泉的地方。'}
+      ]},
+      {t:'card',blocks:[
+        {t:'kicker',text:'画面消散 · 指向雨果'},
+        {t:'para',text:'铜鹿不在了，猎狗不在了，喷水塔也不在了。刚刚还完整存在于屏幕里的景象，现实中只剩下石构的轮廓。'},
+        {t:'note',text:'（此处不用「一场火」句 · docx 无）'}
+      ]}
+    ],
+    dock:{ type:'submit', kind:'ds', nextId:'hugo', nextLabel:'前往雨果雕像' }
+  },
+  {
+    id:'hugo', ptype:'narrative', title:'雨果雕像', tag:'S4',
+    blocks:[
+      {t:'badge',left:'雨果雕像',right:'站 8 / 8'},
+      {t:'prog',step:7},
+      {t:'title',text:'雨果雕像'},
+      {t:'lead',text:'同样愤怒的还有面前的这位法国作家——雨果。'},
+      {t:'photo',text:'雨果雕像 · 遗址旁 · 占位',h:100,note:'他从来没有来过这里。',tilt:'l'},
+      {t:'para',text:'1861年，圆明园被焚毁后的第二年，雨果在法国写下《致巴特勒上尉的信》，公开谴责英法联军对圆明园的劫掠和焚毁。奇怪的是，他从来没有来过这里。如今，他的雕像就立在西洋楼遗址旁，静静地凝视着那断壁残垣。'},
+      {t:'card',blocks:[
+        {t:'kicker',text:'史料 · 致巴特勒上尉的信'},
+        {t:'para',text:'有一天，两个强盗闯进了圆明园，一个抢掠，一个放火，一个叫法兰西，一个叫英吉利。'},
+        {t:'src',text:'〔来源〕雨果 · 1861年11月25日'}
+      ]}
+    ],
+    dock:{ type:'go', id:'finale', label:'继 续' }
+  },
+  {
+    id:'finale', ptype:'narrative', title:'结局 · 五幕', tag:'END', pager:true,
+    blocks:[
+      {t:'kicker',text:'结局 · 幕 2'},
+      {t:'title',text:'重新组合'},
+      {t:'hatch'},
+      {t:'stepsCheck',items:['完成过的谜题','收集到的图样','经过的地点','今天的日期','一份新的档案生成中……']},
+      {t:'card',blocks:[
+        {t:'kicker',text:'幕 3 · 五层拼合'},
+        {t:'layers',items:['黄花阵的中心亭','海晏堂残存的石座','大水法的断壁','雨果雕像前停留的身影','档案包和其中的文件'],caption:'第二十一图。'}
+      ]},
+      {t:'kicker',text:'尾声 · 第二十一图'},
+      {t:'title',text:'幕 4 · 长文'},
+      {t:'hatch'},
+      {t:'para',text:'至此，西洋楼遗址已经快走完了，可是，第二十一幅画到底在哪呢？'},
+      {t:'para',text:'屏幕暗了一下，然后亮起，一幅画面缓缓浮现。密集交错的线条构成明暗，锐利的刻痕描绘着建筑轮廓，仿佛一幅真正的《西洋楼铜版图》。'},
+      {t:'para',text:'画面中没有乾隆时期的宫苑盛景。'},
+      {t:'para',text:'而是记录着我一路走过的地方：黄花阵的中心亭、海晏堂残存的石座、大水法的断壁，以及雨果雕像前停留的身影……以及档案包和其中的文件。'},
+      {t:'kicker',text:'尾声 · 第二十一图'},
+      {t:'title',text:'那封信'},
+      {t:'hatch'},
+      {t:'para',text:'这究竟是怎么回事？'},
+      {t:'para',text:'屏幕中缓缓出来了一封信：如果你看到这里，说明你已经走完了这条路。你一定很好奇，那幅传闻中的第二十一幅版画，究竟在哪里。其实，它从未被藏在某个地方。因为它从来不是一幅等待被发现的旧画。它是一幅等待被后来者完成的“新画”。'},
+      {t:'para',text:'西洋楼的二十幅版画，把西洋楼记录得完完整整，喷泉、石柱、兽首、琉璃瓦，样样俱全。'},
+      {t:'kicker',text:'尾声 · 第二十一图'},
+      {t:'title',text:'未被画下的'},
+      {t:'hatch'},
+      {t:'para',text:'可是，站在今天的遗址前，还有许多东西没有被画下来。那些断裂的石柱，那些被火焚烧后的痕迹，那些流散海外、等待归来的文物，还有无数后来的人，站在废墟前发出的叹息。所以，我留下了这个传闻。希望有一天，会有人因为这个问题，重新走进这片遗址，将那些未曾被记录的一一记下。'},
+      {t:'kicker',text:'尾声 · 第二十一图'},
+      {t:'title',text:'第 N 个版本'},
+      {t:'hatch'},
+      {t:'hl',text:'每一个来到这里、认真看过它的人，都在画第21幅的第N个版本。'},
+      {t:'para',text:'它记录毁灭，也记录重生。记录失去，也记录被重新看见。'},
+      {t:'para',text:'几秒后，一份新的档案生成。'},
+      {t:'card',tape:'brass',blocks:[
+        {t:'kicker',text:'新档案'},
+        {t:'para',text:'考察记录生成完成《西洋楼铜版图·第二十一图》'},
+        {t:'sign'}
+      ]},
+      {t:'tiny',text:'【温馨提示：可以订阅关注小程序，第二天会推送彩蛋～】'}
+    ],
+    dock:{ type:'pager', lastGo:'letter', lastLabel:'署 名 · 查看报告' }
+  },
+  {
+    id:'letter', ptype:'narrative', title:'彩蛋 · 离园之后', tag:'EGG', pager:true,
+    blocks:[
+      {t:'kicker',text:'彩蛋 · 离园之后'},
+      {t:'title',text:'一封信'},
+      {t:'hatch'},
+      {t:'para',text:'昨天，你已经走完了西洋楼。'},
+      {t:'para',text:'但昨天，还有一件事没有告诉你。'},
+      {t:'kicker',text:'彩蛋 · 打开'},
+      {t:'title',text:'老师的信'},
+      {t:'hatch'},
+      {t:'openLetter'},
+      {t:'para',text:'不错，这份档案，最初确实是我留下的。'},
+      {t:'kicker',text:'彩蛋 · 离园之后'},
+      {t:'title',text:'安排'},
+      {t:'hatch'},
+      {t:'para',text:'我那个学生是历史系出身，受惯了历史学的训练，碰见什么问题，总想着先翻文献、查目录、找出处。我一直想带他真正去现场走一趟——有些东西，坐在书桌前是看不出来的。只是那几年我身体已经不大好了，实在没办法陪着他从头走到尾。'},
+      {t:'para',text:'所以我想了个办法。我把年轻时在西洋楼考察时看过的、想过的东西重新整理出来，又故意添上了一些线索，做成这只档案袋。那张写着“闻有第二十一图，未见”的纸片，那本故作神秘的旧日记，还有一路上的地图、谜题和提示——都是我安排的。'},
+      {t:'kicker',text:'彩蛋 · 离园之后'},
+      {t:'title',text:'许多人'},
+      {t:'hatch'},
+      {t:'para',text:'我知道他一定会上钩。果然，他带着这只档案袋去了西洋楼。不过，有件事后来连我自己也没有想到。后来，又有人拿着它走了一遍。再后来，又有了第三个人、第四个人……'},
+      {t:'para',text:'每个人寻找的都是同一幅“第二十一图”，走过的也是差不多的一条路，可最后留下来的东西却都不一样。有人记住了黄花阵的屋檐，有人一直在研究水法，有人在大水法前站了很久，也有人只留下了一张照片、一句话。'},
+      {t:'hl',text:'你只是许多“第二十一图探寻者”中的一位。'},
+      {t:'kicker',text:'彩蛋 · 离园之后'},
+      {t:'title',text:'丙午 · 2026'},
+      {t:'hatch'},
+      {t:'para',text:'至于这份档案——我其实只真正替第一个学生安排好了第一步。日记把他引到黄花阵以后，后面的路，我故意没有再替他写死。'},
+      {t:'para',text:'我能告诉他去哪里，却不能替他决定在那里看到什么。'},
+      {t:'quote',text:'“丙午年于西洋楼。”'},
+      {t:'para',text:'想必当年第一个拿到档案的傻小子，还真认真算过究竟是哪一个丙午年。'},
+      {t:'kicker',text:'彩蛋 · 离园之后'},
+      {t:'title',text:'答案'},
+      {t:'hatch'},
+      {t:'opts2',quiz:'egg2026',options:[
+        {k:'A',text:'1786'},{k:'B',text:'1846'},{k:'C',text:'1906'},{k:'D',text:'1966'},{k:'E',text:'2026'}
+      ]},
+      {t:'para',text:'都不是。 其实就是2026年。那本所谓的“旧日记”，也是我故意做旧的。'},
+      {t:'kicker',text:'彩蛋 · 离园之后'},
+      {t:'title',text:'留给下一位'},
+      {t:'hatch'},
+      {t:'para',text:'不过，先别急着怪老夫骗你。因为这个骗局，后来慢慢变成了一件真的事情。'},
+      {t:'para',text:'第二十一幅旧铜版画从来没有存在过。 可这么多年来，已经真的有许多人，为了寻找它来到这里，重新看了一遍西洋楼，又留下了一点属于自己的东西。'},
+      {t:'para',text:'而且——上一位探寻“第二十一图”的人，也给你留下了一件东西。'},
+      {t:'card',blocks:[
+        {t:'kicker',text:'上一位的留言'},
+        {t:'note',text:'（经审核后的图片 / 文字 / 一句话 · 占位）'}
+      ]},
+      {t:'kicker',text:'彩蛋 · 离园之后'},
+      {t:'title',text:'留言'},
+      {t:'hatch'},
+      {t:'para',text:'所以，我最后还想问你一个问题。你愿意为下一位来到这里的人，留下点什么吗？可以是一句话。可以是一张今天拍下的照片。也可以是一个你希望他到了现场以后，替你再看一眼的地方。'},
+      {t:'letterBtns'},
+      {t:'para',text:'你留下的内容，在经过审核之后，也许会出现在下一位探寻者收到的“次日回信”里。到那时候，你也会成为这份档案的一部分。'},
+      {t:'kicker',text:'彩蛋 · 离园之后'},
+      {t:'title',text:'秘密'},
+      {t:'hatch'},
+      {t:'para',text:'至于“第二十一图”究竟在哪里—— 我想，你现在应该已经不需要老夫告诉你答案了。'},
+      {t:'para',text:'这份档案还会继续传下去。 所以，还请替老夫保守这个关于第廿一图的秘密。'},
+      {t:'title',text:'【完】'}
+    ],
+    dock:{ type:'pager', lastGo:'cover', lastLabel:'回 封 面' }
+  }
+];
+const ANSWERS = { s1:'D', s2p:'C', s2w:'A', xsh:'A' };
+
+/* 三类页型装页：narrative 流式 / puzzle 合页 / map 恒单页 */
+SCREENS.forEach(s => {
+  const kind = s.ptype || 'narrative';
+  if (kind === 'map') {
+    s._pages = packPages(s.blocks, { budget: 760, firstBudget: 720 });
+  } else if (kind === 'puzzle') {
+    s._pages = packPages(s.blocks, { budget: PHONE.pageBudget, firstBudget: PHONE.firstBudget, mergeInteractive: true });
+  } else {
+    s._pages = packPages(s.blocks, { budget: PHONE.pageBudget, firstBudget: PHONE.firstBudget });
+  }
+  if (s._pages.length > 1) s.pager = true;
+});
+
+/* ---------- 状态与渲染 ---------- */
+const state = { idx:0, page:0, hist:[], revealed:false, stageIx:0, flipped:false };
+const stageEl = document.getElementById('stage');
+const dockEl = document.getElementById('dock');
+const navTitle = document.getElementById('navTitle');
+const navTag = document.getElementById('navTag');
+const toc = document.getElementById('toc');
+
+function pagesOf(s){
+  return s._pages && s._pages.length ? s._pages : [[]];
+}
+
+function renderPageBlocks(pageBlocks){
+  return pageBlocks.filter(b => b.t !== 'forceBreak').map(b => {
+    if (b.t === 'interactive') return injectInteractive(null, b.kind);
+    return blockHTML(b);
+  }).join('');
+}
+
+function pagerHTML(s, page, total){
+  if (!s.pager || total <= 1) return '';
+  const dots = Array.from({length: total}, (_,i)=>`<i class="${i===page?'on':''}"></i>`).join('');
+  return `<div class="pager"><span>第 ${page+1} / ${total} 页</span><span class="dot">${dots}</span></div>`;
+}
+
+function dockHTML(s, isLast){
+  const d = s.dock || {};
+  const multi = pagesOf(s).length > 1;
+  if (multi && !isLast && (d.type === 'go' || d.type === 'pager' || d.type === 'submit' || d.type === 'staged' || d.type === 'flip')) {
+    if (d.type === 'staged' && state.stageIx === 0) {
+      /* fallthrough to staged */
+    } else if (d.type !== 'staged') {
+      return `<button class="ghost-btn" data-next-page>下 一 页</button>`;
+    }
+  }
+  switch(d.type){
+    case 'go': {
+      return `<button class="seal-btn" data-go="${d.id}">${d.label}</button>`;
+    }
+    case 'pager': {
+      if (!isLast) return `<button class="ghost-btn" data-next-page>下 一 页</button>`;
+      return `<button class="seal-btn" data-go="${d.lastGo}">${d.lastLabel}</button>`;
+    }
+    case 'submit': {
+      if (!isLast) return `<button class="ghost-btn" data-next-page>下 一 页</button>`;
+      const submit = state.revealed ? '' : `<button class="seal-btn" data-submit="${d.kind}">落 印 · 提 交</button>`;
+      const next = state.revealed
+        ? `<button class="ghost-btn" data-go="${d.nextId}">${d.nextLabel}</button>`
+        : '';
+      return submit + next;
+    }
+    case 'flip': {
+      if (state.flipped) return `<button class="ghost-btn" data-go="${d.nextId}">${d.nextLabel}</button>`;
+      return `<button class="seal-btn" data-flip-btn>我 已 翻 到 背 面</button>`;
+    }
+    case 'staged': {
+      const st = d.stages || [];
+      const cur = Math.min(state.stageIx, st.length - 1);
+      const item = st[cur];
+      if (item.id === 'audio') {
+        if (!isLast) {
+          const pages = pagesOf(s);
+          const page = pages[state.page] || [];
+          const hasAudio = page.some(b => b.t === 'interactive' && b.kind === 'xqAudio');
+          if (hasAudio) return `<button class="seal-btn" data-audio-next>听 完 了</button>`;
+          return `<button class="ghost-btn" data-next-page>下 一 页</button>`;
+        }
+        return `<button class="seal-btn" data-audio-next>听 完 了</button>`;
+      }
+      if (item.id === 'xq' || item.id === 'go:transit2') {
+        const pages = pagesOf(s);
+        const page = pages[state.page] || [];
+        const hasText = page.some(b => b.t === 'interactive' && b.kind === 'xqText');
+        if (!hasText && !isLast) return `<button class="ghost-btn" data-next-page>下 一 页</button>`;
+        if (state.revealed) return `<button class="ghost-btn" data-go="transit2">${st[st.length-1].label}</button>`;
+        return `<button class="seal-btn" data-submit="xq">落 印 · 提 交</button>`;
+      }
+      return `<button class="seal-btn" data-submit="${item.id}">${item.label}</button>`;
+    }
+    default:
+      return '';
+  }
+}
+
+function stampSeal(text){
+  const host = stageEl.querySelector('.plate:last-of-type') || stageEl;
+  if (host.querySelector('.seal-mark')) return;
+  const mark = document.createElement('div');
+  mark.className = 'seal-mark';
+  mark.innerHTML = text || '廿一<br>考察';
+  host.appendChild(mark);
+}
+
+function render(){
+  const s = SCREENS[state.idx];
+  const pages = pagesOf(s);
+  if (state.page >= pages.length) state.page = pages.length - 1;
+
+  navTitle.textContent = s.title.split('·').pop().trim() || s.title;
+  navTag.textContent = s.tag || '第貳拾壹號';
+
+  let html = renderPageBlocks(pages[state.page]);
+  if (state.revealed && s.reveals && s.revealedOnPage === state.page) {
+    html += s.reveals.map(blockHTML).join('');
+  }
+  html += pagerHTML(s, state.page, pages.length);
+
+  stageEl.innerHTML = html;
+  stageEl.scrollTop = 0;
+  const over = stageEl.scrollHeight > stageEl.clientHeight + 8;
+  stageEl.classList.toggle('fit', !over);
+
+  const isLast = state.page === pages.length - 1;
+  dockEl.innerHTML = dockHTML(s, isLast);
+
+  toc.querySelectorAll('button').forEach((b,i)=>b.classList.toggle('on', i===state.idx));
+}
+
+function go(i, push){
+  if (push !== false && state.idx !== i) state.hist.push({i:state.idx, p:state.page});
+  state.idx = Math.max(0, Math.min(SCREENS.length-1, i));
+  state.page = 0;
+  state.revealed = false;
+  state.stageIx = 0;
+  state.flipped = false;
+  render();
+}
+function back(){
+  if (state.page > 0){ state.page--; render(); return; }
+  const h = state.hist.pop();
+  if (h){ state.idx=h.i; state.page=h.p; state.revealed=false; state.stageIx=0; state.flipped=false; render(); }
+  else if (state.idx > 0){ state.idx--; state.page=0; state.revealed=false; state.stageIx=0; state.flipped=false; render(); }
+}
+
+document.getElementById('backBtn').addEventListener('click', back);
+
+function revealOnCurrent(){
+  const s = SCREENS[state.idx];
+  state.revealed = true;
+  s.revealedOnPage = state.page;
+  if (s.dock && s.dock.type === 'staged') {
+    if (state.stageIx === 0) state.stageIx = 1;
+    else state.stageIx = 2;
+  }
+  stampSeal('廿一<br>已记');
+  render();
+  stampSeal('廿一<br>已记');
+}
+
+stageEl.addEventListener('click', e=>{
+  const s = SCREENS[state.idx];
+  const opt = e.target.closest('.opt[data-k]');
+  if (opt && opt.parentElement.dataset.quiz){
+    opt.parentElement.querySelectorAll('.opt').forEach(o=>o.classList.remove('on'));
+    opt.classList.add('on');
+    return;
+  }
+  const chipQ = e.target.closest('.chip[data-k]');
+  if (chipQ && chipQ.parentElement.dataset.quiz){
+    chipQ.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+    chipQ.classList.add('on');
+    return;
+  }
+  const chipP = e.target.closest('.chip[data-p]');
+  if (chipP && chipP.parentElement.dataset.capture){
+    chipP.classList.toggle('on');
+    return;
+  }
+  if (e.target.closest('[data-flip-host]')){
+    if (s.id !== 's2name') return;
+    const host = stageEl.querySelector('[data-flip-host]');
+    if (host && !state.flipped){
+      host.innerHTML = plateWrap(
+        `<div class="img-ph" style="min-height:120px">背面 · 宫女持莲花灯游阵图</div><div class="handnote">黄花灯 · 得名</div>`,
+        '图版 · 背面', '图版'
+      ) + `<div data-reveal-inline></div>`;
+      state.flipped = true;
+      s.revealedOnPage = state.page;
+      state.revealed = true;
+      const inline = stageEl.querySelector('[data-reveal-inline]');
+      if (inline && s.reveals) inline.innerHTML = s.reveals.map(blockHTML).join('');
+      dockEl.innerHTML = dockHTML(s, state.page === pagesOf(s).length-1);
+      stampSeal('廿一<br>翻面');
+    }
+    return;
+  }
+  if (e.target.closest('[data-audio]')){
+    if (s.dock && s.dock.type==='staged') state.stageIx = 1;
+    render();
+    const pages = pagesOf(s);
+    for (let i=0;i<pages.length;i++){
+      const has = pages[i].some(b=>b.t==='interactive' && b.kind==='xqText');
+      if (has){ state.page = i; state.stageIx = 1; render(); break; }
+    }
+    return;
+  }
+  if (e.target.closest('[data-reveal-letter]')){
+    stageEl.querySelectorAll('[data-letter-body]').forEach(n=>n.hidden=false);
+    const card = stageEl.querySelector('[data-open]');
+    if (card) card.remove();
+    return;
+  }
+  const part = e.target.closest('.part[data-p]');
+  if (part){
+    const slot = stageEl.querySelector(`.slot[data-s="${part.dataset.p}"]`);
+    if (slot && !slot.classList.contains('full')){
+      slot.classList.add('full');
+      slot.innerHTML = part.innerHTML + '<br>✓';
+      part.classList.add('used');
+      const left = stageEl.querySelectorAll('.part:not(.used)').length;
+      const fb = stageEl.querySelector('[data-feedback]');
+      if (fb) fb.textContent = left ? `还剩 ${left} 组` : '全部归位';
+      if (left === 0) revealOnCurrent();
+    }
+    return;
+  }
+  const slot = e.target.closest('.slot');
+  if (slot && !slot.classList.contains('full')){
+    const part = stageEl.querySelector('.part:not(.used)');
+    if (part){
+      slot.classList.add('full');
+      slot.innerHTML = part.innerHTML + '<br>✓';
+      part.classList.add('used');
+      const left = stageEl.querySelectorAll('.part:not(.used)').length;
+      const fb = stageEl.querySelector('[data-feedback]');
+      if (fb) fb.textContent = left ? `还剩 ${left} 组` : '全部归位';
+      if (left === 0) revealOnCurrent();
+    }
+  }
+});
+
+function handleSubmit(kind){
+  const s = SCREENS[state.idx];
+  const fb = stageEl.querySelector('[data-feedback]');
+  const fail = msg => { if (fb){ fb.textContent = msg; fb.style.color = 'var(--cinnabar)'; } };
+  const ok = msg => { if (fb){ fb.textContent = msg; fb.style.color = 'var(--patina)'; } };
+
+  if (kind === 'xq'){
+    const input = stageEl.querySelector('[data-answer="xq"]');
+    const val = (input && input.value || '').trim();
+    if (!val) return fail('先写下站名');
+    if (val.includes('黄花阵')) { ok('✓ 线索对上了'); revealOnCurrent(); }
+    else fail('信封两半拼起来再看一次');
+    return;
+  }
+  if (kind === 's3'){
+    const a = (stageEl.querySelector('[data-fill="s3a"]')||{}).value||'';
+    const b = (stageEl.querySelector('[data-fill="s3b"]')||{}).value||'';
+    if (!a.trim()||!b.trim()) return fail('两空都填一下');
+    ok('✓ 未时羊 / 正午午马（或十二）');
+    revealOnCurrent(); return;
+  }
+  if (kind === 'zodiac' || kind === 'water'){
+    ok('✓ 已收进手册（画板不校验实体道具）');
+    revealOnCurrent(); return;
+  }
+  if (kind === 'blend'){
+    const n = stageEl.querySelectorAll('.chip.on').length;
+    if (n < 1) return fail('至少选/拍一处');
+    ok(`✓ 已记录 ${n} 处`);
+    revealOnCurrent(); return;
+  }
+  if (kind === 'ds'){
+    const left = stageEl.querySelectorAll('.part:not(.used)').length;
+    if (left > 0) return fail(`还剩 ${left} 组构件`);
+    revealOnCurrent(); return;
+  }
+  if (kind === 'bingwu' || kind === 'egg2026'){
+    const quiz = stageEl.querySelector(`[data-quiz="${kind}"]`);
+    if (quiz){
+      const on = quiz.querySelector('.on');
+      if (!on) return fail('先选一项');
+      if (on.dataset.k !== 'E' && on.dataset.k !== 'A'){
+        ok('提示：今年也是丙午年 →');
+        return;
+      }
+      ok('✓ 2026');
+    }
+    return;
+  }
+
+  const quiz = stageEl.querySelector(`[data-quiz="${kind}"]`);
+  if (!quiz){ revealOnCurrent(); return; }
+  const on = quiz.querySelector('.on');
+  if (!on) return fail('先选一项');
+  const correct = on.dataset.k === ANSWERS[kind];
+  if (!correct){
+    return fail(kind === 's1'
+      ? '再看看地图上西洋楼贴着长春园的哪一边。'
+      : '再想想 · 提示阶梯会再给一次');
+  }
+  ok('✓ 答对了');
+  revealOnCurrent();
+}
+
+dockEl.addEventListener('click', e=>{
+  const b = e.target.closest('button');
+  if (!b) return;
+  const s = SCREENS[state.idx];
+  const pages = pagesOf(s);
+
+  if (b.hasAttribute('data-next-page')){
+    if (state.page < pages.length - 1){ state.page++; render(); }
+    return;
+  }
+  if (b.dataset.go){ go(SCREENS.findIndex(x => x.id === b.dataset.go), true); return; }
+  if (b.dataset.submit){ handleSubmit(b.dataset.submit); return; }
+  if (b.hasAttribute('data-flip-btn')){
+    const host = stageEl.querySelector('[data-flip-host]');
+    if (host) host.click();
+    return;
+  }
+  if (b.hasAttribute('data-audio-next')){
+    if (s.dock && s.dock.type==='staged') state.stageIx = 1;
+    for (let i=0;i<pages.length;i++){
+      if (pages[i].some(bl=>bl.t==='interactive'&&bl.kind==='xqText')){
+        state.page = i; state.stageIx = 1; render(); return;
+      }
+    }
+    render(); return;
+  }
+});
+
+stageEl.addEventListener('keydown', e=>{
+  if (e.key === 'Enter' && e.target.matches('.fill')){
+    const btn = dockEl.querySelector('[data-submit]');
+    if (btn) btn.click();
+  }
+});
+
+function buildToc(){
+  const label = { puzzle:'谜', narrative:'文', map:'图', cover:'面' };
+  toc.innerHTML = SCREENS.map((s,i)=>`<li><button data-i="${i}"><span class="type">${label[s.ptype]||'·'}</span>${s.title}</button></li>`).join('');
+  toc.addEventListener('click', e=>{
+    const b = e.target.closest('button[data-i]');
+    if (b) go(+b.dataset.i, true);
+  });
+}
+
+buildToc();
+go(0, false);
+
+/* 自检：只查 stage/dock 渲染物 */
+(function selfCheck(){
+  const probe = document.createElement('div');
+  const banned = [
+    'archive-sheet','record-field','paper-real','feTurbulence','mix-blend-mode','img-aged','一场火过后',
+    'clip-card','double-frame','photo-sticker','perfo-frame','stamp-date','tag-no','note-hand','binder','torn','tape',
+    'case \'dial\'','实体道具 · 黄花阵图 · 正面'
+  ];
+  const hits = [];
+  let sparse = 0, overflow = 0, totalPages = 0;
+  const detail = [];
+  for (const s of SCREENS) {
+    const pages = pagesOf(s);
+    totalPages += pages.length;
+    pages.forEach((pg, i) => {
+      probe.innerHTML = renderPageBlocks(pg);
+      if (s.reveals && s.revealedOnPage === i) probe.innerHTML += s.reveals.map(blockHTML).join('');
+      probe.innerHTML += dockHTML(s, i === pages.length - 1);
+      const h = pg.reduce((a,b)=>a+estBlockH(b), 0);
+      const cap = s.ptype === 'map' ? (i === 0 ? 720 : 760) : s.ptype === 'puzzle' ? (i === 0 ? PHONE.pzFirst : PHONE.pzPage) : (i === 0 ? PHONE.firstBudget : PHONE.pageBudget);
+      const pct = Math.round(h / cap * 100);
+      const isInt = pg.length === 1 && pg[0].t === 'interactive';
+      if (h > cap) overflow++;
+      else if (!isInt && pct < 45 && pg.some(b => b.t !== 'badge' && b.t !== 'prog')) sparse++;
+      detail.push(s.id + ' p' + (i+1) + ' ' + h + '/' + cap + ' ' + pct + '%');
+      for (const b of banned) if (probe.innerHTML.includes(b)) hits.push(s.id + '#' + i + ':' + b);
+    });
+  }
+  console.log('[selfcheck] banned hits:', hits.length ? hits : 'NONE');
+  console.log('[selfcheck] pages total:', totalPages, '| overflow:', overflow, '| sparse(<45%):', sparse);
+  console.log('[selfcheck] per page:', detail.join(' | '));
+  console.log('[selfcheck] per screen:', SCREENS.map(s => s.id + ':' + pagesOf(s).length).join(' '));
+})();
+
+</script>
+</body>
+</html>

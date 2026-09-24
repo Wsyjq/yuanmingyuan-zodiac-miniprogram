@@ -1,81 +1,24 @@
-node_modules/
-**/node_modules/
-
-.zcode/
-.grok/
-.workbuddy/
-.kimi-code/
-.playwright-cli/
-.env
-.env.*
-!.env.example
-plate21/module/utils/judge-secrets.js
+# 微信开发者工具私有配置
 project.private.config.json
 
+# 本机密钥，不要进仓库
+**/judge-secrets.js
+**/*-secrets.js
+
+# 依赖与日志
+node_modules/
 *.log
-!test/gen-all.log
 
-test/login-qr.png
-test/login-result.json
-test/devtools-win.png
-test/screen*.png
-test/shots/
-test/shots-test/
-test/shots-h5/
-test/shots-play-guide/
-test/shots-devtools/
-test/shots-fix/
-test/shots-real/
-test/shots-v2/
-test/shots-v22/
-test/shots-v3fix/
-test/shots-v3new/
-test/shots-review/
-test/shots-devtools-*.png
-test/sim-win*.png
-test/*.tap
-test/audit-flow-layout.report.json
-test/harness/out/
-test/_archived/
-test/gen-raw/
-test/gen-img-*.png
-test/ref-real/
-test/stickers-src/pv-*.png
-
-showcase/
-showcase-demos/
-
-# 本地隧道与调试脚本（内网预览用，不进仓库）
-/tunnel*
-/test.ps1
-/test2.ps1
-/*.txt
-
-/拾迹创游-项目介绍*.html
-/拾迹创游-项目介绍*.pdf
-
-plate21/module/assets/img/IMG-ENVELOPE-*.png
-plate21/module/assets/img/IMG-P-WANZI.png
-plate21/module/assets/img/IMG-S2C1.png
-plate21/module/assets/img/IMG-S2C2.png
-plate21/module/assets/img/IMG-S2C3.png
-plate21/module/assets/img/IMG-S2C4.png
-
-coverage/
-__pycache__/
-*.pyc
+# 系统与编辑器
 .DS_Store
 Thumbs.db
-# pollux 项目记忆（private 档：整个目录不入库）
-.projectmem/
-/CLAUDE.md
-# BGM 音频本地生成（ComfyUI），不入库
-/bgm/
-/audio/
-# 史料工作稿与配图（本地对照用，不入库）
-docs/plates-20/
-docs/sl-source-images/
-docs/SL史料卡-*.md
+desktop.ini
+.idea/
+.vscode/
+.playwright-cli/
 
-test/shots-ai-style/
-test/shots-archive/
+# 测试截图（不入库）
+test/*.png
+test/all/
+preview/shots/
+preview/*.png

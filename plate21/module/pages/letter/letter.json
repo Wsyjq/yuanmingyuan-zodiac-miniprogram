@@ -3,5 +3,7 @@
     "bgm-ambience": "../../components/bgm-ambience/bgm-ambience"
   },
   "navigationBarTitleText": "次日之信",
+  "navigationBarBackgroundColor": "#F4EDDC",
+  "navigationBarTextStyle": "black",
   "disableScroll": true
 }

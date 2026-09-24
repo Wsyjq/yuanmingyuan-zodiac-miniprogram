@@ -1,5 +1,5 @@
 <view wx:if="{{open}}" class="md-mask {{closing ? 'overlay-out' : ''}}" bindtap="close"></view>
-<view wx:if="{{open}}" class="md-drawer {{closing ? 'overlay-out' : ''}}" catchtouchmove="true">
+<view wx:if="{{open}}" class="md-drawer {{closing ? 'overlay-out' : ''}}" catchtouchmove="noop">
 
   <view class="md-head">
     <view class="md-head-main">

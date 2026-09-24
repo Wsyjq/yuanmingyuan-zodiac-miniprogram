@@ -1,3 +1,4 @@
+const statusBarBeh = require('../../utils/status-bar')
 // 序章（飞书 v3 rev4379 §序章）
 // novel-view 叙事（小纸片 → 问老师 → 档案袋 → 旧日记「寻廿一图」→ 丙午年）
 // → 档案交接清点面板 → 前往西洋楼入口（s1-decode）。
@@ -9,7 +10,7 @@ const glossHost = require('../../utils/gloss-host')
 const content = require('../../content/prologue')
 
 Page({
-  behaviors: [coachHost, glossHost],
+  behaviors: [statusBarBeh, coachHost, glossHost],
   data: {
     paragraphs: content.paragraphs,
     props: content.props,

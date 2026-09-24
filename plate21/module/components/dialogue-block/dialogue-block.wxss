@@ -17,7 +17,7 @@
 .db-speaker {
   font-size: 30rpx;
   font-weight: 600;
-  color: #4a402e;
+  color: var(--ink);
   letter-spacing: 4rpx;
 }
 
@@ -26,7 +26,7 @@
 .db-text {
   font-size: 31rpx;
   line-height: 1.9;
-  color: #3d3627;
+  color: var(--ink);
   text-align: justify;
 }
 

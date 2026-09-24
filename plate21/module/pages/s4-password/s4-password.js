@@ -1,3 +1,4 @@
+const statusBarBeh = require('../../utils/status-bar')
 // 第四站收口 · 八位日期（V2.1：密码是加料，不是门）
 // 剧情：八张卡片角落的数字连起来 = 建档日 YYYYMMDD。连上就填进空栏；缺卡也出报告，不卡死。
 // 校验口径：会话锁定日期 YYYYMMDD；跳过通道与答对通道都完成第四站并进入 finale。
@@ -7,6 +8,7 @@ const audioSrc = require('../../utils/audio-src')
 const audioBus = require('../../utils/audio-bus')
 
 Page({
+  behaviors: [statusBarBeh],
   data: {
     narrSrc: audioSrc.clip('narr-s4-password'),
     pwd: '',

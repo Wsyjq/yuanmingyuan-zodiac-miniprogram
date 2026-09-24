@@ -1,52 +1,50 @@
 <nav-back />
 <page-overlays />
 <bgm-ambience />
-<view class="page page-shell paper-grain paper-real">
-  <view class="binder"></view>
-  <view class="tag-no tag-no-fixed">No.S3-3</view>
-
+<view class="page page-shell task-shell paper-grain" style="--sbh: {{statusBarHeight}}px">
   <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
-  <view class="title serif">让水显出答案</view>
-  <view class="hatch-divider title-div"></view>
-  <view class="lead kaiti">正午轮到马首喷水。档案里夹的那张纸认水——蘸点水，看它显出谁来。</view>
-  <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">蘸点水，涂在那张纸上（只涂自家道具纸），看它显出谁来。</text></view>
-  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
+  <view class="task-kicker">海晏堂 · 本题</view>
+  <view class="task-lead kaiti">正午轮到马首喷水。档案里夹的那张纸认水——蘸点水，看它显出谁来。</view>
+  <view class="task-lead">蘸点水，涂在那张纸上（只涂自家道具纸），看它显出谁来。</view>
+  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" autoplay="{{true}}" kind="voice" label="听 · 本页讲述" />
 
-  <view class="prop-card archive-sheet">
-    <view class="prop-label archive-tab">线下道具 · 实体水显纸</view>
+  <view class="prop-prompt clip-card double-frame">
+    <view class="prop-label tag-no">线下道具 · 实体水显纸</view>
     <view class="prop-title serif">用少量清水显影</view>
-    <view class="archive-rule"></view>
-    <view class="care-note">注意：只需湿润纸面，不要浸泡；远离手机和其他纸质资料。</view>
-    <view class="archive-steps">
-      <view class="step-row"><view class="step-no">1</view><view class="step-copy">将水显纸平放在干燥、平整的表面。</view></view>
-      <view class="step-row"><view class="step-no">2</view><view class="step-copy">用微湿的工具缓慢涂过纸面，让隐藏内容逐渐显现。</view></view>
-      <view class="step-row"><view class="step-no">3</view><view class="step-copy">看清兽首名称后，把结果填入下方。</view></view>
+    <view class="prop-steps">
+      <view class="prop-step"><text class="step-no">1</text><text class="step-copy">将水显纸平放在干燥、平整的表面。</text></view>
+      <view class="prop-step"><text class="step-no">2</text><text class="step-copy">用微湿的工具缓慢涂过纸面，让隐藏内容逐渐显现。</text></view>
+      <view class="prop-step"><text class="step-no">3</text><text class="step-copy">看清兽首名称后，把结果填入下方。</text></view>
     </view>
-    <button wx:if="{{!operated}}" class="btn-seal confirm-btn record-action" bindtap="onOperationComplete">图案已经完整显现</button>
+    <view class="prop-note note-hand olive">实体道具在手上操作；本页只回填结果。注意：只需湿润纸面，不要浸泡；远离手机和其他纸质资料。</view>
   </view>
 
-  <view class="answer-area record-field" wx:if="{{operated && !solved}}">
+  <view class="answer-area stitch-strip" wx:if="{{operated && !solved}}">
     <view class="answer-label">水显纸上的答案</view>
     <input class="answer-input" value="{{answerInput}}" bindinput="onInput" placeholder="请输入兽首名称" maxlength="8" />
     <button class="hint-btn" bindtap="onHint">显影提示</button>
     <view class="hint-copy note-hand" wx:if="{{hintText}}">{{hintText}}</view>
     <view class="wrong-tip" wx:if="{{wrongTip}}">{{wrongTip}}</view>
-    <button class="btn-seal confirm-btn record-action" bindtap="onSubmit">提交</button>
   </view>
-  <button class="skip-btn note-hand olive" bindtap="onSkip" wx:if="{{!solved && !showHandoff}}">纸先不湿了，往下走</button>
 
-  <view class="prop-card archive-sheet" wx:if="{{showHandoff}}">
-    <view class="prop-label archive-tab">道具收尾 · 下一条线索</view>
+  <view class="prop-prompt clip-card double-frame" wx:if="{{showHandoff}}">
+    <view class="prop-label tag-no">道具收尾 · 下一条线索</view>
     <view class="prop-title serif">晾干水显纸，再收回资料袋</view>
-    <view class="archive-rule"></view>
-    <view class="care-note">将纸张平放自然晾干，不要擦拭或折叠湿润区域；完全干燥后再收好。</view>
-    <view class="archive-steps">
-      <view class="step-row"><view class="step-no">1</view><view class="step-copy">纸遇水，马首显出来了——正午那一尊。把纸晾干收好。</view></view>
-      <view class="step-row"><view class="step-no">2</view><view class="step-copy">往东看，几根残柱已经戳在视线尽头，档案的下一页就在那儿。</view></view>
+    <view class="prop-steps">
+      <view class="prop-step"><text class="step-no">1</text><text class="step-copy">纸遇水，马首显出来了——正午那一尊。把纸晾干收好。</text></view>
+      <view class="prop-step"><text class="step-no">2</text><text class="step-copy">往东看，几根残柱已经戳在视线尽头，档案的下一页就在那儿。</text></view>
     </view>
-    <button class="btn-seal confirm-btn record-action" bindtap="onNext" disabled="{{advancing}}">水显纸已收好，往东走</button>
+    <view class="prop-note note-hand olive">将纸张平放自然晾干，不要擦拭或折叠湿润区域；完全干燥后再收好。</view>
   </view>
   </scroll-view>
+  <view class="task-dock">
+    <view wx:if="{{hintText}}" class="hint">{{hintText}}</view>
+    <view wx:if="{{wrongTip}}" class="hint">{{wrongTip}}</view>
+    <button wx:if="{{!operated && !solved && !showHandoff}}" class="btn-seal" bindtap="onOperationComplete">图案已经完整显现</button>
+    <button wx:elif="{{operated && !solved}}" class="btn-seal" bindtap="onSubmit">提交</button>
+    <button wx:elif="{{showHandoff}}" class="btn-seal" bindtap="onNext" disabled="{{advancing}}">水显纸已收好，往东走</button>
+    <button wx:if="{{!solved && !showHandoff}}" class="skip-btn" bindtap="onSkip">纸先不湿了，往下走</button>
+  </view>
 </view>
 
 <history-card

@@ -1,3 +1,4 @@
+const statusBarBeh = require('../../utils/status-bar')
 // P14 结局（飞书 v3 rev4379 §结局）：五张残片拼合 → 新铜版画浮现 → 档案主人最后一段记录 → 署名定格。
 // 幕1 黑屏 → 幕2 重新组合记录 → 幕3 拼合揭示 → 幕4 长文叙事（不可跳过）→ 幕5 署名。
 // 版本编号走 claimEdition。领不到号时署名屏写「第 — 版」，不挡住署名。
@@ -42,6 +43,7 @@ const NOVEL_PARAGRAPHS = [
 ]
 
 Page({
+  behaviors: [statusBarBeh],
   data: {
     act: 1,               // 当前幕 1~5
     night: false,         // 幕1 黑屏（--night）

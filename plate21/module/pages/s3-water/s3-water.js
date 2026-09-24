@@ -1,3 +1,4 @@
+const statusBarBeh = require('../../utils/status-bar')
 const session = require('../../store/session')
 const answers = require('../../utils/puzzle-answers')
 const audioSrc = require('../../utils/audio-src')
@@ -12,6 +13,7 @@ const HISTORY_LINES = [
 ]
 
 Page({
+  behaviors: [statusBarBeh],
   data: {
     answerInput: '',
     attempts: 0,

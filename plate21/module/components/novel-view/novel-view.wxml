@@ -46,7 +46,7 @@
           <view wx:if="{{block.image}}" class="photo-sheet">
             <view class="photo-tape"></view>
             <archive-illustration wx:if="{{block.illustrationType}}" class="page-photo" type="{{block.illustrationType}}" label="{{block.caption}}" compact="{{true}}" style="display:block;" />
-            <image wx:elif="{{block.src}}" class="page-photo img-aged" src="{{block.src}}" mode="aspectFill" />
+            <image wx:elif="{{block.src}}" class="page-photo" src="{{block.src}}" mode="aspectFill" />
             <view wx:else class="photo-code">{{block.image}}</view>
             <view class="photo-caption">{{block.caption}}</view>
           </view>
@@ -107,7 +107,7 @@
           <view wx:if="{{block.image}}" class="photo-sheet">
             <view class="photo-tape"></view>
             <archive-illustration wx:if="{{block.illustrationType}}" class="page-photo" type="{{block.illustrationType}}" label="{{block.caption}}" compact="{{true}}" style="display:block;" />
-            <image wx:elif="{{block.src}}" class="page-photo img-aged" src="{{block.src}}" mode="aspectFill" />
+            <image wx:elif="{{block.src}}" class="page-photo" src="{{block.src}}" mode="aspectFill" />
             <view wx:else class="photo-code">{{block.image}}</view>
             <view class="photo-caption">{{block.caption}}</view>
           </view>

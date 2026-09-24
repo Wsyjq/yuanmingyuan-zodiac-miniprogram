@@ -69,6 +69,8 @@ Component({
   },
 
   methods: {
+    noop() {},
+
     open() {
       this.setData({ open: true, closing: false })
       this.refreshSites(null)

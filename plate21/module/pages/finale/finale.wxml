@@ -1,7 +1,7 @@
 <bgm-ambience />
 <!-- v1.3.1 手账：左侧活页装订孔列（移到 .stage 外，避免 flex 影响 fixed；pointer-events:none 不扰演出点击） -->
-<view class="binder"></view>
-<view class="stage page-shell paper-grain paper-real {{night ? 'night' : ''}}" bindtap="onTapScreen">
+<view class="binder {{night ? 'night' : ''}}"></view>
+<view class="stage page-shell paper-grain {{night ? 'night' : ''}}" bindtap="onTapScreen" style="--sbh: {{statusBarHeight}}px">
 
   <!-- v1.3 手账：档案编号标签（黑屏/打字机幕不显示，避让演出） -->
   <view wx:if="{{act === 3 || act === 5}}" class="tag-no fin-no">No.014</view>
@@ -70,7 +70,7 @@
     bind:pagechange="onNovelPage"
     bind:finish="onNovelFinish"
   />
-    <audio-clip wx:if="{{act === 4 && narrSrc}}" src="{{narrSrc}}" label="听 · 结局讲述" dock="{{true}}" />
+    <audio-clip wx:if="{{act === 4 && narrSrc}}" src="{{narrSrc}}" autoplay="{{true}}" kind="voice" label="听 · 本页讲述" />
 
   <!-- 幕5 署名 -->
   <view wx:if="{{act === 5}}" class="act5">

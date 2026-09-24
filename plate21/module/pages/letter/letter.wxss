@@ -50,7 +50,8 @@
 /* 竖排正文：容器高度固定，列自右向左生长，横向滚动 */
 .letter-scroll {
   width: 100%;
-  height: 80vh;
+  flex: 1;
+  min-height: 0;
 }
 .letter-body {
   writing-mode: vertical-rl;

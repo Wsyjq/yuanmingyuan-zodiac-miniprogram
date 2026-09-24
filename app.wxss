@@ -12,7 +12,7 @@ page {
   --paper3: #DED1B4;     /* 灰米深档：浮层、覆盖层 */
   --ink: #46382A;        /* 暖褐墨：正文主文本、排线 */
   --ink-deep: #2E1F0D;   /* 重墨：大标题、重要框线 */
-  --ink60: #8A7A60;      /* 褐墨淡：次要文本、来源标注 */
+  --ink60: #70624E;      /* 褐墨淡：次要文本、来源标注 */
   --patina: #4A6B64;     /* 铜绿：史料卡标题、已解锁、可交互提示 */
   --olive: #6F7248;      /* 暗橄榄绿：编号标签、注释、和纸胶带 */
   --coffee: #7A5C3E;     /* 咖色：票据正文、次级强调 */
@@ -31,6 +31,7 @@ page {
   font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
   font-size: 30rpx;
   line-height: 1.9;
+  height: 100%;
 }
 
 .page-shell {
@@ -38,14 +39,14 @@ page {
   width: 100%;
   max-width: 100vw;
   min-width: 0;
-  height: 100vh;
-  max-height: 100vh;
+  height: 100%;
+  max-height: 100%;
   overflow: hidden;
   box-sizing: border-box;
 }
 .page-shell.page-shell {
-  height: 100vh;
-  max-height: 100vh;
+  height: 100%;
+  max-height: 100%;
   overflow: hidden;
   padding-right: var(--page-gutter);
   padding-bottom: calc(48rpx + var(--safe-bottom));
@@ -68,6 +69,204 @@ page {
     repeating-linear-gradient(0deg, rgba(122, 92, 62, 0.025) 0, rgba(122, 92, 62, 0.025) 1rpx, transparent 1rpx, transparent 13rpx),
     linear-gradient(155deg, #F6F0E0 0%, var(--paper) 58%, #E8E0CE 100%);
   box-shadow: 8rpx 10rpx 0 var(--paper2), 0 10rpx 28rpx rgba(70, 56, 42, 0.18);
+}
+
+/* 任务页：一层纸，不要内卡+装订孔。操作栏钉在底部。 */
+.task-shell {
+  --binder-reserve: 0px;
+  display: flex;
+  flex-direction: column;
+  padding-top: calc(var(--sbh, 20px) + 44px) !important;
+  padding-left: 32rpx !important;
+  padding-right: 32rpx !important;
+  padding-bottom: 0 !important;
+}
+.task-shell .binder {
+  display: none;
+}
+.task-shell .page-doc {
+  flex: 1;
+  height: auto;
+  min-height: 0;
+  width: auto;
+  margin: 0;
+  padding: 8rpx 8rpx 16rpx;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+.task-head {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16rpx;
+  margin-bottom: 16rpx;
+}
+.task-head .task-kicker {
+  margin-bottom: 0;
+  flex: 1;
+}
+.task-head .ac-wrap,
+.task-head .ac-iconbtn {
+  flex-shrink: 0;
+  margin: 0;
+}
+.task-kicker {
+  margin-bottom: 0;
+  font-size: 24rpx;
+  letter-spacing: 6rpx;
+  color: var(--olive);
+  font-weight: 700;
+}
+.task-diary {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 16rpx;
+  margin: 12rpx 0 28rpx;
+  padding: 4rpx 0 4rpx 20rpx;
+  border-left: 4rpx solid var(--cinnabar);
+}
+.task-diary .task-lead {
+  flex: 1;
+}
+.task-diary .ac-iconbtn {
+  margin-top: 6rpx;
+}
+.task-lead {
+  margin-bottom: 0;
+  font-size: 36rpx;
+  line-height: 1.75;
+  color: var(--ink-deep);
+}
+.task-exam {
+  padding-top: 8rpx;
+  border-top: 1rpx solid rgba(46, 31, 13, 0.18);
+}
+.q-label {
+  margin: 16rpx 0 8rpx;
+  font-size: 22rpx;
+  letter-spacing: 8rpx;
+  color: var(--cinnabar);
+  font-weight: 700;
+}
+
+/* 任务页：上面剧情大、下面选项小。 */
+.task-shell .task-lead,
+.task-shell .lead,
+.task-shell .novel-p,
+.task-shell .para,
+.task-shell .wp-line,
+.task-shell .wp-intro,
+.task-shell .dsf-quote,
+.task-shell .narr-text,
+.task-shell .prop-title,
+.task-shell .flip-face,
+.task-shell .act-strip-text {
+  font-size: 36rpx !important;
+  line-height: 1.7 !important;
+  color: var(--ink-deep) !important;
+}
+.task-shell .q-title,
+.task-shell .title,
+.task-shell .navi-title,
+.task-shell .route {
+  font-size: 34rpx !important;
+  line-height: 1.45 !important;
+  font-weight: 700 !important;
+  color: var(--ink-deep) !important;
+  letter-spacing: 1rpx !important;
+}
+.task-shell .opt,
+.task-shell .wp-opt {
+  align-items: flex-start;
+  min-height: 88rpx;
+  padding: 18rpx 8rpx 18rpx 0 !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1rpx solid rgba(46, 31, 13, 0.16) !important;
+  box-shadow: none !important;
+}
+.task-shell .opt-sel,
+.task-shell .wp-opt-on {
+  background: rgba(166, 58, 46, 0.08) !important;
+  border-bottom-color: var(--cinnabar) !important;
+}
+.task-shell .opt-text,
+.task-shell .wp-opt-text,
+.task-shell .cell-name {
+  font-size: 28rpx !important;
+  line-height: 1.5 !important;
+  color: var(--ink-deep) !important;
+  font-weight: 400 !important;
+}
+.task-shell .opt-key,
+.task-shell .wp-opt-key {
+  width: 48rpx;
+  margin-right: 12rpx;
+  font-size: 26rpx !important;
+  font-weight: 700 !important;
+  color: var(--cinnabar) !important;
+}
+.task-shell .hint,
+.task-shell .hint-copy,
+.task-shell .wrong-tip,
+.task-shell .cell-desc,
+.task-shell .step-copy,
+.task-shell .note-hand,
+.task-shell .care-note,
+.task-shell .act-strip,
+.task-shell .site-name,
+.task-shell .site-state,
+.task-shell .wp-step-text,
+.task-shell .panel-no {
+  font-size: 28rpx !important;
+  line-height: 1.55 !important;
+  color: var(--ink-deep) !important;
+}
+.task-shell .answer-input,
+.task-shell .pwd-input {
+  font-size: 32rpx !important;
+  color: var(--ink-deep) !important;
+}
+.task-dock {
+  flex-shrink: 0;
+  padding: 16rpx 8rpx calc(24rpx + var(--safe-bottom));
+  background: linear-gradient(180deg, rgba(244, 237, 220, 0) 0%, var(--paper) 18%);
+  border-top: none;
+}
+.task-dock .btn-seal {
+  width: 100%;
+  min-height: 96rpx;
+  font-size: 32rpx;
+  letter-spacing: 16rpx;
+  color: #F7F4EC;
+  background: var(--cinnabar);
+  border: none;
+  border-radius: 2rpx;
+  box-shadow: 0 8rpx 0 #7A241C;
+}
+.task-dock .btn-seal[disabled] {
+  color: #F7F4EC;
+  background: rgba(166, 58, 46, 0.45);
+  border-color: rgba(166, 58, 46, 0.45);
+  opacity: 1;
+}
+.task-dock .skip-btn {
+  width: 100%;
+  margin-top: 8rpx;
+  padding: 8rpx 0;
+  min-height: 56rpx;
+  background: transparent;
+  border: none;
+  color: var(--ink-deep);
+  font-size: 28rpx;
+}
+.task-dock .hint {
+  margin-bottom: 10rpx;
+  font-size: 28rpx;
+  color: var(--ink-deep);
 }
 
 /* ---------- 字体工具类（设计文档 §1.3） ---------- */
@@ -412,6 +611,90 @@ button.skip-btn {
   pointer-events: none;
 }
 
+/* 缝线条：手帐等价物（左青绿边 + 横线稿纸，无英文 FIELD NOTE） */
+.stitch-strip {
+  position: relative;
+  box-sizing: border-box;
+  padding: 24rpx 24rpx 20rpx;
+  border-top: 1rpx solid rgba(70, 56, 42, 0.28);
+  border-right: 1rpx solid rgba(70, 56, 42, 0.16);
+  border-bottom: 1rpx solid rgba(70, 56, 42, 0.28);
+  border-left: 6rpx solid var(--patina);
+  background:
+    repeating-linear-gradient(0deg, transparent 0, transparent 47rpx, rgba(122, 92, 62, 0.05) 48rpx, transparent 49rpx),
+    rgba(248, 241, 223, 0.72);
+  box-shadow: 4rpx 5rpx 0 rgba(70, 56, 42, 0.06);
+}
+
+/* 实体道具提示卡（只提示步骤，不画假道具） */
+.prop-prompt {
+  position: relative;
+  box-sizing: border-box;
+  margin-top: 40rpx;
+  padding: 48rpx 32rpx 32rpx;
+}
+.prop-prompt .prop-label {
+  display: inline-flex;
+  margin-bottom: 16rpx;
+}
+.prop-prompt .prop-title {
+  color: var(--ink-deep);
+  font-size: 36rpx;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 2rpx;
+  margin-bottom: 20rpx;
+}
+.prop-prompt .prop-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 14rpx;
+}
+.prop-prompt .prop-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 16rpx;
+}
+.prop-prompt .step-no {
+  flex-shrink: 0;
+  width: 36rpx;
+  height: 36rpx;
+  line-height: 36rpx;
+  text-align: center;
+  border-radius: 50%;
+  background: var(--patina);
+  color: #FBF6EA;
+  font-size: 22rpx;
+}
+.prop-prompt .step-copy {
+  flex: 1;
+  font-size: 28rpx;
+  line-height: 1.65;
+  color: var(--ink);
+  padding-top: 2rpx;
+}
+.prop-prompt .prop-note {
+  margin-top: 22rpx;
+  font-size: 24rpx;
+  color: rgba(70, 56, 42, 0.62);
+}
+
+.record-action {
+  box-shadow: inset 0 0 0 1rpx rgba(166, 58, 46, 0.1);
+}
+
+/* 排线分隔细条：cover/handbook/report/waypoint 标题下（非禁用类） */
+.archive-rule {
+  position: relative;
+  height: 10rpx;
+  margin: 14rpx 0 8rpx;
+  border-top: 1rpx solid rgba(46, 31, 13, 0.42);
+  background: repeating-linear-gradient(90deg, rgba(46, 31, 13, 0.24) 0, rgba(46, 31, 13, 0.24) 2rpx, transparent 2rpx, transparent 9rpx);
+  background-size: 100% 5rpx;
+  background-position: left bottom;
+  background-repeat: no-repeat;
+}
+
 /* ---------- 装饰（设计文档 §1.4/§1.5） ---------- */
 /* 排线分隔带：纯 CSS 模拟铜版画排线，褐墨 45% 透明度的细排线 */
 .hatch-divider {
@@ -561,178 +844,7 @@ button.skip-btn {
 .sticker.edge-r.rot-l { transform: translateY(-50%) rotate(-3deg); }
 .sticker.edge-r.rot-r { transform: translateY(-50%) rotate(3deg); }
 
-/* ---------- 真纸纹底（v1.3.3 全站统一） ----------
- * 所有页面在 .paper-grain 之上叠加真实旧纸扫描（TEX-01 PD 素材），统一到 P00 封面的质感。
- * 用法：<view class="page paper-grain paper-real">；photo-check 夜景豁免。
- * 实现注意：.paper-grain 用 background shorthand 设了渐变底，会覆盖本类的 background-image，
- *   故本类自身不设底，仅用伪元素叠加一层真纸纹（opacity 0.5 清晰可见），multiply 混合。
- */
-.paper-real {
-  position: relative;
-}
-.paper-real::before {
-  content: "";
-  position: absolute;
-  left: 0; top: 0; right: 0; bottom: 0;
-  /* 纯 CSS 模拟旧纸纤维质感（WXSS 不允许本地图片，改用渐变叠加）
-     层次：①细纤维排线 ②随机斑点 ③边缘泛黄 */
-  background-image:
-    repeating-linear-gradient(91deg, rgba(122, 92, 62, 0.025) 0, rgba(122, 92, 62, 0.025) 1rpx, transparent 1rpx, transparent 5rpx),
-    repeating-linear-gradient(1deg, rgba(122, 92, 62, 0.02) 0, rgba(122, 92, 62, 0.02) 1rpx, transparent 1rpx, transparent 7rpx),
-    radial-gradient(ellipse 120rpx 80rpx at 30% 20%, rgba(111, 114, 72, 0.04) 0%, transparent 70%),
-    radial-gradient(ellipse 180rpx 120rpx at 75% 65%, rgba(122, 92, 62, 0.04) 0%, transparent 70%),
-    radial-gradient(ellipse 100rpx 140rpx at 50% 90%, rgba(111, 114, 72, 0.03) 0%, transparent 70%);
-  opacity: 0.9;
-  pointer-events: none;
-  /* 小程序 WXSS 不支持 `>*:not()` 选择器，改为负 z-index 把伪元素压到内容层之下，
-     内容（含 fixed 的 .binder）无需逐个提层即可自然位于纸纹之上。 */
-  z-index: -1;
-}
-/* .binder / task-banner 等固定层不受影响（它们是 position:fixed，z-index 自身已 ≥4） */
-
-/* ---------- 去精致化（2026-09-21 用户方向：铜版画是糙档案，不做漂亮展品） ----------
- * 全部手写 WXSS 重写，不引第三方库/字体/纹理素材，零侵权风险。
- * ① AI 叙事图做旧：降饱和、压对比、提亮一档——像档案扫描件，不像精致插画。
- *    真铜版画扫描件（plate-*）本来就糙，不加这类滤镜。 */
-.img-aged {
-  filter: sepia(0.32) saturate(0.72) contrast(0.92) brightness(1.02);
-}
-/* ② 纸面加糙：自写 SVG 噪点（feTurbulence 分形噪），无外部纹理图。
-   与 .paper-real::before 同走负 z-index 压到内容层之下。 */
-.paper-grain::after {
-  content: "";
-  position: absolute;
-  left: 0; top: 0; right: 0; bottom: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E");
-  opacity: 0.55;
-  pointer-events: none;
-  z-index: -1;
-}
-
-/* ---------- 档案任务单原语（v1.6，闭源商用 UI 迭代） ----------
- * Visual references:
- * - YangMann/Paper@21d1d43 (MIT): Chinese document hierarchy and rules
- * - PaperCSS@v1.9.2 (ISC): restrained paper-card and form tactility
- * This is a project-owned WXSS rewrite; neither upstream framework is bundled.
- */
-.archive-sheet {
-  position: relative;
-  box-sizing: border-box;
-  border: 2rpx solid rgba(46, 31, 13, 0.72);
-  border-radius: 3rpx 7rpx 4rpx 5rpx;
-  background:
-    linear-gradient(92deg, rgba(122, 92, 62, 0.035) 0, transparent 18%, transparent 82%, rgba(122, 92, 62, 0.035) 100%),
-    linear-gradient(155deg, #F8F1DF 0%, var(--paper2) 100%);
-  box-shadow:
-    8rpx 10rpx 0 rgba(70, 56, 42, 0.07),
-    0 8rpx 22rpx rgba(70, 56, 42, 0.12);
-}
-
-.archive-sheet::before {
-  content: "";
-  position: absolute;
-  left: 10rpx;
-  right: 10rpx;
-  top: 10rpx;
-  bottom: 10rpx;
-  border: 1rpx solid rgba(70, 56, 42, 0.22);
-  pointer-events: none;
-}
-
-.archive-sheet::after {
-  content: "";
-  position: absolute;
-  right: -2rpx;
-  top: -2rpx;
-  width: 30rpx;
-  height: 30rpx;
-  border-left: 1rpx solid rgba(70, 56, 42, 0.22);
-  border-bottom: 1rpx solid rgba(70, 56, 42, 0.22);
-  background: linear-gradient(225deg, var(--paper) 0%, var(--paper) 48%, #D8C8A8 50%, #EEE3CA 100%);
-  pointer-events: none;
-}
-
-.archive-sheet > .archive-tab {
-  position: absolute;
-  left: 24rpx;
-  top: -27rpx;
-  z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  min-height: 48rpx;
-  box-sizing: border-box;
-  padding: 0 20rpx;
-  border: 1rpx solid var(--cinnabar);
-  background: #F3E8CF;
-  color: var(--cinnabar);
-  font-size: 21rpx;
-  line-height: 1;
-  letter-spacing: 3rpx;
-  transform: rotate(-0.8deg);
-  box-shadow: 3rpx 4rpx 0 rgba(70, 56, 42, 0.08);
-}
-
-.archive-rule {
-  position: relative;
-  height: 10rpx;
-  margin: 14rpx 0 8rpx;
-  border-top: 1rpx solid rgba(46, 31, 13, 0.42);
-  background: repeating-linear-gradient(90deg, rgba(46, 31, 13, 0.24) 0, rgba(46, 31, 13, 0.24) 2rpx, transparent 2rpx, transparent 9rpx);
-  background-size: 100% 5rpx;
-  background-position: left bottom;
-  background-repeat: no-repeat;
-}
-
-.archive-steps {
-  position: relative;
-  padding: 4rpx 0 2rpx;
-}
-
-.archive-steps::before {
-  content: "";
-  position: absolute;
-  left: 22rpx;
-  top: 28rpx;
-  bottom: 28rpx;
-  border-left: 1rpx dashed rgba(111, 114, 72, 0.62);
-  pointer-events: none;
-}
-
-.archive-steps .step-no {
-  position: relative;
-  z-index: 1;
-  background: var(--paper2);
-}
-
-.record-field {
-  position: relative;
-  box-sizing: border-box;
-  padding: 28rpx 26rpx 24rpx;
-  border-top: 1rpx solid rgba(70, 56, 42, 0.3);
-  border-right: 1rpx solid rgba(70, 56, 42, 0.18);
-  border-bottom: 1rpx solid rgba(70, 56, 42, 0.3);
-  border-left: 6rpx solid var(--patina);
-  background:
-    repeating-linear-gradient(0deg, transparent 0, transparent 47rpx, rgba(122, 92, 62, 0.055) 48rpx, transparent 49rpx),
-    rgba(248, 241, 223, 0.7);
-  box-shadow: 4rpx 5rpx 0 rgba(70, 56, 42, 0.06);
-}
-
-.record-field::before {
-  content: "FIELD NOTE";
-  position: absolute;
-  right: 18rpx;
-  top: 10rpx;
-  color: rgba(122, 92, 62, 0.38);
-  font-family: "Courier New", monospace;
-  font-size: 15rpx;
-  line-height: 1;
-  letter-spacing: 2rpx;
-}
-
-.record-action {
-  box-shadow: inset 0 0 0 1rpx rgba(166, 58, 46, 0.1);
-}
+/* 档案风容器/噪点/multiply 已废弃：微信端可能白屏；一律 clip-card / double-frame / stitch-strip。 */
 
 /* ===== V2.2 讲述版通用 ===== */
 /* 纸·实物铭文引文（四声部之「纸」）：档案物件上本来就有的字 */

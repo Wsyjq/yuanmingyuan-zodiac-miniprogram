@@ -74,8 +74,9 @@ Page({
   },
 
   goHandbook() {
-    wx.navigateTo({ url: '/plate21/module/pages/handbook/handbook' })
-  },
-
-  noop() {}
+    wx.navigateTo({
+      url: '/plate21/module/pages/handbook/handbook',
+      fail: function () { wx.showToast({ title: '完成一次考察后可打开手册', icon: 'none' }) }
+    })
+  }
 })

@@ -1,4 +1,6 @@
+const statusBarBeh = require('../../utils/status-bar')
 Page({
+  behaviors: [statusBarBeh],
   onLoad(options) {
     const query = options || {}
     const keys = Object.keys(query)

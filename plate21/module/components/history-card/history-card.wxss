@@ -38,7 +38,12 @@
   font-size: 48rpx;
   line-height: 1;
   color: var(--ink60);
-  padding: 8rpx 16rpx;
+  padding: 16rpx 24rpx;
+  min-width: 72rpx;
+  min-height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   /* INT-302：落印 :active 统一（与 .btn-seal 一致） */
   transition: transform 0.15s ease, opacity 0.15s ease;
 }

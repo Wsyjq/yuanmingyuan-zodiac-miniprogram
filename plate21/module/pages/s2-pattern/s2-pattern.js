@@ -1,3 +1,4 @@
+const statusBarBeh = require('../../utils/status-bar')
 // 第二站 · 黄花阵 对读四：纹样举纸对照（V2.2 讲述版，骨架沿用 V2.1）
 // 玩法：这一路的墙上都是同一种花纹，手里那页印着四种纹样图样——举纸对照，
 // 走向对上的那张就是万字纹（另三种墙上没有）。红线：举纸不贴墙。
@@ -16,7 +17,7 @@ const PUZZLE = content.puzzleId
 const PATTERNS = content.patterns
 
 Page({
-  behaviors: [glossHost],
+  behaviors: [statusBarBeh, glossHost],
   data: {
     patterns: PATTERNS,
     picked: null,       // 举纸对照后认出的 key

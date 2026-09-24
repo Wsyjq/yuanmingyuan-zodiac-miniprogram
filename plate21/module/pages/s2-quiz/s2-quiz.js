@@ -1,3 +1,4 @@
+const statusBarBeh = require('../../utils/status-bar')
 // 黄花阵 · 修建目的（四选一）。
 // 文案单点在 content/s2-quiz.js；答题流程（选择/判分/史料卡/后续旁白）走 quiz-host 公共行为。
 const session = require('../../store/session')
@@ -10,7 +11,7 @@ const content = require('../../content/s2-quiz')
 const sl07 = require('../../utils/sl-cards').get('sl07')
 
 Page({
-  behaviors: [coachHost, glossHost, quizHost],
+  behaviors: [statusBarBeh, coachHost, glossHost, quizHost],
   data: {
     content: content,
     options: content.options,

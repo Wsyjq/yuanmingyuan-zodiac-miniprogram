@@ -1,3 +1,4 @@
+const statusBarBeh = require('../../utils/status-bar')
 // P17 考察手册（全局）：进度总览 + 史料卡回看 + 考察报告缩略位
 const session = require('../../store/session')
 const fieldRecord = require('../../store/field-record')
@@ -59,6 +60,7 @@ const SIDE_SITES = [
 ]
 
 Page({
+  behaviors: [statusBarBeh],
   data: {
     slots: [],
     doneCount: 0,

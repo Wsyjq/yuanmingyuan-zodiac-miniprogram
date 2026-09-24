@@ -15,9 +15,10 @@
   background: transparent;
   border: 2rpx solid rgba(74, 64, 46, 0.55);
   border-radius: 999rpx;
+  min-height: 64rpx;
   line-height: 1.5;
   font-size: 24rpx;
-  color: #4a402e;
+  color: var(--ink);
 }
 
 .ac-btn::after { border: none; }
@@ -52,8 +53,8 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 52rpx;
-  height: 52rpx;
+  width: 72rpx;
+  height: 72rpx;
   border: 2rpx solid rgba(74, 64, 46, 0.5);
   border-radius: 50%;
   background: rgba(247, 244, 236, 0.75);
@@ -68,8 +69,8 @@
   border-color: rgba(74, 64, 46, 0.8);
 }
 .ac-iconbtn-img {
-  width: 24rpx;
-  height: 24rpx;
+  width: 28rpx;
+  height: 28rpx;
   margin-left: 3rpx;
   opacity: 0.78;
 }
@@ -80,7 +81,7 @@
 .ac-iconbtn-bar {
   width: 6rpx;
   height: 20rpx;
-  background: #4a402e;
+  background: var(--ink);
   border-radius: 2rpx;
 }
 
@@ -107,8 +108,8 @@
 }
 .ac-dock-fold {
   flex-shrink: 0;
-  width: 44rpx;
-  height: 44rpx;
+  width: 64rpx;
+  height: 64rpx;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -142,3 +143,19 @@
   border-color: rgba(74, 107, 100, 0.85);
   background: rgba(74, 107, 100, 0.12);
 }
+
+.ac-mute {
+  flex-shrink: 0;
+  margin: 0;
+  padding: 8rpx 18rpx;
+  min-height: 56rpx;
+  background: transparent;
+  border: 2rpx solid rgba(74, 64, 46, 0.35);
+  border-radius: 999rpx;
+  color: var(--ink60);
+  font-size: 22rpx;
+  letter-spacing: 2rpx;
+  line-height: 1.4;
+}
+.ac-mute::after { border: none; }
+.ac-mute:active { opacity: 0.7; }

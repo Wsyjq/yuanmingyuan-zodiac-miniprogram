@@ -1,4 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" viewBox="0 0 640 420">
-  <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#6f7248"/><stop offset="1" stop-color="#d8c7a0"/></linearGradient></defs>
-  <rect width="640" height="420" fill="url(#g)"/><path d="m320 110 42 82 91 13-66 64 16 91-83-43-83 43 16-91-66-64 91-13Z" fill="#f4eddc" opacity=".72"/><text x="32" y="48" fill="#46382a" font-family="monospace" font-size="22">TEST FIELD PHOTO 04</text>
-</svg>

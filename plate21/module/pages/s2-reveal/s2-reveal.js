@@ -1,3 +1,4 @@
+const statusBarBeh = require('../../utils/status-bar')
 // 第二站 · 黄花阵名字由来（飞书 rev5614：翻面揭晓，不再开放作答）。
 // 文案单点在 content/s2-reveal.js。
 const session = require('../../store/session')
@@ -9,7 +10,7 @@ const content = require('../../content/s2-reveal')
 const PUZZLE = content.puzzleId
 
 Page({
-  behaviors: [coachHost],
+  behaviors: [statusBarBeh, coachHost],
   data: {
     showHistory: false,
     historyLines: content.historyLines,

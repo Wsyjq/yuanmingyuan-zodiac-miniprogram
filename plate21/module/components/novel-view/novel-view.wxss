@@ -397,7 +397,6 @@
 .page-photo {
   display: block;
   filter: sepia(0.18) saturate(0.78) contrast(0.96);
-  mix-blend-mode: multiply;
 }
 
 .photo-code {

@@ -8,6 +8,11 @@
   flex-direction: column;
   align-items: center;
 }
+.board-scroll {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+}
 
 .board-state {
   margin-top: 220rpx;
@@ -292,7 +297,6 @@
 .jr-img {
   width: 100%;
   height: 100%;
-  mix-blend-mode: multiply;
   filter: sepia(0.28) saturate(0.72) contrast(1.02);
 }
 .jr-seal {

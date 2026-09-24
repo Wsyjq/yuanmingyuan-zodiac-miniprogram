@@ -11,7 +11,7 @@
   right: 0;
   bottom: 0;
   z-index: 120;
-  height: 82vh;
+  height: 82%;
   display: flex;
   flex-direction: column;
   background: var(--paper);
@@ -44,8 +44,8 @@
   color: var(--ink-deep);
 }
 .md-close {
-  width: 56rpx;
-  height: 56rpx;
+  width: 72rpx;
+  height: 72rpx;
   font-size: 34rpx;
   color: var(--ink60);
   display: flex;
@@ -142,6 +142,7 @@
 
 .md-actions {
   padding-top: 16rpx;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   gap: 14rpx;

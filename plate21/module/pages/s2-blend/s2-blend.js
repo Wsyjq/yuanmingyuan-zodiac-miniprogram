@@ -1,4 +1,5 @@
 'use strict'
+const statusBarBeh = require('../../utils/status-bar')
 
 // 第二站 · 黄花阵 对读三：亭子线稿对眼前这座亭（V2.1 可用稿）。
 // 举线稿对照，用手机拍下中西混作的细节——找到一处即算；四处细目都拍，记录更厚。
@@ -51,6 +52,7 @@ function keepPhoto(tempFilePath) {
 }
 
 Page({
+  behaviors: [statusBarBeh],
   data: {
     points: buildPoints(),
     photoCount: 0,

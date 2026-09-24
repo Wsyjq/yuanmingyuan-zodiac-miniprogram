@@ -2,17 +2,21 @@
 
 .page {
   position: relative;
-  min-height: 100vh;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 0 0 80rpx 52rpx; /* 左侧 52rpx 让位 .binder */
 }
+/* task-shell 未接管的页面：手动给 nav-back / 状态栏留位 */
+.page.page-shell {
+  padding-top: calc(var(--sbh, 20px) + 44px);
+}
 
 /* v1.3 手账：归档编号签（右上角，避让胶囊） */
 .page-tag {
   position: absolute;
-  top: 88rpx; right: 210rpx;
+  top: calc(var(--sbh, 20px) + 8px); right: 210rpx;
   z-index: 3;
 }
 /* v1.3.1：邮戳贴纸压在编号签左下方，归档封缄感 */
@@ -60,7 +64,7 @@
 .video-block {
   position: relative;
   width: 100%;
-  height: 62vh;
+  height: 62%;
   box-sizing: border-box;
   background: var(--paper2);
   display: flex;

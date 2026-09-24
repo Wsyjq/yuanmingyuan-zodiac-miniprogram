@@ -1,26 +1,24 @@
 /* 第二站 · 谜题4 墙体花纹观察（采风修订版，复古手账风） */
-.page { padding: 0 36rpx 48rpx; height: 100%; overflow: hidden; }
+.page { padding: 0; height: 100%; overflow: hidden; }
 
 /* 编号签 */
-.tag-no-fixed { position: absolute; top: 88rpx; right: 210rpx; }
+.tag-no-fixed { position: absolute; top: calc(var(--sbh, 20px) + 8px); right: 210rpx; }
 
 /* 经历感贴纸：吊牌（右上）+ 邮票（左上页边）+ 票根（右下页边）*/
 .sticker-hangtag {
-  position: absolute; top: 84rpx; right: 28rpx;
+  position: absolute; top: calc(var(--sbh, 20px) + 40px); right: 28rpx;
   width: 130rpx; height: 78rpx; opacity: .88; z-index: 9;
   transform: rotate(-5deg); pointer-events: none;
   filter: drop-shadow(0 3rpx 6rpx rgba(70, 56, 42, 0.22));
 }
 .sticker-stamp {
-  position: absolute; top: 18rpx; left: 176rpx;
+  position: absolute; top: calc(var(--sbh, 20px) + 8px); left: 176rpx;
   width: 96rpx; height: 110rpx; opacity: .85; z-index: 9;
   transform: rotate(-8deg); pointer-events: none;
   filter: drop-shadow(0 2rpx 4rpx rgba(70, 56, 42, 0.2));
 }
 
 /* 标题区 */
-.title { padding-top: 130rpx; font-size: 42rpx; font-weight: 700; color: var(--patina); letter-spacing: 4rpx; }
-.title-div { width: 40%; margin: 18rpx auto 0; }
 .lead { margin-top: 18rpx; font-size: 31rpx; line-height: 1.85; color: var(--ink); }
 
 /* 主图区 */
@@ -29,12 +27,10 @@
   position: relative;
   min-width: 0; padding: 14rpx; box-sizing: border-box;
   background: var(--paper2); border-radius: 10rpx;
+  border: 4rpx solid rgba(70, 56, 42, 0.45);
   transition: all .2s;
 }
-.cell { border: 4rpx solid rgba(70, 56, 42, 0.45); }
 .cell.on { border-color: #A63A2E; background: rgba(166, 58, 46, 0.12); }
-.cell-img { width: 100%; height: 180rpx; overflow: hidden; border-radius: 6rpx; background: var(--paper3); }
-.pattern-photo { display: block; width: 100%; height: 100%; filter: sepia(.18) saturate(.8) contrast(1.02); }
 .cell-name { margin-top: 10rpx; font-size: 30rpx; font-weight: 600; color: var(--ink); text-align: center; letter-spacing: 2rpx; }
 .cell-desc { margin-top: 4rpx; font-size: 24rpx; color: var(--ink60); text-align: center; }
 .cell-pin {

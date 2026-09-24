@@ -1,3 +1,4 @@
+const statusBarBeh = require('../../utils/status-bar')
 // P15 考察报告（成果页）：第 21 图成品展示 + 保存相册 + 拓印提示
 // 定格口径（V2.1）：《西洋楼铜版图·第二十一图》/ 今日对读。非馆藏原件。/ 绘制者 / 绘制时间。
 const session = require('../../store/session')
@@ -10,6 +11,7 @@ const CH = 1120
 const REPORT_PLATE_SRC = '/plate21/module/assets/img/IMG-RUNTIME-PLATE.jpg'
 
 Page({
+  behaviors: [statusBarBeh],
   data: {
     name: '',
     editionLabel: '今日对读',
@@ -425,7 +427,7 @@ Page({
     session.completeExperience().then(() => {
       session.emit({ name: 'module_exit' })
       wx.reLaunch({
-        url: '/pages/index/index',
+        url: '/plate21/module/pages/cover/cover',
         fail: () => this.setData({ completing: false })
       })
     }).catch(() => {

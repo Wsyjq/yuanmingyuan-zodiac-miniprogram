@@ -1,7 +1,7 @@
 <nav-back />
 <!-- v1.3.1 手账：左侧活页装订孔列（移到 .page 外，避免 flex 影响 fixed） -->
 <view class="binder"></view>
-<view class="page page-shell paper-grain paper-real">
+<view class="page page-shell paper-grain" style="--sbh: {{statusBarHeight}}px">
 <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
 
   <!-- v1.3.1 手账：票根贴纸压在标题右上角，像手册的装订凭证 -->
@@ -32,7 +32,7 @@
   <!-- 第贰折：玩家实际拍摄的四图考察卡 -->
   <view class="hatch-divider sec-div"></view>
   <view class="sec-head serif">第贰折 · 亭下考察卡</view>
-  <view class="photo-record archive-sheet">
+  <view class="photo-record clip-card double-frame stitched">
     <view class="photo-record-head">
       <view>
         <view class="photo-record-kicker">FIELD RECORD · S2-3</view>

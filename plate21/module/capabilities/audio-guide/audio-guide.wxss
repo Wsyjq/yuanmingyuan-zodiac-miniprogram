@@ -26,9 +26,9 @@
   position: fixed;
   left: 24rpx;
   right: 24rpx;
-  bottom: 28rpx;
+  bottom: calc(28rpx + env(safe-area-inset-bottom));
   z-index: 114;
-  max-height: 62vh;
+  max-height: 62%;
   display: flex;
   flex-direction: column;
   padding: 26rpx 28rpx;
@@ -118,7 +118,7 @@
 .ag-script {
   margin-top: 16rpx;
   min-height: 0;
-  max-height: 34vh;
+  max-height: 34%;
 }
 .ag-line {
   padding: 10rpx 2rpx;
@@ -146,7 +146,7 @@
 }
 .ag-deep-toggle::after { border: none; }
 .ag-deep-script {
-  max-height: 26vh;
+  max-height: 26%;
   margin-top: 12rpx;
   padding-top: 10rpx;
   border-top: 1rpx dashed rgba(138, 122, 96, 0.28);

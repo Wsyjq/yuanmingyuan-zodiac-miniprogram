@@ -1,3 +1,4 @@
+const statusBarBeh = require('../../utils/status-bar')
 // 雨果雕像（飞书 v3 rev5614 §雨果雕像）：纯叙事页。
 // rev5614 已删去时间线排序、四遗物卡与密码锁；本页读完即往结局（finale）。
 // puzzleId 仍记 s4-timeline（含日期卡收集），仅为存档/卡链兼容。
@@ -6,7 +7,7 @@ const audioSrc = require('../../utils/audio-src')
 const glossHost = require('../../utils/gloss-host')
 
 Page({
-  behaviors: [glossHost],
+  behaviors: [statusBarBeh, glossHost],
   data: {
     narrSrc: audioSrc.clip('narr-s4-timeline'),
     advancing: false,

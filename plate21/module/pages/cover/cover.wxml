@@ -1,7 +1,7 @@
 <nav-back />
 <!-- v1.3.1 手账：左侧活页装订孔列（移到 .page 外，避免 flex 容器影响 fixed 定位） -->
 <view class="binder"></view>
-<view class="page page-shell">
+<view class="page page-shell" style="--sbh: {{statusBarHeight}}px">
   <!-- v1.3.1 手账：真实吊牌素材 + 叠字编号（右上角，避让返回按钮与胶囊） -->
   <view class="page-tag">
     <image class="page-tag-img" src="/plate21/module/assets/img/stickers/st-hang-tag-01.png" mode="aspectFit" />

@@ -3,25 +3,25 @@ page {
 }
 
 .ticket {
-  min-height: 100vh;
+  min-height: 100%;
   box-sizing: border-box;
   padding: 48rpx 40rpx 80rpx;
   background: #F4EDDC;
-  color: #2E1F0D;
+  color: var(--ink-deep);
 }
 
 .card {
   box-sizing: border-box;
   padding: 48rpx 36rpx 40rpx;
   background: #FBF6EA;
-  border: 4rpx solid #2E1F0D;
+  border: 4rpx solid var(--ink-deep);
 }
 
 .kicker {
   text-align: center;
   font-size: 22rpx;
   letter-spacing: 4rpx;
-  color: #4A6B64;
+  color: var(--patina);
 }
 
 .title {
@@ -29,38 +29,38 @@ page {
   text-align: center;
   font-size: 44rpx;
   font-weight: 700;
-  color: #2E1F0D;
+  color: var(--ink-deep);
 }
 
 .copy {
   margin-top: 28rpx;
   font-size: 28rpx;
   line-height: 1.7;
-  color: #2E1F0D;
+  color: var(--ink-deep);
 }
 
 .dash {
   margin: 36rpx 0;
-  border-top: 4rpx dashed #C0B49A;
+  border-top: 4rpx dashed var(--dash);
 }
 
 .label {
   font-size: 22rpx;
   letter-spacing: 4rpx;
-  color: #8A7A60;
+  color: var(--ink60);
 }
 
 .price {
   margin-top: 8rpx;
   font-size: 64rpx;
   font-weight: 700;
-  color: #A63A2E;
+  color: var(--cinnabar);
 }
 
 .note {
   margin-top: 12rpx;
   font-size: 26rpx;
-  color: #8A7A60;
+  color: var(--ink60);
 }
 
 .unlock {
@@ -93,7 +93,7 @@ page {
   margin: 40rpx auto 0;
   padding: 0;
   background: transparent;
-  color: #2E1F0D;
+  color: var(--ink-deep);
   font-size: 32rpx;
   font-weight: 700;
   border: none;

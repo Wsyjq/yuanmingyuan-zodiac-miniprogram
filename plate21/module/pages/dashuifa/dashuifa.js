@@ -1,3 +1,4 @@
+const statusBarBeh = require('../../utils/status-bar')
 // 大水法 · 猎狗逐鹿 + 火毁转场（飞书 v3 rev5614 §大水法）。
 // 归位三构件 → 喷水场景重现 → 画面破碎转入火烧视频 → 前往雨果雕像。
 // （rev5614 已删远瀛观问答；ds-yuan 谜题 id 仅为旧存档兼容保留在 progress-flow。）
@@ -20,7 +21,7 @@ const ZONES = [
 ]
 
 Page({
-  behaviors: [coachHost, glossHost],
+  behaviors: [statusBarBeh, coachHost, glossHost],
   data: {
     stage: 'hunt',
     pieces: PIECES,
@@ -29,6 +30,7 @@ Page({
     holding: '',
     huntAttempts: 0,
     huntHint: '',
+    advancing: false,
     narrSrc: audioSrc.clip('narr-dashuifa-hunt'),
     // 史料卡挂点（飞书 v3）：到站「大水法」SL-14
     introParts: [
@@ -82,9 +84,14 @@ Page({
   },
 
   onNext() {
+    if (this.data.advancing) return
+    this.setData({ advancing: true })
     wx.redirectTo({
       url: '/plate21/module/pages/transit/transit?leg=ds-s4',
-      fail: () => wx.showToast({ title: '页面跳转失败，请重试', icon: 'none' })
+      fail: () => {
+        this.setData({ advancing: false })
+        wx.showToast({ title: '页面跳转失败，请重试', icon: 'none' })
+      }
     })
   },
 

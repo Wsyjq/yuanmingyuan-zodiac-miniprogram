@@ -1,3 +1,4 @@
+/* optional: task-shell 已预留顶部空间；当前主线页未引用本组件，保留备用 */
 .task-banner {
   position: fixed;
   left: 32rpx;
