@@ -170,5 +170,17 @@
   "LT8": {
     "kind": "letter",
     "playId": ""
+  },
+  "FQ1": {
+    "kind": "puzzle",
+    "playId": "quiz-fang-person"
+  },
+  "FQ2": {
+    "kind": "puzzle",
+    "playId": "quiz-fang-use"
+  },
+  "FR1": {
+    "kind": "read",
+    "playId": ""
   }
 }

@@ -136,6 +136,8 @@ test('walk normal play requires correct answers, sound completion, field record,
       assert.equal(h.session.getSnapshot().records.length, 1)
     }
     if (id === 'H5') await h.invoke('onChoice', event({ id: 'wanzi' }))
+    if (id === 'FQ1') await h.invoke('onChoice', event({ id: 'rongfei' }))
+    if (id === 'FQ2') await h.invoke('onChoice', event({ id: 'worship' }))
     if (id === 'HY1') await finishClock(h)
     if (id === 'HY3') await h.invoke('onConfirmDial', event({}, ['confirmed']))
     if (id === 'XS1') await h.invoke('onChoice', event({ id: 'high' }))
@@ -478,6 +480,7 @@ test('physical flip reveals its answer on a separate screen before the story', a
 test('listening preference gates auto narration and only current-page audio can begin countdown', async () => {
   const h = await harness()
   assert.equal(h.page.data.showModeChoice, true)
+  await h.arrange('X1')
   await h.invoke('onChooseMode', event({ mode: 'listen' }))
   assert.equal(h.page.data.showModeChoice, false)
   assert.equal(h.page.data.listenMode, 'listen')
@@ -492,7 +495,7 @@ test('listening preference gates auto narration and only current-page audio can 
   assert.equal(h.page.data.autoSeconds, 0)
   await h.invoke('onCloseDrawer')
   await h.arrange('HY1')
-  assert.ok(h.page.data.listenKey)
+  assert.equal(h.page.data.listenKey, '', 'changed narration waits for a matching recording')
   await h.invoke('onPrimary')
   assert.equal(h.page.data.screen.screenPart, 'activity')
   assert.equal(h.page.data.listenKey, '')

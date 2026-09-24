@@ -18,15 +18,15 @@ function frozen(value) {
   return value
 }
 
-test('all 43 stable page IDs build pure display models and caller state remains immutable', () => {
-  assert.equal(pages.list.length, 43)
+test('all 46 page IDs build pure display models and caller state remains immutable', () => {
+  assert.equal(pages.list.length, 46)
   for (const page of pages.list) {
     const run = frozen(runAt(page.id)), ui = frozen({ optionId: 'ne', text: '草稿', placed: { deer: 'ring' } })
     const view = buildScreen(run, ui)
     assert.equal(view.pageId, page.id)
     assert.ok(view.title)
     assert.ok(Array.isArray(view.lines))
-    assert.equal(view.pageCount, 43)
+    assert.equal(view.pageCount, 46)
     assert.equal(run.uiByPage[page.id], undefined)
   }
 })
@@ -37,7 +37,7 @@ test('non-bracketed scene descriptions remain screen copy alongside presentation
   assert.equal(pages.byId.FN1.presentation.kind, 'engraving-reveal')
   assert.equal(pages.byId.FN3.presentation.kind, 'archive-reveal')
   assert.equal(pages.byId.HY2.presentation.kind, 'water-clock-finale')
-  assert.match(pages.byId.HG1.lines.join(''), /雨果在法国写下/)
+  assert.match(pages.byId.HG1.lines.join(''), /雨果写下/)
 })
 
 test('stable choice IDs are used once, selected from saved UI, with no answer marked by default', () => {
@@ -174,7 +174,7 @@ test('final letter acknowledgement follows real submission status or private sav
   for (const [status, pattern] of Object.entries(expected)) assert.match(buildScreen(letterAt('LT8'), { relay: { submitStatus: status } }).lines.join(''), pattern)
 })
 
-test('all eleven puzzles project separate gameplay modules without mixing their prompts into the story', () => {
+test('all thirteen puzzles project separate gameplay modules without mixing their prompts into the story', () => {
   let count = 0
   for (const page of pages.list.filter(p => p.playId)) {
     const view = buildScreen(runAt(page.id), { arrived: true, flipped: true })
@@ -185,7 +185,7 @@ test('all eleven puzzles project separate gameplay modules without mixing their 
     for (const line of view.interaction.lines) assert.ok(!view.lines.includes(line), page.id + ': duplicate gameplay text')
     count++
   }
-  assert.equal(count, 11)
+  assert.equal(count, 13)
   const closed = buildScreen(runAt('H3'), { flipped: false })
   assert.doesNotMatch(closed.interaction.lines.join(''), /黄色彩绸/)
   assert.equal(buildScreen(runAt('E2')).interaction, null)

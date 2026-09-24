@@ -206,7 +206,8 @@ Page({
         await this.changePart(nextPart); return
       }
       if (this.data.review) {
-        if (page.next && engine.canEnter(this.run, page.next)) await session.navigate(page.next, { sessionId: this.sessionId })
+        const next = engine.reviewNext(this.run, page.id)
+        if (next) await session.navigate(next, { sessionId: this.sessionId })
         else await session.resume(this.sessionId)
         return
       }

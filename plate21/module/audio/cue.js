@@ -23,6 +23,7 @@ function soundscapeFor(page) {
 }
 
 function clipsFor(page, run) {
+  if (page.narrationPending) return []
   if (!shouldPlay(page, run)) return []
   const status = page.revealOf && run && run.puzzles && run.puzzles[page.revealOf]
   if (page.revealOf && status !== 'solved' && status !== 'assisted') return []

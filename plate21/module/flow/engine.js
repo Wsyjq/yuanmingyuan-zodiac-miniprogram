@@ -34,6 +34,16 @@ function enter(run, id) {
   if (id === next.resumePageId && page.siteId && !next.sites[page.siteId]) next.sites[page.siteId] = 'active'
   return next
 }
+function reviewNext(run, id) {
+  let target = pageOf(id).next
+  const seen = new Set()
+  while (target && !seen.has(target)) {
+    if (canEnter(run, target)) return target
+    if (!pageOf(target).addedInRevision) return ''
+    seen.add(target); target = pageOf(target).next
+  }
+  return ''
+}
 function resume(run) { return enter(run, run.resumePageId) }
 function isLastOfSite(page, target) {
   return !!page.siteId && (!pages.byId[target] || pages.byId[target].siteId !== page.siteId)
@@ -88,7 +98,7 @@ function openLetter(run) {
   if (next.resumePageId === 'FN4') return moveFrontier(next, 'LT1')
   return enter(next, 'LT1')
 }
-return { createRun, cloneRun, canEnter, isReview, enter, resume, complete, skip, openLetter }
+return { reviewNext, createRun, cloneRun, canEnter, isReview, enter, resume, complete, skip, openLetter }
 
 }
 module.exports = Object.assign(createEngine(require('./pages')), { createEngine })

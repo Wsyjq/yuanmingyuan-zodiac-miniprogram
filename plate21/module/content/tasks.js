@@ -1,5 +1,4 @@
 'use strict'
-// Editable content only. See docs/v3-content-authoring.md.
 module.exports = {
   "quiz-direction": {
     "title": "对照地图，辨认西洋楼的方位",
@@ -66,5 +65,17 @@ module.exports = {
     "instruction": "对照铜版图，把鹿与猎犬拖回水池，唤起水流。",
     "feedback": "对照铜版图，看看鹿与猎犬各在水池的什么位置。",
     "hint": "鹿立在水池中央，猎犬环绕在它周围。"
+  },
+  "quiz-fang-person": {
+    "title": "辨认人物线索",
+    "instruction": "翻阅方外观的史料，找出与这里生活有关的人。",
+    "feedback": "看看史料里，谁曾在这里礼拜。",
+    "hint": "线索与一位来自不同文化背景的妃子有关。"
+  },
+  "quiz-fang-use": {
+    "title": "读懂建筑用途",
+    "instruction": "结合人物线索和阿拉伯文碑刻，判断建筑用途。",
+    "feedback": "碑刻不只是装饰，也提示了这座建筑怎样被使用。",
+    "hint": "想想宗教信仰与日常礼拜需要怎样的场所。"
   }
 }

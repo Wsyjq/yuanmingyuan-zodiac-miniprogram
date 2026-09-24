@@ -1,6 +1,6 @@
 'use strict'
 
-// 主线十一道玩法的判定。不渲染页面，也不给出下一页。
+// 主线玩法的判定。不渲染页面，也不给出下一页。
 // propPrompt 只摘 docs/飞书分页接入方案.md 里已有的提示，不描写道具外观。
 
 const { PLAY_IDS } = require('../flow/contract')
@@ -87,6 +87,11 @@ const PLAYS = {
     solved: function (action) { return !!(action.deer && action.dogs && action.beasts) }
   }
 }
+
+;['quiz-fang-person', 'quiz-fang-use'].forEach(id => {
+  PLAYS[id] = { propPrompt: '', fields: [{ name: 'value', type: 'choice', options: CHOICES[id].map(item => item.label) }],
+    solved: action => choiceIs(id, action, config.answers[id]) }
+})
 
 if (Object.keys(PLAYS).length !== PLAY_IDS.length) {
   throw new Error('play table does not match PLAY_IDS')

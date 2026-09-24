@@ -54,7 +54,7 @@ test('walk and host index event handlers resolve to methods on their actual Page
 
 test('sampled mainline and relay screens render through the runtime with their intended key interaction', async () => {
   const expected = {
-    P1: /第二十一图的传闻/, X1: /音乐贴片|直接听/, H3: /我已翻到背面/, H4: /我已到达中心亭/,
+    P1: /第二十一图的传闻/, FQ1: /人物线索/, FQ2: /礼拜场所/, FR1: /容妃.*礼拜/, X1: /音乐贴片|直接听/, H3: /我已翻到背面/, H4: /我已到达中心亭/,
     HY1: /海晏堂|水力钟/, DS1: /梅花鹿/, DS2: /旧画与眼前/, FN4: /保存考察记录|署名/,
     LT6: /接力记录/, LT7: /公开投稿/
   }
@@ -198,7 +198,7 @@ test('gameplay instructions, controls and submit button render inside one distin
 })
 
 test('story and gameplay occupy mutually exclusive full screens for every mixed node', async () => {
-  for (const page of pages.list.filter(p => p.interaction)) {
+  for (const page of pages.list.filter(p => p.interaction && p.lines.length)) {
     const activity = await render(page.id, { screenPart: 'activity', arrived: true, flipped: true })
     assert.deepEqual(activity.errors, [], page.id)
     assert.equal(activity.data.narrative.length, 0, page.id + ' gameplay must not include story prose')

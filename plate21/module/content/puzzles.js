@@ -1,5 +1,5 @@
 'use strict'
-// Preserve option IDs when editing labels. New mechanics require a registered handler.
+// Stable option IDs support script revisions.
 module.exports = {
   "choices": {
     "quiz-direction": [
@@ -65,13 +65,47 @@ module.exports = {
         "id": "basket",
         "label": "花篮纹"
       }
+    ],
+    "quiz-fang-person": [
+      {
+        "id": "qianlong",
+        "label": "乾隆帝"
+      },
+      {
+        "id": "castiglione",
+        "label": "郎世宁"
+      },
+      {
+        "id": "rongfei",
+        "label": "容妃"
+      }
+    ],
+    "quiz-fang-use": [
+      {
+        "id": "library",
+        "label": "皇家藏书楼"
+      },
+      {
+        "id": "worship",
+        "label": "礼拜场所"
+      },
+      {
+        "id": "bedroom",
+        "label": "皇帝寝宫"
+      },
+      {
+        "id": "music",
+        "label": "西洋乐器陈列厅"
+      }
     ]
   },
   "answers": {
     "quiz-direction": "ne",
     "quiz-lantern": "lantern",
     "quiz-pattern": "wanzi",
-    "quiz-height": "high"
+    "quiz-height": "high",
+    "quiz-fang-person": "rongfei",
+    "quiz-fang-use": "worship"
   },
   "envelopeAnswers": [
     "黄花阵"

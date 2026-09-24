@@ -71,6 +71,7 @@ const PIECES = [
 
 
 const PLAY_TYPES = {
+  'quiz-fang-person': 'choice', 'quiz-fang-use': 'choice',
   'quiz-direction': 'choice', 'listen-nfc': 'soundscape', 'quiz-envelope': 'text',
   'quiz-lantern': 'choice', 'prop-flip': 'physical-flip', 'photo-pavilion': 'photo',
   'quiz-pattern': 'picture-choice', 'quiz-hour': 'water-clock', 'prop-dial': 'physical-confirm',
@@ -141,14 +142,7 @@ function bodyLines(page, run, ui) {
   }
   return lines
 }
-function nextIsUnlocked(run, page) {
-  if (!page.next) return false
-  const unlocked = (run.unlocked || {})[page.next] || (run.visited || {})[page.next]
-  const target = pages.byId[page.next]
-  if (target.revealOf && ['solved', 'assisted'].indexOf((run.puzzles || {})[target.revealOf]) < 0) return false
-  if (target.id.indexOf('LT') === 0 && (!run.completedAt || !run.letterAvailable)) return false
-  return !!unlocked
-}
+function nextIsUnlocked(run, page) { return !!require('./engine').reviewNext(run, page.id) }
 function buttons(model, page, run, state) {
   model.primary = page.next ? '继续' : '收好这份档案'
   model.primaryAction = page.next ? 'continue' : 'finish'
@@ -225,7 +219,7 @@ function buildScreen(run, ui) {
     completedDate: completedDate, completionDateLabel: completedDate ? '考察完成于' + completedDate : '',
     presentation: clone(page.presentation), board: null, waterClock: clone(state.waterClock || null),
     fountain: page.id === 'DS2', fountainProgress: clamp(state.fountainProgress == null ? state.fade : state.fountainProgress, 0, 100),
-    portrait: page.id === 'F2' ? '/assets/fig/rongfei.jpg' : '',
+    portrait: page.portrait || '',
     teacher: page.id === 'LT2' ? '/assets/fig/letter-teacher.jpg' : '',
     nfc: page.playId === 'listen-nfc', nfcLine: page.playId === 'listen-nfc' ? '喷泉声、少数民族音乐和西洋音乐' : '',
     nfcStatus: safeText(state.nfcStatus), nfcAside: safeText(state.nfcAside), heard: !!state.heard,

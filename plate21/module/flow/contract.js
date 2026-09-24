@@ -21,6 +21,8 @@ const PLAY_IDS = [
   'prop-flip',
   'photo-pavilion',
   'quiz-pattern',
+  'quiz-fang-person',
+  'quiz-fang-use',
   'quiz-hour',
   'prop-dial',
   'quiz-height',

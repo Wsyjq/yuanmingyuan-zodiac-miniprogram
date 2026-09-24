@@ -12,7 +12,7 @@ function visibleAt(id, extra) {
   return buildScreen(Object.assign(run, extra), { flipped: true, arrived: true, relay: { status: 'ready', viewed: true, records: [{ id: 'real', status: 'published', text: '真实记录' }] } })
 }
 test('every non-bracketed main-script paragraph has a verified visible destination', () => {
-  assert.equal(fixture.paragraphs.filter(p => p.text).length, 165)
+  assert.equal(fixture.paragraphs.filter(p => p.text).length, 176)
   for (const p of fixture.paragraphs) {
     if (!p.text) { assert.equal(p.destination.field, 'program-marker'); continue }
     if (p.displayText === '') continue // User explicitly removed stage directions; original remains in the source fixture.
@@ -20,7 +20,7 @@ test('every non-bracketed main-script paragraph has a verified visible destinati
     const { page, field } = p.destination
     const screen = visibleAt(page)
     if (field === 'choices') {
-      const labels = page === 'H1' ? p.text.split(/[A-D]\./).filter(Boolean) : [p.text.replace(/^[a-d]\s*/, '')]
+      const labels = p.choiceLabels || (page === 'H1' ? p.text.split(/[A-D]\./).filter(Boolean) : [p.text.replace(/^[a-d]\s*/, '')])
       for (const label of labels) assert.ok(screen.choices.some(choice => normalized(choice.label) === normalized(label)), 'missing option ' + label)
       continue
     }
