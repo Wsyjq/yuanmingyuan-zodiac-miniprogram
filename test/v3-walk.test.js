@@ -148,7 +148,7 @@ test('walk normal play requires correct answers, sound completion, field record,
   }
   assert.equal(h.page.data.pageId, 'FN4')
   assert.equal(h.session.getRun().puzzles['quiz-direction'], 'assisted')
-  assert.equal(h.session.getRun().puzzles['photo-pavilion'], 'assisted')
+  assert.equal(h.session.getRun().puzzles['photo-pavilion'], 'solved')
   assert.equal(h.session.getRun().puzzles['listen-nfc'], 'solved')
   assert.equal(h.session.getRun().puzzles['quiz-hour'], 'solved')
   assert.equal(h.session.getRun().puzzles['place-animals'], 'solved')
@@ -339,5 +339,56 @@ test('history is complete before solving or after skipping, and catalog return r
       assert.equal(h.page.data.drawerScrollTop, 0)
       assert.equal(h.page.data.cardAnchor, '')
     }
+  } finally { await h.close() }
+})
+
+test('field note submits directly, persists once, and remains a normal completion on review', async () => {
+  const h = await harness()
+  try {
+    await h.arrange('H4')
+    await h.invoke('onArrived')
+    await h.invoke('onInput', event({ key: 'note' }, '飞檐和穹顶在一起'))
+    await h.invoke('onPrimary')
+    assert.equal(h.page.data.pageId, 'H5')
+    assert.equal(h.session.getRun().puzzles['photo-pavilion'], 'solved')
+    const records = copy(h.session.getSnapshot().records)
+    assert.equal(records.length, 1)
+    assert.equal(records[0].text, '飞檐和穹顶在一起')
+    await h.invoke('onOpenPage', event({ page: 'H4' }))
+    await h.invoke('onInput', event({ key: 'note' }, '不应写入'))
+    await h.invoke('onSaveNote')
+    await h.invoke('onDeleteRecord', event({ id: records[0].id }))
+    assert.deepEqual(h.session.getSnapshot().records, records)
+    assert.equal(h.page.ui.note, '')
+  } finally { await h.close() }
+})
+test('empty answers give an action; wrong answers give an observation cue; explanation keeps skip honest', async () => {
+  const h = await harness()
+  try {
+    await h.arrange('X2')
+    await h.invoke('onPrimary')
+    assert.match(h.page.ui.feedback, /先填写/)
+    await h.invoke('onInput', event({ key: 'text' }, '错误地点'))
+    await h.invoke('onPrimary')
+    assert.match(h.page.ui.feedback, /半字/)
+    await h.invoke('onExplain')
+    assert.equal(h.page.data.drawer, 'explanation')
+    assert.ok(h.page.data.explanation.join('').includes('黄花阵'))
+    assert.equal(h.session.getRun().puzzles['quiz-envelope'], undefined)
+    assert.equal(h.session.getRun().resumePageId, 'X2')
+    await h.invoke('onSkip')
+    assert.equal(h.session.getRun().puzzles['quiz-envelope'], 'skipped')
+    assert.equal(h.page.data.drawer, '')
+    assert.equal(h.page.data.pageId, 'M2')
+  } finally { await h.close() }
+})
+test('water-clock explanation cannot reveal noon before the prediction sequence', async () => {
+  const h = await harness()
+  try {
+    await h.arrange('HY1')
+    assert.equal(h.page.data.canExplain, false)
+    await h.invoke('onExplain')
+    assert.equal(h.page.data.drawer, '')
+    assert.equal(h.session.getRun().puzzles['quiz-hour'], undefined)
   } finally { await h.close() }
 })

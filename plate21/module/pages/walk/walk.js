@@ -21,6 +21,7 @@ const resources = require('../../host/resources')
 const glossary = require('../../flow/glossary')
 const navigation = require('../../host/navigation')
 const navModel = require('../../capabilities/map/nav-model')
+const taskGuide = require('../../flow/task-guide')
 const HINTS = {
   'quiz-direction': '对照地图上长春园与西洋楼的位置，找出它所在的方位。',
   'quiz-envelope': '把信封封口处与信背面的半个字拼在一起，从左到右读。',
@@ -104,7 +105,7 @@ Page({
       letterSceneImage: resources.resolve('/assets/fig/letter-teacher.jpg', 'asset'), screen: model, pageId: page.id, playId: page.playId, ui: clone(this.ui),
       completed: !!this.run.completedAt, review: engine.isReview(this.run),
       rows: view.rows.map((r) => Object.assign({}, r, { openPageId: view.openPageId(r.id) })),
-      records: field, photoCount: field.filter((r) => r.kind === 'photo').length,
+      records: page.id === 'H4' ? field.filter(r => r.siteId === 'maze' || !r.siteId) : field, photoCount: field.filter((r) => r.kind === 'photo').length,
       narrClips: cue.clipsFor(page, Object.assign({}, this.run, { uiByPage: Object.assign({}, this.run.uiByPage, { [page.id]: this.ui }) })),
       voiceEnabled: settings.get().voice, soundSrc: resources.resolve(nfc.SOUND, 'audio'), waterClockState: this.ui.waterClock || {},
       clockPlaying: !!(this.ui.waterClock && this.ui.waterClock.playing),
@@ -112,6 +113,7 @@ Page({
       narrative: model.lines.map(line => glossary.segments(line, glossary.inlineTermsFor(page.id, unlockedCards))),
       routeRows: view.rows.filter(r => navModel.listSites().some(s => s.id === r.id)).map(r => Object.assign({}, r, { openPageId: r.current ? view.resumePageId : view.openPageId(r.id) })),
       routeCurrent: (view.rows.find(r => r.current) || {}).title || '考察尚未开始',
+      canExplain: !!(page.playId && page.playId !== 'quiz-hour' && pages.byId[page.next] && pages.byId[page.next].revealOf === page.playId),
       historyCards: unlockedCards, hasHint: !!HINTS[page.playId], hint: this.ui.hint ? HINTS[page.playId] : '',
       contributions: snap.contributions.map((c) => Object.assign({}, c, { label: STATUS[c.status] || c.status })),
       archives: session.getArchives().map((a) => ({ id: a.sessionId, name: a.run.name, date: fmt(a.run.completedAt) })),
@@ -144,11 +146,11 @@ Page({
   onUnload() { clearTimeout(this._scrollTimer); this.onHide(); this._active = false; settings.unsubscribe(this._settings) },
   onPageScroll(e) { if (this.data.playId === 'quiz-hour') this.onScroll({ detail: e }) },
   onScroll(e) { this.ui.scrollTop = Math.max(0, Number(e.detail.scrollTop) || 0); clearTimeout(this._scrollTimer); this._scrollTimer = setTimeout(() => this.persist().catch(() => {}), 250) },
-  onInput(e) { this.draft({ [ds(e, 'key')]: e.detail.value, again: false }, false) },
+  onInput(e) { if (this.data.review) return; this.draft({ [ds(e, 'key')]: e.detail.value, again: false }, false); this.setData({ 'ui.again': false }) },
   onChoice(e) { if (!this.data.review) this.draft({ choice: ds(e, 'id'), optionId: ds(e, 'id'), again: false }) },
-  onSpot(e) { this.draft({ spot: ds(e, 'id') }) },
-  onHint() { this.draft({ hint: true }); session.viewHint(this.data.playId, 1) },
-  onArrived() { this.draft({ arrived: true }) },
+  onSpot(e) { if (this.data.review) return; this.draft({ spot: ds(e, 'id') }) },
+  onHint() { if (this.data.review) return; this.draft({ hint: true }); session.viewHint(this.data.playId, 1) },
+  onArrived() { if (this.data.review) return; this.draft({ arrived: true }) },
   onVoice(e) { settings.set('voice', !!e.detail.value) },
   onMuteAll() { settings.set('voice', false); audioBus.pauseAll(); this.setData({ pageVisible: false }); wx.nextTick(() => this.setData({ pageVisible: true })) },
   onLetterProgress(e) { this.draft({ letterCursor: e.detail.index }, false) },
@@ -176,15 +178,16 @@ Page({
           waterClock: this.ui.waterClock }
         if (page.playId === 'photo-pavilion') {
           if (!this.ui.arrived) { await this.draft({ again: true, feedback: '到达中心亭后，请先确认到达。' }); return }
+          if (String(this.ui.note || '').trim()) await this.saveObservation()
           const records = this.snapshot().records.filter((r) => r.purpose === 'field' && (r.siteId === 'maze' || !r.siteId))
           answer.count = records.filter((r) => r.kind === 'photo' || r.kind === 'text' && r.text.trim()).length
-          if (!records.some((r) => r.kind === 'photo')) assisted = true
+          // Text and photos are equally valid field observations.
         }
         if (page.playId === 'place-animals') {
           const p = this.ui.placed || {}; answer = { deer: p.deer === 'center', dogs: p.dogs === 'ring', beasts: p.beasts === 'ends' }
         }
         if (play.submit(page.playId, answer).status !== 'solved') {
-          await this.draft({ again: true, feedback: '还没有完成这一项。可以再试一次、查看提示，或选择跳过。' }); return
+          await this.draft({ again: true, feedback: taskGuide.feedback(page.playId, this.ui) }); return
         }
       }
       if (page.id === 'LT6' && this.data.relayItems.length) { this.ui.relayViewed = true; await this.persist() }
@@ -193,7 +196,14 @@ Page({
       if (page.id === 'LT8') this.onReport()
     })
   },
-  onSkip() { this.action(() => session.skipPage(this.run.pageId, { sessionId: this.sessionId })) },
+  onExplain() {
+    if (this.data.review || !this.data.canExplain) return
+    const next = pages.byId[pages.byId[this.run.pageId].next]
+    audioBus.pauseAll()
+    this.draft({ hint: true })
+    this.setData({ drawer: 'explanation', explanation: (next.interaction ? next.interaction.lines : []).concat(next.lines) })
+  },
+  onSkip() { this.setData({ drawer: '' }); this.action(() => session.skipPage(this.run.pageId, { sessionId: this.sessionId })) },
   onResume() { this.action(() => session.resume(this.sessionId)) },
   onBack() {
     this.action(async () => {
@@ -248,17 +258,26 @@ Page({
   },
   onPreview(e) { const src = ds(e, 'src'); if (src) wx.previewImage({ current: src, urls: [src] }) },
   onAddPhoto(e) {
+    if (this.data.review) return
     this.action(async () => { await photos.pickRecord({ purpose: 'field', siteId: this.run.pageId === 'H4' ? 'maze' : pages.byId[this.run.pageId].siteId, spot: this.ui.spot, text: '', id: e && ds(e, 'id') || undefined }, this.sessionId) })
   },
-  onDeleteRecord(e) { this.action(() => session.deleteRecord(ds(e, 'id'), this.sessionId)) },
+  onDeleteRecord(e) {
+    if (this.data.review) return
+    this.action(() => session.deleteRecord(ds(e, 'id'), this.sessionId)) },
   onSaveNote() {
+    if (this.data.review) return
     this.action(async () => {
       if (!String(this.ui.note || '').trim()) throw new Error('请先写下观察记录')
-      await session.saveRecord({ purpose: 'field', kind: 'text', siteId: 'maze', text: this.ui.note, status: 'private' }, this.sessionId)
-      this.ui.note = ''; await this.persist()
+      await this.saveObservation()
     })
   },
-  onConfirmDial(e) { this.draft({ confirmed: e.detail.value.length > 0 }) },
+  async saveObservation() {
+    const text = String(this.ui.note || '').trim()
+    if (!text) return
+    await session.saveRecord({ purpose: 'field', kind: 'text', siteId: 'maze', text, status: 'private' }, this.sessionId)
+    this.ui.note = ''; this.ui.again = false; await this.persist()
+  },
+  onConfirmDial(e) { if (this.data.review) return; this.draft({ confirmed: e.detail.value.length > 0 }) },
   onPiece(e) { if (!this.data.review) this.draft({ selectedPiece: ds(e, 'id') }) },
   onSlot(e) {
     if (!this.ui.selectedPiece || this.data.review) return
@@ -284,7 +303,7 @@ Page({
     this._nfcStarting = false
   },
   stopNfc() { if (this._nfc) this._nfc.stop(); this._nfc = null },
-  onHeard() { this.draft({ heard: true }) },
+  onHeard() { if (this.data.review) return; this.draft({ heard: true }) },
   onSoundError() { this.setData({ nfcStatus: '音乐暂时无法播放，可重试或跳过，不影响后续。' }) },
   async loadRelay() {
     this.setData({ relayState: 'loading' })

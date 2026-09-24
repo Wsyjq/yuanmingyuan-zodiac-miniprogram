@@ -6,6 +6,7 @@ const play = require('../play/index')
 const nav = require('../capabilities/map/nav-model')
 const glossary = require('./glossary')
 const props = require('./props')
+const taskGuide = require('./task-guide')
 
 const PATTERN_FIGURES = [
   { id: 'wanzi', label: '万字纹', src: '/plate21/module/assets/img/IMG-RUNTIME-PATTERN-WANZI.jpg' },
@@ -221,6 +222,7 @@ function buildScreen(run, ui) {
   const model = {
     pageId: page.id, kind: page.kind, sectionTitle: page.sectionTitle, title: TITLES[page.id] || ('前往' + (site ? site.name : '下一站')),
     siteId: page.siteId, siteTitle: site ? site.name : '', pageIndex: index + 1, pageCount: pages.list.length,
+    task: taskGuide.get(page.playId), stageLabel: site ? '第 ' + (nav.listSites().findIndex(item => item.id === site.id) + 1) + ' / 8 站' : (page.id.startsWith('LT') ? '次日来信' : page.id.startsWith('FN') ? '我的考察记录' : '考察序章'),
     interaction: interaction, lines: bodyLines(page, run, state), prop: props.forPage(page.id), propPrompt: page.propPrompt || '',
     play: playSpec ? { id: page.playId, type: PLAY_TYPES[page.playId], choices: clone(choices), fields: clone(playSpec.fields), readOnly: review } : null,
     choices: choices, inputs: [], toggles: [], figures: [], spots: [],

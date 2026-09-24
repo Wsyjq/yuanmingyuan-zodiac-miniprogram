@@ -1,4 +1,5 @@
 <view class="interaction-module">
+  <view wx:if="{{screen.task}}" class="task-summary"><text class="task-label">当前任务</text><text class="task-title">{{screen.task.title}}</text><text class="caption">{{screen.task.instruction}}</text></view>
   <view class="interaction-heading">{{screen.interaction.title}}</view>
       <view wx:if="{{screen.prop.items.length}}" class="prop">
         <view class="prop-title">{{screen.prop.title || '实体道具'}}</view>
@@ -12,17 +13,17 @@
       <view wx:if="{{playId === 'listen-nfc'}}" class="activity">
         <view class="subheading">听见谐奇趣</view><text class="caption">把手机靠近音乐贴片，或点下方按钮直接听。是否读到贴片不影响考察。</text>
         <audio-clip id="soundscape" src="{{soundSrc}}" kind="clip" active="{{pageVisible && !drawer}}" label="直接听 · 声景" bind:ended="onHeard" bind:error="onSoundError"/>
-        <text class="caption">{{nfcStatus}}</text><text wx:if="{{ui.heard}}" class="success">已听完这一段</text>
+        <button wx:if="{{!ui.heard && !review}}" class="secondary" bindtap="onHeard">我已听过，确认完成听音</button><text class="caption">{{nfcStatus}}</text><text wx:if="{{ui.heard}}" class="success">已听完这一段</text>
       </view>
       <view wx:if="{{playId === 'prop-flip' && !ui.flipped}}" class="activity"><text>先翻开实体黄花阵图，确认后阅读背后的故事。</text></view>
       <view wx:if="{{playId === 'photo-pavilion'}}" class="activity">
-        <button wx:if="{{!ui.arrived}}" class="choice" bindtap="onArrived">我已到达中心亭</button>
+        <button disabled="{{review}}" wx:if="{{!ui.arrived}}" class="choice" bindtap="onArrived">我已到达中心亭</button>
         <block wx:if="{{ui.arrived}}">
           <view class="subheading">留一份自己的观察</view><text class="caption">可拍一张或多张照片，也可以用文字记录。</text>
-          <view class="spot-grid"><button wx:for="{{screen.spots}}" wx:key="id" data-id="{{item.id}}" bindtap="onSpot" class="spot {{item.on ? 'selected' : ''}}"><image src="{{item.src}}" mode="aspectFill"/><text>{{item.title}}</text></button></view>
-          <button class="secondary" bindtap="onAddPhoto" disabled="{{busy}}">拍摄或选择照片</button>
-          <view class="record" wx:for="{{records}}" wx:key="id"><image wx:if="{{item.kind === 'photo'}}" src="{{item.filePath}}" mode="aspectFit" data-src="{{item.filePath}}" bindtap="onPreview"/><text wx:else>{{item.text}}</text><view class="row"><button wx:if="{{item.kind === 'photo'}}" class="text-button" data-id="{{item.id}}" bindtap="onAddPhoto">替换</button><button class="text-button" data-id="{{item.id}}" bindtap="onDeleteRecord">删除</button></view></view>
-          <textarea data-key="note" value="{{ui.note}}" maxlength="500" placeholder="无法拍摄也没关系，写下你看到的细节…" bindinput="onInput"/><button class="text-button" bindtap="onSaveNote">保存文字记录</button>
+          <view class="spot-grid"><button wx:for="{{screen.spots}}" wx:key="id" data-id="{{item.id}}" bindtap="onSpot" disabled="{{review}}" class="spot {{item.on ? 'selected' : ''}}"><image src="{{item.src}}" mode="aspectFill"/><text>{{item.title}}</text></button></view>
+          <button class="secondary" bindtap="onAddPhoto" disabled="{{busy || review}}">拍摄或选择照片</button>
+          <view class="record" wx:for="{{records}}" wx:key="id"><image wx:if="{{item.kind === 'photo'}}" src="{{item.filePath}}" mode="aspectFit" data-src="{{item.filePath}}" bindtap="onPreview"/><text wx:else>{{item.text}}</text><view wx:if="{{!review}}" class="row"><button wx:if="{{item.kind === 'photo'}}" class="text-button" data-id="{{item.id}}" bindtap="onAddPhoto">替换</button><button class="text-button" data-id="{{item.id}}" bindtap="onDeleteRecord">删除</button></view></view>
+          <textarea disabled="{{review}}" data-key="note" value="{{ui.note}}" maxlength="500" placeholder="无法拍摄也没关系，写下你看到的细节…" bindinput="onInput"/><button class="text-button" disabled="{{busy || review}}" bindtap="onSaveNote">保存文字记录</button>
           <text wx:if="{{screen.spotDetail}}" class="caption">{{screen.spotDetail}}</text>
         </block>
       </view>
@@ -42,5 +43,6 @@
       </view>
       <view wx:if="{{hint}}" class="notice">{{hint}}</view><button wx:if="{{hasHint && !review}}" class="text-button" bindtap="onHint">给我一点提示</button>
       <view wx:if="{{ui.again}}" class="error" role="alert">{{ui.feedback || '再观察一下，或选择跳过。'}}</view>
-  <view wx:if="{{screen.play}}" class="interaction-actions"><button class="primary" bindtap="onPrimary" disabled="{{busy}}" loading="{{busy}}">{{review ? '继续回看 / 返回进度' : completed && pageId === 'FN4' ? '查看我的作品' : pageId === 'LT8' ? '读完来信，查看作品' : screen.primary || '继续'}}</button><button wx:if="{{screen.showSkip && !review}}" class="text-button skip" bindtap="onSkip" disabled="{{busy}}">{{screen.skipLabel || '这题跳过'}}</button></view>
+  <button wx:if="{{canExplain && !review}}" class="text-button" bindtap="onExplain">想先看解读</button>
+  <view wx:if="{{screen.play}}" class="interaction-actions"><button class="primary" bindtap="onPrimary" disabled="{{busy}}" loading="{{busy}}">{{review ? screen.primary : completed && pageId === 'FN4' ? '查看我的作品' : pageId === 'LT8' ? '读完来信，查看作品' : screen.primary || '继续'}}</button><button wx:if="{{screen.showSkip && !review}}" class="text-button skip" bindtap="onSkip" disabled="{{busy}}">{{screen.skipLabel || '这题跳过'}}</button></view>
 </view>
