@@ -5,6 +5,7 @@ const engine = require('../../flow/engine')
 const pages = require('../../flow/pages')
 const screen = require('../../flow/screen')
 const parts = require('../../flow/screen-parts')
+const letterParagraphs = require('../../flow/letter-paragraphs')
 const listenFlow = require('../../audio/listen-flow')
 const play = require('../../play/index')
 const cue = require('../../audio/cue')
@@ -109,9 +110,11 @@ Page({
         if (!unlockedCards.some((x) => x.key === term.key)) unlockedCards.push({ key: term.key, label: (cards.get(term.key) || {}).title || term.label })
       })
     })
+    const letterLines = letterParagraphs.build(page, model.lines)
+    const letterCursor = letterParagraphs.cursor(model.lines, letterLines, this.ui.letterCursor, this.ui.letterCursorVersion)
     const narrationKey = page.id + ':' + model.screenPart + ':' + (letterActivity ? 'editor' : 'body')
     if (narrationKey !== this.data.narrationKey) this.cancelAuto()
-    this.setData({ narrationKey, listenMode: settings.get().mode || '', letterScene: page.kind === 'letter' && !(this.ui.letterSceneDone && ['LT6', 'LT7'].includes(page.id)),
+    this.setData({ letterLines, letterCursor, narrationKey, listenMode: settings.get().mode || '', letterScene: page.kind === 'letter' && !(this.ui.letterSceneDone && ['LT6', 'LT7'].includes(page.id)),
       letterSceneImage: resources.resolve('/assets/fig/letter-teacher.jpg', 'asset'), screen: model, pageId: page.id, playId: page.playId, ui: clone(this.ui),
       completed: !!this.run.completedAt, review: engine.isReview(this.run),
       rows: view.rows.map((r) => Object.assign({}, r, { openPageId: view.openPageId(r.id) })),
@@ -184,7 +187,7 @@ Page({
   onArrived() { if (this.data.review) return; this.draft({ arrived: true }) },
   onVoice(e) { settings.set('voice', !!e.detail.value) },
   onMuteAll() { settings.set('voice', false); audioBus.pauseAll(); this.setData({ pageVisible: false }); wx.nextTick(() => this.setData({ pageVisible: true })) },
-  onLetterProgress(e) { this.draft({ letterCursor: e.detail.index }, false) },
+  onLetterProgress(e) { this.draft({ letterCursor: e.detail.index, letterCursorVersion: 2 }, false) },
   onLetterComplete() {
     if (['LT6', 'LT7'].includes(this.data.pageId)) this.draft({ letterSceneDone: true })
     else this.onPrimary()

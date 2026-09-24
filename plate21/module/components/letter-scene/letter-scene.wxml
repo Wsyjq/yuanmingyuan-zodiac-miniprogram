@@ -8,8 +8,8 @@
   </view>
   <view class="dialogue" bindtap="onNext">
     <view class="speaker">老师<text class="counter">{{index + 1}} / {{total}}</text></view>
-    <scroll-view scroll-y class="dialogue-scroll" scroll-top="{{0}}"><text class="words">{{text}}</text><text wx:if="{{typing}}" class="cursor">▏</text></scroll-view>
-    <button class="advance" catchtap="onNext" disabled="{{busy}}">{{typing ? '轻触补全文字' : index + 1 === total ? '继续' : '轻触继续'}} ▾</button>
+    <scroll-view scroll-y class="dialogue-scroll" scroll-top="{{scrollTop}}" bindscroll="onDialogueScroll" catchtap="noop"><text class="words">{{text}}</text><text wx:if="{{typing}}" class="cursor">▏</text></scroll-view>
+    <button class="advance" catchtap="onNext" disabled="{{busy}}">{{typing ? '轻触补全文字' : index + 1 === total ? '继续' : '下一段'}} ▾</button>
     <button class="history-button" catchtap="onHistory">剧情回顾</button>
   </view>
   <view wx:if="{{history}}" class="history">

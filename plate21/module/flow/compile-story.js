@@ -19,6 +19,7 @@ function compile(pack, catalogs) {
     if (node.kind === 'puzzle' && !node.playId) errors.push(id + ' 缺少 playId')
     if (node.revealOf && !contract.PLAY_IDS.includes(node.revealOf)) errors.push(id + ' 未知揭晓玩法')
     ;['lines', 'signedLines', 'beforeLines', 'answerLines', 'relayLines'].forEach(key => lines(node[key], id + '.' + key))
+    if (node.dialogueGroups && (!Array.isArray(node.dialogueGroups) || !node.dialogueGroups.every(n => Number.isInteger(n) && n > 0) || node.dialogueGroups.reduce((a, b) => a + b, 0) !== (node.lines || []).length)) errors.push(id + ' 对话段落分组需覆盖全部 lines')
     if (node.interaction) {
       lines(node.interaction.lines, id + '.interaction.lines')
       lines(node.interaction.revealLines, id + '.interaction.revealLines')

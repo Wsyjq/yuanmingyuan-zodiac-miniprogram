@@ -1,18 +1,8 @@
 'use strict'
-function split(lines) {
-  const result = []
-  ;(lines || []).forEach(line => {
-    const chunks = String(line).match(/[^。！？；]+[。！？；]?/g) || [String(line)]
-    chunks.forEach(chunk => {
-      const chars = Array.from(chunk)
-      while (chars.length) result.push(chars.splice(0, 85).join(''))
-    })
-  })
-  return result
-}
+function split(lines) { return (lines || []).map(String).filter(line => line.trim()) }
 Component({
   properties: { chapter: String, heading: String, lines: Array, cursor: Number, scene: String, active: Boolean, busy: Boolean },
-  data: { text: '', index: 0, total: 0, typing: false, history: false, past: [] },
+  data: { text: '', index: 0, total: 0, typing: false, history: false, past: [], scrollTop: 0 },
   observers: {
     'chapter, lines': function () { if (this._alive) this._load() },
     active: function (value) { if (!value) this._stop(); else if (this._alive && !this.data.history) this._type() }
@@ -30,7 +20,7 @@ Component({
       this._key = key; this._stop(); this._parts = split(this.properties.lines)
       const index = Math.max(0, Math.min(this._parts.length - 1, Number(this.properties.cursor) || 0))
       this._count = 0
-      this.setData({ index, total: this._parts.length, text: '', history: false, typing: true })
+      this.setData({ index, total: this._parts.length, text: '', history: false, typing: true, scrollTop: 0 })
       this._type()
     },
     _type() {
@@ -53,7 +43,9 @@ Component({
       }
       if (this.data.index + 1 >= this._parts.length) { this.triggerEvent('complete'); return }
       const index = this.data.index + 1; this._count = 0
-      this.setData({ index, text: '', typing: true })
+      this.setData({ scrollTop: this._scrollTop || 1 })
+      this.setData({ index, text: '', typing: true, scrollTop: 0 })
+      this._scrollTop = 0
       this.triggerEvent('progress', { index }); this._type()
     },
     onHistory() {
@@ -61,6 +53,8 @@ Component({
       this.setData({ history: !this.data.history, past: this._parts.slice(0, this.data.index).concat(this.data.text ? [this.data.text] : []) })
       if (!this.data.history) this._type()
     },
+    onDialogueScroll(e) { this._scrollTop = e.detail.scrollTop },
+    noop() {},
     onImageError() { this.setData({ imageFailed: true }) }
   }
 })

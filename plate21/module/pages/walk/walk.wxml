@@ -20,7 +20,7 @@
   <view wx:if="{{loading}}" class="empty">正在打开考察档案…</view>
   <view wx:if="{{error}}" class="error" role="alert">{{error}}<button wx:if="{{!pageId}}" bindtap="load">重新打开</button></view>
   <view wx:if="{{notice}}" class="notice">{{notice}}</view>
-  <view wx:if="{{letterScene}}" class="letter-stage"><letter-scene chapter="{{pageId}}" heading="{{screen.sectionTitle}}" lines="{{screen.lines}}" cursor="{{ui.letterCursor || 0}}" scene="{{letterSceneImage}}" active="{{pageVisible && !drawer}}" busy="{{busy}}" bind:progress="onLetterProgress" bind:complete="onLetterComplete" /></view>
+  <view wx:if="{{letterScene}}" class="letter-stage"><letter-scene chapter="{{pageId}}" heading="{{screen.sectionTitle}}" lines="{{letterLines}}" cursor="{{letterCursor || 0}}" scene="{{letterSceneImage}}" active="{{pageVisible && !drawer}}" busy="{{busy}}" bind:progress="onLetterProgress" bind:complete="onLetterComplete" /></view>
   <!-- Native Canvas uses page scrolling, avoiding a nested native scroll layer. -->
   <view wx:if="{{pageId && !letterScene && playId === 'quiz-hour'}}"><include src="walk-content.wxml" /></view>
   <scroll-view wx:elif="{{pageId && !letterScene}}" scroll-y class="reading" scroll-top="{{scrollTop}}" bindscroll="onScroll">

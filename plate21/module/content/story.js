@@ -1132,6 +1132,7 @@ module.exports = {
     },
     {
       "id": "LT1",
+      "dialogueGroups": [2],
       "kind": "letter",
       "siteId": "",
       "lines": [
@@ -1158,6 +1159,7 @@ module.exports = {
     },
     {
       "id": "LT2",
+      "dialogueGroups": [2, 2, 2],
       "kind": "letter",
       "siteId": "",
       "lines": [
@@ -1188,6 +1190,7 @@ module.exports = {
     },
     {
       "id": "LT3",
+      "dialogueGroups": [2, 1, 2],
       "kind": "letter",
       "siteId": "",
       "lines": [
@@ -1217,6 +1220,7 @@ module.exports = {
     },
     {
       "id": "LT4",
+      "dialogueGroups": [1, 1, 2],
       "kind": "letter",
       "siteId": "",
       "lines": [
@@ -1245,6 +1249,7 @@ module.exports = {
     },
     {
       "id": "LT5",
+      "dialogueGroups": [3, 4, 3],
       "kind": "letter",
       "siteId": "",
       "lines": [
@@ -1279,6 +1284,7 @@ module.exports = {
     },
     {
       "id": "LT6",
+      "dialogueGroups": [2, 2],
       "kind": "letter",
       "siteId": "",
       "lines": [
@@ -1310,6 +1316,7 @@ module.exports = {
     },
     {
       "id": "LT7",
+      "dialogueGroups": [1],
       "kind": "letter",
       "siteId": "",
       "lines": [
@@ -1339,6 +1346,7 @@ module.exports = {
     },
     {
       "id": "LT8",
+      "dialogueGroups": [2, 4],
       "kind": "letter",
       "siteId": "",
       "lines": [
