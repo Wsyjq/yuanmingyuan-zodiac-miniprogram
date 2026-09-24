@@ -118,3 +118,22 @@ test('only next-day letters use the character scene; relay editing follows the d
     assert.doesNotMatch(text(main.html), /剧情回顾/, id)
   }
 })
+
+test('restored original prose actually reaches WXML instead of only remaining in configuration', async () => {
+  const cases = [
+    ['H2', {}, ['黄花阵的作用：', '最先到达中心的人会得到皇帝的赏赐']],
+    ['H4', { arrived: true }, ['西式穹顶', '莲花基座', '双天鹅', '蝙蝠寓意福气']],
+    ['HY2', {}, ['答案确认后，画面里的十二生肖一个接一个亮起']],
+    ['DS2', {}, ['大水法中央原有一只铜制梅花鹿', '鹿角喷水', '大型卷尾铜兽']],
+    ['FN1', {}, ['屏幕暗了一下，然后亮起', '密集交错的线条构成明暗']],
+    ['FN2', {}, ['屏幕中缓缓出来了一封信', '等待被后来者完成']],
+    ['X2', {}, ['日记和信封会指引你第一站的方向', '信封的封口处和信的背面都有一半的字']]
+  ]
+  for (const [id, state, phrases] of cases) {
+    const result = await render(id, state)
+    assert.deepEqual(result.errors, [], id)
+    const actual = text(result.html).replace(/\s/g, '')
+    for (const phrase of phrases) assert.ok(actual.includes(phrase), id + ': ' + phrase)
+    assert.doesNotMatch(actual, /【DJ|【SL|【小程序/)
+  }
+})

@@ -27,4 +27,19 @@ function termsFor(pageId) {
   })
 }
 
-module.exports = { termsFor: termsFor }
+function segments(text, terms) {
+  const result = []; let rest = String(text)
+  while (rest) {
+    let match = null
+    terms.forEach(term => {
+      const at = term.label ? rest.indexOf(term.label) : -1
+      if (at >= 0 && (!match || at < match.at || (at === match.at && term.label.length > match.label.length))) match = Object.assign({ at }, term)
+    })
+    if (!match) { result.push({ text: rest, key: '' }); break }
+    if (match.at) result.push({ text: rest.slice(0, match.at), key: '' })
+    result.push({ text: match.label, key: match.key })
+    rest = rest.slice(match.at + match.label.length)
+  }
+  return result
+}
+module.exports = { termsFor, segments }

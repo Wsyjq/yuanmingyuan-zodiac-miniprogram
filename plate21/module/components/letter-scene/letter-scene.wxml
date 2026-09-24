@@ -2,7 +2,7 @@
   <view class="stage">
     <image wx:if="{{!imageFailed}}" class="portrait" src="{{scene}}" mode="aspectFill" binderror="onImageError"/>
     <view class="shade"></view>
-    <view class="chapter">次日 · 老师的来信</view>
+    <view class="chapter">{{heading || '次日 · 老师的来信'}}</view>
     <view wx:if="{{imageFailed}}" class="fallback">书房里的灯还亮着。<text class="fallback-line">老师留下的信，终于翻到了最后几页。</text></view>
     <view class="scene-note">书房 · 档案的另一面</view>
   </view>

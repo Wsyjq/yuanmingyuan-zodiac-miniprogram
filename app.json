@@ -26,22 +26,8 @@
       ]
     },
     {
-      "root": "voice-c",
-      "name": "voice-c",
-      "pages": [
-        "pages/hold/hold"
-      ]
-    },
-    {
       "root": "voice-d",
       "name": "voice-d",
-      "pages": [
-        "pages/hold/hold"
-      ]
-    },
-    {
-      "root": "voice-e",
-      "name": "voice-e",
       "pages": [
         "pages/hold/hold"
       ]
@@ -75,22 +61,8 @@
       ]
     },
     {
-      "root": "voice-j",
-      "name": "voice-j",
-      "pages": [
-        "pages/hold/hold"
-      ]
-    },
-    {
       "root": "voice-k",
       "name": "voice-k",
-      "pages": [
-        "pages/hold/hold"
-      ]
-    },
-    {
-      "root": "voice-l",
-      "name": "voice-l",
       "pages": [
         "pages/hold/hold"
       ]
@@ -117,5 +89,13 @@
     "navigationBarBackgroundColor": "#F4EFE3",
     "navigationBarTextStyle": "black"
   },
-  "sitemapLocation": "sitemap.json"
+  "sitemapLocation": "sitemap.json",
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于实地导引中显示您的当前位置"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation"
+  ]
 }

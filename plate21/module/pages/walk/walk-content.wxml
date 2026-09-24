@@ -14,7 +14,8 @@
           <text class="prop-what">取出 · {{item.what}}</text><text wx:for="{{item.steps}}" wx:for-item="step" wx:key="index">{{step}}</text><text class="caption">{{item.returnWhen}}</text>
         </view>
       </view>
-      <view class="narrative"><text wx:for="{{screen.lines}}" wx:key="index" class="paragraph">{{item}}</text></view>
+      <text wx:if="{{screen.sectionTitle}}" class="caption">{{screen.sectionTitle}}</text>
+      <view class="narrative"><text wx:for="{{narrative}}" wx:for-item="paragraph" wx:key="index" class="paragraph"><text wx:for="{{paragraph}}" wx:key="index" class="{{item.key ? 'history-link' : ''}}" data-key="{{item.key}}" bindtap="onOpenCard">{{item.text}}</text></text></view>
       <image wx:if="{{screen.portrait}}" src="{{screen.portrait}}" mode="widthFix" class="illustration" data-src="{{screen.portrait}}" bindtap="onPreview"/>
       <image wx:if="{{screen.teacher}}" src="{{screen.teacher}}" mode="widthFix" class="illustration"/>
       <view class="audio-row" wx:if="{{narrClips.length}}"><audio-clip clips="{{narrClips}}" active="{{pageVisible && !clockPlaying && !drawer}}" label="听这一段" /></view>
@@ -53,7 +54,9 @@
         </view><slider min="0" max="100" value="{{ui.fountainProgress || 0}}" activeColor="#627d77" bindchange="onFade"/><view class="row caption"><text>旧时构件与水流</text><text>眼前遗址</text></view>
       </view>
       <view wx:if="{{pageId === 'FN1'}}" class="activity"><view class="subheading">这一次，我留下了</view><view class="photo-strip"><image wx:for="{{records}}" wx:key="id" wx:if="{{item.kind === 'photo'}}" src="{{item.filePath}}" mode="aspectFill" data-src="{{item.filePath}}" bindtap="onPreview"/></view><text wx:if="{{!records.length}}" class="caption">还没有照片或文字记录。完成署名后，也可以在个人作品中补录。</text><text wx:for="{{records}}" wx:key="id" wx:if="{{item.kind !== 'photo'}}" class="paragraph">{{item.text}}</text></view>
-      <view wx:if="{{pageId === 'FN4'}}" class="activity"><label>绘制者署名</label><input data-key="name" value="{{ui.name}}" maxlength="40" placeholder="写下你的名字，也可以留白" bindinput="onInput" disabled="{{completed}}"/><text class="caption">完成后生成个人作品。次日来信将于北京时间零点后开放，可晚些回来阅读。</text><button wx:if="{{completed}}" class="secondary" bindtap="onReport">打开我的第二十一图</button></view>
+      <view wx:if="{{pageId === 'FN4'}}" class="activity"><label>绘制者署名</label><text class="caption">绘制者：{{screen.signature.name}}
+绘制日期：{{screen.signature.date}}
+版本编号：{{screen.signature.edition}}</text><input data-key="name" value="{{ui.name}}" maxlength="40" placeholder="写下你的名字，也可以留白" bindinput="onInput" disabled="{{completed}}"/><text class="caption">完成后生成个人作品。次日来信将于北京时间零点后开放，可晚些回来阅读。</text><button wx:if="{{completed}}" class="secondary" bindtap="onReport">打开我的第二十一图</button></view>
       <view wx:if="{{pageId === 'LT6'}}" class="activity"><view class="subheading">探寻者的接力记录</view>
         <text wx:if="{{relayState === 'loading'}}">正在读取…</text><text wx:if="{{relayState === 'empty'}}">暂时没有可公开的接力记录。你仍可以留下自己的私人记录。</text><text wx:if="{{relayState === 'unavailable'}}">接力服务尚未接入，当前没有可展示的游客投稿。</text><text wx:if="{{relayState === 'failed'}}">暂时没有读到接力记录，请重试。</text>
         <view wx:for="{{relayItems}}" wx:key="id" class="record"><text class="caption">{{item.from}}</text><image wx:if="{{item.kind === 'photo' && item.url}}" src="{{item.url}}" mode="widthFix" data-src="{{item.url}}" bindtap="onPreview"/><text>{{item.text}}</text></view><button class="text-button" bindtap="loadRelay">重新读取</button>

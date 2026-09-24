@@ -101,6 +101,8 @@ test('walk loads without a payment gate and a skipped route reaches a durable na
   assert.ok(h.session.getRun().completedAt)
   assert.equal(h.session.getRun().name, '跳过路线玩家')
   assert.equal(h.session.getRun().puzzles['quiz-direction'], 'skipped')
+  assert.match(h.page.data.screen.lines.join(''), /考察记录生成完成/)
+  await h.invoke('onPrimary')
   assert.ok(h.calls.routes.at(-1).startsWith('/plate21/module/pages/report/report?sessionId='))
   assert.equal(h.session.getArchives().length, 1)
   await h.close()
@@ -274,4 +276,46 @@ test('same-process official account change reinitializes the module at a new iso
   assert.equal(h.page.data.clockPlaying, true)
   assert.equal(h.session.getRun().uiByPage.HY1.waterClock.time, 8)
   await h.close()
+})
+
+
+test('field tools preserve progress, suppress tap after dragging and handle location failure', async () => {
+  const h = await harness()
+  try {
+    const before = copy(h.session.getRun())
+    h.page.onNavStart({ touches: [{ clientX: 300, clientY: 400 }] })
+    h.page.onNavMove({ touches: [{ clientX: -300, clientY: -400 }] })
+    h.page.onNavEnd()
+    assert.equal(h.page.data.drawer, '')
+    assert.equal(h.page.data.navX, 8)
+    assert.equal(h.page.data.navY, 60)
+    h.page.onNavStart({ touches: [{ clientX: 8, clientY: 60 }] })
+    h.page.onNavEnd()
+    assert.equal(h.page.data.drawer, 'route')
+    assert.equal(h.page.data.routeRows.length, 8)
+    assert.deepEqual(h.session.getRun(), before)
+    await h.page.onLocate()
+    assert.match(h.page.data.locationError, /不支持定位/)
+    assert.equal(h.page.data.locating, false)
+    global.wx.getLocation = opts => opts.success({ latitude: 40, longitude: 116 })
+    await h.page.onLocate()
+    assert.equal(h.page.data.location.latitude, 40)
+    assert.deepEqual(h.session.getRun(), before)
+  } finally { await h.close() }
+})
+
+test('history only opens encountered cards and hides puzzle answers and illustrations until solved', async () => {
+  const h = await harness()
+  try {
+    h.page.onOpenCard(event({ key: 'sl12' }))
+    assert.equal(h.page.data.card, null)
+    await h.arrange('H1')
+    h.page.onOpenCard(event({ key: 'sl07' }))
+    assert.equal(h.page.data.card.layers.length, 1)
+    assert.equal(h.page.data.card.answerHidden, true)
+    assert.equal(h.page.data.card.image, '')
+    h.page.onOpenCard(event({ key: 'sl01' }))
+    assert.equal(h.page.data.card.layers.length, 2)
+    assert.ok(h.page.data.card.image)
+  } finally { await h.close() }
 })

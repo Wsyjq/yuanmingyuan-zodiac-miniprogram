@@ -31,13 +31,13 @@ test('all 43 stable page IDs build pure display models and caller state remains 
   }
 })
 
-test('stage directions leave story lines and are only presentation metadata', () => {
-  const text = pages.list.flatMap(page => page.lines).join('\n')
-  for (const phrase of ['给出 4 种花纹的图样', '14时对应由哪个兽首喷水', '正午时候由哪个兽首喷水', '答案确认后，画面', '屏幕暗了一下', '屏幕中缓缓出来了一封信', '几秒后，一份新的档案生成']) assert.equal(text.includes(phrase), false, phrase)
+test('non-bracketed scene descriptions remain screen copy alongside presentation metadata', () => {
+  const text = pages.list.flatMap(page => page.lines.concat(page.signedLines)).join('\n')
+  for (const phrase of ['给出 4 种花纹的图样', '14时对应由哪个兽首喷水', '正午时候由哪个兽首喷水', '答案确认后，画面', '屏幕暗了一下', '屏幕中缓缓出来了一封信', '几秒后，一份新的档案生成']) assert.equal(text.includes(phrase), true, phrase)
   assert.equal(pages.byId.FN1.presentation.kind, 'engraving-reveal')
   assert.equal(pages.byId.FN3.presentation.kind, 'archive-reveal')
   assert.equal(pages.byId.HY2.presentation.kind, 'water-clock-finale')
-  assert.match(pages.byId.HG1.lines.join(''), /雨果在根西岛写下/)
+  assert.match(pages.byId.HG1.lines.join(''), /雨果在法国写下/)
 })
 
 test('stable choice IDs are used once, selected from saved UI, with no answer marked by default', () => {
@@ -58,7 +58,8 @@ test('stable choice IDs are used once, selected from saved UI, with no answer ma
 test('physical flip needs explicit saved/UI confirmation; skipped status never reveals an answer', () => {
   const skipped = runAt('H3', { puzzles: { 'prop-flip': 'skipped' } })
   const before = buildScreen(skipped)
-  assert.deepEqual(before.lines, [])
+  assert.deepEqual(before.lines, ['互动玩法｜黄花阵名字的由来', '翻面揭晓答案'])
+  assert.doesNotMatch(before.lines.join(''), /黄色彩绸/)
   assert.equal(before.holdReveal, true)
   assert.equal(before.primaryAction, 'flip')
   const after = buildScreen(skipped, { flipped: true })
@@ -135,7 +136,7 @@ test('completion date is Beijing calendar day and signing never invents a global
   assert.doesNotMatch(view.lines.join(''), /第 N 版|版本编号|推送|绘制日期/)
   assert.equal(view.primaryAction, 'sign')
   const letter = buildScreen(letterAt('LT1'))
-  assert.doesNotMatch(letter.lines.join(''), /昨天/)
+  assert.match(letter.lines.join(''), /昨天/) // Preserve the dated letter's original voice.
   assert.equal(letter.completedDate, '2026年9月25日')
   assert.equal(buildScreen(runAt('LT2')).teacher, '')
 })
@@ -155,7 +156,7 @@ test('empty, unavailable, failed or nonpublished relay never pretends someone le
 test('published relay only gets read-through wording after actual display acknowledgement', () => {
   const relay = { status: 'ready', records: [{ id: 'c1', status: 'published', kind: 'text', text: '我看到了屋檐。' }], viewed: false }
   const page6 = buildScreen(letterAt('LT6'), { relay })
-  assert.match(page6.lines.join(''), /先前探寻/)
+  assert.match(page6.lines.join(''), /上一位探寻/)
   assert.doesNotMatch(buildScreen(letterAt('LT7'), { relay }).lines.join(''), /看完了吗/)
   relay.viewed = true
   assert.match(buildScreen(letterAt('LT7'), { relay }).lines.join(''), /看完了吗/)

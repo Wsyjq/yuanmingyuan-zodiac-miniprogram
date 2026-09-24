@@ -11,7 +11,7 @@ function split(lines) {
   return result
 }
 Component({
-  properties: { chapter: String, lines: Array, cursor: Number, scene: String, active: Boolean, busy: Boolean },
+  properties: { chapter: String, heading: String, lines: Array, cursor: Number, scene: String, active: Boolean, busy: Boolean },
   data: { text: '', index: 0, total: 0, typing: false, history: false, past: [] },
   observers: {
     'chapter, lines': function () { if (this._alive) this._load() },

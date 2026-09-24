@@ -127,26 +127,18 @@ function bodyLines(page, run, ui) {
   const state = ui || {}
   if (page.revealOf && ['solved', 'assisted'].indexOf((run.puzzles || {})[page.revealOf]) < 0) return []
   if (page.id.indexOf('LT') === 0 && (!run.completedAt || !run.letterAvailable)) return []
-  if (page.id === 'H3') return state.flipped === true ? page.lines.slice() : []
+  if (page.id === 'H3') return (page.beforeLines || []).concat(state.flipped === true ? page.lines : [])
   let lines = page.lines.slice()
   const choices = play.CHOICES[page.playId] || []
   lines = lines.filter(function (line) {
     return !choices.some(function (choice) { return choice.label === line }) &&
-      !/^(梅花鹿|十只猎狗|两只大型卷尾铜兽) → /.test(line)
+      !(page.id === 'DS1' && /^(梅花鹿|十只猎狗|两只大型卷尾铜兽) → /.test(line))
   })
-  if (page.id === 'X2') {
-    lines = lines.filter(function (line) {
-      if ((run.puzzles || {})['listen-nfc'] === 'skipped' && line.indexOf('如此悠扬') === 0) return false
-      return line.indexOf('日记和信封会') !== 0 && line.indexOf('信封的封口处') !== 0
-    })
-  }
-  if (page.id === 'H4') lines = lines.filter(function (line) {
-    return line.indexOf('终于到了中心亭') === 0 || line.indexOf('你能找到这座亭子') === 0
-  })
+  // Non-bracketed script is screen copy, including scene descriptions.
+  // Arrival, physical reveal, real submission and real records still gate their own content.
   if (page.id === 'H4' && !state.arrived) lines = ['接下来请走到黄花阵中心亭，对照现场标识确认到达，再留下你的观察。']
-  if (page.id === 'FN1') lines = ['这一段考察走到了尾声。第二十一幅画，到底在哪里？', '它将由这次真正留下的照片、文字与考察记录组成。未到访和跳过的部分，也如实留在档案里。']
-  if (page.id === 'FN2') lines = lines.map(function (line) { return line.replace('你已经走完了这条路', '你的这段考察已经告一段落') })
-  if (page.id === 'LT1') lines = ['上次，你完成了自己的西洋楼考察记录。', '那次，还有一件事没有告诉你。']
+  if (page.id === 'E2' && ['solved', 'assisted'].includes((run.puzzles || {})['quiz-direction'])) lines = page.answerLines.concat(lines)
+  if (page.id === 'FN4' && run.completedAt) lines = page.signedLines.slice()
   const relay = relayState(run, state)
   if (page.id === 'LT6' && relay.hasRecord) lines = lines.concat(page.relayLines || [])
   if (page.id === 'LT7' && relay.viewed) lines = (page.relayLines || []).concat(lines)
@@ -221,7 +213,7 @@ function buildScreen(run, ui) {
   }).map(clone) : [])
   const selectedPhoto = photos.filter(function (record) { return !state.spot || record.spot === state.spot })[0]
   const model = {
-    pageId: page.id, kind: page.kind, title: TITLES[page.id] || ('前往' + (site ? site.name : '下一站')),
+    pageId: page.id, kind: page.kind, sectionTitle: page.sectionTitle, title: TITLES[page.id] || ('前往' + (site ? site.name : '下一站')),
     siteId: page.siteId, siteTitle: site ? site.name : '', pageIndex: index + 1, pageCount: pages.list.length,
     lines: bodyLines(page, run, state), prop: props.forPage(page.id), propPrompt: page.propPrompt || '',
     play: playSpec ? { id: page.playId, type: PLAY_TYPES[page.playId], choices: clone(choices), fields: clone(playSpec.fields), readOnly: review } : null,
@@ -242,6 +234,7 @@ function buildScreen(run, ui) {
     nfcStatus: safeText(state.nfcStatus), nfcAside: safeText(state.nfcAside), heard: !!state.heard,
     relay: relay, letterRead: page.id === 'LT6', letterLeave: page.id === 'LT7',
     leaveText: safeText(state.leaveText), wish: safeText(state.wish), name: safeText(state.name || run.name),
+    signature: { name: safeText(state.name || run.name) || '未署名', date: completedDate || '完成考察后记录', edition: run.editionNo == null ? '暂无全局版号' : '第 ' + run.editionNo + ' 版' },
     signed: !!run.completedAt
   }
   if (page.playId === 'quiz-pattern') {

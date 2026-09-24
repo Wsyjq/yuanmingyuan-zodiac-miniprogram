@@ -18,6 +18,9 @@ const dates = require('../../utils/session-date')
 const clock = require('../../play/water-clock')
 const bridge = require('../../host/bridge')
 const resources = require('../../host/resources')
+const glossary = require('../../flow/glossary')
+const navigation = require('../../host/navigation')
+const navModel = require('../../capabilities/map/nav-model')
 const HINTS = {
   'quiz-direction': '对照地图上长春园与西洋楼的位置，找出它所在的方位。',
   'quiz-envelope': '把信封封口处与信背面的半个字拼在一起，从左到右读。',
@@ -34,8 +37,11 @@ function errorText(err) { return err && (err.message || err.errMsg) || '操作�
 Page({
   data: { loading: true, busy: false, error: '', pageVisible: true, screen: {}, ui: {}, rows: [], records: [],
     narrClips: [], voiceEnabled: false, drawer: '', card: null, waterClockState: {}, clockPlaying: false,
-    soundSrc: nfc.SOUND, relayItems: [], relayState: 'idle', contributions: [], archives: [], scrollTop: 0 },
+    soundSrc: nfc.SOUND, relayItems: [], relayState: 'idle', contributions: [], archives: [], scrollTop: 0, navX: 0, navY: 0, locating: false, location: null, locationError: '' },
   async onLoad(query) {
+    const window = wx.getWindowInfo ? wx.getWindowInfo() : (wx.getSystemInfoSync ? wx.getSystemInfoSync() : { windowWidth: 375, windowHeight: 667 })
+    this._window = window
+    this.setData({ navX: Math.max(8, window.windowWidth - 66), navY: Math.max(80, window.windowHeight - 180) })
     this.query = query || {}; this.sessionId = this.query.sessionId || ''; this.ui = {}; this._active = true
     this._settings = (value) => { if (this._active) this.setData({ voiceEnabled: value.voice }) }
     settings.subscribe(this._settings)
@@ -96,12 +102,16 @@ Page({
     })
     this.setData({ letterScene: page.kind === 'letter' && !(this.ui.letterSceneDone && ['LT6', 'LT7'].includes(page.id)),
       letterSceneImage: resources.resolve('/assets/fig/letter-teacher.jpg', 'asset'), screen: model, pageId: page.id, playId: page.playId, ui: clone(this.ui),
+      scriptAppendix: this.run.completedAt ? require('../../flow/script-content').appendix : [],
       completed: !!this.run.completedAt, review: engine.isReview(this.run),
       rows: view.rows.map((r) => Object.assign({}, r, { openPageId: view.openPageId(r.id) })),
       records: field, photoCount: field.filter((r) => r.kind === 'photo').length,
       narrClips: cue.clipsFor(page, Object.assign({}, this.run, { uiByPage: Object.assign({}, this.run.uiByPage, { [page.id]: this.ui }) })),
       voiceEnabled: settings.get().voice, soundSrc: resources.resolve(nfc.SOUND, 'audio'), waterClockState: this.ui.waterClock || {},
       clockPlaying: !!(this.ui.waterClock && this.ui.waterClock.playing),
+      narrative: model.lines.map(line => glossary.segments(line, model.terms || [])),
+      routeRows: view.rows.filter(r => navModel.listSites().some(s => s.id === r.id)).map(r => Object.assign({}, r, { openPageId: r.current ? view.resumePageId : view.openPageId(r.id) })),
+      routeCurrent: (view.rows.find(r => r.current) || {}).title || '考察尚未开始',
       historyCards: unlockedCards, hasHint: !!HINTS[page.playId], hint: this.ui.hint ? HINTS[page.playId] : '',
       contributions: snap.contributions.map((c) => Object.assign({}, c, { label: STATUS[c.status] || c.status })),
       archives: session.getArchives().map((a) => ({ id: a.sessionId, name: a.run.name, date: fmt(a.run.completedAt) })),
@@ -155,7 +165,7 @@ Page({
         return
       }
       if (page.kind === 'sign') {
-        if (!this.run.completedAt) await session.sign(this.ui.name)
+        if (!this.run.completedAt) { await session.sign(this.ui.name); return }
         this.onReport(); return
       }
       let assisted = !!this.ui.hint
@@ -200,12 +210,37 @@ Page({
   noop() {},
   onOpenCard(e) {
     const key = ds(e, 'key'); const card = cards.get ? cards.get(key) : cards.SL_CARDS[key]
-    if (!card) return
+    if (!card || !this.data.historyCards.some(item => item.key === key)) return
+    audioBus.pauseAll()
     const required = { sl07: 'quiz-lantern', sl12: 'quiz-hour', sl14: 'place-animals' }[key]
     const status = this.run.puzzles[required]
     const locked = !!required && status !== 'solved' && status !== 'assisted'
-    this.setData({ drawer: 'history', card: Object.assign({}, card, { key, image: resources.resolve(card.image, 'asset'), layers: locked ? card.layers.slice(0, key === 'sl07' ? 1 : 0) : card.layers,
+    this.setData({ drawer: 'history', card: Object.assign({}, card, { key, level: 0, image: locked ? '' : resources.resolve(card.image, 'asset'), caption: locked ? '' : card.caption, layers: locked ? card.layers.slice(0, key === 'sl07' ? 1 : 0) : card.layers,
       answerHidden: locked, years: locked ? [] : card.years || [] }) })
+  },
+  onCardLevel(e) {
+    const level = Number(ds(e, 'level'))
+    if (this.data.card && Number.isInteger(level) && level >= 0 && level < this.data.card.layers.length) this.setData({ 'card.level': level })
+  },
+  onRoute() { this.setData({ drawer: 'route', card: null }); audioBus.pauseAll() },
+  onNavStart(e) {
+    const t = e.touches[0]; this._drag = { x: t.clientX, y: t.clientY, left: this.data.navX, top: this.data.navY, moved: false }
+  },
+  onNavMove(e) {
+    if (!this._drag) return
+    const t = e.touches[0], d = this._drag, w = this._window
+    const dx = t.clientX - d.x, dy = t.clientY - d.y
+    if (Math.abs(dx) + Math.abs(dy) > 8) d.moved = true
+    if (d.moved) this.setData({ navX: Math.max(8, Math.min(w.windowWidth - 66, d.left + dx)), navY: Math.max(60, Math.min(w.windowHeight - 130, d.top + dy)) })
+  },
+  onNavEnd() { if (this._drag && !this._drag.moved) this.onRoute(); this._drag = null },
+  onNavCancel() { this._drag = null },
+  async onLocate() {
+    if (this.data.locating) return
+    this.setData({ locating: true, locationError: '' })
+    try { const location = await navigation.locate(); if (this._active) this.setData({ location }) }
+    catch (err) { if (this._active) this.setData({ locationError: errorText(err) }) }
+    finally { if (this._active) this.setData({ locating: false }) }
   },
   onPreview(e) { const src = ds(e, 'src'); if (src) wx.previewImage({ current: src, urls: [src] }) },
   onAddPhoto(e) {
