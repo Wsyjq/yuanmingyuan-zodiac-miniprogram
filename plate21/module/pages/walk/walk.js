@@ -94,7 +94,8 @@ Page({
         if (!unlockedCards.some((x) => x.key === term.key)) unlockedCards.push(term)
       })
     })
-    this.setData({ screen: model, pageId: page.id, playId: page.playId, ui: clone(this.ui),
+    this.setData({ letterScene: page.kind === 'letter' && !(this.ui.letterSceneDone && ['LT6', 'LT7'].includes(page.id)),
+      letterSceneImage: resources.resolve('/assets/fig/letter-teacher.jpg', 'asset'), screen: model, pageId: page.id, playId: page.playId, ui: clone(this.ui),
       completed: !!this.run.completedAt, review: engine.isReview(this.run),
       rows: view.rows.map((r) => Object.assign({}, r, { openPageId: view.openPageId(r.id) })),
       records: field, photoCount: field.filter((r) => r.kind === 'photo').length,
@@ -140,6 +141,11 @@ Page({
   onArrived() { this.draft({ arrived: true }) },
   onVoice(e) { settings.set('voice', !!e.detail.value) },
   onMuteAll() { settings.set('voice', false); audioBus.pauseAll(); this.setData({ pageVisible: false }); wx.nextTick(() => this.setData({ pageVisible: true })) },
+  onLetterProgress(e) { this.draft({ letterCursor: e.detail.index }, false) },
+  onLetterComplete() {
+    if (['LT6', 'LT7'].includes(this.data.pageId)) this.draft({ letterSceneDone: true })
+    else this.onPrimary()
+  },
   onPrimary() {
     this.action(async () => {
       const page = pages.byId[this.run.pageId]

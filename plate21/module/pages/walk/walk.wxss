@@ -3,3 +3,7 @@
 .ruins-line{position:absolute;inset:0;background:#e9e2cc}.column{position:absolute;bottom:60rpx;width:35rpx;height:170rpx;border:3rpx solid #827d64;background:repeating-linear-gradient(90deg,#ccc5ac 0,#ccc5ac 4rpx,#dfd7bc 5rpx,#dfd7bc 9rpx)}.c1{left:12%;height:140rpx}.c2{left:31%;height:205rpx}.c3{right:31%;height:205rpx}.c4{right:12%;height:130rpx}.arch{position:absolute;width:27%;height:100rpx;left:36.5%;bottom:185rpx;border:10rpx solid #9c957e;border-bottom:0;border-radius:90rpx 90rpx 0 0}.ruins-line text{position:absolute;bottom:12rpx;width:100%;text-align:center;font-size:22rpx;color:#82765f}
 
 .canvas-page{height:auto;min-height:100vh}
+
+.letter-stage{flex:1;height:0;min-height:0}
+
+.letter-audio{padding:8rpx 24rpx;background:#f4efe3;flex-shrink:0}

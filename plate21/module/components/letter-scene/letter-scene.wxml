@@ -1,0 +1,19 @@
+<view class="scene">
+  <view class="stage">
+    <image wx:if="{{!imageFailed}}" class="portrait" src="{{scene}}" mode="aspectFill" binderror="onImageError"/>
+    <view class="shade"></view>
+    <view class="chapter">次日 · 老师的来信</view>
+    <view wx:if="{{imageFailed}}" class="fallback">书房里的灯还亮着。<text class="fallback-line">老师留下的信，终于翻到了最后几页。</text></view>
+    <view class="scene-note">书房 · 档案的另一面</view>
+  </view>
+  <view class="dialogue" bindtap="onNext">
+    <view class="speaker">老师<text class="counter">{{index + 1}} / {{total}}</text></view>
+    <scroll-view scroll-y class="dialogue-scroll" scroll-top="{{0}}"><text class="words">{{text}}</text><text wx:if="{{typing}}" class="cursor">▏</text></scroll-view>
+    <button class="advance" catchtap="onNext" disabled="{{busy}}">{{typing ? '轻触补全文字' : index + 1 === total ? '继续' : '轻触继续'}} ▾</button>
+    <button class="history-button" catchtap="onHistory">剧情回顾</button>
+  </view>
+  <view wx:if="{{history}}" class="history">
+    <view class="speaker">已读对白<button class="close" bindtap="onHistory">返回剧情</button></view>
+    <scroll-view scroll-y class="history-scroll"><text wx:for="{{past}}" wx:key="index" class="past">{{item}}</text><text wx:if="{{!past.length}}">轻触对白，即可开始阅读。</text></scroll-view>
+  </view>
+</view>

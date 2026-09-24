@@ -7,12 +7,14 @@
   <view wx:if="{{loading}}" class="empty">正在打开考察档案…</view>
   <view wx:if="{{error}}" class="error" role="alert">{{error}}<button wx:if="{{!pageId}}" bindtap="load">重新打开</button></view>
   <view wx:if="{{notice}}" class="notice">{{notice}}</view>
+  <view wx:if="{{letterScene}}" class="letter-stage"><letter-scene chapter="{{pageId}}" lines="{{screen.lines}}" cursor="{{ui.letterCursor || 0}}" scene="{{letterSceneImage}}" active="{{pageVisible && !drawer}}" busy="{{busy}}" bind:progress="onLetterProgress" bind:complete="onLetterComplete" /></view>
+  <view wx:if="{{letterScene && narrClips.length}}" class="letter-audio"><audio-clip clips="{{narrClips}}" active="{{pageVisible && !drawer}}" label="听老师读信" /></view>
   <!-- Native Canvas uses page scrolling, avoiding a nested native scroll layer. -->
-  <view wx:if="{{pageId && playId === 'quiz-hour'}}"><include src="walk-content.wxml" /></view>
-  <scroll-view wx:elif="{{pageId}}" scroll-y class="reading" scroll-top="{{scrollTop}}" bindscroll="onScroll">
+  <view wx:if="{{pageId && !letterScene && playId === 'quiz-hour'}}"><include src="walk-content.wxml" /></view>
+  <scroll-view wx:elif="{{pageId && !letterScene}}" scroll-y class="reading" scroll-top="{{scrollTop}}" bindscroll="onScroll">
     <include src="walk-content.wxml" />
   </scroll-view>
-  <view wx:if="{{pageId}}" class="footer"><button class="primary" bindtap="onPrimary" disabled="{{busy}}" loading="{{busy}}">{{review ? '继续回看 / 返回进度' : completed && pageId === 'FN4' ? '查看我的作品' : pageId === 'LT8' ? '读完来信，查看作品' : screen.primary || '继续'}}</button><button wx:if="{{screen.showSkip && !review}}" class="text-button skip" bindtap="onSkip" disabled="{{busy}}">{{screen.skipLabel || '这题跳过'}}</button></view>
+  <view wx:if="{{pageId && !letterScene}}" class="footer"><button class="primary" bindtap="onPrimary" disabled="{{busy}}" loading="{{busy}}">{{review ? '继续回看 / 返回进度' : completed && pageId === 'FN4' ? '查看我的作品' : pageId === 'LT8' ? '读完来信，查看作品' : screen.primary || '继续'}}</button><button wx:if="{{screen.showSkip && !review}}" class="text-button skip" bindtap="onSkip" disabled="{{busy}}">{{screen.skipLabel || '这题跳过'}}</button></view>
   <view wx:if="{{drawer}}" class="overlay" bindtap="onCloseDrawer"><view class="drawer" catchtap="noop"><view class="row"><text class="subheading">{{drawer === 'history' ? '史料夹' : '我的考察簿'}}</text><button class="text-button" bindtap="onCloseDrawer">关闭 ✕</button></view>
     <scroll-view scroll-y class="drawer-scroll">
       <block wx:if="{{drawer === 'history'}}"><block wx:if="{{card}}"><view class="title small">{{card.title}}</view><image wx:if="{{card.image}}" src="{{card.image}}" mode="widthFix" class="illustration"/><text class="caption">{{card.caption}}</text><view wx:if="{{card.years.length}}" class="notice">相关年份：<text wx:for="{{card.years}}" wx:key="*this">{{item}}　</text></view><text class="paragraph" wx:for="{{card.layers}}" wx:key="index">{{item}}</text><text wx:if="{{card.answerHidden}}" class="caption">与谜题答案相关的史料，将在完成对应互动后展示。</text></block><button wx:for="{{historyCards}}" wx:key="key" class="choice" data-key="{{item.key}}" bindtap="onOpenCard">{{item.label}}</button></block>
