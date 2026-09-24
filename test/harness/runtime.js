@@ -217,6 +217,10 @@ function readJson(file) {
   try { return JSON.parse(fs.readFileSync(file, 'utf8')) } catch (e) { return {} }
 }
 
+function readWxml(file) {
+  return readText(file).replace(/<include\s+src=["']([^"']+)["']\s*\/>/g, (_, src) => readWxml(path.resolve(path.dirname(file), src)))
+}
+
 function readText(file) {
   try { return fs.readFileSync(file, 'utf8') } catch (e) { return '' }
 }
@@ -233,7 +237,7 @@ function loadComponent(compPathNoExt, env, errors, cssCollector) {
   if (env.compCache.has(compPathNoExt)) return env.compCache.get(compPathNoExt)
   const jsFile = compPathNoExt + '.js'
   const json = readJson(compPathNoExt + '.json')
-  const tpl = readText(compPathNoExt + '.wxml')
+  const tpl = readWxml(compPathNoExt + '.wxml')
   const css = readText(compPathNoExt + '.wxss')
   if (css && !cssCollector.done.has(compPathNoExt)) {
     cssCollector.done.add(compPathNoExt)
@@ -352,7 +356,7 @@ async function renderPage(spec) {
   const pageNoExt = path.join(ROOT, spec.route)
   const pageDir = path.dirname(pageNoExt)
   const pageJson = readJson(pageNoExt + '.json')
-  const pageTpl = readText(pageNoExt + '.wxml')
+  const pageTpl = readWxml(pageNoExt + '.wxml')
   const pageCss = readText(pageNoExt + '.wxss')
 
   // 1. 求值页面 js

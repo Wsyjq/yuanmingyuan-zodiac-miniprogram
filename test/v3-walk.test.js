@@ -229,3 +229,49 @@ test('unavailable public relay stays empty instead of presenting seed text or fa
   assert.equal(h.session.getSnapshot().records[0].text, '给下一位')
   await h.close()
 })
+test('published relay alone activates read narration, and edited private text is saved before continuing', async () => {
+  let clock = Date.UTC(2026, 8, 24)
+  const h = await harness({ config: { now: () => clock, host: { async listContributions() {
+    return { items: [ { id: 'wrong-protocol', status: 'approved', kind: 'text', text: '不可显示' },
+      { id: 'real', status: 'published', kind: 'text', text: '经真实审核的游客记录' } ] }
+  } } } })
+  await h.arrange('FN4'); await h.session.sign('甲'); clock += 86400000
+  await h.session.openLetter(); await h.arrange('LT6'); await h.page.loadRelay()
+  assert.equal(h.page.data.relayState, 'ready')
+  assert.equal(h.page.data.relayItems.length, 1)
+  assert.equal(h.page.data.screen.relay.hasRecord, true)
+  await h.invoke('onPrimary')
+  assert.equal(h.page.data.pageId, 'LT7')
+  assert.equal(h.page.data.screen.relay.viewed, true)
+  await h.invoke('onInput', event({ key: 'relayText' }, '第一稿'))
+  await h.invoke('onSaveRelay')
+  await h.invoke('onInput', event({ key: 'relayText' }, '修改后正文'))
+  await h.invoke('onPrimary')
+  assert.equal(h.page.data.pageId, 'LT8')
+  assert.equal(h.session.getSnapshot().records[0].text, '修改后正文')
+  await h.close()
+})
+test('same-process official account change reinitializes the module at a new isolated identity', async () => {
+  let currentUser = 'alice'
+  const config = { mode: 'host', identityVersion: 1, host: { async getContext() { return { userId: currentUser } } } }
+  const h = await harness({ config })
+  await h.invoke('onPrimary')
+  assert.equal(h.session.getRun().pageId, 'P2')
+  currentUser = 'bob'; h.app.plate21Host.identityVersion = 2
+  await h.page.load()
+  assert.equal(h.session.getSnapshot().userId, 'bob')
+  assert.equal(h.page.data.pageId, 'P1')
+  await h.close()
+})
+
+ test('water-clock live events persist without feeding state back into the child observer', async () => {
+  const h = await harness()
+  await h.arrange('HY1')
+  const initial = copy(h.page.data.waterClockState)
+  const state = Object.assign({}, initial, { time: 8, playing: true })
+  await h.invoke('onWaterClockChange', { detail: { state } })
+  assert.deepEqual(h.page.data.waterClockState, initial)
+  assert.equal(h.page.data.clockPlaying, true)
+  assert.equal(h.session.getRun().uiByPage.HY1.waterClock.time, 8)
+  await h.close()
+})

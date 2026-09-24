@@ -14,6 +14,7 @@ const audioSrc = require('../../utils/audio-src')
 const nfc = require('../../capabilities/nfc/listen')
 const nfcLaunch = require('../../capabilities/nfc/launch')
 const photos = require('../../utils/photo-records')
+const dates = require('../../utils/session-date')
 const clock = require('../../play/water-clock')
 const bridge = require('../../host/bridge')
 const resources = require('../../host/resources')
@@ -28,7 +29,7 @@ const HINTS = {
 const STATUS = { draft: '草稿', private: '仅自己可见', unavailable: '公开服务尚未接入，私人稿已保留', failed: '提交未确认，可重试', submitted: '已收到投稿，等待处理', published: '已公开', rejected: '未获公开', withdrawn: '已撤回' }
 function clone(value) { return JSON.parse(JSON.stringify(value)) }
 function ds(e, key) { return e.currentTarget.dataset[key] }
-function fmt(at) { const d = new Date(Number(at) + 8 * 3600000); return d.toISOString().slice(0, 10) }
+function fmt(at) { return dates.formatArchiveDate(dates.dateKeyFromTimestamp(at)) }
 function errorText(err) { return err && (err.message || err.errMsg) || '操作未完成，请重试' }
 Page({
   data: { loading: true, busy: false, error: '', pageVisible: true, screen: {}, ui: {}, rows: [], records: [],
@@ -70,6 +71,7 @@ Page({
     if (this.run.pageId === 'HY1') this.ui.waterClock = clock.createState(this.ui.waterClock)
     this.setData({ scrollTop: this.ui.scrollTop || 0, error: '' })
     this.render()
+    if (wx.pageScrollTo) wx.pageScrollTo({ scrollTop: this.data.playId === 'quiz-hour' ? (this.ui.scrollTop || 0) : 0, duration: 0 })
     if (this.run.pageId === 'LT6') this.loadRelay()
   },
   render() {
@@ -117,7 +119,7 @@ Page({
   draft(patch, redraw) {
     Object.assign(this.ui, patch)
     if (redraw !== false) this.render()
-    this.persist().catch((err) => { if (this._active) this.setData({ error: '记录未保存：' + errorText(err) }) })
+    return this.persist().catch((err) => { if (this._active) this.setData({ error: '记录未保存：' + errorText(err) }) })
   },
   async action(fn) {
     if (this.data.busy) return
@@ -129,6 +131,7 @@ Page({
   onShow() { this._active = true; this.setData({ pageVisible: true }); if (this.run) this.restore() },
   onHide() { this.setData({ pageVisible: false }); audioBus.pauseAll(); this.stopNfc(); if (this.run) this.persist().catch(() => {}) },
   onUnload() { clearTimeout(this._scrollTimer); this.onHide(); this._active = false; settings.unsubscribe(this._settings) },
+  onPageScroll(e) { if (this.data.playId === 'quiz-hour') this.onScroll({ detail: e }) },
   onScroll(e) { this.ui.scrollTop = Math.max(0, Number(e.detail.scrollTop) || 0); clearTimeout(this._scrollTimer); this._scrollTimer = setTimeout(() => this.persist().catch(() => {}), 250) },
   onInput(e) { this.draft({ [ds(e, 'key')]: e.detail.value, again: false }, false) },
   onChoice(e) { if (!this.data.review) this.draft({ choice: ds(e, 'id'), optionId: ds(e, 'id'), again: false }) },
@@ -151,12 +154,12 @@ Page({
       }
       let assisted = !!this.ui.hint
       if (page.playId) {
-        if (page.playId === 'prop-flip' && !this.ui.flipped) { this.draft({ flipped: true }); return }
+        if (page.playId === 'prop-flip' && !this.ui.flipped) { await this.draft({ flipped: true }); return }
         let answer = { optionId: this.ui.optionId || this.ui.choice, value: this.ui.text, played: this.ui.heard,
           confirmed: page.playId === 'prop-flip' ? this.ui.flipped : this.ui.confirmed,
           waterClock: this.ui.waterClock }
         if (page.playId === 'photo-pavilion') {
-          if (!this.ui.arrived) { this.draft({ again: true, feedback: '到达中心亭后，请先确认到达。' }); return }
+          if (!this.ui.arrived) { await this.draft({ again: true, feedback: '到达中心亭后，请先确认到达。' }); return }
           const records = this.snapshot().records.filter((r) => r.purpose === 'field' && (r.siteId === 'maze' || !r.siteId))
           answer.count = records.filter((r) => r.kind === 'photo' || r.kind === 'text' && r.text.trim()).length
           if (!records.some((r) => r.kind === 'photo')) assisted = true
@@ -165,7 +168,7 @@ Page({
           const p = this.ui.placed || {}; answer = { deer: p.deer === 'center', dogs: p.dogs === 'ring', beasts: p.beasts === 'ends' }
         }
         if (play.submit(page.playId, answer).status !== 'solved') {
-          this.draft({ again: true, feedback: '还没有完成这一项。可以再试一次、查看提示，或选择跳过。' }); return
+          await this.draft({ again: true, feedback: '还没有完成这一项。可以再试一次、查看提示，或选择跳过。' }); return
         }
       }
       if (page.id === 'LT6' && this.data.relayItems.length) { this.ui.relayViewed = true; await this.persist() }
@@ -221,10 +224,12 @@ Page({
   onFade(e) { this.draft({ fountainProgress: Number(e.detail.value) }) },
   onWaterClockChange(e) {
     this.ui.waterClock = e.detail.state
-    this.setData({ waterClockState: e.detail.state, clockPlaying: !!e.detail.state.playing })
+    // The child owns live playback; echoing its state into its property causes
+    // reentrant observer updates in the native component renderer.
+    if (this.data.clockPlaying !== !!e.detail.state.playing) this.setData({ clockPlaying: !!e.detail.state.playing })
     this.persist().catch((err) => this.setData({ error: errorText(err) }))
   },
-  onWaterClockComplete(e) { this.draft({ waterClock: e.detail.state }) },
+  onWaterClockComplete(e) { this.onWaterClockChange(e) },
   syncNfc() {
     if (this.run.pageId !== 'X1' || !this.data.pageVisible) { this.stopNfc(); return }
     if (this._nfcStarting || this._nfc) return
