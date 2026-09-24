@@ -50,14 +50,15 @@ Page({
   },
 
   goPlate21() {
-    // 门票制（2026-09-18）：入口先过 gate 门页（已解锁自动放行 cover）
-    // 主包不能引用分包。DJ-06 的 query 在这里原样带上。
-    let url = '/plate21/module/pages/gate/gate'
+    let url = '/pages/ticket/ticket'
     const entry = this.entry || {}
     if (entry.from === 'nfc' && entry.prop === 'dj06') {
       url += '?from=nfc&prop=dj06&next=xieqiqu'
     }
-    wx.navigateTo({ url: url })
+    wx.navigateTo({
+      url: url,
+      fail: function () { wx.reLaunch({ url: url }) }
+    })
   },
 
   goRevisit() {

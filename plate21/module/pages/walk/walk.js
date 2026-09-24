@@ -96,7 +96,7 @@ Page({
   },
 
   lockedUrl() {
-    return nfcLaunch.parse(this.pageQuery) ? nfcLaunch.gateUrl() : '/plate21/module/pages/gate/gate'
+    return nfcLaunch.parse(this.pageQuery) ? nfcLaunch.gateUrl() : '/pages/ticket/ticket'
   },
 
   boot() {

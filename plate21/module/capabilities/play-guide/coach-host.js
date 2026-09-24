@@ -5,8 +5,7 @@
 const session = require('../../store/session')
 const playGuide = require('./guide')
 const coachMeasure = require('./measure')
-
-let busy = false
+const coachBusy = require('./coach-busy')
 
 module.exports = Behavior({
   data: {
@@ -22,7 +21,7 @@ module.exports = Behavior({
   lifetimes: {
     detached() {
       this._clearCoachRetry()
-      if (this.data.showCoach) busy = false
+      if (this.data.showCoach) coachBusy.resetBusy()
     }
   },
 
@@ -42,8 +41,8 @@ module.exports = Behavior({
 
     beginCoach(steps, doneFlag) {
       if (!steps || !steps.length) return false
-      if (busy) return false
-      busy = true
+      if (coachBusy.isBusy()) return false
+      coachBusy.setBusy(true)
       this._coachFlag = doneFlag || null
       this.setData({
         showCoach: true,
@@ -80,12 +79,11 @@ module.exports = Behavior({
 
     runAfterCoach(fn) {
       const self = this
-      const go = function () { if (typeof fn === 'function') fn.call(self) }
       if (this.data.showCoach) {
-        this.finishCoach(go)
+        this.onCoachNext()
         return
       }
-      go()
+      if (typeof fn === 'function') fn.call(self)
     },
 
     measureCoach() {
@@ -96,10 +94,6 @@ module.exports = Behavior({
       coachMeasure.measureIn(this, step.selector).then(function (got) {
         if (self.data.coachStep && self.data.coachStep.selector !== step.selector) return
         if (!got) {
-          if (step.skipIfMissing) {
-            self.onCoachNext()
-            return
-          }
           self.setData({ coachHole: null })
           return
         }
@@ -153,10 +147,9 @@ module.exports = Behavior({
       this.setData({ coachClosing: true })
       const self = this
       const close = function () {
-        busy = false
+        coachBusy.resetBusy()
         self.setData({ showCoach: false, coachClosing: false, coachHole: null })
         if (typeof after === 'function') after()
-        else if (playGuide.isTouring()) playGuide.continueTour()
       }
       const flag = this._coachFlag
       this._coachTimer = setTimeout(function () {
@@ -175,7 +168,7 @@ module.exports = Behavior({
         clearTimeout(this._coachTimer)
         this._coachTimer = null
       }
-      if (this.data.showCoach) busy = false
+      coachBusy.resetBusy()
     }
   }
 })

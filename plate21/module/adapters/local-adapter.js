@@ -151,8 +151,10 @@ const localAdapter = {
 
   startOrResumeSession() {
     const env = readEnvelope()
-    if (env.snapshot) return Promise.resolve(env.snapshot)
+    if (env.snapshot && env.snapshot.sessionId) return Promise.resolve(env.snapshot)
+    const kept = env.snapshot && env.snapshot.flags
     const snapshot = createInitialSnapshot()
+    if (kept) snapshot.flags = Object.assign({}, kept)
     writeEnvelope({ snapshot: snapshot, ops: {} })
     return Promise.resolve(snapshot)
   },

@@ -1,7 +1,7 @@
 <nav-back />
 <!-- v1.3.1 手账：左侧活页装订孔列（移到 .page 外，避免 flex 容器影响 fixed 定位） -->
 <view class="binder"></view>
-<view class="page page-shell paper-grain paper-real">
+<view class="page page-shell">
   <!-- v1.3.1 手账：真实吊牌素材 + 叠字编号（右上角，避让返回按钮与胶囊） -->
   <view class="page-tag">
     <image class="page-tag-img" src="/plate21/module/assets/img/stickers/st-hang-tag-01.png" mode="aspectFit" />
@@ -10,7 +10,7 @@
 
   <!-- 上 1/3：已授权 AI 主视觉（邮票齿孔框 + 双框 + 角花 + 胶带贴角 + 微倾斜） -->
   <view class="hero">
-    <view class="perfo-frame hero-perfo tilt-l">
+    <view class="perfo-frame hero-perfo">
       <view class="tape" style="left:40rpx;top:4rpx;transform:rotate(-4deg);"></view>
       <!-- v1.3.1 手账：邮戳贴纸（压在主视觉右上角） -->
       <image class="sticker-postmark" src="/plate21/module/assets/img/stickers/st-postmark-01.png" mode="aspectFit" />

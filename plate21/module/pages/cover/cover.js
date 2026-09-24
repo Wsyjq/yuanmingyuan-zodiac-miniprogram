@@ -7,8 +7,9 @@ const progressFlow = require('../../store/progress-flow')
 const sessionDate = require('../../utils/session-date')
 const playGuide = require('../../capabilities/play-guide/guide')
 const coachHost = require('../../capabilities/play-guide/coach-host')
+const coachBusy = require('../../capabilities/play-guide/coach-busy')
 const PROLOGUE_URL = '/plate21/module/pages/prologue/prologue'
-const GATE_URL = '/plate21/module/pages/gate/gate'
+const GATE_URL = '/pages/ticket/ticket'
 
 function windowSize() {
   const info = (wx.getWindowInfo && wx.getWindowInfo()) || wx.getSystemInfoSync() || {}
@@ -27,7 +28,7 @@ Page({
     guideClosing: false,
     showRestartConfirm: false,
     restarting: false,
-    loading: true,
+    loading: false,
     navigating: false,
     archiveDate: ''
   },
@@ -35,30 +36,38 @@ Page({
   onLoad() {
     this.setData({ coachWin: windowSize() })
     session.init({}).then((snap) => {
-      const hasRecord = this.hasProgress(snap)
-      const completed = this.isCompleted(snap)
-      const steps = playGuide.coverSteps(hasRecord, completed)
-      const showCoach = playGuide.shouldShow(snap) && !hasRecord
-      this.setData({
-        hasRecord: hasRecord,
-        completed: completed,
-        archiveDate: sessionDate.formatArchiveDate(snap.sessionDate),
-        loading: false
-      })
-      if (showCoach) {
-        playGuide.resetTour()
-        const self = this
-        const kick = function () { self.beginCoach(steps, null) }
-        if (wx.nextTick) wx.nextTick(kick)
-        else setTimeout(kick, 0)
-      }
-      session.checkPremiumUnlocked().then((unlocked) => {
-        if (!unlocked) wx.redirectTo({ url: GATE_URL })
+      return session.checkPremiumUnlocked().then((unlocked) => {
+        if (!unlocked) {
+          this.setData({ loading: false, navigating: false, hasRecord: false })
+          return
+        }
+        const hasRecord = this.hasProgress(snap)
+        const completed = this.isCompleted(snap)
+        const steps = playGuide.coverSteps(hasRecord, completed)
+        const showCoach = playGuide.shouldShow(snap) && !hasRecord
+        this.setData({
+          hasRecord: hasRecord,
+          completed: completed,
+          archiveDate: sessionDate.formatArchiveDate(snap.sessionDate),
+          loading: false,
+          navigating: false
+        })
+        if (showCoach) {
+          playGuide.resetTour()
+          const self = this
+          const kick = function () { self.beginCoach(steps, null) }
+          if (wx.nextTick) wx.nextTick(kick)
+          else setTimeout(kick, 0)
+        }
       })
     }).catch(() => {
       this.setData({ loading: false })
       wx.showToast({ title: '档案恢复失败，可重新进入', icon: 'none' })
     })
+  },
+
+  onShow() {
+    this.setData({ navigating: false })
   },
 
   hasProgress(snap) {
@@ -82,10 +91,10 @@ Page({
   onStart() {
     if (this.data.navigating || this.data.showGuide) return
     if (this.data.showCoach) {
-      playGuide.abortTour()
-      this._coachFlag = playGuide.FLAG
-      this.finishCoach(() => this.goPrologue())
-      return
+      playGuide.resetTour()
+      coachBusy.resetBusy()
+      this.setData({ showCoach: false, coachHole: null })
+      session.setFlag(playGuide.FLAG, Date.now()).catch(function () {})
     }
     this.goPrologue()
   },
@@ -98,15 +107,13 @@ Page({
 
   onContinue() {
     if (this.data.navigating) return
-    const go = () => {
-      this.setData({ navigating: true })
-      wx.navigateTo({ url: this.resumeUrl(), fail: () => this.setData({ navigating: false }) })
-    }
     if (this.data.showCoach) {
-      this.finishCoach(go)
-      return
+      playGuide.resetTour()
+      coachBusy.resetBusy()
+      this.setData({ showCoach: false, coachHole: null })
     }
-    go()
+    this.setData({ navigating: true })
+    wx.navigateTo({ url: this.resumeUrl(), fail: () => this.setData({ navigating: false }) })
   },
 
   onRestart() {
@@ -128,9 +135,10 @@ Page({
         showRestartConfirm: false,
         hasRecord: false,
         completed: false,
+        navigating: false,
+        showCoach: false,
         archiveDate: sessionDate.formatArchiveDate(snap.sessionDate)
       })
-      wx.navigateTo({ url: PROLOGUE_URL })
     }).catch(() => {
       this.setData({ restarting: false })
       wx.showToast({ title: '重新考察失败，请重试', icon: 'none' })
@@ -138,48 +146,20 @@ Page({
   },
 
   onHandbook() {
-    const go = () => wx.navigateTo({ url: '/plate21/module/pages/handbook/handbook' })
     if (this.data.showCoach) {
-      this.finishCoach(go)
+      this.onCoachNext()
       return
     }
-    go()
-  },
-
-  onCoachNext() {
-    if (this.data.coachClosing) return
-    this.persistCoachStep()
-    const last = (this.data.coachSteps || []).length - 1
-    if (this.data.coachIndex < last) {
-      const next = this.data.coachIndex + 1
-      this.setData({
-        coachIndex: next,
-        coachStep: this.data.coachSteps[next],
-        coachHole: null
-      })
-      this.measureCoach()
-      return
-    }
-    this.finishCoach(() => {
-      const stop = playGuide.startTour()
-      if (stop && stop.url) wx.redirectTo({ url: stop.url })
-    })
-  },
-
-  onCoachSkip() {
-    playGuide.abortTour()
-    this._coachFlag = playGuide.FLAG
-    this.finishCoach()
+    wx.navigateTo({ url: '/plate21/module/pages/handbook/handbook' })
   },
 
   onShowHelp() {
     if (this.data.navigating) return
-    const go = () => this.setData({ showGuide: true, guideClosing: false })
     if (this.data.showCoach) {
-      this.finishCoach(go)
+      this.onCoachNext()
       return
     }
-    go()
+    this.setData({ showGuide: true, guideClosing: false })
   },
 
   onGuideNext() {

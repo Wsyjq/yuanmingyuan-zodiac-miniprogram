@@ -1,6 +1,7 @@
 {
   "pages": [
-    "pages/index/index"
+    "pages/index/index",
+    "pages/ticket/ticket"
   ],
   "usingComponents": {
     "archive-illustration": "/components/archive-illustration/archive-illustration"
@@ -8,6 +9,7 @@
   "subpackages": [
     {
       "root": "plate21/module",
+      "name": "module",
       "pages": [
         "pages/gate/gate",
         "pages/walk/walk",

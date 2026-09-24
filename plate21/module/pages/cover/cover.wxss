@@ -1,13 +1,15 @@
 /* P00 封面 */
-.page {
+.page.page-shell {
   position: relative;
-  height: 100%;
-  overflow: hidden;
+  height: auto;
+  min-height: 100vh;
+  max-height: none;
+  overflow: visible;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  padding-top: 120rpx;
   padding-left: 52rpx; /* 给左侧活页装订孔列让位 */
-  /* 真纸纹底由全局 .paper-real 统一接管（v1.3.3 全站一致） */
 }
 
 /* v1.3.1：真实吊牌 + 叠字编号 */
@@ -17,8 +19,6 @@
   right: 48rpx;
   width: 130rpx;
   z-index: 60;
-  transform: rotate(3deg);
-  filter: drop-shadow(0 4rpx 8rpx rgba(70, 56, 42, 0.25));
 }
 .page-tag-img {
   width: 130rpx;
@@ -79,8 +79,6 @@
   width: 100%;
   height: 100%;
   display: block;
-  filter: sepia(0.24) saturate(0.72) contrast(1.04);
-  mix-blend-mode: multiply;
 }
 /* v1.3 手账：考察者手记批注，收进主视觉图框内侧下缘，不压框线 */
 .hero-note {
@@ -105,7 +103,6 @@
   right: -26rpx;
   width: 250rpx;
   height: 164rpx;
-  transform: rotate(7deg);
   opacity: 0.92;
   z-index: 9;
 }
@@ -171,7 +168,6 @@
 }
 .entry {
   margin: 0 40rpx 32rpx;
-  filter: drop-shadow(0 6rpx 14rpx rgba(70, 56, 42, 0.16));
   position: relative;
 }
 /* v1.3.1：干花标本贴纸，从票根卡左侧探出 */
@@ -181,7 +177,6 @@
   bottom: -30rpx;
   width: 140rpx;
   height: 218rpx;
-  transform: rotate(-14deg);
   z-index: 5;
 }
 .entry-card {
