@@ -43,5 +43,5 @@
     <view wx:for="{{hours}}" wx:key="name"><text>{{item.name}}</text><text class="hour-range">{{item.range}}</text></view>
   </view>
   <view wx:if="{{notice}}" class="clock-notice">{{notice}}</view>
-  <view class="clock-source">实景参考与喷水原理示意，非清代工程复原。</view>
+
 </view>

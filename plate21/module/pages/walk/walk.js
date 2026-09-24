@@ -22,13 +22,13 @@ const glossary = require('../../flow/glossary')
 const navigation = require('../../host/navigation')
 const navModel = require('../../capabilities/map/nav-model')
 const taskGuide = require('../../flow/task-guide')
-const STATUS = { draft: '草稿', private: '仅自己可见', unavailable: '公开服务尚未接入，私人稿已保留', failed: '提交未确认，可重试', submitted: '已收到投稿，等待处理', published: '已公开', rejected: '未获公开', withdrawn: '已撤回' }
+const STATUS = { draft: '草稿', private: '仅自己可见', unavailable: '暂时无法分享，私人记录已保留', failed: '提交未确认，可重试', submitted: '已收到投稿，等待处理', published: '已公开', rejected: '未获公开', withdrawn: '已撤回' }
 function clone(value) { return JSON.parse(JSON.stringify(value)) }
 function ds(e, key) { return e.currentTarget.dataset[key] }
 function fmt(at) { return dates.formatArchiveDate(dates.dateKeyFromTimestamp(at)) }
 function errorText(err) { return err && (err.message || err.errMsg) || '操作未完成，请重试' }
 Page({
-  data: { loading: true, busy: false, error: '', pageVisible: true, screen: {}, ui: {}, rows: [], records: [],
+  data: { restartScreen: false, loading: true, busy: false, error: '', pageVisible: true, screen: {}, ui: {}, rows: [], records: [],
     narrClips: [], voiceEnabled: false, drawer: '', card: null, drawerScrollTop: 0, cardAnchor: '', cardImageFailed: false, waterClockState: {}, clockPlaying: false,
     soundSrc: nfc.SOUND, relayItems: [], relayState: 'idle', contributions: [], archives: [], scrollTop: 0, navX: 0, navY: 0, locating: false, location: null, locationError: '' },
   async onLoad(query) {
@@ -58,7 +58,7 @@ Page({
         else this.setData({ notice: '已识别谐奇趣贴片。请从当前进度继续；到谐奇趣后可直接听音乐。' })
       }
       this.restore()
-      this.setData({ loading: false })
+      this.setData({ loading: false, restartScreen: this.query.entry === 'restart' })
     } catch (err) { this.setData({ loading: false, error: errorText(err) }) }
   },
   snapshot() { return this.sessionId ? session.getArchive(this.sessionId) : session.getSnapshot() },
@@ -291,7 +291,7 @@ Page({
   },
   onWaterClockComplete(e) { this.onWaterClockChange(e) },
   syncNfc() {
-    if (this.run.pageId !== 'X1' || !this.data.pageVisible) { this.stopNfc(); return }
+    if (this.run.pageId !== 'X1' || !this.data.pageVisible || this.data.restartScreen) { this.stopNfc(); return }
     if (this._nfcStarting || this._nfc) return
     this._nfcStarting = true
     this._nfc = nfc.start({ onTag: () => { const player = this.selectComponent('#soundscape'); if (player && this.data.pageVisible) player.onReplay() },
@@ -345,10 +345,14 @@ Page({
     const id = e && e.currentTarget ? ds(e, 'id') : this.sessionId || this.snapshot().sessionId
     wx.navigateTo({ url: '/plate21/module/pages/report/report?sessionId=' + encodeURIComponent(id || this.snapshot().sessionId) })
   },
-  onRestart() {
-    wx.showModal({ title: '开始新的考察？', content: '已完成的作品会保留。当前未完成的考察将重新开始。', success: (res) => {
-      if (res.confirm) this.action(async () => { await session.restart(); this.sessionId = ''; this.query = {}; this.setData({ drawer: '' }); wx.redirectTo({ url: '/plate21/module/pages/walk/walk' }) })
-    } })
+  onRestart() { audioBus.pauseAll(); this.stopNfc(); this.setData({ drawer: '', restartScreen: true }) },
+  onCancelRestart() { this.setData({ restartScreen: false }); this.render() },
+  onConfirmRestart() {
+    return this.action(async () => {
+      await session.restart()
+      this.sessionId = ''; this.query = {}; this.ui = {}
+      this.setData({ restartScreen: false, drawer: '' })
+    })
   },
   async exit() {
     const result = await session.exit('user')

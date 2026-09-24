@@ -123,10 +123,10 @@ test('restored original prose actually reaches WXML instead of only remaining in
   const cases = [
     ['H2', {}, ['黄花阵的作用：', '最先到达中心的人会得到皇帝的赏赐']],
     ['H4', { arrived: true }, ['西式穹顶', '莲花基座', '双天鹅', '蝙蝠寓意福气']],
-    ['HY2', {}, ['答案确认后，画面里的十二生肖一个接一个亮起']],
+    ['HY2', {}, ['到了正午，十二道水流同时喷出']],
     ['DS2', {}, ['大水法中央原有一只铜制梅花鹿', '鹿角喷水', '大型卷尾铜兽']],
-    ['FN1', {}, ['屏幕暗了一下，然后亮起', '密集交错的线条构成明暗']],
-    ['FN2', {}, ['屏幕中缓缓出来了一封信', '等待被后来者完成']],
+    ['FN1', {}, ['密集交错的线条构成明暗']],
+    ['FN2', {}, ['如果你看到这里', '等待被后来者完成']],
     ['X2', {}, ['日记和信封会指引你第一站的方向', '信封的封口处和信的背面都有一半的字']]
   ]
   for (const [id, state, phrases] of cases) {
@@ -164,7 +164,7 @@ test('clicking each of 17 inline historical terms renders every Word layer and i
     }
     const source = cards.get(term.key)
     if (source.image) assert.ok(result.html.includes(source.image), term.key + ' image missing')
-    assert.match(actual, /本篇史料已完整展示/)
+    assert.match(actual, /读完，返回剧情/)
     assert.doesNotMatch(actual, /完成对应互动后展示|undefined/)
   }
   assert.equal(visited.size, 17)

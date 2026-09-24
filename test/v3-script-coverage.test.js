@@ -15,6 +15,8 @@ test('every non-bracketed main-script paragraph has a verified visible destinati
   assert.equal(fixture.paragraphs.filter(p => p.text).length, 165)
   for (const p of fixture.paragraphs) {
     if (!p.text) { assert.equal(p.destination.field, 'program-marker'); continue }
+    if (p.displayText === '') continue // User explicitly removed stage directions; original remains in the source fixture.
+    const expected = p.displayText == null ? p.text : p.displayText
     const { page, field } = p.destination
     const screen = visibleAt(page)
     if (field === 'choices') {
@@ -30,7 +32,7 @@ test('every non-bracketed main-script paragraph has a verified visible destinati
     }
     if (field === 'document-section') { assert.ok(screen.sectionTitle); continue }
     const actual = field === 'sectionTitle' ? screen.sectionTitle : field === 'interaction' ? screen.interaction.title + screen.interaction.lines.join('\n') : screen.lines.join('\n')
-    assert.ok(normalized(actual).includes(normalized(p.text)), 'paragraph ' + p.paragraph + ' → ' + page + '.' + field + ': ' + p.text)
+    assert.ok(normalized(actual).includes(normalized(expected)), 'paragraph ' + p.paragraph + ' → ' + page + '.' + field + ': ' + p.text)
     assert.doesNotMatch(actual, /【|】/)
   }
 })
@@ -39,10 +41,10 @@ test('restored passages retain action gates without being discarded or replacing
   for (const phrase of ['西式穹顶', '檐角立兽', '莲花基座', '双天鹅']) assert.match(h4.interaction.lines.join(''), new RegExp(phrase === '檐角立兽' ? '檐角位置' : phrase))
   assert.match(visibleAt('H2').interaction.lines.join(''), /最先到达中心的人会得到皇帝的赏赐/)
   assert.match(visibleAt('DS2').interaction.lines.join(''), /鹿角喷水/)
-  assert.match(visibleAt('FN1').lines.join(''), /屏幕暗了一下/)
-  assert.match(visibleAt('FN2').lines.join(''), /屏幕中缓缓出来了一封信/)
+  assert.match(visibleAt('FN1').lines.join(''), /密集交错的线条/)
+  assert.match(visibleAt('FN2').lines.join(''), /如果你看到这里/)
   assert.doesNotMatch(visibleAt('FN4', { completedAt: null }).lines.join(''), /生成完成/)
-  assert.match(visibleAt('FN4').lines.join(''), /几秒后，一份新的档案生成/)
+  assert.match(visibleAt('FN4').lines.join(''), /西洋楼铜版图/)
   assert.match(visibleAt('LT8').lines.join(''), /你留下的内容，在经过审核之后，也许会出现在/)
 })
 

@@ -4,16 +4,16 @@
     <view>{{loadError}}</view><button class="report-button" bindtap="onRetryLoad">重新读取</button>
   </view>
   <block wx:elif="{{model}}">
-    <view class="eyebrow">FIELD ARCHIVE · 个人考察档案</view>
+    <view class="eyebrow">个人考察档案</view>
     <view class="report-title">我的第二十一图</view>
-    <view class="report-subtitle">{{model.completed ? '考察已经完成，这份作品仍可以补充。' : '这是一份考察草稿，完成后会保留署名与日期。'}}</view>
+    <view class="report-subtitle">{{model.completed ? '这一程的所见，留在这里。' : '这份档案，等待你继续书写。'}}</view>
     <view class="identity"><text>{{model.name}}</text><text>{{model.dateLabel}}</text></view>
 
     <view class="artwork-section">
       <view wx:if="{{generating}}" class="notice">正在把你的照片和观察编入作品……</view>
       <image wx:for="{{previewImages}}" wx:key="filePath" class="artwork-preview" src="{{item.filePath}}" mode="widthFix" data-index="{{index}}" bindtap="onPreviewArtwork" aria-label="预览个人作品第{{item.number}}页" />
       <view wx:if="{{!previewImages.length && !generating}}" class="empty-art">作品还未生成。你的记录已经保存在下方。</view>
-      <view class="small-note">底图为遗址示意线稿；照片只来自你留下的现场记录。{{sheetCount > 1 ? '记录较多，作品会分成 ' + sheetCount + ' 页，完整保留每条记录。' : ''}}</view>
+
       <view wx:if="{{exportWarning}}" class="notice">{{exportWarning}}</view>
       <view class="button-row">
         <button class="report-button primary" bindtap="onSave" disabled="{{generating || saving || busy}}">{{saving ? '保存中…' : (savedCount && savedCount === previewImages.length ? '已保存到相册' : '保存到相册')}}</button>
@@ -61,7 +61,7 @@
       <view class="button-row"><button class="report-button primary" bindtap="onSaveText" disabled="{{busy || generating || saving}}">{{busy ? '保存中…' : '保存文字'}}</button><button class="report-button" bindtap="onAddPhoto" disabled="{{busy || generating || saving}}">补充照片</button></view>
       <button wx:if="{{editingTextId}}" class="report-button" bindtap="onCancelEdit" disabled="{{busy}}">取消修改</button>
       <view wx:if="{{recordError}}" class="notice error">{{recordError}}</view>
-      <view class="small-note">这些是你的私人记录。补充、替换或删除不会改变原完成日期，也不会把跳过的站点改成已完成。</view>
+      <view class="small-note"></view>
     </view>
 
     <view wx:if="{{model.completed}}" class="section letter-card">
@@ -72,6 +72,7 @@
       <button wx:if="{{reminderSupported && !letterAvailable}}" class="report-button reminder-button" bindtap="onRequestReminder" disabled="{{reminderRequesting || reminderAccepted}}">{{reminderRequesting ? '请求中…' : (reminderAccepted ? '提醒请求已受理' : '申请来信提醒')}}</button>
       <view wx:if="{{reminderMessage}}" class="small-note reminder-message">{{reminderMessage}}</view>
     </view>
+    <button class="report-button return-button" bindtap="onRestart" disabled="{{busy || saving}}">重新考察</button>
     <button class="report-button return-button" bindtap="onReturn" disabled="{{busy || saving}}">返回考察</button>
   </block>
   <canvas type="2d" id="reportCanvas" class="export-canvas" style="width:700px;height:2000px;" />

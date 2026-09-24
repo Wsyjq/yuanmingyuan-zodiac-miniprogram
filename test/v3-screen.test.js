@@ -33,7 +33,7 @@ test('all 43 stable page IDs build pure display models and caller state remains 
 
 test('non-bracketed scene descriptions remain screen copy alongside presentation metadata', () => {
   const text = pages.list.flatMap(page => page.lines.concat(page.signedLines, page.interaction ? page.interaction.lines : [])).join('\n')
-  for (const phrase of ['给出 4 种花纹的图样', '14时对应由哪个兽首喷水', '正午时候由哪个兽首喷水', '答案确认后，画面', '屏幕暗了一下', '屏幕中缓缓出来了一封信', '几秒后，一份新的档案生成']) assert.equal(text.includes(phrase), true, phrase)
+  for (const phrase of ['让用户选出', '程序设计参考', '答案确认后，画面', '屏幕暗了一下', '屏幕中缓缓出来了一封信', '几秒后，一份新的档案生成']) assert.equal(text.includes(phrase), false, phrase)
   assert.equal(pages.byId.FN1.presentation.kind, 'engraving-reveal')
   assert.equal(pages.byId.FN3.presentation.kind, 'archive-reveal')
   assert.equal(pages.byId.HY2.presentation.kind, 'water-clock-finale')
@@ -179,7 +179,8 @@ test('all eleven puzzles project separate gameplay modules without mixing their 
   for (const page of pages.list.filter(p => p.playId)) {
     const view = buildScreen(runAt(page.id), { arrived: true, flipped: true })
     assert.ok(view.interaction, page.id)
-    assert.match(view.interaction.title, /^互动玩法｜/)
+    assert.ok(view.interaction.title.trim())
+    assert.doesNotMatch(view.interaction.title, /程序设计|互动玩法｜/)
     assert.doesNotMatch(view.lines.join(''), /互动玩法｜/)
     for (const line of view.interaction.lines) assert.ok(!view.lines.includes(line), page.id + ': duplicate gameplay text')
     count++

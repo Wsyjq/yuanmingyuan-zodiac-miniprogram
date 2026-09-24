@@ -130,6 +130,7 @@ Page({
       this.update({ letterMessage: error.code === 'LETTER_LOCKED' ? '这封信尚未开放，或需要联网确认时间。到期后仍可从这里进入。' : '来信暂时无法打开，请重试。' })
     } finally { this.update({ letterOpening: false }) }
   },
+  onRestart: function () { return invoke('redirectTo', { url: WALK + '?entry=restart' }) },
   onReturn: function () {
     return invoke('redirectTo', { url: WALK + (this._sessionId ? '?sessionId=' + encodeURIComponent(this._sessionId) : '') })
       .catch(() => this.update({ saveError: '暂时无法返回考察，请使用左上角返回后重试。' }))

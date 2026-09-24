@@ -1,4 +1,11 @@
 <view class="p21-page {{playId === 'quiz-hour' ? 'canvas-page' : ''}}">
+  <scroll-view wx:if="{{restartScreen}}" scroll-y class="restart-screen">
+    <view class="restart-paper"><text class="restart-eyebrow">第廿一图 · 再访</text><view class="restart-mark">廿一</view><view class="restart-title">再走一遍，
+会看见什么？</view><text class="restart-prose">旧图仍在，新的足迹尚未落下。
+带上档案，再次走进西洋楼。</text><view class="restart-rule"></view><text class="restart-note">已完成的作品会保留。
+这次尚未完成的考察将从头开始。</text><view wx:if="{{error}}" class="error">{{error}}</view><button class="primary" bindtap="onConfirmRestart" disabled="{{busy || loading}}" loading="{{busy}}">重新启程 →</button><button class="text-button restart-cancel" bindtap="onCancelRestart" disabled="{{busy}}">回到这份档案</button></view>
+  </scroll-view>
+  <block wx:else>
   <view class="toolbar">
     <button class="text-button" bindtap="onBack" disabled="{{busy || loading}}">‹ 返回</button>
     <text class="brand">第廿一图</text>
@@ -21,11 +28,11 @@
     <scroll-view wx:else scroll-y class="drawer-scroll" scroll-top="{{drawerScrollTop}}" bindscroll="onDrawerScroll">
       <block wx:if="{{drawer === 'explanation'}}"><text class="caption">可以带着解读再试一次，也可以跳过本题继续；跳过会如实记录。</text><text wx:for="{{explanation}}" wx:key="index" class="paragraph">{{item}}</text><button class="primary" bindtap="onCloseDrawer">回去再试一次</button><button class="text-button" bindtap="onSkip" disabled="{{busy}}">跳过本题，继续考察</button></block>
       <block wx:elif="{{drawer === 'route'}}">
-        <view class="route-current"><text class="caption">当前考察进度</text><view class="subheading">{{routeCurrent}}</view><text class="caption">站点状态依据考察记录，不代表 GPS 到访。</text></view>
+        <view class="route-current"><text class="caption">当前考察进度</text><view class="subheading">{{routeCurrent}}</view></view>
         <map wx:if="{{location}}" class="field-map" latitude="{{location.latitude}}" longitude="{{location.longitude}}" scale="16" show-location />
         <button class="secondary" bindtap="onLocate" loading="{{locating}}" disabled="{{locating}}">{{location ? '刷新我的实际位置' : '查看我的实际位置'}}</button>
         <text wx:if="{{locationError}}" class="caption">{{locationError}}</text>
-        <text class="caption">对照实体地图与现场标识步行。站点坐标尚未核实，暂不显示距离及精确导航。</text>
+        <text class="caption">请循实体地图与沿途路标前行。</text>
         <view class="route-stop {{item.current ? 'route-active' : ''}}" wx:for="{{routeRows}}" wx:key="id"><text class="route-number">{{index + 1}}</text><view class="route-copy"><text>{{item.title}}</text><text class="caption">{{item.state}}</text></view><button class="text-button" data-page="{{item.openPageId}}" bindtap="onOpenPage" disabled="{{!item.canOpen}}">{{item.current ? '继续' : item.canOpen ? '回看' : '待考察'}}</button></view>
       </block>
 
@@ -36,12 +43,13 @@
           <button class="text-button" data-name="menu" bindtap="onDrawer">音频、作品与考察设置</button>
         </block>
       </block>
-      <block wx:else><view class="row"><text>讲述音频</text><switch checked="{{voiceEnabled}}" bindchange="onVoice" color="#627d77"/></view><button class="text-button" bindtap="onMuteAll">暂停全部声音</button><text class="caption">{{isDemo ? '本地演示 · 记录保存在本设备' : '官方接入模式'}} · {{syncState}}</text>
+      <block wx:else><view class="row"><text>讲述音频</text><switch checked="{{voiceEnabled}}" bindchange="onVoice" color="#627d77"/></view><button class="text-button" bindtap="onMuteAll">暂停全部声音</button>
         <button class="choice" bindtap="onResume">回到当前考察进度</button><button class="choice" data-name="history" bindtap="onDrawer">已遇见的史料</button>
         <view wx:for="{{rows}}" wx:key="id" class="progress-row"><button class="text-button" data-page="{{item.openPageId}}" bindtap="onOpenPage" disabled="{{!item.canOpen}}">{{item.title}} · {{item.state}}</button><view class="caption" wx:for="{{item.puzzles}}" wx:for-item="puzzle" wx:key="playId">{{puzzle.state}}<button wx:if="{{puzzle.canOpen}}" class="text-button" data-page="{{puzzle.reopenPageId}}" bindtap="onOpenPage">回看互动</button></view></view>
         <view class="subheading">已完成的作品</view><text wx:if="{{!archives.length}}" class="caption">完成考察后，作品会保存在这里。</text><button wx:for="{{archives}}" wx:key="id" class="choice" data-id="{{item.id}}" bindtap="onReport">{{item.name}} · {{item.date}}</button>
-        <button class="secondary" bindtap="onRestart">重新考察</button><button class="text-button" bindtap="onExit">保存并退出模块</button>
+        <button class="secondary" bindtap="onRestart">重新考察</button><button class="text-button" bindtap="onExit">收好档案</button>
       </block>
     </scroll-view>
   </view></view>
+  </block>
 </view>

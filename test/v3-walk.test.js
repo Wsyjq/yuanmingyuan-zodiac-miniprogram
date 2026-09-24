@@ -101,7 +101,7 @@ test('walk loads without a payment gate and a skipped route reaches a durable na
   assert.ok(h.session.getRun().completedAt)
   assert.equal(h.session.getRun().name, '跳过路线玩家')
   assert.equal(h.session.getRun().puzzles['quiz-direction'], 'skipped')
-  assert.match(h.page.data.screen.lines.join(''), /考察记录生成完成/)
+  assert.match(h.page.data.screen.lines.join(''), /西洋楼铜版图/)
   await h.invoke('onPrimary')
   assert.ok(h.calls.routes.at(-1).startsWith('/plate21/module/pages/report/report?sessionId='))
   assert.equal(h.session.getArchives().length, 1)
@@ -390,5 +390,36 @@ test('water-clock explanation cannot reveal noon before the prediction sequence'
     await h.invoke('onExplain')
     assert.equal(h.page.data.drawer, '')
     assert.equal(h.session.getRun().puzzles['quiz-hour'], undefined)
+  } finally { await h.close() }
+})
+
+test('restart has a dedicated screen; cancel keeps progress and confirm preserves finished archives', async () => {
+  const h = await harness()
+  try {
+    await h.arrange('FN4'); await h.session.sign('原考察者')
+    const old = h.session.getSnapshot(), archives = h.session.getArchives()
+    await h.invoke('onRestart')
+    assert.equal(h.page.data.restartScreen, true)
+    await h.invoke('onCancelRestart')
+    assert.equal(h.session.getSnapshot().sessionId, old.sessionId)
+    await h.invoke('onRestart'); await h.invoke('onConfirmRestart')
+    assert.equal(h.page.data.restartScreen, false)
+    assert.equal(h.page.data.pageId, 'P1')
+    assert.notEqual(h.session.getSnapshot().sessionId, old.sessionId)
+    assert.equal(h.session.getArchives().length, archives.length)
+    assert.equal(h.session.getArchive(old.sessionId).run.completedAt, old.run.completedAt)
+  } finally { await h.close() }
+})
+test('home restart entry opens without resetting an unfinished expedition', async () => {
+  let h = await harness()
+  await h.arrange('X2'); const storage = h.storage, id = h.session.getSnapshot().sessionId
+  await h.close()
+  h = await harness({ storage, query: { entry: 'restart' } })
+  try {
+    assert.equal(h.page.data.restartScreen, true)
+    assert.equal(h.session.getSnapshot().sessionId, id)
+    assert.equal(h.session.getRun().resumePageId, 'X2')
+    await h.invoke('onCancelRestart')
+    assert.equal(h.page.data.pageId, 'X2')
   } finally { await h.close() }
 })

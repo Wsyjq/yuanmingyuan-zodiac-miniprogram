@@ -1,12 +1,12 @@
     <view class="paper">
       <view class="eyebrow">{{screen.siteTitle || '西洋楼现场考察档案'}} · {{screen.stageLabel}}</view>
       <view class="title">{{screen.title || '第二十一图'}}<text class="seal">考察</text></view>
-      <view wx:if="{{review}}" class="notice">正在回看 · 保留原考察结果<button class="text-button" bindtap="onResume">回到当前进度 →</button></view>
+      <view wx:if="{{review}}" class="notice">重读这一页<button class="text-button" bindtap="onResume">回到当前进度 →</button></view>
       <view wx:if="{{screen.kind === 'nav'}}" class="route-card">
         <text class="eyebrow">前往下一站</text><view class="route-destination">{{screen.siteTitle}}</view>
         <text>{{screen.nav.instruction || '请对照实体地图与现场标识步行。'}}到达后，点击“我到达了”。</text>
         <view class="route-strip"><text wx:for="{{rows}}" wx:key="id" wx:if="{{index > 0 && index < 9}}" class="route-stop {{item.current ? 'current' : ''}}">{{item.title}}</text></view>
-        <text class="caption">路线顺序示意，不用于精确定位。蓄水楼为海晏堂北面高台。</text>
+
       </view>
       <view wx:if="{{screen.prop.items.length && !screen.interaction}}" class="prop">
         <view class="prop-title">{{screen.prop.title || '实体道具'}}</view>
@@ -25,9 +25,9 @@
       <view wx:if="{{pageId === 'FN1'}}" class="activity"><view class="subheading">这一次，我留下了</view><view class="photo-strip"><image wx:for="{{records}}" wx:key="id" wx:if="{{item.kind === 'photo'}}" src="{{item.filePath}}" mode="aspectFill" data-src="{{item.filePath}}" bindtap="onPreview"/></view><text wx:if="{{!records.length}}" class="caption">还没有照片或文字记录。完成署名后，也可以在个人作品中补录。</text><text wx:for="{{records}}" wx:key="id" wx:if="{{item.kind !== 'photo'}}" class="paragraph">{{item.text}}</text></view>
       <view wx:if="{{pageId === 'FN4'}}" class="activity"><button wx:if="{{completed}}" class="secondary" bindtap="onOpenBonus" disabled="{{busy}}">直接进入彩蛋 →</button><label>绘制者署名</label><text class="caption">绘制者：{{screen.signature.name}}
 绘制日期：{{screen.signature.date}}
-版本编号：{{screen.signature.edition}}</text><input wx:if="{{!completed}}" data-key="name" value="{{ui.name}}" maxlength="40" placeholder="写下你的名字，也可以留白" bindinput="onInput" disabled="{{completed}}"/><text class="caption">{{completed ? '考察记录已保存。' : '完成后生成个人作品。'}}保存考察后可以直接进入彩蛋，也可以留到明天再读。</text></view>
+</text><input wx:if="{{!completed}}" data-key="name" value="{{ui.name}}" maxlength="40" placeholder="写下你的名字，也可以留白" bindinput="onInput" disabled="{{completed}}"/><text class="caption">{{completed ? '考察记录已保存。' : '完成后生成个人作品。'}}</text></view>
       <view wx:if="{{pageId === 'LT6'}}" class="activity"><view class="subheading">探寻者的接力记录</view>
-        <text wx:if="{{relayState === 'loading'}}">正在读取…</text><text wx:if="{{relayState === 'empty'}}">暂时没有可公开的接力记录。你仍可以留下自己的私人记录。</text><text wx:if="{{relayState === 'unavailable'}}">接力服务尚未接入，当前没有可展示的游客投稿。</text><text wx:if="{{relayState === 'failed'}}">暂时没有读到接力记录，请重试。</text>
+        <text wx:if="{{relayState === 'loading'}}">正在读取…</text><text wx:if="{{relayState === 'empty'}}">暂时没有可公开的接力记录。你仍可以留下自己的私人记录。</text><text wx:if="{{relayState === 'unavailable'}}">暂时没有收到后来者的来信。</text><text wx:if="{{relayState === 'failed'}}">暂时没有读到接力记录，请重试。</text>
         <view wx:for="{{relayItems}}" wx:key="id" class="record"><text class="caption">{{item.from}}</text><image wx:if="{{item.kind === 'photo' && item.url}}" src="{{item.url}}" mode="widthFix" data-src="{{item.url}}" bindtap="onPreview"/><text>{{item.text}}</text></view><button class="text-button" bindtap="loadRelay">重新读取</button>
       </view>
       <view wx:if="{{pageId === 'LT7'}}" class="activity"><view class="subheading">给后来者，也给自己</view>

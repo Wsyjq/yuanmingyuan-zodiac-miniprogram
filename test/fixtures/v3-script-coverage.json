@@ -172,7 +172,8 @@
       "destination": {
         "page": "E1",
         "field": "interaction"
-      }
+      },
+      "displayText": "辨认方向"
     },
     {
       "paragraph": 149,
@@ -275,7 +276,8 @@
       "destination": {
         "page": "X1",
         "field": "interaction"
-      }
+      },
+      "displayText": "听见谐奇趣"
     },
     {
       "paragraph": 161,
@@ -320,7 +322,8 @@
       "destination": {
         "page": "X2",
         "field": "interaction"
-      }
+      },
+      "displayText": "下一站去哪"
     },
     {
       "paragraph": 166,
@@ -383,7 +386,8 @@
       "destination": {
         "page": "H1",
         "field": "interaction"
-      }
+      },
+      "displayText": "迷宫的修建目的我不禁好奇，这迷宫的修建目的是"
     },
     {
       "paragraph": 174,
@@ -420,7 +424,8 @@
       "destination": {
         "page": "H3",
         "field": "interaction"
-      }
+      },
+      "displayText": "黄花阵名字的由来"
     },
     {
       "paragraph": 179,
@@ -474,7 +479,8 @@
       "destination": {
         "page": "H4",
         "field": "interaction"
-      }
+      },
+      "displayText": "中西结合的观察"
     },
     {
       "paragraph": 186,
@@ -546,7 +552,8 @@
       "destination": {
         "page": "H5",
         "field": "interaction"
-      }
+      },
+      "displayText": "黄花阵花纹观察"
     },
     {
       "paragraph": 194,
@@ -555,7 +562,8 @@
       "destination": {
         "page": "H6",
         "field": "interaction"
-      }
+      },
+      "displayText": "沿途看到的，是万字纹。"
     },
     {
       "paragraph": 201,
@@ -690,7 +698,8 @@
       "destination": {
         "page": "HY1",
         "field": "interaction"
-      }
+      },
+      "displayText": "海晏堂的十二生肖水力钟"
     },
     {
       "paragraph": 217,
@@ -699,7 +708,8 @@
       "destination": {
         "page": "HY1",
         "field": "interaction"
-      }
+      },
+      "displayText": "看看不同时辰的水流。14时由哪个兽首喷水？正午又会怎样？"
     },
     {
       "paragraph": 218,
@@ -708,7 +718,8 @@
       "destination": {
         "page": "HY2",
         "field": "interaction"
-      }
+      },
+      "displayText": "到了正午，十二道水流同时喷出。"
     },
     {
       "paragraph": 219,
@@ -726,7 +737,8 @@
       "destination": {
         "page": "HY3",
         "field": "interaction"
-      }
+      },
+      "displayText": "转盘花纹匹配"
     },
     {
       "paragraph": 221,
@@ -807,7 +819,8 @@
       "destination": {
         "page": "XS1",
         "field": "interaction"
-      }
+      },
+      "displayText": "水法的物理原理"
     },
     {
       "paragraph": 230,
@@ -926,7 +939,8 @@
       "destination": {
         "page": "DS1",
         "field": "interaction"
-      }
+      },
+      "displayText": "大水法"
     },
     {
       "paragraph": 243,
@@ -989,7 +1003,8 @@
       "destination": {
         "page": "DS2",
         "field": "lines"
-      }
+      },
+      "displayText": "猎狗、铜鹿与水流，都回到了画中的位置。"
     },
     {
       "paragraph": 251,
@@ -1025,7 +1040,8 @@
       "destination": {
         "page": "DS2",
         "field": "lines"
-      }
+      },
+      "displayText": "铜鹿不在了，猎狗不在了，喷水塔也不在了。旧画里的景象，现实中只剩下石构的轮廓。"
     },
     {
       "paragraph": 256,
@@ -1079,7 +1095,8 @@
       "destination": {
         "page": "FN1",
         "field": "lines"
-      }
+      },
+      "displayText": "密集交错的线条构成明暗，锐利的刻痕描绘着建筑轮廓，仿佛一幅真正的《西洋楼铜版图》。"
     },
     {
       "paragraph": 263,
@@ -1115,7 +1132,8 @@
       "destination": {
         "page": "FN2",
         "field": "lines"
-      }
+      },
+      "displayText": "如果你看到这里，说明你已经走完了这条路。你一定很好奇，那幅传闻中的第二十一幅版画，究竟在哪里。其实，它从未被藏在某个地方。因为它从来不是一幅等待被发现的旧画。它是一幅等待被后来者完成的“新画”。"
     },
     {
       "paragraph": 267,
@@ -1169,7 +1187,8 @@
       "destination": {
         "page": "FN4",
         "field": "signedLines"
-      }
+      },
+      "displayText": ""
     },
     {
       "paragraph": 274,
@@ -1178,7 +1197,8 @@
       "destination": {
         "page": "FN4",
         "field": "signedLines"
-      }
+      },
+      "displayText": "《西洋楼铜版图·第二十一图》"
     },
     {
       "paragraph": 275,
