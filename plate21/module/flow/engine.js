@@ -1,7 +1,7 @@
 'use strict'
 
 const { createRun } = require('./contract')
-const pages = require('./pages')
+function createEngine(pages) {
 function copy(value) { return JSON.parse(JSON.stringify(value)) }
 function error(code, message) { const err = new Error(message); err.code = code; return err }
 function pageOf(id) {
@@ -88,4 +88,7 @@ function openLetter(run) {
   if (next.resumePageId === 'FN4') return moveFrontier(next, 'LT1')
   return enter(next, 'LT1')
 }
-module.exports = { createRun, cloneRun, canEnter, isReview, enter, resume, complete, skip, openLetter }
+return { createRun, cloneRun, canEnter, isReview, enter, resume, complete, skip, openLetter }
+
+}
+module.exports = Object.assign(createEngine(require('./pages')), { createEngine })

@@ -3,11 +3,12 @@
   "version": "3.0.0",
   "private": true,
   "scripts": {
-    "test": "npm run check && npm run test:unit && npm run check:resources && npm run package:report",
+    "test": "npm run check && npm run check:story && npm run test:unit && npm run check:resources && npm run package:report",
     "test:unit": "node --test test/v3-*.test.js test/photo-pipeline.test.js test/session-date.test.js",
     "check": "node test/check-project.js",
     "check:resources": "node test/check-third-party.js",
     "package:report": "node test/package-report.js",
-    "resources:refresh": "node tools/build-resource-manifest.js"
+    "resources:refresh": "node tools/build-resource-manifest.js",
+    "check:story": "node tools/check-story.js"
   }
 }

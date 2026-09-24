@@ -6,25 +6,11 @@
 const { PLAY_IDS } = require('../flow/contract')
 const waterClock = require('./water-clock')
 
-const DIRECTION_OPTIONS = ['西北', '东南', '西南', '东北']
-const HEIGHT_OPTIONS = ['高', '低']
-const LANTERN_OPTIONS = [
-  '作为军事防御工事，用于迷惑和阻挡入侵的敌人。',
-  '作为皇家藏书楼，利用复杂路径保护珍贵书籍。',
-  '作为中秋节的皇家娱乐场所，举办“迷宫灯会”游戏。',
-  '作为皇子们的秘密议事厅，以防外人窃听。'
-]
-
-// IDs are the persisted answer contract. Exact labels are accepted only for old UI callers.
-const CHOICES = {
-  'quiz-direction': ['nw', 'se', 'sw', 'ne'].map(function (id, i) { return { id: id, label: DIRECTION_OPTIONS[i] } }),
-  'quiz-lantern': ['defense', 'library', 'lantern', 'council'].map(function (id, i) { return { id: id, label: LANTERN_OPTIONS[i] } }),
-  'quiz-height': [{ id: 'high', label: '高' }, { id: 'low', label: '低' }],
-  'quiz-pattern': [
-    { id: 'wanzi', label: '万字纹' }, { id: 'shell', label: '贝壳纹' },
-    { id: 'scroll', label: '卷草纹' }, { id: 'basket', label: '花篮纹' }
-  ]
-}
+const config = require('../content/puzzles')
+const CHOICES = config.choices
+const DIRECTION_OPTIONS = CHOICES['quiz-direction'].map(item => item.label)
+const HEIGHT_OPTIONS = CHOICES['quiz-height'].map(item => item.label)
+const LANTERN_OPTIONS = CHOICES['quiz-lantern'].map(item => item.label)
 
 function choiceIs(playId, action, answerId) {
   const choices = CHOICES[playId] || []
@@ -38,7 +24,7 @@ const PLAYS = {
   'quiz-direction': {
     propPrompt: '打开地图再做方位题',
     fields: [{ name: 'value', type: 'choice', options: DIRECTION_OPTIONS }],
-    solved: function (action) { return choiceIs('quiz-direction', action, 'ne') }
+    solved: function (action) { return choiceIs('quiz-direction', action, config.answers['quiz-direction']) }
   },
   'listen-nfc': {
     propPrompt: '提示用音乐贴片',
@@ -49,14 +35,14 @@ const PLAYS = {
     propPrompt: '提示：信封的封口处和信的背面都有一半的字，拼接起来看一下！',
     fields: [{ name: 'value', type: 'text' }],
     solved: function (action) {
-      return typeof action.value === 'string' && action.value.replace(/\s/g, '') === '黄花阵'
+      return typeof action.value === 'string' && config.envelopeAnswers.includes(action.value.replace(/\s/g, ''))
     }
   },
   'quiz-lantern': {
     propPrompt: '',
     fields: [{ name: 'value', type: 'choice', options: LANTERN_OPTIONS }],
     solved: function (action) {
-      return choiceIs('quiz-lantern', action, 'lantern')
+      return choiceIs('quiz-lantern', action, config.answers['quiz-lantern'])
     }
   },
   'prop-flip': {
@@ -74,7 +60,7 @@ const PLAYS = {
   'quiz-pattern': {
     propPrompt: '选出看到的花纹',
     fields: [{ name: 'value', type: 'choice' }],
-    solved: function (action) { return choiceIs('quiz-pattern', action, 'wanzi') }
+    solved: function (action) { return choiceIs('quiz-pattern', action, config.answers['quiz-pattern']) }
   },
   'quiz-hour': {
     propPrompt: '',
@@ -89,7 +75,7 @@ const PLAYS = {
   'quiz-height': {
     propPrompt: '提示看特刊',
     fields: [{ name: 'value', type: 'choice', options: HEIGHT_OPTIONS }],
-    solved: function (action) { return choiceIs('quiz-height', action, 'high') }
+    solved: function (action) { return choiceIs('quiz-height', action, config.answers['quiz-height']) }
   },
   'place-animals': {
     propPrompt: '提示对照《大水法南面》',

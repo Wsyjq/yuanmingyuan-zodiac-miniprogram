@@ -1,0 +1,174 @@
+{
+  "P1": {
+    "kind": "read",
+    "playId": ""
+  },
+  "P2": {
+    "kind": "read",
+    "playId": ""
+  },
+  "P3": {
+    "kind": "read",
+    "playId": ""
+  },
+  "E1": {
+    "kind": "puzzle",
+    "playId": "quiz-direction"
+  },
+  "E2": {
+    "kind": "read",
+    "playId": ""
+  },
+  "M1": {
+    "kind": "nav",
+    "playId": ""
+  },
+  "X1": {
+    "kind": "puzzle",
+    "playId": "listen-nfc"
+  },
+  "X2": {
+    "kind": "puzzle",
+    "playId": "quiz-envelope"
+  },
+  "X3": {
+    "kind": "read",
+    "playId": ""
+  },
+  "M2": {
+    "kind": "nav",
+    "playId": ""
+  },
+  "H1": {
+    "kind": "puzzle",
+    "playId": "quiz-lantern"
+  },
+  "H2": {
+    "kind": "read",
+    "playId": ""
+  },
+  "H3": {
+    "kind": "puzzle",
+    "playId": "prop-flip"
+  },
+  "H4": {
+    "kind": "puzzle",
+    "playId": "photo-pavilion"
+  },
+  "H5": {
+    "kind": "puzzle",
+    "playId": "quiz-pattern"
+  },
+  "H6": {
+    "kind": "read",
+    "playId": ""
+  },
+  "M3": {
+    "kind": "nav",
+    "playId": ""
+  },
+  "F1": {
+    "kind": "read",
+    "playId": ""
+  },
+  "F2": {
+    "kind": "read",
+    "playId": ""
+  },
+  "M4": {
+    "kind": "nav",
+    "playId": ""
+  },
+  "HY1": {
+    "kind": "puzzle",
+    "playId": "quiz-hour"
+  },
+  "HY2": {
+    "kind": "read",
+    "playId": ""
+  },
+  "HY3": {
+    "kind": "puzzle",
+    "playId": "prop-dial"
+  },
+  "M5": {
+    "kind": "nav",
+    "playId": ""
+  },
+  "XS1": {
+    "kind": "puzzle",
+    "playId": "quiz-height"
+  },
+  "XS2": {
+    "kind": "read",
+    "playId": ""
+  },
+  "M6": {
+    "kind": "nav",
+    "playId": ""
+  },
+  "DS1": {
+    "kind": "puzzle",
+    "playId": "place-animals"
+  },
+  "DS2": {
+    "kind": "read",
+    "playId": ""
+  },
+  "M7": {
+    "kind": "nav",
+    "playId": ""
+  },
+  "HG1": {
+    "kind": "read",
+    "playId": ""
+  },
+  "FN1": {
+    "kind": "read",
+    "playId": ""
+  },
+  "FN2": {
+    "kind": "read",
+    "playId": ""
+  },
+  "FN3": {
+    "kind": "read",
+    "playId": ""
+  },
+  "FN4": {
+    "kind": "sign",
+    "playId": ""
+  },
+  "LT1": {
+    "kind": "letter",
+    "playId": ""
+  },
+  "LT2": {
+    "kind": "letter",
+    "playId": ""
+  },
+  "LT3": {
+    "kind": "letter",
+    "playId": ""
+  },
+  "LT4": {
+    "kind": "letter",
+    "playId": ""
+  },
+  "LT5": {
+    "kind": "letter",
+    "playId": ""
+  },
+  "LT6": {
+    "kind": "letter",
+    "playId": ""
+  },
+  "LT7": {
+    "kind": "letter",
+    "playId": ""
+  },
+  "LT8": {
+    "kind": "letter",
+    "playId": ""
+  }
+}

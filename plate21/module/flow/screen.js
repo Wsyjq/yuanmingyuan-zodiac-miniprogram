@@ -70,17 +70,6 @@ const PIECES = [
 ]
 
 
-const TITLES = {
-  P1: '第二十一图的传闻', P2: '向老师求证', P3: '未完成的考察资料',
-  E1: '从地图辨认方向', E2: '走进西洋楼', X1: '听见谐奇趣', X2: '寻找下一站', X3: '线索拼起来了',
-  H1: '皇家宫苑中的迷宫', H2: '迷宫里的灯会', H3: '黄花阵的名字', H4: '中心亭的观察记录',
-  H5: '认出一路上的花纹', H6: '花纹里的寓意', F1: '方外观', F2: '五竹亭的旧闻',
-  HY1: '海晏堂的水力钟', HY2: '十二兽首的水流', HY3: '转盘里的信息',
-  XS1: '蓄水楼的线索', XS2: '水法背后的工程', DS1: '对照铜版图复原水法', DS2: '重新看眼前的遗址',
-  HG1: '雨果与那封信', FN1: '第廿一图浮现', FN2: '一封留给后来者的信', FN3: '今天的记录',
-  FN4: '为考察记录署名', LT1: '那次考察之后', LT2: '是谁留下了档案', LT3: '后来者的记录',
-  LT4: '遗址之外的去处', LT5: '丙午年的答案', LT6: '一份接力记录', LT7: '留下你的记录', LT8: '收好这份档案'
-}
 const PLAY_TYPES = {
   'quiz-direction': 'choice', 'listen-nfc': 'soundscape', 'quiz-envelope': 'text',
   'quiz-lantern': 'choice', 'prop-flip': 'physical-flip', 'photo-pavilion': 'photo',
@@ -220,7 +209,7 @@ function buildScreen(run, ui) {
     if (page.id === 'H4' && !state.arrived) interaction.lines = []
   }
   const model = {
-    pageId: page.id, kind: page.kind, sectionTitle: page.sectionTitle, title: TITLES[page.id] || ('前往' + (site ? site.name : '下一站')),
+    pageId: page.id, kind: page.kind, sectionTitle: page.sectionTitle, title: page.title || ('前往' + (site ? site.name : '下一站')),
     siteId: page.siteId, siteTitle: site ? site.name : '', pageIndex: index + 1, pageCount: pages.list.length,
     task: taskGuide.get(page.playId), stageLabel: site ? '第 ' + (nav.listSites().findIndex(item => item.id === site.id) + 1) + ' / 8 站' : (page.id.startsWith('LT') ? '次日来信' : page.id.startsWith('FN') ? '我的考察记录' : '考察序章'),
     interaction: interaction, lines: bodyLines(page, run, state), prop: props.forPage(page.id), propPrompt: page.propPrompt || '',

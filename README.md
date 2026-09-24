@@ -7,7 +7,7 @@
 在微信开发者工具导入此目录，使用项目 AppID 或有权限的测试 AppID，编译 `pages/index/index`。点击“开始 / 继续考察”。默认是设备本地演示；讲述默认关闭，可在考察簿开启。
 
 - 唯一游戏页面：`plate21/module/pages/walk/walk`、`plate21/module/pages/report/report`。
-- 43 个剧情节点由 `flow/pages.js` 驱动，不等于 43 个微信页面。
+- 43 个剧情节点由 `content/story.js` 配置、`flow/pages.js` 编译驱动，不等于 43 个微信页面。
 - 八站：西洋楼入口 → 谐奇趣 → 黄花阵 → 方外观 → 海晏堂 → 蓄水楼 → 大水法 → 雨果雕像。
 - 地图为路线顺序示意，需结合实体地图与现场标识；没有采用旧仓库未经实测的精确坐标。
 - 可跳过题目或站点。照片至少一张即可，也可文字替代。只有完成署名才记为完成考察。
@@ -49,3 +49,7 @@ npm run package:report
 海晏堂原型位于 `reference/海晏堂水力钟-谜题互动版.html`，不进入发布包。实际玩法使用原生 WXML + Canvas 2D。
 
 本地 Git 基线标签 `baseline/main-20260924`，整合分支 `feat/game-module-v3`。原始资料和删除内容可从 Git 找回；未推送远程。
+
+## 后续剧本调整
+
+剧情、史料、道具与既有题库集中在 `plate21/module/content/`。普通文字/关联/阅读页调整不需要重写页面。详见 [剧本内容包与快速调整指南](docs/v3-content-authoring.md)，执行 `npm run check:story` 可提前检查结构及存档兼容问题。

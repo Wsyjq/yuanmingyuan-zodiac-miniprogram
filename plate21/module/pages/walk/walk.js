@@ -22,14 +22,6 @@ const glossary = require('../../flow/glossary')
 const navigation = require('../../host/navigation')
 const navModel = require('../../capabilities/map/nav-model')
 const taskGuide = require('../../flow/task-guide')
-const HINTS = {
-  'quiz-direction': '对照地图上长春园与西洋楼的位置，找出它所在的方位。',
-  'quiz-envelope': '把信封封口处与信背面的半个字拼在一起，从左到右读。',
-  'quiz-lantern': '想一想，迷宫中央的亭子与游乐活动有什么关系？',
-  'quiz-pattern': '观察转折相接、可以连续延伸的墙面纹样，再与四张图比较。',
-  'quiz-height': '喷泉的水压与蓄水位置的高度差有关。',
-  'place-animals': '看铜版图：一组在中央，一组围绕中央，另一组位于池的两端。'
-}
 const STATUS = { draft: '草稿', private: '仅自己可见', unavailable: '公开服务尚未接入，私人稿已保留', failed: '提交未确认，可重试', submitted: '已收到投稿，等待处理', published: '已公开', rejected: '未获公开', withdrawn: '已撤回' }
 function clone(value) { return JSON.parse(JSON.stringify(value)) }
 function ds(e, key) { return e.currentTarget.dataset[key] }
@@ -114,7 +106,7 @@ Page({
       routeRows: view.rows.filter(r => navModel.listSites().some(s => s.id === r.id)).map(r => Object.assign({}, r, { openPageId: r.current ? view.resumePageId : view.openPageId(r.id) })),
       routeCurrent: (view.rows.find(r => r.current) || {}).title || '考察尚未开始',
       canExplain: !!(page.playId && page.playId !== 'quiz-hour' && pages.byId[page.next] && pages.byId[page.next].revealOf === page.playId),
-      historyCards: unlockedCards, hasHint: !!HINTS[page.playId], hint: this.ui.hint ? HINTS[page.playId] : '',
+      historyCards: unlockedCards, hasHint: !!taskGuide.hint(page.playId), hint: this.ui.hint ? taskGuide.hint(page.playId) : '',
       contributions: snap.contributions.map((c) => Object.assign({}, c, { label: STATUS[c.status] || c.status })),
       archives: session.getArchives().map((a) => ({ id: a.sessionId, name: a.run.name, date: fmt(a.run.completedAt) })),
       syncState: snap.sync && snap.sync.status || 'local', isDemo: bridge.getConfig().mode === 'demo'
