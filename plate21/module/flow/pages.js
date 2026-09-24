@@ -22,6 +22,7 @@ function page(spec) {
     kind: spec.kind,
     siteId: spec.siteId || '',
     lines: original.lines || spec.lines || [],
+    interaction: original.interaction || null,
     beforeLines: original.beforeLines || [],
     answerLines: original.answerLines || [],
     signedLines: original.signedLines || [],

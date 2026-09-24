@@ -8,51 +8,20 @@
         <view class="route-strip"><text wx:for="{{rows}}" wx:key="id" wx:if="{{index > 0 && index < 9}}" class="route-stop {{item.current ? 'current' : ''}}">{{item.title}}</text></view>
         <text class="caption">路线顺序示意，不用于精确定位。蓄水楼为海晏堂北面高台。</text>
       </view>
-      <view wx:if="{{screen.prop.items.length}}" class="prop">
+      <view wx:if="{{screen.prop.items.length && !screen.interaction}}" class="prop">
         <view class="prop-title">{{screen.prop.title || '实体道具'}}</view>
         <view wx:for="{{screen.prop.items}}" wx:key="what" class="prop-item">
           <text class="prop-what">取出 · {{item.what}}</text><text wx:for="{{item.steps}}" wx:for-item="step" wx:key="index">{{step}}</text><text class="caption">{{item.returnWhen}}</text>
         </view>
       </view>
       <text wx:if="{{screen.sectionTitle}}" class="caption">{{screen.sectionTitle}}</text>
+      <view wx:if="{{screen.interaction.position === 'before'}}"><include src="walk-interaction.wxml" /></view>
       <view class="narrative"><text wx:for="{{narrative}}" wx:for-item="paragraph" wx:key="index" class="paragraph"><text wx:for="{{paragraph}}" wx:key="index" class="{{item.key ? 'history-link' : ''}}" data-key="{{item.key}}" bindtap="onOpenCard">{{item.text}}</text></text></view>
       <image wx:if="{{screen.portrait}}" src="{{screen.portrait}}" mode="widthFix" class="illustration" data-src="{{screen.portrait}}" bindtap="onPreview"/>
       <image wx:if="{{screen.teacher}}" src="{{screen.teacher}}" mode="widthFix" class="illustration"/>
       <view class="audio-row" wx:if="{{narrClips.length}}"><audio-clip clips="{{narrClips}}" active="{{pageVisible && !clockPlaying && !drawer}}" label="听这一段" /></view>
       <view wx:if="{{screen.terms.length}}" class="terms"><button wx:for="{{screen.terms}}" wx:key="key" class="chip" data-key="{{item.key}}" bindtap="onOpenCard">史料 · {{item.label}}</button></view>
-      <view wx:if="{{screen.choices.length && playId !== 'quiz-pattern'}}" class="choices"><button wx:for="{{screen.choices}}" wx:key="id" class="choice {{item.selected ? 'selected' : ''}}" data-id="{{item.id}}" bindtap="onChoice" disabled="{{review}}">{{item.label}}</button></view>
-      <view wx:if="{{playId === 'quiz-envelope'}}" class="input-group"><label>拼出的三个字</label><input data-key="text" value="{{ui.text}}" maxlength="20" placeholder="输入地点名称" bindinput="onInput" disabled="{{review}}"/></view>
-      <view wx:if="{{playId === 'listen-nfc'}}" class="activity">
-        <view class="subheading">听见谐奇趣</view><text class="caption">把手机靠近音乐贴片，或点下方按钮直接听。是否读到贴片不影响考察。</text>
-        <audio-clip id="soundscape" src="{{soundSrc}}" kind="clip" active="{{pageVisible && !drawer}}" label="直接听 · 声景" bind:ended="onHeard" bind:error="onSoundError"/>
-        <text class="caption">{{nfcStatus}}</text><text wx:if="{{ui.heard}}" class="success">已听完这一段</text>
-      </view>
-      <view wx:if="{{playId === 'prop-flip' && !ui.flipped}}" class="activity"><text>先翻开实体黄花阵图，确认后阅读背后的故事。</text></view>
-      <view wx:if="{{playId === 'photo-pavilion'}}" class="activity">
-        <button wx:if="{{!ui.arrived}}" class="choice" bindtap="onArrived">我已到达中心亭</button>
-        <block wx:if="{{ui.arrived}}">
-          <view class="subheading">留一份自己的观察</view><text class="caption">可拍一张或多张照片，也可以用文字记录。</text>
-          <view class="spot-grid"><button wx:for="{{screen.spots}}" wx:key="id" data-id="{{item.id}}" bindtap="onSpot" class="spot {{item.on ? 'selected' : ''}}"><image src="{{item.src}}" mode="aspectFill"/><text>{{item.title}}</text></button></view>
-          <button class="secondary" bindtap="onAddPhoto" disabled="{{busy}}">拍摄或选择照片</button>
-          <view class="record" wx:for="{{records}}" wx:key="id"><image wx:if="{{item.kind === 'photo'}}" src="{{item.filePath}}" mode="aspectFit" data-src="{{item.filePath}}" bindtap="onPreview"/><text wx:else>{{item.text}}</text><view class="row"><button wx:if="{{item.kind === 'photo'}}" class="text-button" data-id="{{item.id}}" bindtap="onAddPhoto">替换</button><button class="text-button" data-id="{{item.id}}" bindtap="onDeleteRecord">删除</button></view></view>
-          <textarea data-key="note" value="{{ui.note}}" maxlength="500" placeholder="无法拍摄也没关系，写下你看到的细节…" bindinput="onInput"/><button class="text-button" bindtap="onSaveNote">保存文字记录</button>
-          <text wx:if="{{screen.spotDetail}}" class="caption">{{screen.spotDetail}}</text>
-        </block>
-      </view>
-      <view wx:if="{{screen.figures.length}}" class="pattern-grid"><button wx:for="{{screen.figures}}" wx:key="id" data-id="{{item.id}}" bindtap="onChoice" class="pattern {{item.selected ? 'selected' : ''}}" disabled="{{review}}"><image src="{{item.src}}" mode="aspectFill"/><text>{{item.label}}</text></button></view>
-      <water-clock wx:if="{{playId === 'quiz-hour'}}" state="{{waterClockState}}" active="{{pageVisible && !drawer}}" bind:change="onWaterClockChange" bind:complete="onWaterClockComplete"/>
-      <view wx:if="{{playId === 'prop-dial'}}" class="activity"><checkbox-group bindchange="onConfirmDial"><label class="check-label"><checkbox value="done" checked="{{ui.confirmed}}" disabled="{{review}}" color="#716743"/>我已完成实体转盘操作，准备继续</label></checkbox-group></view>
-      <view wx:if="{{playId === 'place-animals'}}" class="activity">
-        <text class="caption">先选择构件，再点它在喷水池中的位置；可重新放置。</text>
-        <view class="pieces"><button wx:for="{{screen.board.pieces}}" wx:key="id" class="chip {{item.on ? 'selected' : ''}}" data-id="{{item.id}}" bindtap="onPiece">{{item.text}}</button></view>
-        <view class="pool"><view class="stone-front">大水法石构</view><button wx:for="{{screen.board.slots}}" wx:key="id" class="pool-slot slot-{{item.id}}" data-id="{{item.id}}" bindtap="onSlot">{{item.text}}</button></view>
-      </view>
-      <view wx:if="{{pageId === 'DS2'}}" class="activity">
-        <view class="subheading">旧画与眼前</view><view class="fountain-frame">
-          <view class="ruins-line"><view class="column c1"></view><view class="column c2"></view><view class="arch"></view><view class="column c3"></view><view class="column c4"></view><text>石构轮廓示意 · 请抬头对照现场</text></view>
-          <view class="reconstruction" style="opacity:{{1 - (ui.fountainProgress || 0) / 100}}"><view class="jet jet-left"></view><view class="jet jet-right"></view><view class="deer">鹿</view><view class="dogs">猎狗 · 猎狗 · 猎狗</view><text class="reconstruction-label">喷水构件位置示意</text></view>
-        </view><slider min="0" max="100" value="{{ui.fountainProgress || 0}}" activeColor="#627d77" bindchange="onFade"/><view class="row caption"><text>旧时构件与水流</text><text>眼前遗址</text></view>
-      </view>
+      <view wx:if="{{screen.interaction && screen.interaction.position !== 'before'}}"><include src="walk-interaction.wxml" /></view>
       <view wx:if="{{pageId === 'FN1'}}" class="activity"><view class="subheading">这一次，我留下了</view><view class="photo-strip"><image wx:for="{{records}}" wx:key="id" wx:if="{{item.kind === 'photo'}}" src="{{item.filePath}}" mode="aspectFill" data-src="{{item.filePath}}" bindtap="onPreview"/></view><text wx:if="{{!records.length}}" class="caption">还没有照片或文字记录。完成署名后，也可以在个人作品中补录。</text><text wx:for="{{records}}" wx:key="id" wx:if="{{item.kind !== 'photo'}}" class="paragraph">{{item.text}}</text></view>
       <view wx:if="{{pageId === 'FN4'}}" class="activity"><label>绘制者署名</label><text class="caption">绘制者：{{screen.signature.name}}
 绘制日期：{{screen.signature.date}}
@@ -71,7 +40,5 @@
         <button class="secondary" bindtap="onSubmitRelay" disabled="{{busy || !ui.consent}}">公开投稿</button><button class="text-button" bindtap="onNewRelay">另写一份</button>
         <view wx:for="{{contributions}}" wx:key="id" class="record"><text>{{item.label}}</text><text wx:if="{{item.reason}}" class="caption">{{item.reason}}</text><view class="row"><button class="text-button" data-id="{{item.id}}" bindtap="onRefreshContribution">检查状态</button><button wx:if="{{item.receiptId && item.status !== 'withdrawn'}}" class="text-button" data-id="{{item.id}}" bindtap="onWithdraw">撤回公开投稿</button></view></view>
       </view>
-      <view wx:if="{{hint}}" class="notice">{{hint}}</view><button wx:if="{{hasHint && !review}}" class="text-button" bindtap="onHint">给我一点提示</button>
-      <view wx:if="{{ui.again}}" class="error" role="alert">{{ui.feedback || '再观察一下，或选择跳过。'}}</view>
       <view class="page-end">· {{screen.siteTitle || '第廿一图'}} ·</view>
     </view>

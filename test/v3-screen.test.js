@@ -32,7 +32,7 @@ test('all 43 stable page IDs build pure display models and caller state remains 
 })
 
 test('non-bracketed scene descriptions remain screen copy alongside presentation metadata', () => {
-  const text = pages.list.flatMap(page => page.lines.concat(page.signedLines)).join('\n')
+  const text = pages.list.flatMap(page => page.lines.concat(page.signedLines, page.interaction ? page.interaction.lines : [])).join('\n')
   for (const phrase of ['给出 4 种花纹的图样', '14时对应由哪个兽首喷水', '正午时候由哪个兽首喷水', '答案确认后，画面', '屏幕暗了一下', '屏幕中缓缓出来了一封信', '几秒后，一份新的档案生成']) assert.equal(text.includes(phrase), true, phrase)
   assert.equal(pages.byId.FN1.presentation.kind, 'engraving-reveal')
   assert.equal(pages.byId.FN3.presentation.kind, 'archive-reveal')
@@ -58,12 +58,13 @@ test('stable choice IDs are used once, selected from saved UI, with no answer ma
 test('physical flip needs explicit saved/UI confirmation; skipped status never reveals an answer', () => {
   const skipped = runAt('H3', { puzzles: { 'prop-flip': 'skipped' } })
   const before = buildScreen(skipped)
-  assert.deepEqual(before.lines, ['互动玩法｜黄花阵名字的由来', '翻面揭晓答案'])
+  assert.deepEqual(before.lines, [])
+  assert.deepEqual(before.interaction.lines, ['翻面揭晓答案'])
   assert.doesNotMatch(before.lines.join(''), /黄色彩绸/)
   assert.equal(before.holdReveal, true)
   assert.equal(before.primaryAction, 'flip')
   const after = buildScreen(skipped, { flipped: true })
-  assert.match(after.lines.join(''), /黄色彩绸/)
+  assert.match(after.interaction.lines.join(''), /黄色彩绸/)
   assert.equal(after.primaryAction, 'submit')
   assert.equal(skipped.puzzles['prop-flip'], 'skipped')
 })
@@ -171,4 +172,21 @@ test('final letter acknowledgement follows real submission status or private sav
   assert.match(buildScreen(privateRun).lines.join(''), /私人档案/)
   const expected = { submitted: /等待审核/, published: /已通过审核/, rejected: /未通过审核/, withdrawn: /已撤回/, failed: /暂未提交成功/ }
   for (const [status, pattern] of Object.entries(expected)) assert.match(buildScreen(letterAt('LT8'), { relay: { submitStatus: status } }).lines.join(''), pattern)
+})
+
+test('all eleven puzzles project separate gameplay modules without mixing their prompts into the story', () => {
+  let count = 0
+  for (const page of pages.list.filter(p => p.playId)) {
+    const view = buildScreen(runAt(page.id), { arrived: true, flipped: true })
+    assert.ok(view.interaction, page.id)
+    assert.match(view.interaction.title, /^互动玩法｜/)
+    assert.doesNotMatch(view.lines.join(''), /互动玩法｜/)
+    for (const line of view.interaction.lines) assert.ok(!view.lines.includes(line), page.id + ': duplicate gameplay text')
+    count++
+  }
+  assert.equal(count, 11)
+  const closed = buildScreen(runAt('H3'), { flipped: false })
+  assert.doesNotMatch(closed.interaction.lines.join(''), /黄色彩绸/)
+  assert.equal(buildScreen(runAt('E2')).interaction, null)
+  assert.match(buildScreen(runAt('E2', { puzzles: { 'quiz-direction': 'solved' } })).interaction.lines.join(''), /答案/)
 })

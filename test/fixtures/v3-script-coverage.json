@@ -171,7 +171,7 @@
       "text": "互动玩法｜玩法内容",
       "destination": {
         "page": "E1",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -180,7 +180,7 @@
       "text": "我打开了地图，从上面可以看出来西洋楼的地理位置。西洋楼在圆明三园中的长春园x部",
       "destination": {
         "page": "E1",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -229,7 +229,7 @@
       "text": "答案：d",
       "destination": {
         "page": "E2",
-        "field": "answerLines"
+        "field": "interaction"
       }
     },
     {
@@ -274,7 +274,7 @@
       "text": "互动玩法｜音画内容（程序设计参考）",
       "destination": {
         "page": "X1",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -283,7 +283,7 @@
       "text": "喷泉声、少数民族音乐和西洋音乐。",
       "destination": {
         "page": "X1",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -319,7 +319,7 @@
       "text": "互动玩法｜下一站去哪",
       "destination": {
         "page": "X2",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -328,7 +328,7 @@
       "text": "日记和信封会指引你第一站的方向",
       "destination": {
         "page": "X2",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -337,7 +337,7 @@
       "text": "信封的封口处和信的背面都有一半的字，拼接起来看一下！",
       "destination": {
         "page": "X2",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -346,7 +346,7 @@
       "text": "黄花阵",
       "destination": {
         "page": "X3",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -382,7 +382,7 @@
       "text": "互动玩法｜迷宫的修建目的我不禁好奇，这迷宫的修建目的是",
       "destination": {
         "page": "H1",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -401,7 +401,7 @@
       "text": "黄花阵的作用：每逢中秋之夜，皇帝会坐在阵中心的凉亭里，观赏宫女们在迷宫路径中奔跑嬉戏。最先到达中心的人会得到皇帝的赏赐。",
       "destination": {
         "page": "H2",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -419,7 +419,7 @@
       "text": "互动玩法｜黄花阵名字的由来",
       "destination": {
         "page": "H3",
-        "field": "beforeLines"
+        "field": "interaction"
       }
     },
     {
@@ -428,7 +428,7 @@
       "text": "翻面揭晓答案",
       "destination": {
         "page": "H3",
-        "field": "beforeLines"
+        "field": "interaction"
       }
     },
     {
@@ -437,7 +437,7 @@
       "text": "黄花阵名字由来：由于宫女们手持黄色彩绸扎成的莲花灯，所以这个迷宫也得名黄花阵。",
       "destination": {
         "page": "H3",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -473,7 +473,7 @@
       "text": "互动玩法｜中西结合的观察",
       "destination": {
         "page": "H4",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -482,7 +482,7 @@
       "text": "你能找到这座亭子建筑风格中西结合的具体体现吗，找到后请拍照记录你的考察结果",
       "destination": {
         "page": "H4",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -491,7 +491,7 @@
       "text": "亭子整体「西式穹顶 + 中式八角飞檐混搭结构」",
       "destination": {
         "page": "H4",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -500,7 +500,7 @@
       "text": "亭子八角飞檐的八个檐角位置，全部标注有小型立式装饰物；西方原版欧式凉亭檐角无任何立兽，纯光面檐口，证明这个构件是中式附加增设；",
       "destination": {
         "page": "H4",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -509,7 +509,7 @@
       "text": "版画里该构件基座为中式莲座（中式走兽标配莲花基座），上部花苞造型是西洋园林宝瓶花苞样式。",
       "destination": {
         "page": "H4",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -518,7 +518,7 @@
       "text": "弧形基座浮雕：这一圈弧形壁面分为两种交替排布的浮雕版式，西式巴洛克基底，局部混入中式吉祥元素主体核心是对称双天鹅巴洛克纹样，中式本土化改造：清宫石匠在天鹅胸腹位置悄悄刻了简化蝙蝠纹路（藏在浮雕中心交汇处），把西方天鹅，叠加中式「蝙蝠寓意福气」的吉祥内涵",
       "destination": {
         "page": "H4",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -545,7 +545,7 @@
       "text": "互动玩法｜黄花阵花纹观察",
       "destination": {
         "page": "H5",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -554,7 +554,7 @@
       "text": "给出 4 种花纹的图样，让用户选出看到的花纹（万字纹）",
       "destination": {
         "page": "H6",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -671,7 +671,7 @@
       "text": "海晏堂",
       "destination": {
         "page": "HY1",
-        "field": "sectionTitle"
+        "field": "interaction"
       }
     },
     {
@@ -689,7 +689,7 @@
       "text": "互动玩法｜海晏堂的十二生肖水力钟",
       "destination": {
         "page": "HY1",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -698,7 +698,7 @@
       "text": "观看小程序不同时辰喷水示意，回答14时对应由哪个兽首喷水，并推测正午时候由哪个兽首喷水",
       "destination": {
         "page": "HY1",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -707,7 +707,7 @@
       "text": "答案确认后，画面里的十二生肖一个接一个亮起，到了正午，十二道水流同时喷出。",
       "destination": {
         "page": "HY2",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -725,7 +725,7 @@
       "text": "互动玩法｜转盘花纹匹配",
       "destination": {
         "page": "HY3",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -734,7 +734,7 @@
       "text": "使用转盘，根据花纹匹配寻找信息",
       "destination": {
         "page": "HY3",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -770,7 +770,7 @@
       "text": "蓄水楼",
       "destination": {
         "page": "XS1",
-        "field": "sectionTitle"
+        "field": "interaction"
       }
     },
     {
@@ -806,7 +806,7 @@
       "text": "互动玩法｜水法的物理原理",
       "destination": {
         "page": "XS1",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -815,7 +815,7 @@
       "text": "蓄水楼为了方便供水，通常会建得比较",
       "destination": {
         "page": "XS1",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -862,7 +862,7 @@
       "text": "大水法",
       "destination": {
         "page": "DS1",
-        "field": "sectionTitle"
+        "field": "interaction"
       }
     },
     {
@@ -925,7 +925,7 @@
       "text": "互动玩法｜大水法",
       "destination": {
         "page": "DS1",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -934,7 +934,7 @@
       "text": "请将《西洋楼铜版图·大水法南面》的铜版画和眼前遗址进行对照，复原档案中残存的部分。",
       "destination": {
         "page": "DS1",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -943,7 +943,7 @@
       "text": "档案中缺少了三组重要构件，请根据铜版图，把它们放回原本的位置：",
       "destination": {
         "page": "DS1",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -952,7 +952,7 @@
       "text": "梅花鹿 → 喷水池中央十只猎狗 → 环绕梅花鹿两只大型卷尾铜兽 → 水池东西两端",
       "destination": {
         "page": "DS2",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {
@@ -970,7 +970,7 @@
       "text": "大水法中央原有一只铜制梅花鹿，鹿角喷水；周围十只铜猎狗同时向鹿喷水，组成“猎狗逐鹿”的场景，喷水池东西两端还设有大型卷尾铜兽。水流、雕塑和建筑共同组成了一整套动态景观。",
       "destination": {
         "page": "DS2",
-        "field": "lines"
+        "field": "interaction"
       }
     },
     {

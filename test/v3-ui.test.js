@@ -169,3 +169,30 @@ test('clicking each of 17 inline historical terms renders every Word layer and i
   }
   assert.equal(visited.size, 17)
 })
+
+test('gameplay instructions, controls and submit button render inside one distinct module', async () => {
+  const { parse } = require('./harness/wxml')
+  const tpl = fs.readFileSync(path.join(ROOT, ROUTE.replace(/walk$/, 'walk-content') + '.wxml'), 'utf8')
+  assert.ok(tpl.includes('walk-interaction.wxml'))
+  for (const id of ['E1', 'X1', 'X2', 'H1', 'H3', 'H4', 'H5', 'HY1', 'HY3', 'XS1', 'DS1']) {
+    const result = await render(id, { arrived: true, flipped: true })
+    assert.deepEqual(result.errors, [], id)
+    const ast = parse(result.html)
+    const find = (nodes, cls) => {
+      for (const n of nodes) {
+        if (n.type !== 'element') continue
+        if ((n.attrs.get('class') || '').split(/\s+/).includes(cls)) return n
+        const child = find(n.children || [], cls)
+        if (child) return child
+      }
+    }
+    const flatten = node => node.type === 'text' ? node.value || node.text || '' : (node.children || []).map(flatten).join('')
+    const module = find(ast, 'interaction-module')
+    assert.ok(module, id)
+    assert.ok(find(module.children, 'interaction-heading'), id)
+    assert.ok(find(module.children, 'primary'), id + ' submit is outside module')
+    const narrative = find(ast, 'narrative')
+    assert.doesNotMatch(flatten(narrative), /互动玩法｜/)
+    assert.ok(!find(ast, 'footer'), id + ' duplicated submit footer')
+  }
+})

@@ -127,7 +127,7 @@ function bodyLines(page, run, ui) {
   const state = ui || {}
   if (page.revealOf && ['solved', 'assisted'].indexOf((run.puzzles || {})[page.revealOf]) < 0) return []
   if (page.id.indexOf('LT') === 0 && (!run.completedAt || !run.letterAvailable)) return []
-  if (page.id === 'H3') return (page.beforeLines || []).concat(state.flipped === true ? page.lines : [])
+  if (page.id === 'H3') return state.flipped === true ? page.lines.slice() : []
   let lines = page.lines.slice()
   const choices = play.CHOICES[page.playId] || []
   lines = lines.filter(function (line) {
@@ -137,7 +137,6 @@ function bodyLines(page, run, ui) {
   // Non-bracketed script is screen copy, including scene descriptions.
   // Arrival, physical reveal, real submission and real records still gate their own content.
   if (page.id === 'H4' && !state.arrived) lines = ['接下来请走到黄花阵中心亭，对照现场标识确认到达，再留下你的观察。']
-  if (page.id === 'E2' && ['solved', 'assisted'].includes((run.puzzles || {})['quiz-direction'])) lines = page.answerLines.concat(lines)
   if (page.id === 'FN4' && run.completedAt) lines = page.signedLines.slice()
   const relay = relayState(run, state)
   if (page.id === 'LT6' && relay.hasRecord) lines = lines.concat(page.relayLines || [])
@@ -212,10 +211,17 @@ function buildScreen(run, ui) {
     return record.purpose === 'field' && record.kind === 'photo' && (!record.siteId || record.siteId === page.siteId)
   }).map(clone) : [])
   const selectedPhoto = photos.filter(function (record) { return !state.spot || record.spot === state.spot })[0]
+  let interaction = page.interaction && !locked ? clone(page.interaction) : null
+  if (interaction && interaction.requires && !['solved', 'assisted'].includes((run.puzzles || {})[interaction.requires])) interaction = null
+  if (interaction) {
+    interaction.lines = interaction.lines || []
+    if (page.id === 'H3' && state.flipped) interaction.lines = interaction.lines.concat(interaction.revealLines || [])
+    if (page.id === 'H4' && !state.arrived) interaction.lines = []
+  }
   const model = {
     pageId: page.id, kind: page.kind, sectionTitle: page.sectionTitle, title: TITLES[page.id] || ('前往' + (site ? site.name : '下一站')),
     siteId: page.siteId, siteTitle: site ? site.name : '', pageIndex: index + 1, pageCount: pages.list.length,
-    lines: bodyLines(page, run, state), prop: props.forPage(page.id), propPrompt: page.propPrompt || '',
+    interaction: interaction, lines: bodyLines(page, run, state), prop: props.forPage(page.id), propPrompt: page.propPrompt || '',
     play: playSpec ? { id: page.playId, type: PLAY_TYPES[page.playId], choices: clone(choices), fields: clone(playSpec.fields), readOnly: review } : null,
     choices: choices, inputs: [], toggles: [], figures: [], spots: [],
     photo: safeText(state.photo) || (selectedPhoto ? safeText(selectedPhoto.filePath || selectedPhoto.url) : ''), photos: photos,

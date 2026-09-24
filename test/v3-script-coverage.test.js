@@ -29,16 +29,16 @@ test('every non-bracketed main-script paragraph has a verified visible destinati
       continue
     }
     if (field === 'document-section') { assert.ok(screen.sectionTitle); continue }
-    const actual = field === 'sectionTitle' ? screen.sectionTitle : screen.lines.join('\n')
+    const actual = field === 'sectionTitle' ? screen.sectionTitle : field === 'interaction' ? screen.interaction.title + screen.interaction.lines.join('\n') : screen.lines.join('\n')
     assert.ok(normalized(actual).includes(normalized(p.text)), 'paragraph ' + p.paragraph + ' → ' + page + '.' + field + ': ' + p.text)
     assert.doesNotMatch(actual, /【|】/)
   }
 })
 test('restored passages retain action gates without being discarded or replacing the ending', () => {
   const h4 = visibleAt('H4')
-  for (const phrase of ['西式穹顶', '檐角立兽', '莲花基座', '双天鹅']) assert.match(h4.lines.join(''), new RegExp(phrase === '檐角立兽' ? '檐角位置' : phrase))
-  assert.match(visibleAt('H2').lines.join(''), /最先到达中心的人会得到皇帝的赏赐/)
-  assert.match(visibleAt('DS2').lines.join(''), /鹿角喷水/)
+  for (const phrase of ['西式穹顶', '檐角立兽', '莲花基座', '双天鹅']) assert.match(h4.interaction.lines.join(''), new RegExp(phrase === '檐角立兽' ? '檐角位置' : phrase))
+  assert.match(visibleAt('H2').interaction.lines.join(''), /最先到达中心的人会得到皇帝的赏赐/)
+  assert.match(visibleAt('DS2').interaction.lines.join(''), /鹿角喷水/)
   assert.match(visibleAt('FN1').lines.join(''), /屏幕暗了一下/)
   assert.match(visibleAt('FN2').lines.join(''), /屏幕中缓缓出来了一封信/)
   assert.doesNotMatch(visibleAt('FN4', { completedAt: null }).lines.join(''), /生成完成/)

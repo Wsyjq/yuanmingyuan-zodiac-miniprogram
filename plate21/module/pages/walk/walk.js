@@ -108,6 +108,7 @@ Page({
       narrClips: cue.clipsFor(page, Object.assign({}, this.run, { uiByPage: Object.assign({}, this.run.uiByPage, { [page.id]: this.ui }) })),
       voiceEnabled: settings.get().voice, soundSrc: resources.resolve(nfc.SOUND, 'audio'), waterClockState: this.ui.waterClock || {},
       clockPlaying: !!(this.ui.waterClock && this.ui.waterClock.playing),
+      interactionText: (model.interaction ? model.interaction.lines : []).map(line => glossary.segments(line, glossary.inlineTermsFor(page.id, unlockedCards))),
       narrative: model.lines.map(line => glossary.segments(line, glossary.inlineTermsFor(page.id, unlockedCards))),
       routeRows: view.rows.filter(r => navModel.listSites().some(s => s.id === r.id)).map(r => Object.assign({}, r, { openPageId: r.current ? view.resumePageId : view.openPageId(r.id) })),
       routeCurrent: (view.rows.find(r => r.current) || {}).title || '考察尚未开始',
