@@ -69,7 +69,7 @@ test('fresh device narration is off; existing explicit preference persists; unsu
   try {
     delete require.cache[file]
     const settings = require(file)
-    assert.deepEqual(settings.get(), { voice: false, bgm: true })
+    assert.deepEqual(settings.get(), { voice: false, bgm: true, mode: '' })
     settings.set('voice', true)
     settings.set('toString', false)
     const copy = settings.get(); copy.voice = false
@@ -137,7 +137,7 @@ test('answer recordings cannot play before a solved or assisted puzzle, includin
 test('enabling voice and legacy autoplay never start audio; manual play loads the actual package', () => {
   const h = harness(false), p = h.player({ clips: audioSrc.clips('narr-xs1'), autoplay: true })
   assert.equal(p.data.enabled, false)
-  p.onMute()
+  h.settings.set('voice', true)
   assert.equal(p.data.enabled, true)
   assert.equal(h.loads.length, 0)
   p.onToggle()
@@ -222,4 +222,52 @@ test('two pending players remain exclusive and a canceled first download cannot 
   h.loads[1].success()
   assert.equal(second.data.playing, true)
   assert.equal(first.data.loading, false)
+})
+
+test('explicit listen key starts once per screen, respects pause and never replays on foreground', () => {
+  const h = harness(), p = h.player({ clips: audioSrc.clips('narr-e1'), listenKey: 'E1:story', contextKey: 'E1:story' })
+  assert.equal(h.loads.length, 1)
+  h.loads[0].success()
+  p.change('listenKey', 'E1:story')
+  assert.equal(h.loads.length, 1)
+  p.hide(); p.show(); p.change('active', true)
+  assert.equal(h.contexts[0].plays, 1)
+  p.change('active', false)
+  p.change('listenKey', 'E2:story')
+  p.change('contextKey', 'E2:story')
+  p.change('clips', audioSrc.clips('narr-e2'))
+  assert.equal(h.loads.length, 1)
+  p.change('active', true)
+  assert.equal(h.loads.length, 2)
+  h.loads[1].success(); h.contexts[1].handlers.end()
+  assert.equal(p.events.at(-1).name, 'ended')
+  assert.equal(p.events.at(-1).detail.contextKey, 'E2:story')
+})
+
+test('listen mode chosen after mounting starts audio, failure needs explicit retry', () => {
+  const h = harness(false), p = h.player({ clips: audioSrc.clips('narr-xs1') })
+  p.change('listenKey', 'XS1:story')
+  assert.equal(h.loads.length, 0)
+  h.settings.set('voice', true)
+  assert.equal(h.loads.length, 1)
+  h.loads[0].fail()
+  p.change('active', true); p.change('listenKey', 'XS1:story')
+  assert.equal(h.loads.length, 1)
+  p.onReplay(); assert.equal(h.loads.length, 2)
+})
+
+test('listen/read choice persists and voice toggles do not silently change reading mode', () => {
+  const original = global.wx
+  const file = require.resolve('../plate21/module/utils/audio-settings')
+  let saved
+  global.wx = { getStorageSync: () => saved, setStorageSync: (_, value) => { saved = value } }
+  try {
+    delete require.cache[file]
+    let settings = require(file)
+    settings.setMode('listen'); assert.equal(settings.get().voice, true)
+    delete require.cache[file]; settings = require(file)
+    assert.equal(settings.get().mode, 'listen')
+    settings.setMode('read'); settings.set('voice', true)
+    assert.equal(settings.get().mode, 'read')
+  } finally { global.wx = original; delete require.cache[file] }
 })

@@ -14,14 +14,15 @@ var STORAGE_KEY = 'plate21_audio_settings'
 var listeners = []
 var cached = null
 
-var DEFAULTS = { bgm: true, voice: false }
+var DEFAULTS = { bgm: true, voice: false, mode: '' }
 
 function read() {
   if (cached) return cached
   var saved = null
   try { saved = wx.getStorageSync(STORAGE_KEY) } catch (e) { /* 存储不可用则用默认 */ }
-  cached = { bgm: DEFAULTS.bgm, voice: DEFAULTS.voice }
+  cached = { bgm: DEFAULTS.bgm, voice: DEFAULTS.voice, mode: '' }
   if (saved && typeof saved === 'object') {
+    if (['listen', 'read'].indexOf(saved.mode) >= 0) cached.mode = saved.mode
     if (typeof saved.bgm === 'boolean') cached.bgm = saved.bgm
     if (typeof saved.voice === 'boolean') cached.voice = saved.voice
   }
@@ -35,19 +36,27 @@ function persist(next) {
 
 function get() {
   var cur = read()
-  return { bgm: cur.bgm, voice: cur.voice }
+  return { bgm: cur.bgm, voice: cur.voice, mode: cur.mode }
 }
 
 function set(key, value) {
   var cur = read()
   if ((key !== 'bgm' && key !== 'voice') || cur[key] === !!value) return get()
-  var next = { bgm: cur.bgm, voice: cur.voice }
+  var next = { bgm: cur.bgm, voice: cur.voice, mode: cur.mode }
   next[key] = !!value
   persist(next)
   listeners.forEach(function (fn) {
     try { fn(next, key) } catch (e) { /* 单个订阅者异常不阻断广播 */ }
   })
   return next
+}
+
+function setMode(mode) {
+  if (['listen', 'read'].indexOf(mode) < 0) return get()
+  const next = Object.assign({}, read(), { mode, voice: mode === 'listen' })
+  persist(next)
+  listeners.slice().forEach(fn => { try { fn(next, 'mode') } catch (err) {} })
+  return get()
 }
 
 function subscribe(fn) {
@@ -61,6 +70,7 @@ function unsubscribe(fn) {
 
 module.exports = {
   DEFAULTS: DEFAULTS,
+  setMode: setMode,
   get: get,
   set: set,
   subscribe: subscribe,

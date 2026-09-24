@@ -1,4 +1,4 @@
-/** Manual, lifecycle-safe narration player. clips takes priority over legacy src. */
+/** Lifecycle-safe narration player; explicit listenKey opts into autoplay. clips takes priority over legacy src. */
 const audioBus = require('../../utils/audio-bus')
 const audioSettings = require('../../utils/audio-settings')
 const audioSrc = require('../../utils/audio-src')
@@ -13,6 +13,8 @@ Component({
     icon: { type: Boolean, value: false },
     kind: { type: String, value: 'voice' },
     dock: { type: Boolean, value: false },
+    listenKey: { type: String, value: '' },
+    contextKey: { type: String, value: '' },
     // Accepted for old callers, deliberately never starts audio automatically.
     autoplay: { type: Boolean, value: false }
   },
@@ -24,7 +26,8 @@ Component({
   observers: {
     src() { this.syncPlaylist() },
     clips() { this.syncPlaylist() },
-    active(value) { if (!value) this.pause() }
+    active(value) { if (!value) this.pause(); else this.autoStart() },
+    listenKey() { this.autoStart() }
   },
   lifetimes: {
     attached() {
@@ -38,6 +41,7 @@ Component({
       audioSettings.subscribe(this._onSettings)
       this.applySettings(audioSettings.get())
       this.syncPlaylist()
+      this.autoStart()
       this._onAppHide = () => { this._appVisible = false; audioBus.pauseAll() }
       this._onAppShow = () => { this._appVisible = true }
       if (wx.onAppHide) wx.onAppHide(this._onAppHide)
@@ -58,6 +62,12 @@ Component({
     show() { this._pageVisible = true }
   },
   methods: {
+    autoStart() {
+      const key = this.data.listenKey
+      if (!key || key === this._autoKey || !this.canPlay() || !this._playlist || !this._playlist.length) return
+      this._autoKey = key
+      this.onReplay()
+    },
     publish(values) {
       this.setData(values)
       if (this._alive) this.triggerEvent('state', {
@@ -75,6 +85,7 @@ Component({
       this._playlist = next.slice()
       this.publish({ hasAudio: next.length > 0, segmentCount: next.length,
         segmentIndex: 0, playing: false, loading: false, failed: false, progress: 0 })
+      this.autoStart()
     },
     canPlay() {
       return this._alive && this._pageVisible && this._appVisible &&
@@ -85,11 +96,14 @@ Component({
         (this.data.kind === 'bgm' ? settings.bgm : settings.voice)
       if (!enabled) this.pause()
       this.setData({ enabled: !!enabled, muted: !enabled })
+      this.autoStart()
     },
     onMute() {
       if (this.data.kind === 'clip') { this.pause(); return }
       const key = this.data.kind === 'bgm' ? 'bgm' : 'voice'
-      audioSettings.set(key, !audioSettings.get()[key])
+      const enabled = !audioSettings.get()[key]
+      audioSettings.set(key, enabled)
+      if (enabled && !this.isPlaying()) this.onToggle()
     },
     onToggle() {
       if (this.data.playing || this.data.loading) { this.pause(); return }
@@ -106,6 +120,7 @@ Component({
     playSegment(index) {
       if (!this.canPlay() || !this._playlist[index]) return
       const src = this._playlist[index]
+      const contextKey = this.data.contextKey
       this.destroyCtx()
       const request = ++this._request
       this.publish({ segmentIndex: index, loading: true, playing: false, failed: false, progress: 0 })
@@ -132,7 +147,7 @@ Component({
             this.destroyCtx()
             this.setData({ segmentIndex: 0 })
             audioBus.release(this, { resumeBgm: false })
-            this.triggerEvent('ended')
+            this.triggerEvent('ended', { contextKey })
           })
           ctx.onError(() => { if (current()) this.failPlayback() })
           this.startContext(ctx)

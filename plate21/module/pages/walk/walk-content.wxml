@@ -19,7 +19,6 @@
       <view class="narrative"><text wx:for="{{narrative}}" wx:for-item="paragraph" wx:key="index" class="paragraph"><text wx:for="{{paragraph}}" wx:key="index" class="{{item.key ? 'history-link' : ''}}" data-key="{{item.key}}" bindtap="onOpenCard">{{item.text}}</text></text></view>
       <image wx:if="{{screen.portrait}}" src="{{screen.portrait}}" mode="widthFix" class="illustration" data-src="{{screen.portrait}}" bindtap="onPreview"/>
       <image wx:if="{{screen.teacher}}" src="{{screen.teacher}}" mode="widthFix" class="illustration"/>
-      <view class="audio-row" wx:if="{{narrClips.length}}"><audio-clip clips="{{narrClips}}" active="{{pageVisible && !clockPlaying && !drawer}}" label="听这一段" /></view>
       <view wx:if="{{screen.terms.length}}" class="terms"><button wx:for="{{screen.terms}}" wx:key="key" class="chip" data-key="{{item.key}}" bindtap="onOpenCard">史料 · {{item.label}}</button></view>
       <view wx:if="{{screen.interaction && screen.interaction.position !== 'before'}}"><include src="walk-interaction.wxml" /></view>
       <view wx:if="{{pageId === 'FN1'}}" class="activity"><view class="subheading">这一次，我留下了</view><view class="photo-strip"><image wx:for="{{records}}" wx:key="id" wx:if="{{item.kind === 'photo'}}" src="{{item.filePath}}" mode="aspectFill" data-src="{{item.filePath}}" bindtap="onPreview"/></view><text wx:if="{{!records.length}}" class="caption">还没有照片或文字记录。完成署名后，也可以在个人作品中补录。</text><text wx:for="{{records}}" wx:key="id" wx:if="{{item.kind !== 'photo'}}" class="paragraph">{{item.text}}</text></view>

@@ -5,6 +5,7 @@ const engine = require('../../flow/engine')
 const pages = require('../../flow/pages')
 const screen = require('../../flow/screen')
 const parts = require('../../flow/screen-parts')
+const listenFlow = require('../../audio/listen-flow')
 const play = require('../../play/index')
 const cue = require('../../audio/cue')
 const progress = require('../../progress/build')
@@ -29,7 +30,7 @@ function ds(e, key) { return e.currentTarget.dataset[key] }
 function fmt(at) { return dates.formatArchiveDate(dates.dateKeyFromTimestamp(at)) }
 function errorText(err) { return err && (err.message || err.errMsg) || '操作未完成，请重试' }
 Page({
-  data: { restartScreen: false, loading: true, busy: false, error: '', pageVisible: true, screen: {}, ui: {}, rows: [], records: [],
+  data: { listenMode: '', showModeChoice: false, autoSeconds: 0, narrationKey: '', listenKey: '', restartScreen: false, loading: true, busy: false, error: '', pageVisible: true, screen: {}, ui: {}, rows: [], records: [],
     narrClips: [], voiceEnabled: false, drawer: '', card: null, drawerScrollTop: 0, cardAnchor: '', cardImageFailed: false, waterClockState: {}, clockPlaying: false,
     soundSrc: nfc.SOUND, relayItems: [], relayState: 'idle', contributions: [], archives: [], scrollTop: 0, navX: 0, navY: 0, locating: false, location: null, locationError: '' },
   async onLoad(query) {
@@ -37,7 +38,17 @@ Page({
     this._window = window
     this.setData({ navX: Math.max(8, window.windowWidth - 66), navY: Math.max(80, window.windowHeight - 180) })
     this.query = query || {}; this.sessionId = this.query.sessionId || ''; this.ui = {}; this._active = true
-    this._settings = (value) => { if (this._active) this.setData({ voiceEnabled: value.voice }) }
+    this._countdown = listenFlow.createCountdown({
+      valid: () => this._active && listenFlow.eligible(this.data) && this._endedKey === this.data.narrationKey,
+      update: seconds => { if (this._active) this.setData({ autoSeconds: seconds }) },
+      advance: () => { if (this.data.letterScene) this.onLetterComplete(); else this.onPrimary() }
+    })
+    this._settings = value => {
+      if (!this._active) return
+      this.cancelAuto()
+      this.setData({ voiceEnabled: value.voice, listenMode: value.mode || '' })
+      this.render()
+    }
     settings.subscribe(this._settings)
     await this.load()
   },
@@ -59,7 +70,8 @@ Page({
         else this.setData({ notice: '已识别谐奇趣贴片。请从当前进度继续；到谐奇趣后可直接听音乐。' })
       }
       this.restore()
-      this.setData({ loading: false, restartScreen: this.query.entry === 'restart' })
+      this.setData({ loading: false, restartScreen: this.query.entry === 'restart', showModeChoice: !settings.get().mode })
+      this.syncListen()
     } catch (err) { this.setData({ loading: false, error: errorText(err) }) }
   },
   snapshot() { return this.sessionId ? session.getArchive(this.sessionId) : session.getSnapshot() },
@@ -97,7 +109,9 @@ Page({
         if (!unlockedCards.some((x) => x.key === term.key)) unlockedCards.push({ key: term.key, label: (cards.get(term.key) || {}).title || term.label })
       })
     })
-    this.setData({ letterScene: page.kind === 'letter' && !(this.ui.letterSceneDone && ['LT6', 'LT7'].includes(page.id)),
+    const narrationKey = page.id + ':' + model.screenPart + ':' + (letterActivity ? 'editor' : 'body')
+    if (narrationKey !== this.data.narrationKey) this.cancelAuto()
+    this.setData({ narrationKey, listenMode: settings.get().mode || '', letterScene: page.kind === 'letter' && !(this.ui.letterSceneDone && ['LT6', 'LT7'].includes(page.id)),
       letterSceneImage: resources.resolve('/assets/fig/letter-teacher.jpg', 'asset'), screen: model, pageId: page.id, playId: page.playId, ui: clone(this.ui),
       completed: !!this.run.completedAt, review: engine.isReview(this.run),
       rows: view.rows.map((r) => Object.assign({}, r, { openPageId: view.openPageId(r.id) })),
@@ -116,6 +130,26 @@ Page({
       syncState: snap.sync && snap.sync.status || 'local', isDemo: bridge.getConfig().mode === 'demo'
     })
     this.syncNfc()
+    this.syncListen()
+  },
+  cancelAuto() { if (this._countdown) this._countdown.cancel() },
+  onUserInteraction() { this.cancelAuto() },
+  syncListen() {
+    const key = listenFlow.eligible(this.data) ? this.data.narrationKey + ':' + (this._listenEpoch || 0) : ''
+    if (this.data.listenKey !== key) this.setData({ listenKey: key })
+  },
+  onChooseMode(e) {
+    this._listenEpoch = (this._listenEpoch || 0) + 1
+    this.setData({ showModeChoice: false })
+    settings.setMode(ds(e, 'mode'))
+    this.render()
+  },
+  onChooseModeOpen() { this.cancelAuto(); audioBus.pauseAll(); this.setData({ drawer: '', showModeChoice: true }); this.syncListen() },
+  onNarrationState(e) { if (e.detail.playing || e.detail.loading || e.detail.failed) this.cancelAuto() },
+  onNarrationEnded(e) {
+    if (!e.detail || e.detail.contextKey !== this.data.narrationKey) return
+    this._endedKey = e.detail.contextKey
+    this._countdown.start()
   },
   async persist() {
     if (!this.run) return
@@ -132,16 +166,17 @@ Page({
   },
   async action(fn) {
     if (this.data.busy) return
-    this.setData({ busy: true, error: '' })
+    this.cancelAuto(); audioBus.pauseAll()
+    this.setData({ busy: true, error: '' }); this.syncListen()
     try { await this.persist(); await fn(); this.restore() }
     catch (err) { this.setData({ error: errorText(err) }) }
-    finally { if (this._active) this.setData({ busy: false }) }
+    finally { if (this._active) { this.setData({ busy: false }); this.syncListen() } }
   },
   onShow() { this._active = true; this.setData({ pageVisible: true }); if (this.run) this.restore() },
-  onHide() { this.setData({ pageVisible: false }); audioBus.pauseAll(); this.stopNfc(); if (this.run) this.persist().catch(() => {}) },
+  onHide() { this.cancelAuto(); this.setData({ pageVisible: false }); audioBus.pauseAll(); this.stopNfc(); if (this.run) this.persist().catch(() => {}) },
   onUnload() { clearTimeout(this._scrollTimer); this.onHide(); this._active = false; settings.unsubscribe(this._settings) },
   onPageScroll(e) { if (this.data.playId === 'quiz-hour') this.onScroll({ detail: e }) },
-  onScroll(e) { this.ui.scrollTop = Math.max(0, Number(e.detail.scrollTop) || 0); clearTimeout(this._scrollTimer); this._scrollTimer = setTimeout(() => this.persist().catch(() => {}), 250) },
+  onScroll(e) { this.cancelAuto(); this.ui.scrollTop = Math.max(0, Number(e.detail.scrollTop) || 0); clearTimeout(this._scrollTimer); this._scrollTimer = setTimeout(() => this.persist().catch(() => {}), 250) },
   onInput(e) { if (this.data.review) return; this.draft({ [ds(e, 'key')]: e.detail.value, again: false }, false); this.setData({ 'ui.again': false }) },
   onChoice(e) { if (!this.data.review) this.draft({ choice: ds(e, 'id'), optionId: ds(e, 'id'), again: false }) },
   onSpot(e) { if (this.data.review) return; this.draft({ spot: ds(e, 'id') }) },
@@ -228,10 +263,11 @@ Page({
     })
   },
   onOpenPage(e) { const id = ds(e, 'page'); if (!id) return; this.setData({ drawer: '' }); this.action(() => session.navigate(id, { sessionId: this.sessionId })) },
-  onDrawer(e) { this.setData({ drawer: ds(e, 'name') || '', card: null, drawerScrollTop: 0, cardAnchor: '' }); audioBus.pauseAll() },
+  onDrawer(e) { this.cancelAuto(); this.setData({ drawer: ds(e, 'name') || '', card: null, drawerScrollTop: 0, cardAnchor: '' }); audioBus.pauseAll() },
   onCloseDrawer() { this.setData({ drawer: '', card: null }) },
   noop() {},
   onOpenCard(e) {
+    this.cancelAuto()
     const key = ds(e, 'key'); const card = cards.get ? cards.get(key) : cards.SL_CARDS[key]
     if (!card || !this.data.historyCards.some(item => item.key === key)) return
     audioBus.pauseAll()
@@ -249,7 +285,7 @@ Page({
   onHistoryList() { this.setData({ card: null, cardAnchor: '', drawerScrollTop: 0 }) },
   onCardImageError() { this.setData({ cardImageFailed: true }) },
   onRetryCardImage() { this.setData({ cardImageFailed: false }) },
-  onRoute() { this.setData({ drawer: 'route', card: null }); audioBus.pauseAll() },
+  onRoute() { this.cancelAuto(); this.setData({ drawer: 'route', card: null }); audioBus.pauseAll() },
   onNavStart(e) {
     const t = e.touches[0]; this._drag = { x: t.clientX, y: t.clientY, left: this.data.navX, top: this.data.navY, moved: false }
   },
@@ -367,7 +403,7 @@ Page({
     const id = e && e.currentTarget ? ds(e, 'id') : this.sessionId || this.snapshot().sessionId
     wx.navigateTo({ url: '/plate21/module/pages/report/report?sessionId=' + encodeURIComponent(id || this.snapshot().sessionId) })
   },
-  onRestart() { audioBus.pauseAll(); this.stopNfc(); this.setData({ drawer: '', restartScreen: true }) },
+  onRestart() { this.cancelAuto(); audioBus.pauseAll(); this.stopNfc(); this.setData({ drawer: '', restartScreen: true }) },
   onCancelRestart() { this.setData({ restartScreen: false }); this.render() },
   onConfirmRestart() {
     return this.action(async () => {

@@ -212,3 +212,12 @@ test('story and gameplay occupy mutually exclusive full screens for every mixed 
     assert.ok(!story.html.includes('class="choices"'), page.id)
   }
 })
+
+test('listen choice and narration controls are above the toolbar, with no duplicate body player', async () => {
+  const result = await render('P1')
+  assert.deepEqual(result.errors, [])
+  assert.match(text(result.html), /以听为主.*以阅读为主/)
+  assert.ok(result.html.indexOf('narration-bar') < result.html.indexOf('class="toolbar"'))
+  assert.ok(!result.html.includes('class="audio-row"'))
+  assert.ok(!result.html.includes('class="letter-audio"'))
+})

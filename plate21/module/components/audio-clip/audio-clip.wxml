@@ -1,4 +1,4 @@
-<!-- Missing/unapproved clips render nothing. Enabling narration never starts it. -->
+<!-- Missing/unapproved clips render nothing. Only explicit listen mode supplies a listenKey. -->
 <block wx:if="{{hasAudio && active}}">
   <view wx:if="{{!enabled}}" class="ac-wrap {{dock ? 'ac-dock-bar' : ''}}">
     <button class="ac-btn" bindtap="onMute">{{kind === 'bgm' ? '开启音乐' : '开启讲述'}}</button>

@@ -4,7 +4,7 @@
 
 ## 本地运行
 
-在微信开发者工具导入此目录，使用项目 AppID 或有权限的测试 AppID，编译 `pages/index/index`。点击“开始 / 继续考察”。默认是设备本地演示；讲述默认关闭，可在考察簿开启。
+在微信开发者工具导入此目录，使用项目 AppID 或有权限的测试 AppID，编译 `pages/index/index`。点击“开始 / 继续考察”。默认是设备本地演示；首次进入选择“以听为主”或“以阅读为主”，之后可在顶部切换。听讲模式下，剧情录音结束并停留三秒后继续；互动、到达确认及无录音页会停留。
 
 - 唯一游戏页面：`plate21/module/pages/walk/walk`、`plate21/module/pages/report/report`。
 - 43 个剧情节点由 `content/story.js` 配置、`flow/pages.js` 编译驱动，不等于 43 个微信页面。
