@@ -2,6 +2,7 @@
 
 const session = require('../../store/session')
 const gameEntry = require('../../utils/game-entry')
+const bridge = require('../../host/bridge')
 const renderer = require('../../utils/report-renderer')
 const { normalizePhoto } = require('../../utils/photo-pipeline')
 const WALK = '/plate21/module/pages/walk/walk'
@@ -11,7 +12,8 @@ function invoke(name, options) {
   return new Promise(function (resolve, reject) {
     if (typeof wx[name] !== 'function') return reject(new Error(name + '_unavailable'))
     let settled = false
-    const timer = setTimeout(function () {
+    const interactive = ['chooseMedia', 'chooseImage', 'showModal', 'previewImage', 'saveImageToPhotosAlbum'].indexOf(name) >= 0
+    const timer = interactive ? null : setTimeout(function () {
       if (!settled) { settled = true; reject(new Error(name + '_timeout')) }
     }, 15000)
     function done(callback, value) {
@@ -36,7 +38,8 @@ Page({
     generating: false, saving: false, previewImages: [], saveError: '',
     savedCount: 0, exportWarning: '', canOpenAlbumSettings: false,
     letterAvailable: false, letterChecking: false, letterOpening: false,
-    letterMessage: '', sheetCount: 1
+    letterMessage: '', sheetCount: 1, reminderSupported: false,
+    reminderAccepted: false, reminderRequesting: false, reminderMessage: ''
   },
 
   onLoad: function (options) {
@@ -81,7 +84,8 @@ Page({
       const fingerprint = JSON.stringify(model)
       const changed = fingerprint !== this._fingerprint
       this._fingerprint = fingerprint
-      this.update({ model: model, loading: false, loadError: '', sheetCount: renderer.buildSheets(model).length })
+      this.update({ model: model, loading: false, loadError: '', sheetCount: renderer.buildSheets(model).length,
+        reminderSupported: bridge.available('requestReminder'), reminderAccepted: !!(target.run.reminder && target.run.reminder.accepted === true) })
       if (changed) {
         this._renderedFingerprint = ''
         this.update({ previewImages: [], savedCount: 0, exportWarning: '', saveError: '' })
@@ -120,6 +124,20 @@ Page({
   onReturn: function () {
     return invoke('redirectTo', { url: WALK + (this._sessionId ? '?sessionId=' + encodeURIComponent(this._sessionId) : '') })
       .catch(() => this.update({ saveError: '暂时无法返回考察，请使用左上角返回后重试。' }))
+  },
+  onRequestReminder: async function () {
+    if (this.data.reminderRequesting || this.data.reminderAccepted || !this.data.model || !this.data.model.completed ||
+        !bridge.available('requestReminder')) return
+    this.update({ reminderRequesting: true, reminderMessage: '' })
+    try {
+      const result = await session.requestReminder(this._sessionId)
+      this.update({ reminderAccepted: !!(result && result.accepted === true),
+        reminderMessage: result && result.accepted === true
+          ? '提醒请求已受理。你也可以回到这里自行检查来信。'
+          : result && result.status === 'declined' ? '这次没有开启提醒。到期后仍可从这里阅读来信。'
+            : '提醒请求暂未受理，可以重试；来信入口仍会保留。' })
+    } catch (error) { this.update({ reminderAccepted: false, reminderMessage: '提醒请求暂未受理，可以重试；来信入口仍会保留。' }) }
+    finally { this.update({ reminderRequesting: false }) }
   },
 
   onSiteChange: function (event) {

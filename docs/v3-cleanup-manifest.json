@@ -1,0 +1,3573 @@
+{
+  "baseline": "baseline/main-20260924",
+  "integrationCommit": "d5717c1",
+  "method": "从app.json注册页、组件与require链分析，保留许可证/史料；逐项删除无消费者文件。Git可逐阶段回退。",
+  "removed": [
+    {
+      "path": "plate21/module/capabilities/registry.js",
+      "bytes": 1918,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/capabilities/board/seeds.js",
+      "bytes": 2049,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/capabilities/play-guide/coach-busy.js",
+      "bytes": 431,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/capabilities/play-guide/measure.js",
+      "bytes": 4041,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/capabilities/play-guide/guide.js",
+      "bytes": 7563,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/capabilities/play-guide/coach-host.js",
+      "bytes": 4562,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/capabilities/audio-guide/postcards.js",
+      "bytes": 1548,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/capabilities/audio-guide/audio-guide.json",
+      "bytes": 129,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/capabilities/audio-guide/scripts.js",
+      "bytes": 11696,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/capabilities/audio-guide/audio-guide.wxml",
+      "bytes": 2854,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/capabilities/audio-guide/audio-guide.js",
+      "bytes": 7649,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/capabilities/audio-guide/audio-guide.wxss",
+      "bytes": 4217,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/capabilities/map/sites-mainline.js",
+      "bytes": 3058,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/capabilities/map/site-geo.js",
+      "bytes": 1730,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/capabilities/map/map-drawer/map-drawer.json",
+      "bytes": 85,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/capabilities/map/map-drawer/map-drawer.wxml",
+      "bytes": 2760,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/capabilities/map/map-drawer/map-drawer.wxss",
+      "bytes": 3135,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/capabilities/map/map-drawer/map-drawer.js",
+      "bytes": 5530,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/capabilities/overlay-host/overlay-host.js",
+      "bytes": 2144,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/capabilities/overlay-host/overlay-host.wxml",
+      "bytes": 744,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/capabilities/overlay-host/overlay-host.wxss",
+      "bytes": 665,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/capabilities/overlay-host/overlay-host.json",
+      "bytes": 309,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pay/handoff.js",
+      "bytes": 373,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/content/index.js",
+      "bytes": 666,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/content/s2-pattern.js",
+      "bytes": 3105,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/content/s2-reveal.js",
+      "bytes": 651,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/content/s2-quiz.js",
+      "bytes": 1703,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/content/prologue.js",
+      "bytes": 4118,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/content/s2-blend.js",
+      "bytes": 2392,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/utils/answer-judge.js",
+      "bytes": 8168,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/utils/drag.js",
+      "bytes": 4136,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/utils/attempt-ladder.js",
+      "bytes": 1437,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/utils/gloss-host.js",
+      "bytes": 1090,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/utils/novel-pages.js",
+      "bytes": 2127,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/utils/motion.js",
+      "bytes": 529,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/utils/puzzle-answers.js",
+      "bytes": 2825,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/utils/anime.js",
+      "bytes": 996,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/utils/quiz-host.js",
+      "bytes": 2380,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/styles/report-artwork.wxss",
+      "bytes": 2087,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/stamp-toast/stamp-toast.js",
+      "bytes": 2266,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/stamp-toast/stamp-toast.json",
+      "bytes": 85,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/stamp-toast/stamp-toast.wxml",
+      "bytes": 161,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/stamp-toast/stamp-toast.wxss",
+      "bytes": 898,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/task-banner/task-banner.wxss",
+      "bytes": 1452,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/task-banner/task-banner.wxml",
+      "bytes": 315,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/task-banner/task-banner.js",
+      "bytes": 1557,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/task-banner/task-banner.json",
+      "bytes": 85,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/gloss-text/gloss-text.wxss",
+      "bytes": 351,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/gloss-text/gloss-text.wxml",
+      "bytes": 222,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/gloss-text/gloss-text.js",
+      "bytes": 578,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/gloss-text/gloss-text.json",
+      "bytes": 49,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/play-guide/play-guide.js",
+      "bytes": 901,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/play-guide/play-guide.wxml",
+      "bytes": 1148,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/play-guide/play-guide.wxss",
+      "bytes": 2781,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/play-guide/play-guide.json",
+      "bytes": 85,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/bgm-ambience/bgm-ambience.wxml",
+      "bytes": 69,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/bgm-ambience/bgm-ambience.js",
+      "bytes": 3923,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/bgm-ambience/bgm-ambience.json",
+      "bytes": 49,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/nav-back/nav-back.js",
+      "bytes": 1653,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/nav-back/nav-back.json",
+      "bytes": 85,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/nav-back/nav-back.wxml",
+      "bytes": 227,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/nav-back/nav-back.wxss",
+      "bytes": 578,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/history-card/history-card.wxml",
+      "bytes": 1717,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/history-card/history-card.wxss",
+      "bytes": 3900,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/history-card/history-card.json",
+      "bytes": 85,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/history-card/history-card.js",
+      "bytes": 3545,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/novel-view/novel-view.wxml",
+      "bytes": 6871,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/novel-view/novel-view.wxss",
+      "bytes": 12897,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/novel-view/novel-view.json",
+      "bytes": 229,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/novel-view/novel-view.js",
+      "bytes": 11684,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/dialogue-block/dialogue-block.json",
+      "bytes": 97,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/dialogue-block/dialogue-block.wxss",
+      "bytes": 771,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/dialogue-block/dialogue-block.wxml",
+      "bytes": 526,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/dialogue-block/dialogue-block.js",
+      "bytes": 1239,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/coach-spot/coach-spot.json",
+      "bytes": 129,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/coach-spot/coach-spot.js",
+      "bytes": 3223,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/coach-spot/coach-spot.wxml",
+      "bytes": 1900,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/components/coach-spot/coach-spot.wxss",
+      "bytes": 1884,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-P02.jpg",
+      "bytes": 52152,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-RUNTIME-MAZE.jpg",
+      "bytes": 24864,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-R01.jpg",
+      "bytes": 63498,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-P01.jpg",
+      "bytes": 531482,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/plate-fangwaiguan.jpg",
+      "bytes": 61490,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-RUNTIME-HUGO.jpg",
+      "bytes": 54935,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-R02.jpg",
+      "bytes": 31847,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-V02.jpg",
+      "bytes": 95549,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-V01.jpg",
+      "bytes": 75849,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-M01.jpg",
+      "bytes": 46024,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S2A2.jpg",
+      "bytes": 236454,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-RUNTIME-PROLOGUE-STUDY.jpg",
+      "bytes": 47388,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S1A.jpg",
+      "bytes": 358339,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S1B.jpg",
+      "bytes": 175659,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/plate-zhuting.jpg",
+      "bytes": 68284,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-RUNTIME-LANTERN.jpg",
+      "bytes": 50263,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-P-WANZI.jpg",
+      "bytes": 88400,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S3A.jpg",
+      "bytes": 514951,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-F06.jpg",
+      "bytes": 168286,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S3C.jpg",
+      "bytes": 225066,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-RUNTIME-PROLOGUE-CARD.jpg",
+      "bytes": 27746,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/plate-xieqiqu.jpg",
+      "bytes": 57042,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S2B.jpg",
+      "bytes": 77662,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S2C.jpg",
+      "bytes": 100825,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-RUNTIME-MAP.jpg",
+      "bytes": 41489,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-RUNTIME-PLATE.jpg",
+      "bytes": 28971,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S2A.jpg",
+      "bytes": 25427,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S4B4.jpg",
+      "bytes": 46919,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S3D2.jpg",
+      "bytes": 65036,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S3E6.jpg",
+      "bytes": 75257,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S3D3.jpg",
+      "bytes": 75143,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S3E5.jpg",
+      "bytes": 71110,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S3D1.jpg",
+      "bytes": 47492,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/plate-xushuilou.jpg",
+      "bytes": 53860,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/plate-dashuifa.jpg",
+      "bytes": 56288,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/img-c01.jpg",
+      "bytes": 35415,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S2C4.jpg",
+      "bytes": 64446,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S5A.jpg",
+      "bytes": 596506,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S3E4.jpg",
+      "bytes": 78559,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-RUNTIME-COVER.jpg",
+      "bytes": 29000,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S4B2.jpg",
+      "bytes": 97850,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S3D4.jpg",
+      "bytes": 64418,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S4A.jpg",
+      "bytes": 287936,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S2C1.jpg",
+      "bytes": 46149,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S4B3.jpg",
+      "bytes": 38851,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S3D5.jpg",
+      "bytes": 79982,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S3E1.jpg",
+      "bytes": 72026,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S4B1.jpg",
+      "bytes": 54363,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S3E3.jpg",
+      "bytes": 84553,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/plate-haiyantang-north.jpg",
+      "bytes": 71457,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S2C3.jpg",
+      "bytes": 52238,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S2C2.jpg",
+      "bytes": 67951,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S3E2.jpg",
+      "bytes": 62278,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-S3D6.jpg",
+      "bytes": 73189,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/ui/btn-label-round.png",
+      "bytes": 1877,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/ui/btn-label-seal.png",
+      "bytes": 1164,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/ui/btn-label-ink.png",
+      "bytes": 1672,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/ui/btn-label-skip.png",
+      "bytes": 643,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/stickers/st-botanical-01.png",
+      "bytes": 40184,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/stickers/st-paper-texture-01.jpg",
+      "bytes": 253125,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/stickers/st-botanical-02.png",
+      "bytes": 29067,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/stickers/st-paperclip-02.png",
+      "bytes": 6792,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/stickers/st-binder-clip-01.png",
+      "bytes": 5268,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/stickers/st-ticket-02.png",
+      "bytes": 44241,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/stickers/st-paperclip-01.png",
+      "bytes": 33180,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/stickers/st-ticket-01.png",
+      "bytes": 22748,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/stickers/st-hang-tag-02.png",
+      "bytes": 29437,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/stickers/st-postmark-02.png",
+      "bytes": 31542,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/stickers/st-hang-tag-01.png",
+      "bytes": 13634,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/stickers/st-postmark-01.png",
+      "bytes": 21847,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/stickers/st-stamp-01.png",
+      "bytes": 40489,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/stickers/st-stamp-02.png",
+      "bytes": 39884,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/icons/ic-clock-brass.png",
+      "bytes": 2826,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/icons/ic-arrow-left-ink.png",
+      "bytes": 804,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/icons/ic-eye-brass.png",
+      "bytes": 2562,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/icons/ic-skip-forward-ink60.png",
+      "bytes": 1427,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/icons/ic-stamp-cinnabar.png",
+      "bytes": 1645,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/icons/ic-hand-brass.png",
+      "bytes": 2274,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/icons/ic-arrow-left-right-brass.png",
+      "bytes": 1070,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/icons/ic-check-patina.png",
+      "bytes": 832,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/icons/ic-lightbulb-brass.png",
+      "bytes": 1923,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/icons/ic-pencil-ink.png",
+      "bytes": 1615,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/icons/ic-x-ink60.png",
+      "bytes": 936,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/icons/ic-map-pin-brass.png",
+      "bytes": 2777,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/icons/ic-camera-ink.png",
+      "bytes": 2104,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/icons/ic-camera-brass.png",
+      "bytes": 2078,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/icons/ic-notebook-pen-ink.png",
+      "bytes": 2188,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/icons/ic-chevron-down-ink60.png",
+      "bytes": 762,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/img/icons/ic-download-ink.png",
+      "bytes": 1285,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/assets/fonts/Plate21WenKai-Subset.ttf",
+      "bytes": 97040,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s2-reveal/s2-reveal.wxss",
+      "bytes": 3816,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s2-reveal/s2-reveal.wxml",
+      "bytes": 1890,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s2-reveal/s2-reveal.js",
+      "bytes": 2438,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s2-reveal/s2-reveal.json",
+      "bytes": 533,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s4-timeline/s4-timeline.json",
+      "bytes": 599,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s4-timeline/s4-timeline.wxml",
+      "bytes": 1422,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s4-timeline/s4-timeline.js",
+      "bytes": 1523,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s4-timeline/s4-timeline.wxss",
+      "bytes": 7384,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s3-zodiac/s3-zodiac.wxml",
+      "bytes": 3295,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s3-zodiac/s3-zodiac.js",
+      "bytes": 4281,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s3-zodiac/s3-zodiac.wxss",
+      "bytes": 2094,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s3-zodiac/s3-zodiac.json",
+      "bytes": 473,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s2-pattern/s2-pattern.json",
+      "bytes": 533,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s2-pattern/s2-pattern.js",
+      "bytes": 5063,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s2-pattern/s2-pattern.wxss",
+      "bytes": 3879,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s2-pattern/s2-pattern.wxml",
+      "bytes": 3396,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/archive/archive.json",
+      "bytes": 206,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/archive/archive.wxml",
+      "bytes": 618,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/archive/archive.wxss",
+      "bytes": 369,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/archive/archive.js",
+      "bytes": 791,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s3-comic/s3-comic.json",
+      "bytes": 596,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s3-comic/s3-comic.js",
+      "bytes": 5023,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s3-comic/s3-comic.wxss",
+      "bytes": 3950,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s3-comic/s3-comic.wxml",
+      "bytes": 3126,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/board/board.js",
+      "bytes": 10919,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/board/board.json",
+      "bytes": 94,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/board/board.wxml",
+      "bytes": 5446,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/board/board.wxss",
+      "bytes": 7212,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s2-quiz/s2-quiz.json",
+      "bytes": 656,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s2-quiz/s2-quiz.wxml",
+      "bytes": 2725,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s2-quiz/s2-quiz.wxss",
+      "bytes": 4747,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s2-quiz/s2-quiz.js",
+      "bytes": 2140,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/prologue/prologue.json",
+      "bytes": 587,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/prologue/prologue.js",
+      "bytes": 2043,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/prologue/prologue.wxss",
+      "bytes": 2917,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/prologue/prologue.wxml",
+      "bytes": 1943,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s2-blend/s2-blend.wxss",
+      "bytes": 6296,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s2-blend/s2-blend.wxml",
+      "bytes": 4977,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s2-blend/s2-blend.json",
+      "bytes": 473,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s2-blend/s2-blend.js",
+      "bytes": 12854,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/letter/letter.wxml",
+      "bytes": 2858,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/letter/letter.wxss",
+      "bytes": 2285,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/letter/letter.json",
+      "bytes": 165,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/letter/letter.js",
+      "bytes": 8130,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s1-decode/s1-decode.js",
+      "bytes": 5110,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s1-decode/s1-decode.wxml",
+      "bytes": 3132,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s1-decode/s1-decode.wxss",
+      "bytes": 3285,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s1-decode/s1-decode.json",
+      "bytes": 719,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/transit/transit.json",
+      "bytes": 401,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/transit/transit.js",
+      "bytes": 5766,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/transit/transit.wxml",
+      "bytes": 2851,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/transit/transit.wxss",
+      "bytes": 6213,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s3-water/s3-water.json",
+      "bytes": 473,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s3-water/s3-water.wxss",
+      "bytes": 2403,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s3-water/s3-water.js",
+      "bytes": 4209,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s3-water/s3-water.wxml",
+      "bytes": 3771,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/handbook/handbook.js",
+      "bytes": 7400,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/handbook/handbook.json",
+      "bytes": 206,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/handbook/handbook.wxml",
+      "bytes": 8819,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/handbook/handbook.wxss",
+      "bytes": 10836,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/dashuifa/dashuifa.js",
+      "bytes": 3836,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/dashuifa/dashuifa.json",
+      "bytes": 496,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/dashuifa/dashuifa.wxml",
+      "bytes": 3014,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/dashuifa/dashuifa.wxss",
+      "bytes": 3166,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/ending/ending.wxss",
+      "bytes": 3565,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/ending/ending.js",
+      "bytes": 1831,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/ending/ending.wxml",
+      "bytes": 2189,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/ending/ending.json",
+      "bytes": 124,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/gate/gate.json",
+      "bytes": 148,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/gate/gate.wxml",
+      "bytes": 127,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/gate/gate.js",
+      "bytes": 725,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/gate/gate.wxss",
+      "bytes": 30,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/waypoint/waypoint.js",
+      "bytes": 23255,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/waypoint/waypoint.json",
+      "bytes": 571,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/waypoint/waypoint.wxss",
+      "bytes": 5003,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/waypoint/waypoint.wxml",
+      "bytes": 9844,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/atlas/atlas.wxss",
+      "bytes": 484,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/atlas/atlas.wxml",
+      "bytes": 565,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/atlas/atlas.js",
+      "bytes": 1392,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/atlas/atlas.json",
+      "bytes": 140,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/finale/finale.wxss",
+      "bytes": 7330,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/finale/finale.wxml",
+      "bytes": 5922,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/finale/finale.js",
+      "bytes": 8732,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/finale/finale.json",
+      "bytes": 344,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s4-password/s4-password.js",
+      "bytes": 4622,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s4-password/s4-password.wxml",
+      "bytes": 3058,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s4-password/s4-password.wxss",
+      "bytes": 2974,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/s4-password/s4-password.json",
+      "bytes": 407,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/cover/cover.js",
+      "bytes": 5759,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/cover/cover.wxss",
+      "bytes": 5809,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/cover/cover.wxml",
+      "bytes": 5532,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/pages/cover/cover.json",
+      "bytes": 261,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/vendor/anime.umd.min.js",
+      "bytes": 118043,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/store/progress-flow.js",
+      "bytes": 4242,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/store/trail.js",
+      "bytes": 1432,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/store/achievements.js",
+      "bytes": 4195,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/store/field-record.js",
+      "bytes": 642,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "plate21/module/store/cloud-sync.js",
+      "bytes": 2143,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "pages/ticket/ticket.js",
+      "bytes": 2446,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "pages/ticket/ticket.json",
+      "bytes": 148,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "pages/ticket/ticket.wxml",
+      "bytes": 740,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "pages/ticket/paid.js",
+      "bytes": 2806,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "pages/ticket/ticket.wxss",
+      "bytes": 1497,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "components/archive-illustration/archive-illustration.wxss",
+      "bytes": 10991,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "components/archive-illustration/archive-illustration.wxml",
+      "bytes": 4314,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "components/archive-illustration/archive-illustration.json",
+      "bytes": 24,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "components/archive-illustration/archive-illustration.js",
+      "bytes": 202,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "assets/host/st-paperclip-02.png",
+      "bytes": 6792,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "assets/host/IMG-RUNTIME-HOST.jpg",
+      "bytes": 9332,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "assets/host/IMG-F06.jpg",
+      "bytes": 168286,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "assets/host/st-postmark-02.png",
+      "bytes": 31542,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "assets/host/ic-notebook-pen-ink.png",
+      "bytes": 2188,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "assets/fig/IMG-RUNTIME-COMIC.jpg",
+      "bytes": 65301,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "fonts/Plate21WenKai-Subset.b64.js",
+      "bytes": 129422,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    },
+    {
+      "path": "app.web.json",
+      "bytes": 1286,
+      "reason": "历史H5或临时探测配置不再使用"
+    },
+    {
+      "path": "mor.poc.browser.py",
+      "bytes": 3840,
+      "reason": "历史H5或临时探测配置不再使用"
+    },
+    {
+      "path": "mor.poc.config.js",
+      "bytes": 463,
+      "reason": "历史H5或临时探测配置不再使用"
+    },
+    {
+      "path": ".env.example",
+      "bytes": 167,
+      "reason": "历史H5或临时探测配置不再使用"
+    },
+    {
+      "path": "h5/index.html",
+      "bytes": 2354,
+      "reason": "历史H5镜像；原生分包为唯一实现"
+    },
+    {
+      "path": "h5/app.css",
+      "bytes": 26101,
+      "reason": "历史H5镜像；原生分包为唯一实现"
+    },
+    {
+      "path": "h5/app.js",
+      "bytes": 60733,
+      "reason": "历史H5镜像；原生分包为唯一实现"
+    },
+    {
+      "path": "test/pay-handoff.test.js",
+      "bytes": 1131,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/check-font.js",
+      "bytes": 1894,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/subset-font.js",
+      "bytes": 1403,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/regression.test.js",
+      "bytes": 12082,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/journey-board.test.js",
+      "bytes": 11353,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/novel-pages.test.js",
+      "bytes": 3406,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/map-nav.test.js",
+      "bytes": 2865,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/click-and-shoot.ps1",
+      "bytes": 1505,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/audio-controls.test.js",
+      "bytes": 5442,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/answer-judge.test.js",
+      "bytes": 3544,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/preview-board.js",
+      "bytes": 9530,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/probe-s2reveal-nav.js",
+      "bytes": 2575,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/gen-all-images.js",
+      "bytes": 13456,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/test-all-pages.js",
+      "bytes": 3521,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/flow-engine.test.js",
+      "bytes": 8448,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/optimize-assets.js",
+      "bytes": 3287,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/build-v3-vs-original-html.py",
+      "bytes": 9131,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/play.test.js",
+      "bytes": 7796,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/session.test.js",
+      "bytes": 10729,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/puzzle-answers.test.js",
+      "bytes": 2367,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/build-runtime-images.js",
+      "bytes": 3668,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/play-guide.test.js",
+      "bytes": 13657,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/ticket-paid.test.js",
+      "bytes": 2632,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/h5-e2e.py",
+      "bytes": 10157,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/capabilities.test.js",
+      "bytes": 8890,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/audit-flow-layout.js",
+      "bytes": 21540,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/progress-build.test.js",
+      "bytes": 8545,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/word-plays.test.js",
+      "bytes": 6634,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/screen-layout.test.js",
+      "bytes": 2612,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/smoke.test.js",
+      "bytes": 1827,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/nfc-xieqiqu.test.js",
+      "bytes": 2722,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/probe-launch.js",
+      "bytes": 1490,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/walk-full.js",
+      "bytes": 4552,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/board-revisit.test.js",
+      "bytes": 10108,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/capture-v3-vs-original.js",
+      "bytes": 17669,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/subset-wenkai.js",
+      "bytes": 3671,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/audit-image-evidence.js",
+      "bytes": 4507,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/drive-sim.js",
+      "bytes": 1190,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/probe-s2reveal.js",
+      "bytes": 2451,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/page-voice.test.js",
+      "bytes": 2543,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/preview-play-guide.js",
+      "bytes": 10260,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/gate.test.js",
+      "bytes": 5315,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/build-standalone-md.js",
+      "bytes": 5297,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shot-all.js",
+      "bytes": 2551,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/gen-all.log",
+      "bytes": 4210,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/capture-devtools.ps1",
+      "bytes": 1716,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/layout-contract.test.js",
+      "bytes": 5082,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/fetch-xhs.js",
+      "bytes": 1658,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/gen-image.js",
+      "bytes": 1741,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/page-flow.test.js",
+      "bytes": 27454,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/probe-errors.js",
+      "bytes": 2534,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/build-standalone-html.js",
+      "bytes": 3252,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/attempt-ladder.test.js",
+      "bytes": 1159,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/probe-current.js",
+      "bytes": 1515,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/audio-cue.test.js",
+      "bytes": 1842,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/vendor-src/fonts/README.md",
+      "bytes": 363,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/vendor-src/fonts/LXGWWenKai-Regular.ttf",
+      "bytes": 25575676,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-sl/sl03-waypoint-xq.png",
+      "bytes": 965045,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-sl/sl07-s2-quiz.png",
+      "bytes": 725483,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-sl/sl15-17-dashuifa-followup.png",
+      "bytes": 812954,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-sl/sl11-waypoint-fwg-followup.png",
+      "bytes": 1036203,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-sl/sl13-s3-comic-followup.png",
+      "bytes": 847068,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-sl/sl13-waypoint-xs.png",
+      "bytes": 904092,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-sl/sl14-dashuifa.png",
+      "bytes": 916296,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-sl/sl04-waypoint-xs-followup.png",
+      "bytes": 1047734,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-sl/sl12-s3-comic.png",
+      "bytes": 847068,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-sl/sl02-s1-decode.png",
+      "bytes": 536181,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-sl/sl01-prologue.png",
+      "bytes": 534962,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-sl/sl08-s2-pattern-finale.png",
+      "bytes": 875003,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/harness/shot-gloss.js",
+      "bytes": 5256,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/harness/render-v2.js",
+      "bytes": 12825,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/harness/render.js",
+      "bytes": 13793,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/harness/build-gallery-v2.py",
+      "bytes": 13509,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-brown/b4-s3-comic.png",
+      "bytes": 818693,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-brown/b5-waypoint-xq-history.png",
+      "bytes": 729002,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-brown/b2-waypoint-xq.png",
+      "bytes": 935128,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-brown/b1-prologue.png",
+      "bytes": 540308,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-brown/b3-s2-quiz.png",
+      "bytes": 711151,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-aged/a1-waypoint-xq.png",
+      "bytes": 965045,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-aged/a4-s3-comic.png",
+      "bytes": 847068,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-aged/a3-s2-reveal.png",
+      "bytes": 1005375,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-aged/a5-prologue.png",
+      "bytes": 772651,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-aged/a2-s2-quiz.png",
+      "bytes": 736599,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-v22/handbook.png",
+      "bytes": 362113,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-v22/s2pattern.png",
+      "bytes": 612775,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-v22/xieqiqu.png",
+      "bytes": 400622,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-v22/s4timeline.png",
+      "bytes": 451002,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/shots-v22/s3comic.png",
+      "bytes": 451003,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/ticket257.svg",
+      "bytes": 3762,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/mailstamp.svg",
+      "bytes": 50482,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/pc168413.svg",
+      "bytes": 3811,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/the-ticket.svg",
+      "bytes": 22470,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/movie-tickets.svg",
+      "bytes": 30693,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/svgrepo-pm.html",
+      "bytes": 34748,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/clothing-tag.svg",
+      "bytes": 603091,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/pm-airmail2.svg",
+      "bytes": 14538,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/rubber-stamp.svg",
+      "bytes": 96030,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/gift-tag.svg",
+      "bytes": 705201,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/pm-airmail.svg",
+      "bytes": 52031,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/ticket26278.svg",
+      "bytes": 10110,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/stamp-pennyred.jpg",
+      "bytes": 578175,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/wheat-bw.svg",
+      "bytes": 14827,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/roped-label.svg",
+      "bytes": 18722,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/wheat.svg",
+      "bytes": 13682,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/paperclip-b.svg",
+      "bytes": 23748,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/paperclip-c.svg",
+      "bytes": 12663,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/stamp-jackson.jpg",
+      "bytes": 1789814,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/pm-cavalla.jpg",
+      "bytes": 192441,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/penny-red-stamp.svg",
+      "bytes": 4382451,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/fern-scan1.svg",
+      "bytes": 10172,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/postmark-classic.svg",
+      "bytes": 1449,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/preview.js",
+      "bytes": 742,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/paperclip-a.svg",
+      "bytes": 4869,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/build.js",
+      "bytes": 2842,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/stamp-pennyred-pl148.jpg",
+      "bytes": 106694,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/paper-old.jpg",
+      "bytes": 2261552,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/tag-label.svg",
+      "bytes": 4129,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/ticket-stamp.svg",
+      "bytes": 63890,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/pm-red.svg",
+      "bytes": 103710,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/fern-leaf.svg",
+      "bytes": 341557,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/wheat2.svg",
+      "bytes": 12190,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/postmark.svg",
+      "bytes": 510,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/pm-lubina.jpg",
+      "bytes": 1965,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/pc194831.svg",
+      "bytes": 4824,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/tag-string.svg",
+      "bytes": 51827,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/pm-vintage-airmail.svg",
+      "bytes": 64383,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/pm-luftpost.svg",
+      "bytes": 69028,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/pm-paravion.svg",
+      "bytes": 33202,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/train-ticket-uk.svg",
+      "bytes": 120281,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/pc174141.svg",
+      "bytes": 6908,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/binderclip.svg",
+      "bytes": 12790,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "test/stickers-src/pm-occasion.svg",
+      "bytes": 98225,
+      "reason": "旧路由/旧玩法测试与截图、生成日志、临时探测；由v3行为测试覆盖"
+    },
+    {
+      "path": "docs/西洋楼遗址信源目录-史料明确学界共识艺术演绎.md",
+      "bytes": 37438,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/真机滑动与触觉调参建议.md",
+      "bytes": 5523,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/UI迭代方案-手账实物感补强-v1.3.3.md",
+      "bytes": 5070,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/西洋楼遗址权威信源清单-三级标注.md",
+      "bytes": 74495,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-plot-transition-diff.html",
+      "bytes": 24613,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/剧情玩法验收矩阵-rev2174.md",
+      "bytes": 8860,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/剧情评价报告-V2.2.html",
+      "bytes": 25051,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-comments-compact.txt",
+      "bytes": 6745,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/完全接入对接文档-V2.2.md",
+      "bytes": 44786,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/剧情正文去AI味-改前改后对照-20260911.md",
+      "bytes": 34837,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v1.5.0-实体道具引导规格.md",
+      "bytes": 8623,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/UI-UX设计文档.md",
+      "bytes": 47732,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/西洋楼史料汇总包-20260909.zip",
+      "bytes": 129426,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/迭代开发计划-采风修订版.md",
+      "bytes": 14580,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-vs-original.html",
+      "bytes": 1264906,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/交互迭代规格-v1.4.0.md",
+      "bytes": 23094,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v2快速迭代改动展示-20260910.html",
+      "bytes": 1083358,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/西洋楼史料汇总.html",
+      "bytes": 53253,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/留言板-后台管理与合规要求.md",
+      "bytes": 4477,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/项目完整修复优化计划-飞书剧情对齐.md",
+      "bytes": 36729,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/剧情可用稿-主线走一遍.md",
+      "bytes": 48956,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/剧情叙事_最新版.md",
+      "bytes": 23622,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v1.5.1-碎片传承规格.md",
+      "bytes": 7002,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-mockups.html",
+      "bytes": 61357,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/会议逐字稿补充细节-20260819NPC打磨.md",
+      "bytes": 24855,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/方案设计-回响-明信片流转-解说词分层-v2对齐.md",
+      "bytes": 21636,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/剧情总设定-入口世界观-点位串联-支线系统.md",
+      "bytes": 45246,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/宿主接入方案.md",
+      "bytes": 14700,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/门票制-对接园方支付工程.md",
+      "bytes": 4350,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/剧情可用稿-人物对话版-V2.3.md",
+      "bytes": 49259,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/剧情文案改写计划-历代记录者接力.md",
+      "bytes": 21628,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/素材需求清单.md",
+      "bytes": 11557,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/剧情可用稿-人物对话版-V2.2.md",
+      "bytes": 45468,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/实景解谜文笔参照-外部案例笔记-20260911.md",
+      "bytes": 12853,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-puzzle-try.html",
+      "bytes": 23110,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-逐页旁白清单.md",
+      "bytes": 19439,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/参考图实测色值与token对照-v1.3.2.md",
+      "bytes": 4684,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/H5截图与参考图风格一致性评估-v1.3.2.md",
+      "bytes": 5282,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/产品定位更新-聚焦青年人群.md",
+      "bytes": 3259,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-页面设计模板.md",
+      "bytes": 12087,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/飞书分页接入方案.md",
+      "bytes": 18797,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/主线模块技术设计.md",
+      "bytes": 11603,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/开发进度与AI素材指南.md",
+      "bytes": 25379,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/后端接入实施方案-A2云开发与B自建-V2.2.md",
+      "bytes": 22944,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-谜题实现对照.md",
+      "bytes": 9119,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-page-ui-template.md",
+      "bytes": 12087,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/小程序维护优化技术方案-v2.0.md",
+      "bytes": 67007,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/feishu-import/第廿一图_v3-rev5614.md",
+      "bytes": 88515,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/feishu-import/第廿一图_v3-rev4379.md",
+      "bytes": 76206,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/feishu-import/第廿一图_v2.md",
+      "bytes": 55755,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/pages.md",
+      "bytes": 16505,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/01-images.md",
+      "bytes": 9246,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/body.md",
+      "bytes": 11602,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/to-review.md",
+      "bytes": 17472,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/02-audio.md",
+      "bytes": 8517,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/03-sources.md",
+      "bytes": 12080,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/02b-narration.md",
+      "bytes": 16918,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/14-xushuilou/plate.jpg",
+      "bytes": 53860,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/15-dashuifa/plate.jpg",
+      "bytes": 56288,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/20-handbook/plate21.jpg",
+      "bytes": 28971,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/09-huanghuazhen-name/lantern.jpg",
+      "bytes": 50263,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/18-finale/plate21.jpg",
+      "bytes": 28971,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/12-fangwaiguan/plate.jpg",
+      "bytes": 61490,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/25-board/plate21.jpg",
+      "bytes": 28971,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/25-board/study.jpg",
+      "bytes": 47388,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/25-board/hugo.jpg",
+      "bytes": 54935,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/25-board/maze.jpg",
+      "bytes": 24864,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/25-board/beast.jpg",
+      "bytes": 26660,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/07-xieqiqu/soundscape-playing.mp3",
+      "bytes": 721650,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/07-xieqiqu/soundscape-final.mp3",
+      "bytes": 721650,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/07-xieqiqu/plate.jpg",
+      "bytes": 57042,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/10-huanghuazhen-pavilion/swan.jpg",
+      "bytes": 27035,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/10-huanghuazhen-pavilion/dome.jpg",
+      "bytes": 19328,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/10-huanghuazhen-pavilion/lotus.jpg",
+      "bytes": 21407,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/10-huanghuazhen-pavilion/beast.jpg",
+      "bytes": 26660,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/11-huanghuazhen-pattern/shell.jpg",
+      "bytes": 26439,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/11-huanghuazhen-pattern/wanzi.jpg",
+      "bytes": 34333,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/11-huanghuazhen-pattern/basket.jpg",
+      "bytes": 19040,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/11-huanghuazhen-pattern/scroll.jpg",
+      "bytes": 24200,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/08-huanghuazhen-purpose/maze.jpg",
+      "bytes": 24864,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/03-cover/cover.jpg",
+      "bytes": 29000,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/03-cover/postmark-1860.png",
+      "bytes": 21847,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/13-haiyantang/comic.jpg",
+      "bytes": 78221,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/16-hugo/hugo.jpg",
+      "bytes": 54935,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/04-prologue/card.jpg",
+      "bytes": 27746,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/04-prologue/map.jpg",
+      "bytes": 41489,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/19-report/plate21.jpg",
+      "bytes": 28971,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/06-transit/map.jpg",
+      "bytes": 41489,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/by-page/01-index/cover.jpg",
+      "bytes": 9332,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/props/DJ-05d-dashuifa.jpg",
+      "bytes": 56288,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/props/DJ-09-maze.jpg",
+      "bytes": 24864,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/props/DJ-10-swan.jpg",
+      "bytes": 27035,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/props/DJ-09-lantern.jpg",
+      "bytes": 50263,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/props/DJ-06-soundscape.mp3",
+      "bytes": 721650,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/props/DJ-10-shell.jpg",
+      "bytes": 26439,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/props/DJ-05a-fangwaiguan.jpg",
+      "bytes": 61490,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/props/DJ-10-dome.jpg",
+      "bytes": 19328,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/props/DJ-04-map.jpg",
+      "bytes": 41489,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/props/DJ-05c-haiyantang.jpg",
+      "bytes": 124416,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/props/DJ-10-wanzi.jpg",
+      "bytes": 34333,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/props/DJ-10-scroll.jpg",
+      "bytes": 24200,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/props/DJ-10-lotus.jpg",
+      "bytes": 21407,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/props/DJ-10-beast.jpg",
+      "bytes": 26660,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/props/DJ-10-basket.jpg",
+      "bytes": 19040,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/props/DJ-05b-zhuting.jpg",
+      "bytes": 106885,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/img/draw-beast.jpg",
+      "bytes": 26660,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/img/draw-card.jpg",
+      "bytes": 27746,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/img/plate-fangwaiguan.jpg",
+      "bytes": 61490,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/img/plate-huayuan-gate.jpg",
+      "bytes": 106440,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/img/draw-lotus.jpg",
+      "bytes": 21407,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/img/draw-cover.jpg",
+      "bytes": 29000,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/img/plate-haiyantang.jpg",
+      "bytes": 124416,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/img/draw-swan.jpg",
+      "bytes": 27035,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/img/plate-zhuting.jpg",
+      "bytes": 106885,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/img/draw-map.jpg",
+      "bytes": 41489,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/img/draw-dome.jpg",
+      "bytes": 19328,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/img/plate-huayuan.jpg",
+      "bytes": 135700,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/img/draw-comic.jpg",
+      "bytes": 78221,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/img/plate-xieqiqu.jpg",
+      "bytes": 57042,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/img/draw-maze.jpg",
+      "bytes": 24864,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/img/draw-basket.jpg",
+      "bytes": 19040,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/img/draw-lantern.jpg",
+      "bytes": 50263,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/img/draw-hugo.jpg",
+      "bytes": 54935,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/img/draw-study.jpg",
+      "bytes": 47388,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/img/draw-wanzi.jpg",
+      "bytes": 34333,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/img/draw-scroll.jpg",
+      "bytes": 24200,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/img/draw-shell.jpg",
+      "bytes": 26439,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/img/draw-plate21.jpg",
+      "bytes": 28971,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/img/plate-xushuilou.jpg",
+      "bytes": 53860,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/img/postmark-1860.png",
+      "bytes": 21847,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/img/plate-dashuifa.jpg",
+      "bytes": 56288,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/review-pack/audio/xieqiqu-30s.mp3",
+      "bytes": 721650,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-try-assets/shot-sound.png",
+      "bytes": 169533,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-try-assets/fangwaiguan.jpg",
+      "bytes": 120346,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-try-assets/shot-relic.png",
+      "bytes": 170739,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-try-assets/dashuifa.jpg",
+      "bytes": 225066,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-try-assets/dj06-xieqiqu-soundscape-30s.mp3",
+      "bytes": 721650,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-try-assets/comic.jpg",
+      "bytes": 78221,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-try-assets/hugo.jpg",
+      "bytes": 54935,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-try-assets/maze.jpg",
+      "bytes": 24864,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-try-assets/shot-maze.png",
+      "bytes": 249962,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-try-assets/dashuifa-plate.jpg",
+      "bytes": 112602,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/西洋楼史料汇总包-20260909/index.html",
+      "bytes": 53253,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/西洋楼史料汇总包-20260909/西洋楼史料汇总.html",
+      "bytes": 53253,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/btn-seal.png",
+      "bytes": 1164,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/ic-back.png",
+      "bytes": 804,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/ic-play.png",
+      "bytes": 1709,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/envelope.png",
+      "bytes": 940323,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/pattern-shell.jpg",
+      "bytes": 26439,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/fangwaiguan.jpg",
+      "bytes": 120346,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/btn-ink.png",
+      "bytes": 1672,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/xushuilou.jpg",
+      "bytes": 107291,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/wanzi.jpg",
+      "bytes": 34333,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/map.jpg",
+      "bytes": 41489,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/yuanyingguan.jpg",
+      "bytes": 117988,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/ic-map.png",
+      "bytes": 2777,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/lantern.jpg",
+      "bytes": 50263,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/haiyantang.jpg",
+      "bytes": 107646,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/stamp.png",
+      "bytes": 39884,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/comic.jpg",
+      "bytes": 78221,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/pattern-scroll.jpg",
+      "bytes": 24200,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/hugo.jpg",
+      "bytes": 54935,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/stamp-corner.png",
+      "bytes": 39884,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/cover.jpg",
+      "bytes": 29000,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/maze.jpg",
+      "bytes": 24864,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/hang-tag.png",
+      "bytes": 13634,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/ic-book.png",
+      "bytes": 2188,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/prologue.jpg",
+      "bytes": 47388,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/xieqiqu.jpg",
+      "bytes": 114364,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/postmark.png",
+      "bytes": 21847,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/dashuifa-plate.jpg",
+      "bytes": 112602,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "docs/v3-ui-assets/pattern-basket.jpg",
+      "bytes": 19040,
+      "reason": "过时方案/重复正文/页面镜像/截图素材；保留现行剧本与史料出处"
+    },
+    {
+      "path": "tools/build_page_voice.js",
+      "bytes": 11280,
+      "reason": "旧素材生成/本机音源服务/探测脚本，与v3资源清单不再一致"
+    },
+    {
+      "path": "tools/gen_mainline_narr.py",
+      "bytes": 3289,
+      "reason": "旧素材生成/本机音源服务/探测脚本，与v3资源清单不再一致"
+    },
+    {
+      "path": "tools/pkg-size.js",
+      "bytes": 1575,
+      "reason": "旧素材生成/本机音源服务/探测脚本，与v3资源清单不再一致"
+    },
+    {
+      "path": "tools/gen_voice.py",
+      "bytes": 9404,
+      "reason": "旧素材生成/本机音源服务/探测脚本，与v3资源清单不再一致"
+    },
+    {
+      "path": "tools/audit_voice_sync.py",
+      "bytes": 5764,
+      "reason": "旧素材生成/本机音源服务/探测脚本，与v3资源清单不再一致"
+    },
+    {
+      "path": "tools/knockout-btn-labels.py",
+      "bytes": 2186,
+      "reason": "旧素材生成/本机音源服务/探测脚本，与v3资源清单不再一致"
+    },
+    {
+      "path": "tools/voice_manifest.json",
+      "bytes": 45135,
+      "reason": "旧素材生成/本机音源服务/探测脚本，与v3资源清单不再一致"
+    },
+    {
+      "path": "tools/xieqiqu_soundscape_prompts.json",
+      "bytes": 929,
+      "reason": "旧素材生成/本机音源服务/探测脚本，与v3资源清单不再一致"
+    },
+    {
+      "path": "tools/narr_mainline.json",
+      "bytes": 13577,
+      "reason": "旧素材生成/本机音源服务/探测脚本，与v3资源清单不再一致"
+    },
+    {
+      "path": "tools/pack_voice.js",
+      "bytes": 5748,
+      "reason": "旧素材生成/本机音源服务/探测脚本，与v3资源清单不再一致"
+    },
+    {
+      "path": "tools/AUDIO-README.md",
+      "bytes": 5390,
+      "reason": "旧素材生成/本机音源服务/探测脚本，与v3资源清单不再一致"
+    },
+    {
+      "path": "tools/serve_audio.py",
+      "bytes": 1863,
+      "reason": "旧素材生成/本机音源服务/探测脚本，与v3资源清单不再一致"
+    },
+    {
+      "path": "tools/render-icons.js",
+      "bytes": 2979,
+      "reason": "旧素材生成/本机音源服务/探测脚本，与v3资源清单不再一致"
+    },
+    {
+      "path": "tools/probe-minimax-judge.js",
+      "bytes": 1535,
+      "reason": "旧素材生成/本机音源服务/探测脚本，与v3资源清单不再一致"
+    },
+    {
+      "path": "tools/draw-btn-labels.py",
+      "bytes": 3050,
+      "reason": "旧素材生成/本机音源服务/探测脚本，与v3资源清单不再一致"
+    },
+    {
+      "path": "tools/mix_xieqiqu_soundscape.py",
+      "bytes": 8331,
+      "reason": "旧素材生成/本机音源服务/探测脚本，与v3资源清单不再一致"
+    },
+    {
+      "path": "tools/gen_xieqiqu_stems_comfy.py",
+      "bytes": 5242,
+      "reason": "旧素材生成/本机音源服务/探测脚本，与v3资源清单不再一致"
+    },
+    {
+      "path": "tools/gen_xieqiqu_stems.py",
+      "bytes": 4297,
+      "reason": "旧素材生成/本机音源服务/探测脚本，与v3资源清单不再一致"
+    },
+    {
+      "path": "tools/_tmp_wiki_extract.py",
+      "bytes": 519,
+      "reason": "旧素材生成/本机音源服务/探测脚本，与v3资源清单不再一致"
+    },
+    {
+      "path": "tools/bgm_prompts_v22.json",
+      "bytes": 2056,
+      "reason": "旧素材生成/本机音源服务/探测脚本，与v3资源清单不再一致"
+    },
+    {
+      "path": "tools/check_plot_sync.js",
+      "bytes": 17072,
+      "reason": "旧素材生成/本机音源服务/探测脚本，与v3资源清单不再一致"
+    },
+    {
+      "path": "tools/sync_voice_manifest.py",
+      "bytes": 5436,
+      "reason": "旧素材生成/本机音源服务/探测脚本，与v3资源清单不再一致"
+    },
+    {
+      "path": "tools/narr_voice_prompt.json",
+      "bytes": 1356,
+      "reason": "旧素材生成/本机音源服务/探测脚本，与v3资源清单不再一致"
+    },
+    {
+      "path": "voice-j/narr-waypoint-guanshuifa.mp3",
+      "bytes": 185076,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-j/narr-waypoint-xianfahua.mp3",
+      "bytes": 103140,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-j/guide-t-guanshuifa-deep.mp3",
+      "bytes": 125172,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-j/guide-t-xianfahua-deep.mp3",
+      "bytes": 230148,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-j/narr-waypoint-xianfahua-end.mp3",
+      "bytes": 17316,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-j/narr-waypoint-guanshuifa-b2.mp3",
+      "bytes": 83124,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-j/guide-t-guanshuifa-base.mp3",
+      "bytes": 191124,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-j/guide-t-xianfahua-base.mp3",
+      "bytes": 172116,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-j/dlg-xianfahua-1.mp3",
+      "bytes": 137988,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-j/narr-waypoint-xianfahua-b2.mp3",
+      "bytes": 69156,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-j/narr-waypoint-xianfahua-b3.mp3",
+      "bytes": 122148,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-j/dlg-xianfahua-2.mp3",
+      "bytes": 69300,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-j/dlg-xianfahua-3.mp3",
+      "bytes": 11268,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-j/dlg-guanshuifa-1.mp3",
+      "bytes": 34452,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-j/narr-waypoint-guanshuifa-end.mp3",
+      "bytes": 28404,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-j/dlg-guanshuifa-2.mp3",
+      "bytes": 34740,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-c/guide-s2-deep.mp3",
+      "bytes": 403812,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-c/guide-s2-base.mp3",
+      "bytes": 185652,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-d/guide-s3-deep.mp3",
+      "bytes": 404964,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-d/dlg-haiyantang-1.mp3",
+      "bytes": 94932,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-d/dlg-haiyantang-3.mp3",
+      "bytes": 78084,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-d/dlg-haiyantang-2.mp3",
+      "bytes": 108324,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-d/dlg-haiyantang-5.mp3",
+      "bytes": 20484,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-d/guide-s3-base.mp3",
+      "bytes": 189396,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-d/dlg-haiyantang-4.mp3",
+      "bytes": 46548,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-e/guide-s4-deep.mp3",
+      "bytes": 299556,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-e/dlg-yugao-3.mp3",
+      "bytes": 138132,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-e/dlg-yugao-2.mp3",
+      "bytes": 35316,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-e/dlg-yugao-1.mp3",
+      "bytes": 138852,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-e/dlg-yugao-5.mp3",
+      "bytes": 15012,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-e/dlg-yugao-4.mp3",
+      "bytes": 148356,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-e/guide-s4-base.mp3",
+      "bytes": 195588,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-b/dlg-huanghuazhen-2.mp3",
+      "bytes": 47988,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-b/dlg-huanghuazhen-3.mp3",
+      "bytes": 7668,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-b/dlg-huanghuazhen-1.mp3",
+      "bytes": 50004,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-b/dlg-huanghuazhen-4.mp3",
+      "bytes": 248724,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-b/dlg-huanghuazhen-5.mp3",
+      "bytes": 50004,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-b/dlg-huanghuazhen-6.mp3",
+      "bytes": 219636,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-i/guide-t-xushuilou-base.mp3",
+      "bytes": 272916,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-i/dlg-xushuilou-8.mp3",
+      "bytes": 153684,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-i/dlg-xushuilou-2.mp3",
+      "bytes": 83988,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-i/dlg-xushuilou-3.mp3",
+      "bytes": 76212,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-i/dlg-xushuilou-1.mp3",
+      "bytes": 70308,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-i/guide-t-xushuilou-deep.mp3",
+      "bytes": 284868,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-i/dlg-xushuilou-4.mp3",
+      "bytes": 5796,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-i/dlg-xushuilou-5.mp3",
+      "bytes": 12852,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-i/dlg-xushuilou-7.mp3",
+      "bytes": 37332,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-i/dlg-xushuilou-6.mp3",
+      "bytes": 15588,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-g/narr-waypoint-yangquelong-end.mp3",
+      "bytes": 25812,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-g/guide-t-yangquelong-base.mp3",
+      "bytes": 232308,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-g/dlg-yangquelong-1.mp3",
+      "bytes": 160452,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-g/narr-waypoint-yangquelong-b2.mp3",
+      "bytes": 109620,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-g/dlg-yangquelong-2.mp3",
+      "bytes": 70452,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-g/narr-waypoint-yangquelong-b3.mp3",
+      "bytes": 94500,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-g/narr-waypoint-yangquelong.mp3",
+      "bytes": 96516,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-g/guide-t-yangquelong-deep.mp3",
+      "bytes": 178740,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-f/dlg-xieqiqu-1.mp3",
+      "bytes": 61812,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-f/dlg-xieqiqu-3.mp3",
+      "bytes": 73476,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-f/dlg-xieqiqu-2.mp3",
+      "bytes": 77796,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-f/dlg-xieqiqu-6.mp3",
+      "bytes": 42228,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-f/dlg-xieqiqu-5.mp3",
+      "bytes": 51156,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-f/dlg-xieqiqu-4.mp3",
+      "bytes": 53460,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-f/guide-t-xieqiqu-base.mp3",
+      "bytes": 222228,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-f/guide-t-xieqiqu-deep.mp3",
+      "bytes": 303012,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-h/guide-t-fangwaiguan-deep.mp3",
+      "bytes": 266868,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-h/dlg-fangwaiguan-1.mp3",
+      "bytes": 105588,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-h/dlg-fangwaiguan-2.mp3",
+      "bytes": 99396,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    },
+    {
+      "path": "voice-h/guide-t-fangwaiguan-base.mp3",
+      "bytes": 260244,
+      "reason": "旧导览/对话/废弃支线录音，唯一v3页面与manifest均无引用"
+    }
+  ],
+  "retainedRuntime": [
+    "app.js",
+    "app.wxss",
+    "assets/cover.jpg",
+    "assets/fig/letter-teacher.jpg",
+    "assets/fig/rongfei.jpg",
+    "assets/sl/sl00-ganzhi.jpg",
+    "assets/sl/sl01-dpm-catalog.png",
+    "assets/sl/sl02-jin-yufeng-1980.jpg",
+    "assets/sl/sl03-ohlmer-1873.jpg",
+    "assets/sl/sl07-huanghuazhen.jpg",
+    "assets/sl/sl11-zhuting-north.jpg",
+    "assets/sl/sl13-xihai-earth.jpg",
+    "assets/sl/sl17-hugo.jpg",
+    "pages/index/index.js",
+    "pages/index/index.json",
+    "pages/index/index.wxml",
+    "pages/index/index.wxss",
+    "plate21/module/adapters/local-adapter.js",
+    "plate21/module/assets/NOTICE.md",
+    "plate21/module/assets/img/IMG-RUNTIME-DETAIL-BEAST.jpg",
+    "plate21/module/assets/img/IMG-RUNTIME-DETAIL-DOME.jpg",
+    "plate21/module/assets/img/IMG-RUNTIME-DETAIL-LOTUS.jpg",
+    "plate21/module/assets/img/IMG-RUNTIME-DETAIL-SWAN.jpg",
+    "plate21/module/assets/img/IMG-RUNTIME-PATTERN-BASKET.jpg",
+    "plate21/module/assets/img/IMG-RUNTIME-PATTERN-SCROLL.jpg",
+    "plate21/module/assets/img/IMG-RUNTIME-PATTERN-SHELL.jpg",
+    "plate21/module/assets/img/IMG-RUNTIME-PATTERN-WANZI.jpg",
+    "plate21/module/assets/img/icons/ic-play-ink.png",
+    "plate21/module/assets/licenses/CC0-1.0.txt",
+    "plate21/module/assets/licenses/ISC-Lucide-1.28.0.txt",
+    "plate21/module/assets/licenses/ISC-PaperCSS-v1.9.2.txt",
+    "plate21/module/assets/licenses/MIT-AnimeJS-v4.5.0.txt",
+    "plate21/module/assets/licenses/MIT-YangMann-Paper-21d1d43.txt",
+    "plate21/module/assets/licenses/OFL-LXGW-WenKai-v1.522-characters.txt",
+    "plate21/module/assets/licenses/OFL-LXGW-WenKai-v1.522.txt",
+    "plate21/module/assets/licenses/PROJECT-AI-ASSET-AUTHORIZATION-2026-08-11.txt",
+    "plate21/module/assets/third-party-lock.json",
+    "plate21/module/audio/cue.js",
+    "plate21/module/audio/v3-manifest.js",
+    "plate21/module/capabilities/map/nav-model.js",
+    "plate21/module/capabilities/nfc/launch.js",
+    "plate21/module/capabilities/nfc/listen.js",
+    "plate21/module/components/audio-clip/audio-clip.js",
+    "plate21/module/components/audio-clip/audio-clip.json",
+    "plate21/module/components/audio-clip/audio-clip.wxml",
+    "plate21/module/components/audio-clip/audio-clip.wxss",
+    "plate21/module/components/water-clock/assets/close.jpg",
+    "plate21/module/components/water-clock/assets/paint.jpg",
+    "plate21/module/components/water-clock/assets/water.wav",
+    "plate21/module/components/water-clock/assets/wide.jpg",
+    "plate21/module/components/water-clock/renderer.js",
+    "plate21/module/components/water-clock/water-clock.js",
+    "plate21/module/components/water-clock/water-clock.json",
+    "plate21/module/components/water-clock/water-clock.wxml",
+    "plate21/module/components/water-clock/water-clock.wxss",
+    "plate21/module/contracts/adapter-api.js",
+    "plate21/module/flow/contract.js",
+    "plate21/module/flow/engine.js",
+    "plate21/module/flow/glossary.js",
+    "plate21/module/flow/pages.js",
+    "plate21/module/flow/props.js",
+    "plate21/module/flow/screen.js",
+    "plate21/module/host/bridge.js",
+    "plate21/module/host/resources.js",
+    "plate21/module/pages/report/report.js",
+    "plate21/module/pages/report/report.json",
+    "plate21/module/pages/report/report.wxml",
+    "plate21/module/pages/report/report.wxss",
+    "plate21/module/pages/walk/walk.js",
+    "plate21/module/pages/walk/walk.json",
+    "plate21/module/pages/walk/walk.wxml",
+    "plate21/module/pages/walk/walk.wxss",
+    "plate21/module/play/index.js",
+    "plate21/module/play/water-clock.js",
+    "plate21/module/progress/build.js",
+    "plate21/module/store/session.js",
+    "plate21/module/utils/audio-bus.js",
+    "plate21/module/utils/audio-settings.js",
+    "plate21/module/utils/audio-src.js",
+    "plate21/module/utils/game-entry.js",
+    "plate21/module/utils/photo-pipeline.js",
+    "plate21/module/utils/photo-records.js",
+    "plate21/module/utils/report-renderer.js",
+    "plate21/module/utils/sl-cards.js",
+    "plate21/module/utils/voice-pkg-map.js",
+    "voice-a/pages/hold/hold.js",
+    "voice-a/pages/hold/hold.json",
+    "voice-a/pages/hold/hold.wxml",
+    "voice-a/pages/hold/hold.wxss",
+    "voice-b/pages/hold/hold.js",
+    "voice-b/pages/hold/hold.json",
+    "voice-b/pages/hold/hold.wxml",
+    "voice-b/pages/hold/hold.wxss",
+    "voice-c/pages/hold/hold.js",
+    "voice-c/pages/hold/hold.json",
+    "voice-c/pages/hold/hold.wxml",
+    "voice-c/pages/hold/hold.wxss",
+    "voice-d/pages/hold/hold.js",
+    "voice-d/pages/hold/hold.json",
+    "voice-d/pages/hold/hold.wxml",
+    "voice-d/pages/hold/hold.wxss",
+    "voice-e/pages/hold/hold.js",
+    "voice-e/pages/hold/hold.json",
+    "voice-e/pages/hold/hold.wxml",
+    "voice-e/pages/hold/hold.wxss",
+    "voice-f/pages/hold/hold.js",
+    "voice-f/pages/hold/hold.json",
+    "voice-f/pages/hold/hold.wxml",
+    "voice-f/pages/hold/hold.wxss",
+    "voice-g/pages/hold/hold.js",
+    "voice-g/pages/hold/hold.json",
+    "voice-g/pages/hold/hold.wxml",
+    "voice-g/pages/hold/hold.wxss",
+    "voice-h/pages/hold/hold.js",
+    "voice-h/pages/hold/hold.json",
+    "voice-h/pages/hold/hold.wxml",
+    "voice-h/pages/hold/hold.wxss",
+    "voice-i/pages/hold/hold.js",
+    "voice-i/pages/hold/hold.json",
+    "voice-i/pages/hold/hold.wxml",
+    "voice-i/pages/hold/hold.wxss",
+    "voice-j/pages/hold/hold.js",
+    "voice-j/pages/hold/hold.json",
+    "voice-j/pages/hold/hold.wxml",
+    "voice-j/pages/hold/hold.wxss",
+    "voice-k/pages/hold/hold.js",
+    "voice-k/pages/hold/hold.json",
+    "voice-k/pages/hold/hold.wxml",
+    "voice-k/pages/hold/hold.wxss",
+    "voice-l/pages/hold/hold.js",
+    "voice-l/pages/hold/hold.json",
+    "voice-l/pages/hold/hold.wxml",
+    "voice-l/pages/hold/hold.wxss",
+    "voice-m/pages/hold/hold.js",
+    "voice-m/pages/hold/hold.json",
+    "voice-m/pages/hold/hold.wxml",
+    "voice-m/pages/hold/hold.wxss"
+  ],
+  "restoredDuringVerification": [
+    {
+      "path": "plate21/module/utils/session-date.js",
+      "bytes": 1454,
+      "reason": "已注册页面及其递归引用中无消费者；旧实现已由统一v3流程替代"
+    }
+  ]
+}

@@ -1,7 +1,0 @@
-{
-  "navigationStyle": "custom",
-  "usingComponents": {
-    "nav-back": "../../components/nav-back/nav-back"
-  },
-  "disableScroll": true
-}

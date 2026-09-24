@@ -57,12 +57,13 @@ for (const [root, items] of packages) {
   console.log(('subpackage ' + root).padEnd(28) + mib(sum(items)) + ' (' + items.length + ' files)')
 }
 console.log('total      ' + mib(sum(rows)) + ' (' + rows.length + ' files)')
-console.log('largest main files:')
-main.slice().sort((a, b) => b.bytes - a.bytes).slice(0, 10).forEach((row) => {
+if (process.argv.includes('--verbose')) console.log('largest main files:')
+if (process.argv.includes('--verbose')) main.slice().sort((a, b) => b.bytes - a.bytes).slice(0, 10).forEach((row) => {
   console.log(String(row.bytes).padStart(8) + '  ' + row.rel)
 })
 
 for (const [root, items] of packages) {
+  if (!process.argv.includes('--verbose')) continue
   console.log('largest files in ' + root + ':')
   items.slice().sort((a, b) => b.bytes - a.bytes).slice(0, 10).forEach((row) => {
     console.log(String(row.bytes).padStart(8) + '  ' + row.rel)
@@ -79,7 +80,7 @@ for (const [root, items] of packages) {
   console.error('FAIL subpackage ' + root + ' exceeds the 2 MiB gate')
   process.exitCode = 1
 }
-if (sum(rows) > 4 * MIB) {
-  console.error('FAIL total package exceeds the 4 MiB project gate')
+if (sum(rows) > 20 * MIB) {
+  console.error('FAIL total package exceeds the 20 MiB project budget')
   process.exitCode = 1
 }

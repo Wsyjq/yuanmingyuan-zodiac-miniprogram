@@ -117,6 +117,7 @@ function stroke(ctx, points, close) {
 }
 function drawPlate(ctx, x, y, w, h) {
   ctx.save(); ctx.translate(x, y); ctx.scale(w / 600, h / 260)
+  ctx.beginPath(); ctx.rect(0, 0, 600, 260); ctx.clip()
   ctx.fillStyle = '#e9ddc5'; ctx.fillRect(0, 0, 600, 260)
   ctx.strokeStyle = 'rgba(86,71,48,.14)'; ctx.lineWidth = 0.65
   for (let i = -200; i < 850; i += 13) stroke(ctx, [[i, 0], [i - 140, 260]])

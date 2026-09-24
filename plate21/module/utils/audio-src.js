@@ -11,6 +11,13 @@ Object.keys(bundled).forEach(function (id) {
   if (match) pathPackages[src] = match[1]
 })
 
+Object.keys(manifest.entries).forEach(function (id) {
+  manifest.entries[id].files.forEach(function (src) {
+    const match = src.match(/^\/(voice-[a-z]+)\//)
+    if (match) pathPackages[src] = match[1]
+  })
+})
+
 function bundledClips(id) {
   if (!id || typeof id !== 'string') return []
   const entry = Object.prototype.hasOwnProperty.call(manifest.entries, id) ? manifest.entries[id] : null

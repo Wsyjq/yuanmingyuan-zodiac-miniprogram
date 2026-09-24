@@ -17,7 +17,8 @@ test('session date formats one locked key consistently', () => {
   assert.equal(sessionDate.formatArchiveDate('20260811'), '2026.08.11')
 })
 
-test('date key uses local calendar fields from the supplied timestamp', () => {
-  const timestamp = new Date(2026, 7, 11, 23, 59, 30).getTime()
+test('date key uses Beijing calendar even when the device timezone differs', () => {
+  const timestamp = Date.parse('2026-08-11T15:59:30Z')
   assert.equal(sessionDate.dateKeyFromTimestamp(timestamp), '20260811')
+  assert.equal(sessionDate.dateKeyFromTimestamp(timestamp + 60000), '20260812')
 })

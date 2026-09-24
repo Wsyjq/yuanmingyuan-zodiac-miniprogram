@@ -1,9 +1,0 @@
-<view
-  class="task-banner {{visible ? 'show' : ''}}"
-  style="top: {{statusBarHeight + 44}}px"
->
-  <view class="task-kicker">行 动</view>
-  <image wx:if="{{iconSrc}}" class="icon-img" src="{{iconSrc}}" mode="aspectFit" />
-  <view wx:else class="icon">{{icon}}</view>
-  <view class="text">{{text}}</view>
-</view>

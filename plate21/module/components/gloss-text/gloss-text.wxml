@@ -1,1 +1,0 @@
-<text class="gloss-text"><block wx:for="{{parts}}" wx:for-item="seg" wx:key="index"><text wx:if="{{seg.g}}" class="gt-link" data-g="{{seg.g}}" catchtap="onSeg">{{seg.t}}</text><text wx:else>{{seg.t}}</text></block></text>

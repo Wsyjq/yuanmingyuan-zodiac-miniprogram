@@ -103,6 +103,7 @@ function pageHarness(options) {
     getArchive(id){return id===old.sessionId?clone(old):null},
     async getLetterState(id){calls.push(['letterState',id]);return {available:true}},
     async openLetter(id){calls.push(['openLetter',id]);if(opts.lockLetter){const e=new Error('locked');e.code='LETTER_LOCKED';throw e}return clone(target(id))},
+    async requestReminder(id){calls.push(['reminder',id]);return opts.reminderAck||{accepted:false,status:'failed'}},
     async saveMedia(input){calls.push(['media',input]);return opts.failMedia?{status:'failed'}:{status:'local',localPath:'/saved/new.jpg'}},
     async saveRecord(input,id){
       calls.push(['saveRecord',clone(input),id]);const item=clone(input),s=target(id)
@@ -133,6 +134,7 @@ function pageHarness(options) {
     require(name){
       if(name.includes('store/session'))return api
       if(name.includes('game-entry'))return {async init(input){calls.push(['entry',input]);return api.getSnapshot()}}
+      if(name.includes('host/bridge'))return {available(name){return name==='requestReminder'&&!!opts.reminderSupported}}
       if(name.includes('photo-pipeline'))return {async normalizePhoto(p){return {path:p,width:800,height:600,withinBudget:true}}}
       return ownRequire(name)
     }
@@ -233,4 +235,19 @@ test('letter opens through the session gate before navigation, including late ar
   const locked=pageHarness({lockLetter:true});await locked.page.onLoad({sessionId:'old-run'});await locked.page.onOpenLetter()
   assert.equal(locked.redirects.length,0);assert.ok(locked.page.data.letterMessage.includes('尚未开放'))
   assert.equal(locked.page.data.letterOpening,false)
+})
+
+test('reminder needs host capability and an explicit accepted acknowledgement', async function () {
+  const absent=pageHarness();await absent.page.onLoad({sessionId:'old-run'});await absent.page.onRequestReminder()
+  assert.equal(absent.page.data.reminderSupported,false)
+  assert.equal(absent.calls.filter(c=>c[0]==='reminder').length,0)
+  for(const ack of [{accepted:true,status:'accepted'},{accepted:false,status:'declined'},{status:'accepted'}]){
+    const h=pageHarness({reminderSupported:true,reminderAck:ack});await h.page.onLoad({sessionId:'old-run'})
+    await h.page.onRequestReminder()
+    assert.equal(h.page.data.reminderSupported,true)
+    assert.equal(h.page.data.reminderAccepted,ack.accepted===true)
+    assert.equal(h.page.data.reminderRequesting,false)
+    assert.equal(h.calls.find(c=>c[0]==='reminder')[1],'old-run')
+    assert.equal(h.page.data.reminderMessage.includes('已受理'),ack.accepted===true)
+  }
 })

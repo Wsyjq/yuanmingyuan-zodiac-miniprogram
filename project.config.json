@@ -1,5 +1,5 @@
 {
-  "description": "西洋楼铜版图·第二十一图 —— 1.2.3 plate21-clean",
+  "description": "第廿一图 v3 · 官方宿主游戏模块",
   "appid": "wxa284707129230b80",
   "compileType": "miniprogram",
   "libVersion": "2.30.0",
@@ -9,7 +9,7 @@
     "es6": true,
     "postcss": true,
     "minified": true,
-    "urlCheck": false,
+    "urlCheck": true,
     "minifyWXML": true,
     "compileWorklet": false,
     "uglifyFileName": false,
@@ -45,256 +45,16 @@
         "type": "folder"
       },
       {
-        "value": "preview",
-        "type": "folder"
-      },
-      {
-        "value": "定稿",
-        "type": "folder"
-      },
-      {
-        "value": "assets/host/entry-screen.png",
-        "type": "file"
-      },
-      {
-        "value": "assets/host/entry-hero.jpg",
-        "type": "file"
-      },
-      {
-        "value": "showcase",
-        "type": "folder"
-      },
-      {
-        "value": "showcase-demos",
-        "type": "folder"
-      },
-      {
         "value": "tools",
         "type": "folder"
       },
       {
-        "value": "h5",
+        "value": "reference",
         "type": "folder"
       },
       {
-        "value": "plate21/module/pages/ending",
+        "value": "plate21/module/assets/licenses",
         "type": "folder"
-      },
-      {
-        "value": ".zcode",
-        "type": "folder"
-      },
-      {
-        "value": ".playwright-cli",
-        "type": "folder"
-      },
-      {
-        "value": "plate21/module/assets/fonts",
-        "type": "folder"
-      },
-      {
-        "value": "plate21/module/vendor",
-        "type": "folder"
-      },
-      {
-        "value": "plate21/module/utils/anime.js",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-P-WANZI.png",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S2C1.png",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S2C2.png",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S2C3.png",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S2C4.png",
-        "type": "file"
-      },
-      {
-        "value": "assets/host/IMG-F06.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-F06.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-M01.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-P-WANZI.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-P02.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S2A.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S2B.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S2C1.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S2C2.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S2C3.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S2C4.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S4B1.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S4B3.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S4B4.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/img-c01.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-ENVELOPE-FRONT.png",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-ENVELOPE-BACK.png",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-P01.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-R01.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-R02.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S1A.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S1B.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S2A2.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S2C.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S3A.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S3C.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S3D1.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S3D2.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S3D3.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S3D4.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S3D5.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S3D6.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S3E1.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S3E2.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S3E3.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S3E4.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S3E5.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S3E6.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S4A.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S4B2.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-S5A.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-V01.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/IMG-V02.jpg",
-        "type": "file"
-      },
-      {
-        "value": "plate21/module/assets/img/stickers/st-paper-texture-01.jpg",
-        "type": "file"
       },
       {
         "value": "AGENTS.md",
@@ -302,10 +62,6 @@
       },
       {
         "value": "README.md",
-        "type": "file"
-      },
-      {
-        "value": "plate21/DEV_NOTES.md",
         "type": "file"
       },
       {
@@ -317,19 +73,23 @@
         "type": "file"
       },
       {
+        "value": "plate21/DEV_NOTES.md",
+        "type": "file"
+      },
+      {
         "value": "plate21/module/assets/third-party-lock.json",
         "type": "file"
       },
       {
-        "value": "拾迹创游-项目介绍.pdf",
+        "value": "plate21/module/assets/NOTICE.md",
         "type": "file"
       },
       {
-        "value": "拾迹创游-项目介绍.html",
+        "value": ".gitignore",
         "type": "file"
       },
       {
-        "value": "拾迹创游-项目介绍-方格纸版.html",
+        "value": ".gitattributes",
         "type": "file"
       },
       {
@@ -337,40 +97,84 @@
         "type": "file"
       },
       {
-        "value": "bgm",
-        "type": "folder"
-      },
-      {
-        "value": "audio",
-        "type": "folder"
-      },
-      {
-        "value": ".projectmem",
-        "type": "folder"
-      },
-      {
-        "value": ".grok",
-        "type": "folder"
-      },
-      {
-        "value": ".mor",
-        "type": "folder"
-      },
-      {
-        "value": "CLAUDE.md",
+        "value": "voice-b/narr-h6.mp3",
         "type": "file"
       },
       {
-        "value": "ps-debug.log",
+        "value": "voice-c/narr-fn1.mp3",
         "type": "file"
       },
       {
-        "value": "mor.poc.browser.py",
+        "value": "voice-c/narr-fn2.mp3",
         "type": "file"
       },
       {
-        "value": "mor.poc.config.js",
+        "value": "voice-c/narr-fn3.mp3",
         "type": "file"
+      },
+      {
+        "value": "voice-d/narr-hy2.mp3",
+        "type": "file"
+      },
+      {
+        "value": "voice-d/narr-hy3.mp3",
+        "type": "file"
+      },
+      {
+        "value": "voice-e/narr-hg1.mp3",
+        "type": "file"
+      },
+      {
+        "value": "voice-g/narr-ds2.mp3",
+        "type": "file"
+      },
+      {
+        "value": "voice-h/narr-f2.mp3",
+        "type": "file"
+      },
+      {
+        "value": "voice-i/narr-xs2.mp3",
+        "type": "file"
+      },
+      {
+        "value": "voice-k/narr-lt1.mp3",
+        "type": "file"
+      },
+      {
+        "value": "voice-k/narr-lt4.mp3",
+        "type": "file"
+      },
+      {
+        "value": "voice-l/narr-lt5.mp3",
+        "type": "file"
+      },
+      {
+        "value": "voice-l/narr-lt6.mp3",
+        "type": "file"
+      },
+      {
+        "value": "voice-l/narr-lt7.mp3",
+        "type": "file"
+      },
+      {
+        "value": "voice-l/narr-lt8.mp3",
+        "type": "file"
+      },
+      {
+        "value": "voice-c",
+        "type": "folder"
+      },
+      {
+        "value": "voice-e",
+        "type": "folder"
+      },
+      {
+        "value": "voice-j",
+        "type": "folder"
+      },
+      {
+        "value": "voice-l",
+        "type": "folder"
       }
     ],
     "include": []

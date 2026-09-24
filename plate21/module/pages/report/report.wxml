@@ -68,6 +68,8 @@
       <view class="section-title">{{letterAvailable ? '来信已可启封' : '一封稍后来到的信'}}</view>
       <view class="letter-message">{{letterChecking ? '正在确认来信状态……' : letterMessage}}</view>
       <button class="report-button" bindtap="onOpenLetter" disabled="{{letterOpening || letterChecking}}">{{letterOpening ? '正在启封…' : (letterAvailable ? '阅读来信' : '检查来信')}}</button>
+      <button wx:if="{{reminderSupported && !letterAvailable}}" class="report-button reminder-button" bindtap="onRequestReminder" disabled="{{reminderRequesting || reminderAccepted}}">{{reminderRequesting ? '请求中…' : (reminderAccepted ? '提醒请求已受理' : '申请来信提醒')}}</button>
+      <view wx:if="{{reminderMessage}}" class="small-note reminder-message">{{reminderMessage}}</view>
     </view>
     <button class="report-button return-button" bindtap="onReturn" disabled="{{busy || saving}}">返回考察</button>
   </block>

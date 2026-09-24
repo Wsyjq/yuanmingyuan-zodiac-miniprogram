@@ -101,9 +101,8 @@ test('P1/P2/P3 keep stable ids and exact prologue pack groups; xs uses real voic
   assert.equal(audioSrc.packageForSrc('/voice-i/unknown.mp3'), '')
 })
 
-test('unknown, retired, and known mismatched narration are silent; optional history remains mapped', () => {
-  for (const id of ['narr-missing', 'narr-s2-reveal', 'narr-s3-water', 'narr-h6', 'narr-ds2', 'narr-hg1', 'narr-fn1', 'narr-lt7']) assert.equal(audioSrc.clip(id), '', id)
-  assert.match(audioSrc.clip('guide-s2-base'), /^\/voice-c\//)
+test('unknown, retired, removed legacy guides, and known mismatched narration are silent', () => {
+  for (const id of ['narr-missing', 'narr-s2-reveal', 'narr-s3-water', 'narr-h6', 'narr-ds2', 'narr-hg1', 'narr-fn1', 'narr-lt7', 'narr-lt8', 'guide-s2-base', 'dlg-s1', 'narr-yangquelong']) assert.equal(audioSrc.clip(id), '', id)
   assert.equal(audioSrc.bgm('track.mp3'), '')
   assert.equal(audioSrc.bgm('http://127.0.0.1:8787/test.mp3'), '')
   assert.equal(audioSrc.bgm('https://127.0.0.1/test.mp3'), '')
@@ -130,6 +129,8 @@ test('answer recordings cannot play before a solved or assisted puzzle, includin
   assert.equal(cue.clipsFor(page, { puzzles: { 'quiz-lantern': 'solved' } }).length, 1)
   const flip = { id: 'H3', kind: 'puzzle', narrId: 'narr-h3', playId: 'prop-flip' }
   assert.deepEqual(cue.clipsFor(flip, { puzzles: {} }), [])
+  assert.deepEqual(cue.clipsFor(flip, { puzzles: { 'prop-flip': 'skipped' } }), [])
+  assert.equal(cue.clipsFor(flip, { puzzles: {}, uiByPage: { H3: { flipped: true } } }).length, 1)
   assert.equal(cue.clipsFor(flip, { puzzles: { 'prop-flip': 'assisted' } }).length, 1)
 })
 

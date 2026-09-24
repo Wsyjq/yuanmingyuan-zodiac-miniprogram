@@ -11,13 +11,13 @@
     <text wx:for="{{beasts}}" wx:key="name" class="beast-dot {{item.lit ? 'lit' : ''}} {{item.spraying ? 'spraying' : ''}}">{{item.name}}</text>
   </view>
   <view class="clock-controls">
-    <button wx:if="{{stage === 'observe' || stage === 'reveal' || completed}}" class="clock-button primary" bindtap="onPlay" disabled="{{loading && !staticMode}}">{{staticMode ? (completed ? '回看图景' : '看下一幅') : (playing ? '暂停' : (time === 0 ? '开始观察' : '继续观看'))}}</button>
+    <button wx:if="{{stage === 'observe' || stage === 'reveal' || completed}}" class="clock-button primary {{loading && !staticMode ? 'is-disabled' : ''}}" bindtap="onPlay" disabled="{{loading && !staticMode}}">{{staticMode ? (completed ? '回看图景' : '看下一幅') : (playing ? '暂停' : (time === 0 ? '开始观察' : '继续观看'))}}</button>
     <button wx:if="{{!staticMode}}" class="clock-button" bindtap="onStatic">静态讲解</button>
     <button wx:if="{{!staticMode}}" class="clock-button" bindtap="onSound">水声：{{sound ? '开' : '关'}}</button>
   </view>
   <view wx:if="{{!staticMode || completed}}" class="clock-progress">
-    <slider min="0" max="{{seekMax}}" step="0.1" value="{{time}}" disabled="{{stage === 'reveal'}}" activeColor="#843c2d" backgroundColor="#c9b99b" block-size="18" bindchange="onSeek" aria-label="动画进度" />
-    <text>{{elapsed}} / 40 秒</text>
+    <slider class="clock-progress-slider" min="0" max="{{seekMax}}" step="0.1" value="{{time}}" disabled="{{stage === 'reveal'}}" activeColor="#843c2d" backgroundColor="#c9b99b" block-size="18" bindchange="onSeek" aria-label="动画进度" />
+    <text class="clock-progress-time">{{elapsed}} / 40 秒</text>
   </view>
   <view wx:if="{{stage === 'hour14'}}" class="clock-question">
     <view class="question-title">第一问：14 时，应该由谁喷水？</view>
@@ -31,7 +31,7 @@
     <view class="question-title">第二问：预测正午，会出现怎样的喷水景象？</view>
     <view class="question-help">14 时属于未时，由羊首报时。先记录你的预测，再观看揭晓。</view>
     <button wx:for="{{predictions}}" wx:key="id" class="clock-button answer {{prediction === item.id ? 'selected' : ''}}" data-id="{{item.id}}" bindtap="onPredict" aria-pressed="{{prediction === item.id}}">{{item.label}}</button>
-    <button class="clock-button primary confirm" bindtap="onConfirm" disabled="{{!prediction}}">确认预测 · 揭晓正午</button>
+    <button class="clock-button primary confirm {{!prediction ? 'is-disabled' : ''}}" bindtap="onConfirm" disabled="{{!prediction}}">确认预测 · 揭晓正午</button>
   </view>
   <view wx:if="{{completed}}" class="clock-result">
     <view class="question-title">水力钟的秘密，已揭晓</view>

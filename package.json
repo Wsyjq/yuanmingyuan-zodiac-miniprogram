@@ -1,17 +1,13 @@
 {
-  "name": "plate21-miniprogram",
+  "name": "plate21-game-module",
+  "version": "3.0.0",
   "private": true,
   "scripts": {
-    "check": "npm --prefix test run check",
-    "check:licenses": "npm --prefix test run check:licenses",
-    "check:commercial": "npm --prefix test run check:commercial",
-    "audit:images": "npm --prefix test run --silent audit:images",
-    "build:runtime-images": "npm --prefix test run build:runtime-images",
-    "package:report": "npm --prefix test run report:package",
-    "start:h5": "python -m http.server 8876 --bind 127.0.0.1",
-    "test": "npm --prefix test run test:all",
-    "test:visual": "node test/harness/render.js",
-    "test:h5": "python test/h5-e2e.py",
-    "test:unit": "npm --prefix test test"
+    "test": "npm run check && npm run test:unit && npm run check:resources && npm run package:report",
+    "test:unit": "node --test test/v3-*.test.js test/photo-pipeline.test.js test/session-date.test.js",
+    "check": "node test/check-project.js",
+    "check:resources": "node test/check-third-party.js",
+    "package:report": "node test/package-report.js",
+    "resources:refresh": "node tools/build-resource-manifest.js"
   }
 }

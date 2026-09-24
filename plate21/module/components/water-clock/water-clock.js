@@ -3,6 +3,7 @@
 const model = require('../../play/water-clock')
 const renderer = require('./renderer')
 const audioBus = require('../../utils/audio-bus')
+const resources = require('../../host/resources')
 const ASSETS = '/plate21/module/components/water-clock/assets/'
 
 Component({
@@ -92,7 +93,7 @@ Component({
                 const image = canvas.createImage()
                 image.onload = function () { resolve({ key: key, image: image }) }
                 image.onerror = reject
-                image.src = ASSETS + key + '.jpg'
+                image.src = resources.resolve(ASSETS + key + '.jpg', 'asset')
               })
             })).then(function (loaded) {
               if (!self._alive || self._state.staticMode || self._canvas !== canvas) return
@@ -135,7 +136,7 @@ Component({
         seekMax: state.completed ? model.DURATION : model.QUESTION_AT,
         wrong14: state.attempts14 > 0 && !state.answer14,
         prediction: state.prediction, clock: scene.clock, label: scene.label,
-        caption: scene.caption, shotSrc: ASSETS + scene.shot + '.jpg',
+        caption: scene.caption, shotSrc: resources.resolve(ASSETS + scene.shot + '.jpg', 'asset'),
         beasts: model.NAMES.map(function (name, i) {
           return { name: name, lit: scene.lit.indexOf(i) >= 0, spraying: scene.active.indexOf(i) >= 0 }
         })
@@ -237,7 +238,7 @@ Component({
         try {
           const self = this
           this._audio = wx.createInnerAudioContext()
-          this._audio.src = ASSETS + 'water.wav'
+          this._audio.src = resources.resolve(ASSETS + 'water.wav', 'audio')
           this._audio.loop = true
           this._audio.volume = 0.25
           this._audio.onError(function () {

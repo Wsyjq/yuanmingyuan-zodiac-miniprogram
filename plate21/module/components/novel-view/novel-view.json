@@ -1,8 +1,0 @@
-{
-  "component": true,
-  "styleIsolation": "apply-shared",
-  "usingComponents": {
-    "archive-illustration": "../../../../components/archive-illustration/archive-illustration",
-    "gloss-text": "../gloss-text/gloss-text"
-  }
-}

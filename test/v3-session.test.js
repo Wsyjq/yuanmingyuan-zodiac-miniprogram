@@ -387,3 +387,72 @@ test('caller-supplied media IDs on private records cannot bypass a real upload r
   assert.equal((await session.submitContribution(record.id, { consent: true })).status, 'unavailable')
   assert.equal(submitted, false)
 })
+test('host letter adjudication takes precedence and needs an explicit trusted boolean', async () => {
+  let state = { available: true }
+  const { session } = harness({ mode: 'host', userId: 'alice', host: {
+    async getLetterState() { return state },
+    async getTrustedTime() { return { now: Date.UTC(2026, 8, 24), trusted: true } }
+  } })
+  await reachFinale(session); await session.sign('甲')
+  assert.equal((await session.getLetterState()).reason, 'invalid_letter_ack')
+  state = { trusted: true, available: false, reason: 'server_not_due' }
+  assert.equal((await session.getLetterState()).reason, 'server_not_due')
+  state = { trusted: true, available: true, unlockAt: 123 }
+  assert.equal((await session.getLetterState()).timeSource, 'host_state')
+  state = null
+  assert.equal((await session.getLetterState()).available, true)
+  await session.openLetter()
+  assert.equal(session.getRun().pageId, 'LT1')
+})
+test('optional reminder never reports accepted without the host acknowledgement and preserves archive date', async () => {
+  let ack = null
+  const { session } = harness({ host: { async requestReminder() { return ack } } })
+  await session.init({})
+  assert.equal((await session.requestReminder()).reason, 'not_completed')
+  await reachFinale(session); await session.sign('甲')
+  const archivedId = session.getSnapshot().sessionId
+  const completedAt = session.getRun().completedAt
+  await session.restart()
+  assert.equal((await session.requestReminder(archivedId)).status, 'failed')
+  ack = { accepted: false, reason: 'user_denied' }
+  assert.equal((await session.requestReminder(archivedId)).status, 'declined')
+  ack = { accepted: true, reminderId: 'reminder-1' }
+  const result = await session.requestReminder(archivedId)
+  assert.equal(result.accepted, true)
+  assert.equal(result.status, 'accepted')
+  assert.equal(session.getArchive(archivedId).run.completedAt, completedAt)
+  assert.equal(session.getArchive(archivedId).run.reminder.reminderId, 'reminder-1')
+  assert.equal(session.getRun().reminder, undefined)
+})
+test('late edition response after an account switch cannot write into the new user snapshot', async () => {
+  let release, started
+  const began = new Promise(resolve => { started = resolve })
+  const { session, values } = harness({ mode: 'host', userId: 'alice', host: {
+    claimEdition() { started(); return new Promise(resolve => { release = resolve }) }
+  } })
+  await reachFinale(session); await session.sign('甲')
+  const pending = session.claimEdition()
+  await began
+  session.configure({ mode: 'host', userId: 'bob' }); await session.init({})
+  const rejected = assert.rejects(pending, { code: 'CONTEXT_CHANGED' })
+  release({ scope: 'global', editionNo: 42 }); await rejected
+  assert.equal(session.getSnapshot().userId, 'bob')
+  assert.equal(session.getRun().editionNo, null)
+  assert.equal(values['plate21_v3_session:host:bob'].snapshot.userId, 'bob')
+})
+test('late trusted-time response after an account switch cannot sign the new user game', async () => {
+  let release, started
+  const began = new Promise(resolve => { started = resolve })
+  const { session, values } = harness({ mode: 'host', userId: 'alice', host: {
+    getTrustedTime() { started(); return new Promise(resolve => { release = resolve }) }
+  } })
+  await reachFinale(session)
+  const pending = session.sign('Alice')
+  await began
+  session.configure({ mode: 'host', userId: 'bob' }); await session.init({})
+  const rejected = assert.rejects(pending, { code: 'CONTEXT_CHANGED' })
+  release({ trusted: true, now: Date.UTC(2026, 8, 24) }); await rejected
+  assert.equal(session.getSnapshot().userId, 'bob')
+  assert.equal(session.getRun().completedAt, null)
+  assert.equal(values['plate21_v3_session:host:alice'].snapshot.run.completedAt, null)
+})

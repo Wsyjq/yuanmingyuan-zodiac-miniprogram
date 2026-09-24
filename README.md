@@ -1,66 +1,51 @@
-# 西洋楼铜版图·第二十一图
+# 第廿一图 · 圆明园游戏模块 v3
 
-原生微信小程序。玩家沿四站完成实体道具与屏幕谜题，收集八张日期卡，在终章生成并保存「第二十一图」考察报告。
-
-正式 AppID：`wxa284707129230b80`。代码权威 = `main`（tag `v1.0.0` @ `d2412df`，其后含全站 UI 审查修复）。
-
-## 当前状态
-
-- 生产路由 **32** 条：主包宿主首页 1 + `plate21/module` 分包 21（含门票 `gate` 与留言簿 `board`）+ `voice-a`…`voice-j` 音频分包 10（占位页 `pages/hold`）。权威清单在 `app.json`。
-- 主线：门票 → 封面 → 序章 → 入口拆信 → 黄花阵 → 海晏堂 → 大水法（120s 静默三选一）→ 雨果 → 终章 → 考察报告。
-- 顺路散页全部可选（谐奇趣 / 养雀笼 / 方外观 / 蓄水楼 / 观水法 / 线法画），不玩不影响主线。
-- 通关当天可在报告页写留言；次日起首页回访卡进入留言簿与次日之信。
-- 完成态锚定 `flags.experienceCompletedAt`。八位密码、页面日期、报告日期统一取 `SessionSnapshot.sessionDate`。
-- 人声按站进入 `voice-*` 分包（平台硬限：单包 ≤2MB）。BGM 不入库、不进包，本地在 `/bgm/`，发布走 CDN（`AUDIO_BASE`）。
-- `ending` 源码保留，不注册生产路由。独立 `h5/` 是内部历史镜像，不是发布端。
-
-## 工程结构
-
-```text
-app.json                         主包与分包路由（32）
-pages/index/                     演示宿主首页
-components/archive-illustration  档案图形降级组件
-plate21/module/pages/            业务页面（gate / 主线 / 散页 / letter / board）
-plate21/module/capabilities/     导引地图、语音导览等页面能力
-plate21/module/store/            Session、恢复点、outbox、成就
-plate21/module/adapters/         当前本地 Adapter
-plate21/module/contracts/        Host Adapter 契约 v1.4.0
-voice-a … voice-j                人声音频分包
-docs/                            规格、史料、接入与合规
-test/                            Node 测试、H5 台架和门禁脚本
-```
+以 main `16af879` 为基线的微信原生小程序游戏分包。保留纸质档案视觉，统一八站考察、照片/文字记录、个人作品及次日来信。无购票、支付或独立后端。
 
 ## 本地运行
 
-1. 用微信开发者工具打开工程根目录 `D:/kc/ymy`。
-2. `project.config.json` 已配置正式 AppID，可本地编译与预览；上传和真机验收需在该 AppID 的合法域名与体验权限下进行。
-3. 测试依赖未安装时运行 `npm --prefix test ci`。
+在微信开发者工具导入此目录，使用项目 AppID 或有权限的测试 AppID，编译 `pages/index/index`。点击“开始 / 继续考察”。默认是设备本地演示；讲述默认关闭，可在考察簿开启。
 
-常用命令：
+- 唯一游戏页面：`plate21/module/pages/walk/walk`、`plate21/module/pages/report/report`。
+- 43 个剧情节点由 `flow/pages.js` 驱动，不等于 43 个微信页面。
+- 八站：西洋楼入口 → 谐奇趣 → 黄花阵 → 方外观 → 海晏堂 → 蓄水楼 → 大水法 → 雨果雕像。
+- 地图为路线顺序示意，需结合实体地图与现场标识；没有采用旧仓库未经实测的精确坐标。
+- 可跳过题目或站点。照片至少一张即可，也可文字替代。只有完成署名才记为完成考察。
+- 来信在完成日的下一个北京时间自然日开放；晚到仍可阅读。重新考察保留已完成作品。
 
-```powershell
+## 开发和验证
+
+Node.js 22+，自动测试无需安装运行时依赖：
+
+```sh
 npm test
-npm run build:runtime-images
-npm run test:visual
-npm run audit:images
-npm run check:commercial
+npm run test:unit
 npm run package:report
-node test/check-font.js
 ```
 
-`npm test` = 静态检查 + 许可证 + 单元测试（`test/package.json` 里显式列出的 `*.test.js`）+ 包体报告。
+`npm test` 同时检查 JS/JSON、页面/组件引用、WXML、行为测试、资源哈希与发布预算。更新素材后，核实来源与音频映射，再执行 `npm run resources:refresh`。
 
-## 文档从哪读
+工程预算为主包和每个分包各 2 MiB、总计 20 MiB；它是项目自设检查，不替代微信开发者工具的最终代码包分析。源文件统计及真实工具检查见 [验收记录](docs/v3-validation.md)。
 
-主线有两份设计稿。改某一页的字、图或玩法，或改模块怎么接，先看这两份：
+## 官方小程序接入
 
-- `docs/飞书分页接入方案.md` 定每一页的字、图和玩法。
-- `docs/主线模块技术设计.md` 定支付、流程、地图、音频、玩法、进程怎么接。
+保留游戏分包及 app.json 中实际注册的音频包，同时复制 `assets/sl/`、`assets/fig/`（史料与剧情插图）。`assets/cover.jpg` 和 `pages/index/` 仅供独立演示。
 
-1. 工程事实：本文档、`plate21/DEV_NOTES.md`
-2. 宿主接入（外发）：`docs/完全接入对接文档-V2.2.md`
-3. 剧情结构：`docs/剧情总设定-入口世界观-点位串联-支线系统.md`；讲述层：`docs/剧情可用稿-人物对话版-V2.3.md`；骨架走一遍：`docs/剧情可用稿-主线走一遍.md`
-4. 史料（已入库）：`docs/西洋楼遗址核对详本.md` 与同目录信源/出处/内涵三件套。二十幅对照与 SL 卡是本地工作稿，不进仓库。
-5. 合规：`docs/compliance/`、`docs/留言板-后台管理与合规要求.md`
+官方 App 提供 `plate21Host` 配置后，跳转游戏入口即可；主包不要直接 require 分包 JS。游戏样式和存档独立命名；无硬编码回官方首页、无云开发旁路。
 
-`docs/宿主接入方案.md`、`docs/小程序维护优化技术方案-v2.0.md`、`docs/剧情玩法验收矩阵-rev2174.md` 和 `v1.x` 规格只作历史快照，不作为当前路由、契约或测试基线。
+详见 [宿主接口与示例](docs/v3-host-integration.md)。宿主可提供身份、存档、可信来信状态、资源地址、媒体上传、接力、提醒、全局版号和退出/完成通知。未接上传和投稿服务时，只保留真实私人草稿，不显示“审核中”。
+
+## 维护资料
+
+- [已批准范围与实现记录](docs/v3-implementation-log.md)
+- [删除与保留文件清单](docs/v3-cleanup-manifest.json)
+- [音频迁移、冻结与补录清单](docs/v3-audio-migration.md)
+- [当前资源与发布状态](docs/v3-resource-manifest.json)
+- [测试及人工验收边界](docs/v3-validation.md)
+- [v3 剧本原始提取](docs/feishu-import/第廿一图v3-docx.txt)
+
+37 个新版录音已迁入并核对静态映射；尚未逐条听审。16 个存在稿件/演出提示风险的录音已冻结、排除发布，页面仍能通过文字完成。需根据迁移清单完成听审/补录，之后才能放行相应音源。
+
+海晏堂原型位于 `reference/海晏堂水力钟-谜题互动版.html`，不进入发布包。实际玩法使用原生 WXML + Canvas 2D。
+
+本地 Git 基线标签 `baseline/main-20260924`，整合分支 `feat/game-module-v3`。原始资料和删除内容可从 Git 找回；未推送远程。

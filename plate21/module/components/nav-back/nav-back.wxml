@@ -1,5 +1,0 @@
-<view class="nav-back" style="top: {{statusBarHeight + 8}}px" bindtap="onTap">
-  <view class="circle">
-    <image class="arrow" src="/plate21/module/assets/img/icons/ic-arrow-left-ink.png" mode="aspectFit" />
-  </view>
-</view>

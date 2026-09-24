@@ -1,0 +1,440 @@
+{
+  "schemaVersion": 1,
+  "description": "当前真实资源及工程发布排除状态；校验哈希不等同重新认定素材版权。原许可证、授权证据和来源说明保留。",
+  "resources": [
+    {
+      "path": "assets/cover.jpg",
+      "bytes": 29000,
+      "sha256": "ccdb7872cd0da0bc94e9ec071062e3cd344a6608768c4364852dde7dcf65a569",
+      "published": true,
+      "source": "main 的 IMG-RUNTIME-COVER.jpg 原样移至演示主包；原授权证据保留"
+    },
+    {
+      "path": "assets/fig/letter-teacher.jpg",
+      "bytes": 39843,
+      "sha256": "4520393119d19c2160ba5ea280a22f483fbcf3afdca055619126532780a5d1a6",
+      "published": true,
+      "source": "main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json"
+    },
+    {
+      "path": "assets/fig/rongfei.jpg",
+      "bytes": 55891,
+      "sha256": "75efc9423adcf85c13beaadeeb44c281b1a90ddce72177ee5c2cd9ea7470ab9e",
+      "published": true,
+      "source": "main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json"
+    },
+    {
+      "path": "assets/sl/sl00-ganzhi.jpg",
+      "bytes": 96894,
+      "sha256": "c09940e70a01a68485823ae37409871171d02eef83e12354b4c3be265f52f90b",
+      "published": true,
+      "source": "main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json"
+    },
+    {
+      "path": "assets/sl/sl01-dpm-catalog.png",
+      "bytes": 16703,
+      "sha256": "144abfc12c2718e84719ea0a4a914e113e1e3792002482bb8f0764d78e19f40b",
+      "published": true,
+      "source": "main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json"
+    },
+    {
+      "path": "assets/sl/sl02-jin-yufeng-1980.jpg",
+      "bytes": 38841,
+      "sha256": "870f4550c7a8a41b4ab9415cedaa275e1d9e63ac974c14127e9b084db0422149",
+      "published": true,
+      "source": "main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json"
+    },
+    {
+      "path": "assets/sl/sl03-ohlmer-1873.jpg",
+      "bytes": 116145,
+      "sha256": "ccbf241e86f0fce91b5b163e02f973286c24eb162ac7916cd502b544b30c4e7b",
+      "published": true,
+      "source": "main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json"
+    },
+    {
+      "path": "assets/sl/sl07-huanghuazhen.jpg",
+      "bytes": 56077,
+      "sha256": "e1dfa5deba940ed987053dc341576061d60d217b089427ec5f7524099beec96a",
+      "published": true,
+      "source": "main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json"
+    },
+    {
+      "path": "assets/sl/sl11-zhuting-north.jpg",
+      "bytes": 86815,
+      "sha256": "5e360d9fbbdfc6fe5ac9d59f125c0a74a1b4b7d8397054899b2868b7102465f0",
+      "published": true,
+      "source": "main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json"
+    },
+    {
+      "path": "assets/sl/sl13-xihai-earth.jpg",
+      "bytes": 62809,
+      "sha256": "7238bcd62c75827e0b6e00513499ee1ec37492b1da418143ab39cbceee5c7234",
+      "published": true,
+      "source": "main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json"
+    },
+    {
+      "path": "assets/sl/sl17-hugo.jpg",
+      "bytes": 135159,
+      "sha256": "f133fe39d66eae9bf710f7b42a7b94fd3922f59ba6ad58147896b95511150ebc",
+      "published": true,
+      "source": "main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json"
+    },
+    {
+      "path": "plate21/module/assets/img/icons/ic-play-ink.png",
+      "bytes": 1709,
+      "sha256": "a4a96aa1a47a90f9ac4d44ee20da43f87342acad599c246b963e9457e31f4c3c",
+      "published": true,
+      "source": "main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-RUNTIME-DETAIL-BEAST.jpg",
+      "bytes": 26660,
+      "sha256": "17fecd2bd6497fc67718628d91181cf4aa6dce54bcc0be90433b3a619798ef7d",
+      "published": true,
+      "source": "main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-RUNTIME-DETAIL-DOME.jpg",
+      "bytes": 19328,
+      "sha256": "7cf59bbc0f8b95b9038c54ec008d5df0ce68432c7e7b2423f5d6aa3cdb2b993b",
+      "published": true,
+      "source": "main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-RUNTIME-DETAIL-LOTUS.jpg",
+      "bytes": 21407,
+      "sha256": "f68d723a190c268523c4b156c404f58f5e5054b724dee2c3b39e73d7ef6f79fc",
+      "published": true,
+      "source": "main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-RUNTIME-DETAIL-SWAN.jpg",
+      "bytes": 27035,
+      "sha256": "e18072affe5b776ceaafcf1c17a9ecd2d8f8cd332c957880c8a3dc6c1d0378f2",
+      "published": true,
+      "source": "main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-RUNTIME-PATTERN-BASKET.jpg",
+      "bytes": 19040,
+      "sha256": "f39440d2ac9b0ae731901ca87220fbb54af9f24f58b52c9756e6e9ddb9d6a9ba",
+      "published": true,
+      "source": "main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-RUNTIME-PATTERN-SCROLL.jpg",
+      "bytes": 24200,
+      "sha256": "9a8dd1dd1b607a2888772547d654d043eb619f23b0a01aa906c29b859ff03981",
+      "published": true,
+      "source": "main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-RUNTIME-PATTERN-SHELL.jpg",
+      "bytes": 26439,
+      "sha256": "48e104cac04fac2ab9b1c5ee481945a4c2710b48f933301fce01a801d12fa816",
+      "published": true,
+      "source": "main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json"
+    },
+    {
+      "path": "plate21/module/assets/img/IMG-RUNTIME-PATTERN-WANZI.jpg",
+      "bytes": 34333,
+      "sha256": "56e028eb6fcdb74cbebb70c19c9f3a0fcc76566a3660376390a4e42d28edb9f3",
+      "published": true,
+      "source": "main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json"
+    },
+    {
+      "path": "plate21/module/components/water-clock/assets/close.jpg",
+      "bytes": 119018,
+      "sha256": "053f010e1698d904e8b5c2db75c148ebfafc6205a7e6d0a5de067c823d65728f",
+      "published": true,
+      "source": "用户提供的海晏堂HTML原型；图像提取压缩，水声由代码合成，见 reference/海晏堂水力钟-谜题互动版.html"
+    },
+    {
+      "path": "plate21/module/components/water-clock/assets/paint.jpg",
+      "bytes": 87367,
+      "sha256": "cd9879a499bf8b2db3491a52d286c2a5c9fe36ca31a50f33e0e8aaf333015459",
+      "published": true,
+      "source": "用户提供的海晏堂HTML原型；图像提取压缩，水声由代码合成，见 reference/海晏堂水力钟-谜题互动版.html"
+    },
+    {
+      "path": "plate21/module/components/water-clock/assets/water.wav",
+      "bytes": 44144,
+      "sha256": "380bfcdecc5e68e47d36b343e51556710dffe37e36844be52fef582e3ee015ab",
+      "published": true,
+      "source": "用户提供的海晏堂HTML原型；图像提取压缩，水声由代码合成，见 reference/海晏堂水力钟-谜题互动版.html"
+    },
+    {
+      "path": "plate21/module/components/water-clock/assets/wide.jpg",
+      "bytes": 186272,
+      "sha256": "023d865f5c0a5b4c8dd5308db5b599ef7d673204fca1e2ccf41234fe1446ea48",
+      "published": true,
+      "source": "用户提供的海晏堂HTML原型；图像提取压缩，水声由代码合成，见 reference/海晏堂水力钟-谜题互动版.html"
+    },
+    {
+      "path": "voice-a/dj06-xieqiqu-soundscape-30s-v2.mp3",
+      "bytes": 721650,
+      "sha256": "f9a410f383446c2ce42b55bc7f4466cc497b6f31250411cb83e0fa9f1b3334c7",
+      "published": true,
+      "source": "main 原版 DJ-06 声景"
+    },
+    {
+      "path": "voice-a/narr-prologue-p01.mp3",
+      "bytes": 243108,
+      "sha256": "e3599f6ac52a6d490179d6953fc415e36fa3e377985d7dcae6f7f53f68bd84d1",
+      "published": true,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-a/narr-prologue-p02.mp3",
+      "bytes": 154980,
+      "sha256": "189f83c1741294fd27ab63c0a78c180d7ea0324632d5d5235dbe8fbe2ae3e187",
+      "published": true,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-a/narr-prologue-p03.mp3",
+      "bytes": 277668,
+      "sha256": "34975147543d568cac0e9c1604a8b49c8229707e8ec3ed0765850c1c58b87d86",
+      "published": true,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-a/narr-prologue-p04.mp3",
+      "bytes": 335124,
+      "sha256": "b4f272ad0a64bf6d14d2e0023268c4f0f72e5d0cfd6869fa51c24b41e52840b8",
+      "published": true,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-a/narr-prologue-p05.mp3",
+      "bytes": 195156,
+      "sha256": "1966ba57bd478ccb676aca79a213221f3e27b2d4937bf94a1e749c54792c9048",
+      "published": true,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-b/narr-h1.mp3",
+      "bytes": 111924,
+      "sha256": "c24d6cebab37c9f70bbe96cd1f5292421d3e2afbf389e7085e51a678b25283be",
+      "published": true,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-b/narr-h2.mp3",
+      "bytes": 91044,
+      "sha256": "a573f6f4a74c93e07e0011e8409599c748492cc67b248c44894965795cf52de9",
+      "published": true,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-b/narr-h3.mp3",
+      "bytes": 110196,
+      "sha256": "e160ca05877ea4b5f34473fe6febbe8fa0e58e6ba9894895bc9bc5d273e5dc0e",
+      "published": true,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-b/narr-h4.mp3",
+      "bytes": 41796,
+      "sha256": "41f7ad00c3a428ac97abf880f9a24bff4b3d9e4a0c2e490bb261cf9f2e68fab8",
+      "published": true,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-b/narr-h5.mp3",
+      "bytes": 63972,
+      "sha256": "bb6c1521997b2f36315fd7d673cd89b3fae241fa8b69fe62f765692dead05e52",
+      "published": true,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-b/narr-h6.mp3",
+      "bytes": 304596,
+      "sha256": "4370b33e5a4b188d8097df2b1cb2dda46459fecbf13e146ca8e30f6a9c002e1b",
+      "published": false,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-c/narr-fn1.mp3",
+      "bytes": 289908,
+      "sha256": "efdd026e4c2ac5b3f79bd4e4fe8280850ef29421e9726bb4f4469ea454be26f0",
+      "published": false,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-c/narr-fn2.mp3",
+      "bytes": 254484,
+      "sha256": "0c9fda549d8c670a4f7956cfb8311494de710619bcbe602d5bc9a06d29e6d0dc",
+      "published": false,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-c/narr-fn3.mp3",
+      "bytes": 340308,
+      "sha256": "97c62922a66e9500b5416a4f44c48f64c33050f9f51dc336746aefc9660bb919",
+      "published": false,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-d/narr-hy1.mp3",
+      "bytes": 134676,
+      "sha256": "bdf8fa2aaa16a4da2d4b1edd6ed2238a85e6f1ff13d5d6018d04eaa5d4a032af",
+      "published": true,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-d/narr-hy2.mp3",
+      "bytes": 136116,
+      "sha256": "efe9cef1c036e971da7c4c4d0c702fd7b607060c6f5fc921556c8f744a620293",
+      "published": false,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-d/narr-hy3.mp3",
+      "bytes": 145620,
+      "sha256": "a53f990f6425631ab866b1a38330ac6e3492a15a5e5774d999c2a28e16164a12",
+      "published": false,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-e/narr-hg1.mp3",
+      "bytes": 189252,
+      "sha256": "0d66e7cdd96a8c2a81317e1437f5acb650e106802127a97c4c8920663110beab",
+      "published": false,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-f/narr-x1.mp3",
+      "bytes": 152100,
+      "sha256": "bd067556191d7a35d0be339e834b25c260af5afb474134f93297d2338d06970a",
+      "published": true,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-f/narr-x2.mp3",
+      "bytes": 78084,
+      "sha256": "739f8a5b9e8ac7aa531ce08a276ae49d3ae7cd0e5ded9b45904c26a084d0c048",
+      "published": true,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-f/narr-x3.mp3",
+      "bytes": 44244,
+      "sha256": "c7eccb3188689243c19b7fb53834e2b9edf39f4a1b7f0667889b91ae63e3b351",
+      "published": true,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-g/narr-ds1.mp3",
+      "bytes": 320004,
+      "sha256": "fb1b6b618097ac7c95b59284d06860a618cfc0ad7d8edcbf396f0c946f55016f",
+      "published": true,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-g/narr-ds2.mp3",
+      "bytes": 324900,
+      "sha256": "751ae41ba84571aa58f52bc0dc215f16242042949859e5bbd0198ee5ac485087",
+      "published": false,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-h/narr-f1.mp3",
+      "bytes": 183492,
+      "sha256": "670146e94592711e68a841e3e0add256221862ab6c2e37fdee1c16aaf1ab2779",
+      "published": true,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-h/narr-f2.mp3",
+      "bytes": 310644,
+      "sha256": "5e4deecc78c99f5d0d9c06dbbf24761a0b850c8cd3542fc1ec554154ea6c9c00",
+      "published": false,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-i/narr-xs1.mp3",
+      "bytes": 165780,
+      "sha256": "dfac95196bff887d72c78632d2a792d6a8040e260775bbbb17ce013ecf4a64f4",
+      "published": true,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-i/narr-xs2.mp3",
+      "bytes": 166788,
+      "sha256": "6b22cb9a8ee49d7c0b5a875b8f695de8bf748db5cd29a82d17dba49d10098b2c",
+      "published": false,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-k/narr-lt1.mp3",
+      "bytes": 45252,
+      "sha256": "8c2b9f6a14a2cfafd88f9b4931b9ee066e974a12ffb4bd93c012d6d16514cc2f",
+      "published": false,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-k/narr-lt2.mp3",
+      "bytes": 442260,
+      "sha256": "f0a1f4f4a0469250326f335c16f8e0c5931693e31d9ccd891d556fee12690a33",
+      "published": true,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-k/narr-lt3.mp3",
+      "bytes": 336132,
+      "sha256": "04cb074f58bfd501b5a46168b5ae7087939653beda3ef432d30f853bcfb9b5da",
+      "published": true,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-k/narr-lt4.mp3",
+      "bytes": 382212,
+      "sha256": "53f2228cf92c4ae5f8e10ec68c0348573778d431252fd6358ca77848e1410f28",
+      "published": false,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-l/narr-lt5.mp3",
+      "bytes": 370980,
+      "sha256": "3d31722e5d9658e3c251426d3d3280b96ad1b9885528375a6f899f2a1493a320",
+      "published": false,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-l/narr-lt6.mp3",
+      "bytes": 238356,
+      "sha256": "7d9638c7dfe4f2220778fcaf8163c065a98f0b628ae5d7e4ad4353d405ef1b76",
+      "published": false,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-l/narr-lt7.mp3",
+      "bytes": 208980,
+      "sha256": "ccc5da7117c29990a890dff5a4274f1be4a19920ef2a2a012dafa73dac6a6cbd",
+      "published": false,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-l/narr-lt8.mp3",
+      "bytes": 228132,
+      "sha256": "2bc402c413d8fb6914e2c3657025efbea82b880403de6f404e4c5fa98849ea66",
+      "published": false,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-m/narr-e1.mp3",
+      "bytes": 133092,
+      "sha256": "b27c21a5bad9b6ea8d9e5c4bf836cc99b73226c0a11e0fbbe5440d26249b7880",
+      "published": true,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-m/narr-e2.mp3",
+      "bytes": 225828,
+      "sha256": "42efac5202d823933013b02f822c6aed551e363900e771b7944e6238fa3c89c2",
+      "published": true,
+      "source": "feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md"
+    }
+  ]
+}

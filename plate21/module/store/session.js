@@ -20,8 +20,10 @@ function now() {
 }
 function id(prefix) { return prefix + '-' + now().toString(36) + '-' + Math.random().toString(36).slice(2, 11) }
 function fault(code, message) { const err = new Error(message); err.code = code; return err }
+function assertGeneration(token) { if (token !== generation) throw fault('CONTEXT_CHANGED', '宿主身份已变化，请重新进入') }
 function unavailable(reason) { return { available: false, status: 'unavailable', reason: reason } }
 function failure(err) {
+  if (err && err.code === 'CONTEXT_CHANGED') throw err
   return { available: false, status: err && err.code === 'CAPABILITY_UNAVAILABLE' ? 'unavailable' : 'failed',
     reason: err && (err.code || err.message) || 'request_failed' }
 }
@@ -141,9 +143,11 @@ function flushInternal() {
 }
 function scheduleFlush() { flushInternal().catch(function () {}) }
 async function initialize(entry) {
+  const token = generation
   const config = bridge.getConfig()
   let context = { userId: config.userId || (config.mode === 'demo' ? 'demo' : '') }
   if (bridge.available('getContext')) context = Object.assign(context, await bridge.call('getContext', entry || {}))
+  assertGeneration(token)
   if (!context.userId) throw fault('IDENTITY_REQUIRED', '正式接入需要宿主提供稳定用户标识')
   const userId = String(context.userId)
   storageKey = local.keyFor(config.mode, userId)
@@ -161,7 +165,7 @@ async function initialize(entry) {
         }
       }
     } catch (err) {
-      if (err.code === 'INVALID_SNAPSHOT' || err.code === 'INVALID_ARCHIVE') throw err
+      if (err.code === 'INVALID_SNAPSHOT' || err.code === 'INVALID_ARCHIVE' || err.code === 'CONTEXT_CHANGED') throw err
       if (cached) cached.snapshot.sync = { status: 'failed', reason: err.code || 'load_failed' }
     }
   }
@@ -171,24 +175,29 @@ async function initialize(entry) {
   write(cached)
   if (config.mode === 'host' && !cached.pending.length && cached.snapshot.sync.status !== 'synced') persist(clone(cached.snapshot))
   await flushInternal()
+  assertGeneration(token)
   emit({ name: 'module_enter', source: entry && entry.source || '' })
   return getSnapshot()
 }
 function init(entry) {
   if (initPromise) return initPromise
   if (envelope) return Promise.resolve(getSnapshot())
-  initPromise = initialize(entry).then(function (result) { initPromise = null; return result }, function (err) { initPromise = null; throw err })
+  const token = generation
+  initPromise = initialize(entry).then(function (result) { if (token === generation) initPromise = null; return result }, function (err) { if (token === generation) initPromise = null; throw err })
   return initPromise
 }
 function serial(work) {
-  const task = chain.then(function () { return init({}) }).then(work)
+  const token = generation
+  const check = function () { assertGeneration(token) }
+  const task = chain.then(function () { check(); return init({}) }).then(function () { check(); return work(check) })
   chain = task.catch(function () {})
   return task
 }
 function mutate(change) {
-  return serial(async function () {
+  return serial(async function (check) {
     const next = clone(envelope.snapshot)
     const result = await change(next)
+    check()
     persist(next)
     // 本地持久化就是 UI 写入的等待边界；慢宿主同步在独立单队列中补发。
     scheduleFlush()
@@ -198,7 +207,7 @@ function mutate(change) {
 function flush() { return serial(flushInternal) }
 const FLOW_FIELDS = ['pageId', 'resumePageId', 'visited', 'unlocked', 'completedPages', 'sites', 'puzzles', 'letterRead']
 const LIFE_FIELDS = ['name', 'signedAt', 'completedAt', 'completedTimeSource', 'completedUtcOffsetMinutes',
-  'editionNo', 'letterAvailable', 'letterOpenedAt', 'letterVerifiedAt', 'letterAnchorAt', 'letterAnchorSource', 'completionNotice']
+  'editionNo', 'letterAvailable', 'letterOpenedAt', 'letterVerifiedAt', 'letterAnchorAt', 'letterAnchorSource', 'completionNotice', 'reminder']
 function checkedRun(before, incoming) {
   if (!incoming || !pages.byId[incoming.pageId]) throw fault('UNKNOWN_PAGE', '未知页面')
   let navigation = engine.cloneRun(before)
@@ -281,7 +290,7 @@ async function trustedTime(sessionId) {
   } catch (err) { return failure(err) }
 }
 function nextDay(at, offset) { return (Math.floor((at + offset * 60000) / 86400000) + 1) * 86400000 - offset * 60000 }
-async function notifyCompleteInternal() {
+async function notifyCompleteInternal(check) {
   const snap = envelope.snapshot
   if (!snap.run.completedAt) return
   if (snap.run.completionNotice && snap.run.completionNotice.status === 'acknowledged') return
@@ -294,14 +303,16 @@ async function notifyCompleteInternal() {
       result = ack && ack.acknowledged === true ? { status: 'acknowledged' } : { status: 'failed', reason: 'invalid_completion_ack' }
     } catch (err) { result = failure(err) }
   }
+  check()
   const next = clone(envelope.snapshot); next.run.completionNotice = result; persist(next)
 }
 function sign(name) {
-  return serial(async function () {
+  return serial(async function (check) {
     let snap = clone(envelope.snapshot)
     if (snap.run.pageId !== 'FN4' || snap.run.resumePageId !== 'FN4') throw fault('NOT_AT_FINALE', '请在署名页完成考察')
     if (!snap.run.completedAt) {
       const time = await trustedTime(snap.sessionId)
+      check()
       snap.run.name = String(name || '').trim().slice(0, 40) || '无名氏'
       snap.run.signedAt = now()
       snap.run.completedAt = time.now || snap.run.signedAt
@@ -311,8 +322,9 @@ function sign(name) {
       persist(snap)
       emit({ name: 'module_completed', completedAt: snap.run.completedAt })
     }
-    await notifyCompleteInternal()
+    await notifyCompleteInternal(check)
     await flushInternal()
+    check()
     return getSnapshot()
   })
 }
@@ -325,13 +337,37 @@ function restart() {
   })
 }
 function getLetterState(sessionId) {
-  return serial(async function () {
+  return serial(async function (check) {
     const target = targetOf(envelope.snapshot, sessionId)
     if (!target.run.completedAt) return { available: false, reason: 'not_completed', timeSource: null, unlockAt: null }
     if (target.run.letterAvailable) return { available: true, reason: 'verified_cached',
       timeSource: target.run.letterTimeSource || target.run.completedTimeSource,
-      unlockAt: target.run.letterUnlockAt || nextDay(target.run.completedAt, target.run.completedUtcOffsetMinutes || 0) }
+      unlockAt: target.run.letterTimeSource === 'host_state' ? target.run.letterUnlockAt || null :
+        target.run.letterUnlockAt || nextDay(target.run.completedAt, target.run.completedUtcOffsetMinutes || 0) }
+    // 有正式的来信裁定接口时以它为准，不在拒绝/失败后改用设备时间兜底。
+    if (bridge.getConfig().mode === 'host' && bridge.available('getLetterState')) {
+      let state
+      try {
+        state = await bridge.call('getLetterState', { sessionId: target.sessionId, completedAt: target.run.completedAt,
+          completedTimeSource: target.run.completedTimeSource })
+      } catch (err) { return Object.assign(failure(err), { available: false, timeSource: null, unlockAt: null }) }
+      if (!state || state.trusted !== true || typeof state.available !== 'boolean') {
+        return { available: false, status: 'failed', reason: 'invalid_letter_ack', timeSource: null, unlockAt: null }
+      }
+      const unlockAt = Number.isFinite(state.unlockAt) ? state.unlockAt : null
+      if (state.available) {
+        const next = clone(envelope.snapshot)
+        const selected = targetOf(next, sessionId)
+        selected.run.letterAvailable = true; selected.run.letterTimeSource = 'host_state'
+        selected.run.letterUnlockAt = unlockAt; selected.run.letterVerifiedAt = state.now || now()
+        selected.run.unlocked.LT1 = true
+        persist(next); scheduleFlush()
+      }
+      return { available: state.available, reason: state.available ? 'available' : state.reason || 'not_due',
+        timeSource: 'host_state', unlockAt: unlockAt }
+    }
     const time = await trustedTime(target.sessionId)
+    check()
     if (!time.now) return Object.assign({}, time, { available: false, timeSource: null, unlockAt: null })
     // 离线完成没有可信完成日期：第一次取得宿主时间时确定起算日，不能用改设备时间提前放行。
     let completedAt = target.run.letterAnchorAt || target.run.completedAt
@@ -387,7 +423,7 @@ function updateContributionDraft(input, sessionId) {
   return saveRecord(Object.assign({}, input, { purpose: 'relay', status: 'draft' }), sessionId)
 }
 function deleteRecord(recordId, sessionId) {
-  return serial(async function () {
+  return serial(async function (check) {
     const snap = clone(envelope.snapshot)
     const target = targetOf(snap, sessionId)
     const index = target.records.findIndex(function (record) { return record.id === recordId })
@@ -401,6 +437,7 @@ function deleteRecord(recordId, sessionId) {
     }) }
     persist(snap)
     await flushInternal()
+    check()
     const all = [envelope.snapshot].concat(envelope.snapshot.archives)
     const referenced = filePath && all.some(function (item) { return item.records.some(function (r) { return r.filePath === filePath }) })
     if (filePath && !referenced && !/^https?:/.test(filePath)) {
@@ -566,9 +603,32 @@ function claimEdition() {
     return { status: 'available', editionNo: res.editionNo }
   })
 }
+function requestReminder(sessionId) {
+  return serial(async function () {
+    const target = targetOf(envelope.snapshot, sessionId)
+    if (!target.run.completedAt) return Object.assign(unavailable('not_completed'), { accepted: false })
+    if (target.run.reminder && target.run.reminder.accepted === true) return clone(target.run.reminder)
+    let result
+    if (!bridge.available('requestReminder')) result = Object.assign(unavailable('requestReminder'), { accepted: false })
+    else {
+      try {
+        const res = await bridge.call('requestReminder', { sessionId: target.sessionId, completedAt: target.run.completedAt })
+        if (res && res.accepted === true) result = { available: true, accepted: true, status: 'accepted', acceptedAt: now(), reminderId: res.reminderId || '' }
+        else if (res && res.accepted === false) result = { available: true, accepted: false, status: 'declined', reason: res.reason || 'declined' }
+        else result = { available: false, accepted: false, status: 'failed', reason: 'invalid_reminder_ack' }
+      } catch (err) { result = Object.assign(failure(err), { accepted: false }) }
+    }
+    const next = clone(envelope.snapshot)
+    targetOf(next, sessionId).run.reminder = result
+    persist(next); scheduleFlush()
+    return clone(result)
+  })
+}
 async function exit(reason) {
+  const token = generation
   await init({})
   await flush()
+  assertGeneration(token)
   const snap = getSnapshot()
   emit({ name: 'module_exit', reason: reason || 'back' })
   if (!bridge.available('exit')) return unavailable('exit')
@@ -594,7 +654,7 @@ function onEvent(listener) {
 module.exports = {
   configure, init, getSnapshot, getRun, getArchives, getArchive, saveRun, saveDraft, navigate, resume, completePage, skipPage,
   sign, restart, reset: restart, getLetterState, openLetter, saveRecord, updateContributionDraft, deleteRecord,
-  saveMedia, submitContribution, getContribution, withdrawContribution, listContributions, claimEdition, flush, exit,
+  saveMedia, submitContribution, getContribution, withdrawContribution, listContributions, claimEdition, requestReminder, flush, exit,
   setFlag, emit, onEvent,
   viewPuzzle: function (puzzle) { emit({ name: 'puzzle_viewed', puzzle: puzzle }) },
   attemptPuzzle: function (puzzle, attempt, result, inputMode) { emit({ name: 'puzzle_attempted', puzzle, attempt, result: result ? 'correct' : 'incorrect', inputMode }) },
