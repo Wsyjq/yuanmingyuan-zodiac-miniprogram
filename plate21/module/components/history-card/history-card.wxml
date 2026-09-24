@@ -1,10 +1,6 @@
 <view wx:if="{{visible}}" class="history-card-mask {{closing ? 'overlay-out' : ''}}" bindtap="onClose">
   <view class="history-card card-archive {{closing ? 'card-out' : ''}}" catchtap="noop">
     <!-- 巴洛克卷草角饰（极简弧角 + 菱形点） -->
-    <view class="corner tl"></view>
-    <view class="corner tr"></view>
-    <view class="corner bl"></view>
-    <view class="corner br"></view>
     <view class="hc-close" bindtap="onClose">×</view>
 
     <!-- 采风修订版：卡片右下角数字（主线：数字连成日期密码） -->
@@ -12,7 +8,7 @@
 
     <view class="hc-head">
       <view class="hc-kicker">ARCHIVE NOTE · 史料收录</view>
-      <view class="hatch-divider hc-head-line"></view>
+      <view class="rule hc-head-line"></view>
       <view class="hc-title serif">{{title}}</view>
     </view>
 

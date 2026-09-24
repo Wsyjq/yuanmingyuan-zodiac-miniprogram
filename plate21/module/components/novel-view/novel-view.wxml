@@ -28,7 +28,7 @@
       <view wx:if="{{pageIndex === 0}}" class="title-block">
         <view class="title-kicker">考察档案 · 被认真保存的记录</view>
         <view class="title serif">{{title}}</view>
-        <view class="title-rule"><text></text></view>
+        <view class="title-rule"><text class="tr-dot"></text></view>
       </view>
       <view wx:else class="continued-title">
         <text class="continued-no">{{pageLabel}}</text>
@@ -44,9 +44,8 @@
       <scroll-view class="page-body" scroll-y enhanced show-scrollbar="{{false}}">
         <block wx:for="{{currentPage}}" wx:key="index" wx:for-item="block">
           <view wx:if="{{block.image}}" class="photo-sheet">
-            <view class="photo-tape"></view>
             <archive-illustration wx:if="{{block.illustrationType}}" class="page-photo" type="{{block.illustrationType}}" label="{{block.caption}}" compact="{{true}}" style="display:block;" />
-            <image wx:elif="{{block.src}}" class="page-photo img-aged" src="{{block.src}}" mode="aspectFill" />
+            <image wx:elif="{{block.src}}" class="page-photo" src="{{block.src}}" mode="aspectFill" />
             <view wx:else class="photo-code">{{block.image}}</view>
             <view class="photo-caption">{{block.caption}}</view>
           </view>
@@ -66,7 +65,6 @@
         </block>
       </scroll-view>
 
-      <image class="leaf-botanical" src="/plate21/module/assets/img/stickers/st-botanical-02.png" mode="aspectFit" />
       <view class="leaf-footnote">
         <view class="footnote-line"></view>
         <text wx:if="{{gestureArmed}}" class="gesture-ready">{{gestureDirection === 'next' ? '松手，翻到下一页' : '松手，翻回上一页'}}</text>
@@ -91,7 +89,7 @@
       <view wx:if="{{turnPageLabel === '01'}}" class="title-block">
         <view class="title-kicker">考察档案 · 被认真保存的记录</view>
         <view class="title serif">{{title}}</view>
-        <view class="title-rule"><text></text></view>
+        <view class="title-rule"><text class="tr-dot"></text></view>
       </view>
       <view wx:else class="continued-title">
         <text class="continued-no">{{turnPageLabel}}</text>
@@ -105,9 +103,8 @@
       <view class="page-body turn-body">
         <block wx:for="{{turnPage}}" wx:key="index" wx:for-item="block">
           <view wx:if="{{block.image}}" class="photo-sheet">
-            <view class="photo-tape"></view>
             <archive-illustration wx:if="{{block.illustrationType}}" class="page-photo" type="{{block.illustrationType}}" label="{{block.caption}}" compact="{{true}}" style="display:block;" />
-            <image wx:elif="{{block.src}}" class="page-photo img-aged" src="{{block.src}}" mode="aspectFill" />
+            <image wx:elif="{{block.src}}" class="page-photo" src="{{block.src}}" mode="aspectFill" />
             <view wx:else class="photo-code">{{block.image}}</view>
             <view class="photo-caption">{{block.caption}}</view>
           </view>
@@ -124,7 +121,7 @@
   </view>
 
   <view class="reader-footer">
-    <button class="page-control prev-control {{pageIndex === 0 || turning ? 'disabled' : ''}}" disabled="{{pageIndex === 0 || turning}}" catchtap="onPrev">
+    <button class="narrative-copy {{index === turnLeadIndex ? 'lead-copy' : ''}}" disabled="{{pageIndex === 0 || turning}}" catchtap="onPrev">
       <text class="control-arrow">←</text><text>上一页</text>
     </button>
     <view class="reader-progress">

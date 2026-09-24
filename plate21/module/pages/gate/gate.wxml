@@ -1,27 +1,10 @@
-<view class="gate">
-  <view class="ticket">
-    <view class="corner tl"></view>
-    <view class="corner tr"></view>
-    <view class="corner bl"></view>
-    <view class="corner br"></view>
-    <view class="kicker">西洋楼铜版图</view>
-    <view class="title">第二十一图</view>
-    <view class="dash">
-      <view class="notch l"></view>
-      <view class="notch r"></view>
+<view class="page page-shell paper-grain gate-shell">
+  <view class="plateno gate-tag">No.TICKET</view>
+  <view class="gate-card plate">
+    <view class="gate-title serif">正在打开门票</view>
+    <view class="gate-note handnote">请稍候，正在把票根送到入口。</view>
+    <view class="gate-dots">
+      <text class="dot">·</text><text class="dot">·</text><text class="dot">·</text>
     </view>
-    <block wx:if="{{state !== 'unavailable'}}">
-      <view class="label">门票</view>
-      <view class="price">{{priceText}}</view>
-      <view class="note">不含景区门票</view>
-      <view class="pay {{purchasing ? 'busy' : ''}}" bindtap="onUnlock">
-        <image class="pay-bg" src="/plate21/module/assets/img/ui/btn-label-seal.png" mode="scaleToFill" />
-        <text class="pay-label">{{purchasing ? '正在支付……' : '支付'}}</text>
-      </view>
-    </block>
-    <block wx:else>
-      <view class="note">完整版暂未开放购买，可先返回。</view>
-    </block>
   </view>
-  <view class="back" bindtap="onBackHome">返回</view>
 </view>

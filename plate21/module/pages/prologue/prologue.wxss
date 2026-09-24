@@ -11,6 +11,10 @@
   flex-direction: column;
   padding-left: 52rpx;
 }
+.narr-bar {
+  flex-shrink: 0;
+  padding: 200rpx 28rpx 8rpx 0;
+}
 /* 交接面板里的路线图：档案卡纸底 + 细框，与 pack-sheet 同一语言 */
 .pack-map {
   margin: 4rpx 0 14rpx;

@@ -13,8 +13,6 @@
   z-index: 0;
   width: 100%;
   height: 100%;
-  mix-blend-mode: multiply;
-  filter: sepia(0.28) saturate(0.72) contrast(1.02);
 }
 .report-artwork .layer { position: absolute; opacity: 1; }
 .report-artwork .layer-l2 {

@@ -1,41 +1,42 @@
 <nav-back wx:if="{{!touring}}" />
 <page-overlays />
 <bgm-ambience />
-<view class="page page-shell paper-grain paper-real">
-  <view class="binder"></view>
+<view class="page page-shell task-shell paper-grain">
   <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
-  <view class="novel">
-    <view class="novel-p"><gloss-text parts="{{introParts}}" bind:glossary="onGlossary" /></view>
-  </view>
-  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
+    <view class="task-kicker">黄花阵 · 本题</view>
+    <view class="task-diary">
+      <view class="task-lead kaiti"><gloss-text parts="{{introParts}}" bind:glossary="onGlossary" /></view>
+      <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" autoplay="{{true}}" compact="{{true}}" icon="{{true}}" kind="voice" label="听这段" />
+    </view>
 
-  <view class="quiz" wx:if="{{!followup}}">
-    <view class="q-title serif">我不禁好奇，这迷宫的修建目的是</view>
-    <view class="opts">
-      <view
-        wx:for="{{options}}"
-        wx:key="key"
-        class="opt {{selected === item.key ? 'opt-sel' : ''}} {{revealed && item.key !== 'C' ? 'opt-wrong' : ''}}"
-        data-key="{{item.key}}"
-        bindtap="onSelect"
-        role="button"
-        aria-pressed="{{selected === item.key}}"
-      >
-        <text class="opt-key">{{item.key}}</text>
-        <text class="opt-text">{{item.text}}</text>
+    <view class="quiz task-exam" wx:if="{{!followup}}">
+      <view class="q-label">问</view>
+      <view class="q-title serif">我不禁好奇，这迷宫的修建目的是</view>
+      <view class="opts">
+        <view
+          wx:for="{{options}}"
+          wx:key="key"
+          class="opt {{selected === item.key ? 'opt-sel' : ''}} {{revealed && item.key !== 'C' ? 'opt-wrong' : ''}}"
+          data-key="{{item.key}}"
+          bindtap="onSelect"
+          role="button"
+          aria-pressed="{{selected === item.key}}"
+        >
+          <text class="opt-key">{{item.key}}</text>
+          <text class="opt-text">{{item.text}}</text>
+        </view>
       </view>
     </view>
-    <view wx:if="{{hint}}" class="hint">{{hint}}</view>
-    <view class="q-actions">
-      <button class="btn-seal confirm" bindtap="onConfirm" disabled="{{!selected || solved}}">提交</button>
-    </view>
-  </view>
 
-  <view class="followup" wx:if="{{followup}}">
-    <view class="novel-p">原来，这个黄花阵是皇帝用来观赏宫女在迷宫路径中奔跑嬉戏的。好嘛，这下不出门就有游乐场了！可是这又和“黄花”有什么关系呢？</view>
-    <button class="btn-seal" bindtap="onNext">继 续</button>
-  </view>
+    <view class="followup" wx:if="{{followup}}">
+      <view class="task-lead">原来，这个黄花阵是皇帝用来观赏宫女在迷宫路径中奔跑嬉戏的。好嘛，这下不出门就有游乐场了！可是这又和“黄花”有什么关系呢？</view>
+    </view>
   </scroll-view>
+  <view class="task-dock">
+    <view wx:if="{{hint && !followup}}" class="hint">{{hint}}</view>
+    <button wx:if="{{!followup}}" class="btn-seal" bindtap="onConfirm" disabled="{{!selected || solved}}">提交</button>
+    <button wx:else class="btn-seal" bindtap="onNext" disabled="{{advancing}}">{{advancing ? '正在前往……' : '继续'}}</button>
+  </view>
 </view>
 
 <history-card

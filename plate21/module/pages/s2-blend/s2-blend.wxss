@@ -1,24 +1,13 @@
 /* 第二站 · 谜题3 现场四图考察 */
-.page {
+.page { padding: 0; height: 100%; overflow: hidden; } /* task-shell */
+.page-old {
   height: 100%;
   overflow: hidden;
   box-sizing: border-box;
   padding: 0 30rpx 90rpx 60rpx;
 }
 
-.tag-no-fixed { position: absolute; top: 88rpx; right: 210rpx; }
-.page-tag-sticker {
-  position: absolute;
-  top: 84rpx;
-  right: 22rpx;
-  z-index: 9;
-  width: 140rpx;
-  height: 140rpx;
-  opacity: 0.72;
-  transform: rotate(7deg);
-  pointer-events: none;
-  filter: drop-shadow(0 2rpx 4rpx rgba(70, 56, 42, 0.18));
-}
+.plateno-fixed { position: absolute; top: 88rpx; right: 210rpx; }
 
 .title {
   padding-top: 130rpx;

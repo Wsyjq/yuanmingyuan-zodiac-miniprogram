@@ -113,7 +113,8 @@ function readJudgeConfig() {
   } catch (err) { /* 无 storage 时继续 */ }
   if (typeof wx !== 'undefined' && (!endpoint || !token)) {
     try {
-      const secrets = require('./judge-secrets')
+      let secrets = null
+try { secrets = (function(){ try { return require('./judge-secrets') } catch(e){ return null } })() } catch (e) { secrets = null }
       if (!endpoint) endpoint = String(secrets.endpoint || '').trim()
       if (!token) token = String(secrets.token || '').trim()
       if (secrets.model) model = String(secrets.model).trim()

@@ -5,5 +5,5 @@
     "coach-spot": "../../components/coach-spot/coach-spot",
     "play-guide": "../../components/play-guide/play-guide"
   },
-  "disableScroll": true
+  "disableScroll": false
 }

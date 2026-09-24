@@ -1,6 +1,6 @@
 {
   "pages": [
-    "pages/index/index"
+    "pages/ticket/ticket"
   ],
   "usingComponents": {
     "archive-illustration": "/components/archive-illustration/archive-illustration"

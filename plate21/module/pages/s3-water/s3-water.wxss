@@ -1,10 +1,10 @@
 page{background:var(--paper)}
-.page{height:100%;overflow:hidden;box-sizing:border-box;padding:calc(144rpx + env(safe-area-inset-top)) 44rpx 84rpx 60rpx;position:relative}
+.page{height:100%;overflow:hidden;box-sizing:border-box;padding:0;position:relative}
 .title{color:var(--patina);font-size:42rpx;font-weight:700;letter-spacing:4rpx}
-.tag-no-fixed{position:absolute;top: 88rpx; right: 210rpx}
+.plateno-fixed{position:absolute;top: 88rpx; right: 210rpx}
 .title-div{margin:20rpx 0 28rpx}
 .lead{font-size:32rpx;line-height:1.8;color:var(--ink);margin-bottom:36rpx}
-.prop-card{margin-top:56rpx;padding:56rpx 34rpx 26rpx}
+.prop-prompt{margin-top:56rpx}
 .prop-label{white-space:nowrap}
 .prop-title{color:var(--ink-deep);font-size:40rpx;font-weight:700;line-height:1.5}
 .care-note{font-size:26rpx;line-height:1.65;color:var(--cinnabar);padding:18rpx 20rpx;margin:14rpx 0;border-left:4rpx solid var(--cinnabar);background:rgba(244,237,220,.72)}

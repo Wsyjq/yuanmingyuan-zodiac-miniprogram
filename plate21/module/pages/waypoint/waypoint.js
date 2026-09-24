@@ -15,7 +15,9 @@ const SITES = {
     title: '谐奇趣',
     scored: true,
     audioStation: 't-xieqiqu',
-    narrClip: 'narr-waypoint-xieqiqu',
+    narrClip: 'narr-x1',
+    narrFollowup: 'narr-x2',
+    narrReveal: 'narr-x3',
     intro: '按照路线图走进入口，就来到了谐奇趣。我记得这是西洋楼景区建成的第一座欧式建筑，也是中国皇家园林史上首座西洋建筑。主楼前后都曾设有水法，这里还曾用于演奏中西音乐。怪不得叫“谐奇趣”，要是能听听当时的音乐就好了。',
     introParts: [
       { t: '按照路线图走进入口，就来到了' },
@@ -43,9 +45,14 @@ const SITES = {
     textPuzzle: {
       puzzleId: 'xq-next',
       prompt: '下一站要到哪里去呢？我一时没有了头绪。',
-      lead: '日记和信封会指引你第一站的方向',
+      lead: '日记和信封会指引你第一站的方向。',
+      steps: [
+        '翻开日记，看它把你往哪一站引。',
+        '再拿信封：封口处一半字，背面一半字。',
+        '两半拼起来，把站名写在下面。'
+      ],
       hints: ['信封的封口处和信的背面都有一半的字，拼接起来看一下！'],
-      placeholder: '下一站是哪里',
+      placeholder: '写下站名',
       answer: '黄花阵',
       solvedText: '原来线索在这里上！下一站的去处很明确了：黄花阵。'
     },
@@ -112,7 +119,7 @@ const SITES = {
         quotes: [],
         fadeCard: true,
         fadeImage: '/assets/fig/rongfei.jpg',
-        lines: [],
+        fadeName: '容妃',
         parts: [
           { t: '容妃', g: 'sl10' }
         ]
@@ -121,6 +128,8 @@ const SITES = {
         kicker: '对面',
         lines: [],
         image: '/plate21/module/assets/img/plate-zhuting.jpg',
+        imageNote: '竹亭北面 · 铜版画对照位',
+        action: '点开五竹亭【SL11】',
         parts: [
           { t: '方外观的对面便是“' },
           { t: '五竹亭', g: 'sl11' },
@@ -135,10 +144,7 @@ const SITES = {
         ]
       }
     ],
-    followup: [
-      '方外观的对面便是“五竹亭”',
-      '这里留下的故事很安静——一座礼拜的建筑，一组亭子，还有一些真假难辨的旧闻。'
-    ],
+
     motif: '这里留下的故事很安静——一座礼拜的建筑，一组亭子，还有一些真假难辨的旧闻。',
     next: '/plate21/module/pages/transit/transit?leg=fw-s3',
     nextLabel: '下一站：海晏堂',
@@ -265,7 +271,10 @@ const SITES = {
 // 主卡内术语与正文 gloss-text 关键词点开同一张小卡（gloss-host 行为），返回即回。
 function narrForSite(site, opts) {
   opts = opts || {}
-  if (!site || !site.narrClip) return ''
+  if (!site) return ''
+  if (opts.reveal && site.narrReveal) return audioSrc.clip(site.narrReveal)
+  if (opts.followup && site.narrFollowup) return audioSrc.clip(site.narrFollowup)
+  if (!site.narrClip) return ''
   if (site.scored) {
     return audioSrc.clip(opts.followup ? site.narrClip + '-followup' : site.narrClip)
   }
@@ -292,6 +301,16 @@ function narrForSite(site, opts) {
   return ''
 }
 
+function playNarr(pageInst, src) {
+  const apply = function () { pageInst.setData({ narrSrc: src || '' }) }
+  const pack = String(src || '').match(/^\/(voice-[a-z]+)\//)
+  if (!pack || typeof wx.loadSubpackage !== 'function') {
+    apply()
+    return
+  }
+  wx.loadSubpackage({ name: pack[1], success: apply, fail: apply })
+}
+
 function withOn(site, selected) {
   if (!site || !site.quiz) return site
   const sel = selected || []
@@ -307,6 +326,7 @@ function withOn(site, selected) {
 Page({
   behaviors: [glossHost],
   data: {
+    advancing: false,
     site: null,
     confirmed: false,
     revealLines: [],
@@ -376,9 +396,9 @@ Page({
       step: 0,
       confirmed: false,
       revealLines: [],
-      narrSrc: narrForSite(site, { followup: !!puzzle, step: 0, steps: steps }),
+      narrSrc: '',
       bgmSrc: site.bgmFile ? audioSrc.bgm(site.bgmFile) : '',
-      listenSrc: quiz && quiz.listenFile ? audioSrc.bgm(quiz.listenFile) : '',
+      listenSrc: quiz && quiz.listenFile ? quiz.listenFile : '',
       selected: selected,
       solved: !!puzzle,
       followup: !!puzzle,
@@ -389,6 +409,7 @@ Page({
       nfcNote: nfcNote
     })
     this.recordVisit(key)
+    playNarr(this, narrForSite(site, { followup: !!puzzle, step: 0, steps: steps }))
   },
 
   onToggle(e) {
@@ -419,9 +440,9 @@ Page({
     this.setData({
       followup: true,
       solved: true,
-      showHistory: false,
-      narrSrc: narrForSite(site, { followup: true })
+      showHistory: false
     })
+    playNarr(this, narrForSite(site, { followup: true }))
   },
 
   onQuizConfirm() {
@@ -475,9 +496,9 @@ Page({
   onCloseHistory() {
     this.setData({
       showHistory: false,
-      followup: true,
-      narrSrc: narrForSite(this.data.site, { followup: true })
+      followup: true
     })
+    playNarr(this, narrForSite(this.data.site, { followup: true }))
   },
 
   // 术语史料卡弹层：onGlossary/onGlossClose 与 gloss 状态由 gloss-host 行为提供。
@@ -541,12 +562,16 @@ Page({
     const tp = this.data.site && this.data.site.textPuzzle
     if (!tp || this.data.textSolved) return
     const value = String(this.data.textInput || '').replace(/\s+/g, '')
-    if (!value) return
+    if (!value) {
+      this.setData({ textHint: '对着信封拼出下一站的名字，再提交' })
+      return
+    }
     const attempts = (this._textAttempts || 0) + 1
     this._textAttempts = attempts
     if (value.includes(tp.answer)) {
       session.attemptPuzzle(tp.puzzleId, attempts, true, 'text')
       this.setData({ textSolved: true, textHint: '' })
+      playNarr(this, narrForSite(this.data.site, { reveal: true }))
       session.completePuzzle(tp.puzzleId, { answer: tp.answer, attempts: attempts }).catch(function () {
         wx.showToast({ title: '进度暂未保存，下一步会重试', icon: 'none' })
       })
@@ -564,6 +589,8 @@ Page({
   },
 
   onNext() {
+    if (this.data.advancing) return
+    this.setData({ advancing: true })
     wx.redirectTo({
       url: this._next,
       fail: () => wx.showToast({ title: '页面跳转失败，请重试', icon: 'none' })

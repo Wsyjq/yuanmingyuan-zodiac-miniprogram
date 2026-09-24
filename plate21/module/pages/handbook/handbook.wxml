@@ -1,7 +1,6 @@
 <nav-back />
 <!-- v1.3.1 手账：左侧活页装订孔列（移到 .page 外，避免 flex 影响 fixed） -->
-<view class="binder"></view>
-<view class="page page-shell paper-grain paper-real">
+<view class="page page-shell paper-grain">
 <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
 
   <!-- v1.3.1 手账：票根贴纸压在标题右上角，像手册的装订凭证 -->
@@ -9,30 +8,29 @@
 
   <view class="hb-title serif">考察手册</view>
   <view class="hb-sub">西洋楼铜版图 · 第二十一图</view>
-  <view class="tag-no hb-tag">No.017</view>
+  <view class="plateno hb-tag">No.017</view>
 
   <!-- 第壹折：五份考察记录位 -->
-  <view class="hatch-divider sec-div"></view>
+  <view class="rule sec-div"></view>
   <view class="sec-head serif">第壹折 · 四份考察记录</view>
   <!-- v1.3.1 手账：邮票贴纸压在「第壹折」标题旁，归档感 -->
   <image class="hb-stamp" src="/plate21/module/assets/img/stickers/st-stamp-01.png" mode="aspectFit" />
   <view class="slots">
     <view wx:for="{{slots}}" wx:key="key" class="slot-item">
-      <view class="slot card-ticket">
+      <view class="slot plate">
         <view class="slot-index">REC.{{item.no}}</view>
         <view class="slot-name serif">{{item.name}}</view>
         <view wx:if="{{item.done}}" class="seal kaiti">已录</view>
         <view wx:else class="seal-empty kaiti">待录</view>
       </view>
-      <view class="ticket-edge"></view>
     </view>
   </view>
-  <view class="note-hand olive hb-note">已录 {{doneCount}} 则，共四则。</view>
+  <view class="handnote olive hb-note">已录 {{doneCount}} 则，共四则。</view>
 
   <!-- 第贰折：玩家实际拍摄的四图考察卡 -->
-  <view class="hatch-divider sec-div"></view>
+  <view class="rule sec-div"></view>
   <view class="sec-head serif">第贰折 · 亭下考察卡</view>
-  <view class="photo-record archive-sheet">
+  <view class="photo-record plate stitched">
     <view class="photo-record-head">
       <view>
         <view class="photo-record-kicker">FIELD RECORD · S2-3</view>
@@ -53,14 +51,13 @@
   </view>
 
   <!-- 第叁折：已收集史料卡 -->
-  <view class="hatch-divider sec-div"></view>
+  <view class="rule sec-div"></view>
   <view class="sec-head serif">第叁折 · 已收集史料</view>
   <!-- v1.3.1 手账：回形针贴纸压在「第贰折」标题旁，夹史料感 -->
-  <image class="hb-paperclip" src="/plate21/module/assets/img/stickers/st-paperclip-01.png" mode="aspectFit" />
   <view class="hlist">
     <view wx:for="{{history}}" wx:key="id" class="hitem">
       <view
-        class="hcard card-ticket {{item.available ? '' : 'locked'}}"
+        class="hcard plate {{item.available ? '' : 'locked'}}"
         data-index="{{index}}"
         bindtap="onReadHistory"
       >
@@ -72,15 +69,13 @@
         <view wx:if="{{item.available}}" class="hcard-badge kaiti">已录</view>
         <view wx:else class="hcard-badge lock kaiti">未录</view>
       </view>
-      <view class="ticket-edge"></view>
     </view>
   </view>
 
   <!-- 第肆折：考察报告缩略位 -->
-  <view class="hatch-divider sec-div"></view>
+  <view class="rule sec-div"></view>
   <view class="sec-head serif">第肆折 · 考察报告</view>
   <view wx:if="{{finaleDone}}" class="report-thumb">
-    <view class="tape" style="top:-20rpx; left:50%; margin-left:-90rpx;"></view>
     <view class="mini-wrap">
       <view class="canvas report-artwork">
         <image class="canvas-bg" src="/plate21/module/assets/img/IMG-RUNTIME-PLATE.jpg" mode="aspectFill" />
@@ -101,7 +96,7 @@
   </view>
 
   <!-- 第伍折：成就印记（成就系统解锁记录，详见 store/achievements 规则表） -->
-  <view class="hatch-divider sec-div"></view>
+  <view class="rule sec-div"></view>
   <view class="sec-head serif">第伍折 · 成就印记</view>
   <view class="ach-list">
     <view wx:for="{{achievementList}}" wx:key="id" class="ach-item {{item.unlocked ? '' : 'locked'}}">
@@ -112,10 +107,10 @@
       </view>
     </view>
   </view>
-  <view class="note-hand olive hb-note">已得 {{achievementCount}} 印，共 {{achievementList.length}} 印。</view>
+  <view class="handnote olive hb-note">已得 {{achievementCount}} 印，共 {{achievementList.length}} 印。</view>
 
   <!-- V2.2 独立音频开关：背景音乐 / 人声讲述，各自独立、默认全开（产品定位拍板项） -->
-  <view class="hatch-divider sec-div"></view>
+  <view class="rule sec-div"></view>
   <view class="sec-head serif">音频 · 独立开关</view>
   <view class="audio-set">
     <view class="audio-set-row">
@@ -133,10 +128,10 @@
       <switch checked="{{audioVoice}}" bindchange="onToggleVoice" aria-label="人声讲述开关" color="#4a6b64" />
     </view>
   </view>
-  <view class="note-hand olive hb-note">两个开关互不影响；大水法那一段什么都不会响——那是设计。</view>
+  <view class="handnote olive hb-note">两个开关互不影响；大水法那一段什么都不会响——那是设计。</view>
 
   <!-- v2 顺路散页：可选站点，随时可进；不显示 X/N 完成度（反结算红线） -->
-  <view class="hatch-divider sec-div"></view>
+  <view class="rule sec-div"></view>
   <view class="sec-head serif">路上的页 · 可选</view>
   <view class="side-grid">
     <view
@@ -152,11 +147,11 @@
       <text class="side-chip-name">{{item.title}}</text>
     </view>
   </view>
-  <view class="note-hand olive hb-note">档案里夹着的页，不出日期卡、不做裁判；翻不翻，由你决定。</view>
+  <view class="handnote olive hb-note">档案里夹着的页，不出日期卡、不做裁判；翻不翻，由你决定。</view>
 
   <!-- v2 回响：次日之信入口（finale 后出现；当日封蜡，次日出信） -->
-  <view class="hatch-divider sec-div"></view>
-  <view class="hb-letter {{letterReady ? '' : 'sealed'}}" bindtap="onOpenLetter" role="button" aria-label="次日之信入口">
+  <view class="rule sec-div"></view>
+  <view class="side-chip {{item.visited ? 'got' : ''}}" bindtap="onOpenLetter" role="button" aria-label="次日之信入口">
     <view class="hb-letter-wax kaiti">封</view>
     <view class="hb-letter-main">
       <view class="hb-letter-title serif">{{letterReady ? '有一封信在等你' : '明日启封'}}</view>

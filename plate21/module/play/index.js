@@ -4,6 +4,7 @@
 // propPrompt 只摘 docs/飞书分页接入方案.md 里已有的提示，不描写道具外观。
 
 const { PLAY_IDS } = require('../flow/contract')
+const hourAnswers = require('./hour-answers')
 
 const DIRECTION_OPTIONS = ['西北', '东南', '西南', '东北']
 const HEIGHT_OPTIONS = ['高', '低']
@@ -62,7 +63,9 @@ const PLAYS = {
       { name: 'hour14', type: 'text' },
       { name: 'noon', type: 'text' }
     ],
-    solved: function (action) { return action.hour14 === '羊' && action.noon === '马' }
+    solved: function (action) {
+      return hourAnswers.matchHour14(action.hour14) && hourAnswers.matchNoon(action.noon)
+    }
   },
   'prop-dial': {
     propPrompt: '提示使用转盘',

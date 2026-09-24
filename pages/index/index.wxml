@@ -1,8 +1,68 @@
-<view class="entry">
-  <image class="shot" src="/assets/host/entry-screen.png" mode="scaleToFill" />
-  <view class="hit enter" bindtap="goPlate21"></view>
-  <view class="hit map" bindtap="goAtlas"></view>
-  <view class="hit archive" bindtap="goArchive"></view>
-  <view class="hit book" bindtap="goHandbook"></view>
-  <view wx:if="{{revisitReady}}" class="hit revisit" bindtap="goRevisit"></view>
+<!-- v1.3.1 手账：左侧活页装订孔列（移到容器外，避免 flex 影响 fixed） -->
+
+<view class="host-home page-shell paper-grain">
+  <!-- 右上角：编号签 + 邮戳贴纸 -->
+  <view class="plateno tag-corner">No.HOST</view>
+
+  <!-- 拱券顶饰（呼应封面，但更小） -->
+
+  <!-- 目录标题区 -->
+  <view class="host-title serif">考察模块</view>
+  <view class="host-sub">西洋楼铜版图 · 实景解谜系列</view>
+  <view class="rule host-divider"></view>
+
+  <!-- 次日回访卡：通关次日起出现，直达留言簿（通关当日与未通关不显示） -->
+  <view wx:if="{{revisitReady}}" class="revisit-card plate tilt-r" bindtap="goRevisit">
+    <view class="revisit-stamp">回访</view>
+    <view class="revisit-info">
+      <view class="revisit-name serif">档案 · 新增一页</view>
+      <view class="revisit-desc">昨天走完的路，今天多了一页留言。</view>
+      <view class="revisit-meta">{{revisitDone ? '你的那句话已经在档案里。' : '去读走完这条路的人，留下的话。'}}</view>
+    </view>
+    <view class="module-enter">
+      <text class="enter-text">去看</text>
+      <text class="enter-arrow">→</text>
+    </view>
+  </view>
+
+  <!-- 入口卡：第二十一图 -->
+  <view class="module-card plate tilt-l" bindtap="goPlate21">
+    <!-- 胶带贴顶 -->
+    <!-- 回形针贴右上 -->
+    <!-- 已授权 AI 铜版画缩略 -->
+    <view class="module-thumb">
+      <image class="thumb-img" src="/assets/host/IMG-RUNTIME-HOST.jpg" mode="aspectFill" />
+    </view>
+    <!-- 模块信息 -->
+    <view class="module-info">
+      <view class="module-name serif">第二十一图</view>
+      <view class="module-desc">圆明园西洋楼 · 实景解谜</view>
+      <view class="module-meta">从西往东五处 · 拿一册档案，把纸和地对一遍</view>
+    </view>
+    <!-- 进入箭头 -->
+    <view class="module-enter">
+      <text class="enter-text">进入</text>
+      <text class="enter-arrow">→</text>
+    </view>
+  </view>
+
+  <!-- 预留卡：未来模块 -->
+  <view class="reserved-card">
+    <view class="reserved-text">更多考察模块 · 敬请期待</view>
+  </view>
+
+  <!-- 撕纸分隔 -->
+
+  <!-- 底部次级链接 -->
+  <view class="host-foot">
+    <view class="foot-link" catchtap="goHandbook">
+      <image class="foot-icon" src="/assets/host/ic-notebook-pen-ink.png" mode="aspectFit" />
+      <text>考察手册</text>
+    </view>
+    <view class="foot-dot"></view>
+    <view class="foot-link foot-muted">关于</view>
+  </view>
+
+  <!-- 考察者手记批注（页边手写） -->
+  <view class="handnote host-note">点选模块，开启一趟纸上考察。</view>
 </view>

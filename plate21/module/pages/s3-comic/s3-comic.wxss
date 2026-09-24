@@ -44,8 +44,6 @@
   height: auto;
   max-height: 360rpx;
   object-fit: contain;
-  filter: sepia(.18) saturate(.82) contrast(1.03);
-  mix-blend-mode: multiply;
 }
 .comic-captions {
   margin-top: 18rpx;

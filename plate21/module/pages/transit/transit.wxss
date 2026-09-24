@@ -22,7 +22,7 @@
   height: 100%;
   overflow: hidden;
   box-sizing: border-box;
-  padding: 150rpx 36rpx 48rpx 72rpx;
+  padding: 0;
   display: flex;
   flex-direction: column;
 }
@@ -109,8 +109,7 @@
   opacity: 0.55;
   z-index: 0;
   pointer-events: none;
-  /* 单色铜版画叠在 paper2 底上，用 multiply 让排线融入纸色 */
-  mix-blend-mode: multiply;
+  /* 手帐风：不用 multiply（微信可能白屏），直接降透明度叠纸色 */
 }
 .map-tag {
   position: absolute;

@@ -41,7 +41,7 @@ function waypointUrl(launch) {
 }
 
 function gateUrl() {
-  return '/plate21/module/pages/gate/gate?from=nfc&prop=' + PROP + '&next=' + SITE
+  return '/pages/ticket/ticket?from=nfc&prop=' + PROP + '&next=' + SITE
 }
 
 module.exports = {

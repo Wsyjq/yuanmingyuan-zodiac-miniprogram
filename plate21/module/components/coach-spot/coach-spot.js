@@ -87,14 +87,7 @@ Component({
     buildPanes() {
       const vp = this.viewport()
       const h = this.holeRect()
-      if (!h) {
-        return {
-          top: { top: 0, left: 0, width: vp.w, height: vp.h },
-          left: { top: 0, left: 0, width: 0, height: 0 },
-          right: { top: 0, left: 0, width: 0, height: 0 },
-          bottom: { top: 0, left: 0, width: 0, height: 0 }
-        }
-      }
+      if (!h) return null
       const bottomTop = h.top + h.height
       return {
         top: { top: 0, left: 0, width: vp.w, height: Math.max(0, h.top) },

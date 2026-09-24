@@ -3,32 +3,28 @@
 <nav-back />
 <page-overlays audio-station="{{site.audioStation}}" />
 <bgm-ambience station="{{site.audioStation}}" />
-<view class="page page-shell paper-grain paper-real" wx:if="{{site}}">
-  <view class="binder"></view>
-  <view class="tag-no page-no">{{site.no}}</view>
+<view class="page page-shell task-shell paper-grain" wx:if="{{site}}">
 
   <block wx:if="{{site.scored}}">
     <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
-      <view class="title serif">{{site.title}}</view>
-      <view wx:if="{{nfcNote}}" class="note-hand olive">{{nfcNote}}</view>
-      <view class="wp-intro kaiti"><gloss-text wx:if="{{site.introParts}}" parts="{{site.introParts}}" bind:glossary="onGlossary" /><block wx:else>{{site.intro}}</block></view>
-      <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
-      <view wx:if="{{site.image}}" class="wp-plate double-frame">
-        <view class="tape" style="top:-20rpx; left:50%; margin-left:-90rpx;"></view>
+      <view class="task-kicker">{{site.title}} · 本题</view>
+      <view wx:if="{{nfcNote}}" class="task-lead">{{nfcNote}}</view>
+      <view wx:if="{{!followup}}" class="task-lead kaiti"><gloss-text wx:if="{{site.introParts}}" parts="{{site.introParts}}" bind:glossary="onGlossary" /><block wx:else>{{site.intro}}</block></view>
+      <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" autoplay="{{true}}" kind="voice" label="听 · 本页讲述" />
+      <view wx:if="{{site.image}}" class="wp-plate">
         <image class="wp-plate-img" src="{{site.image}}" mode="widthFix" />
       </view>
-      <view wx:if="{{site.imageNote}}" class="note-hand olive wp-plate-note tilt-l">{{site.imageNote}}</view>
+      <view wx:if="{{site.imageNote}}" class="handnote olive wp-plate-note tilt-l">{{site.imageNote}}</view>
       <view class="act-strip" wx:if="{{site.quiz.action}}"><text class="act-strip-tag">做</text><text class="act-strip-text">{{site.quiz.action}}</text></view>
       <view wx:if="{{site.quiz.listenFile && !followup}}" class="wp-listen">
         <audio-clip src="{{listenSrc}}" label="听 · 约三十秒" kind="clip" bind:play="onListenPlay" />
-        <view class="note-hand olive">{{site.quiz.listenNote}}</view>
+        <view class="handnote olive">{{site.quiz.listenNote}}</view>
       </view>
       <view wx:if="{{!followup && site.quiz.listenOnly}}" class="quiz">
         <view class="q-title serif">{{site.quiz.prompt}}</view>
-        <button class="btn-seal wp-confirm-btn" bindtap="onHeard">听完了</button>
       </view>
       <view wx:if="{{!followup && !site.quiz.listenOnly}}" class="quiz">
-        <view class="hatch-divider wp-hatch"></view>
+        <view class="rule wp-hatch"></view>
         <view class="q-title serif">{{site.quiz.prompt}}</view>
         <view
           wx:for="{{site.quiz.options}}"
@@ -42,26 +38,34 @@
           <text class="wp-opt-key">{{item.key}}</text>
           <text class="wp-opt-text">{{item.text}}</text>
         </view>
-        <view wx:if="{{hint}}" class="hint note-hand">{{hint}}</view>
-        <button class="btn-seal wp-confirm-btn" bindtap="onQuizConfirm" disabled="{{!selected.length || solved}}">提交</button>
+        <view wx:if="{{hint}}" class="hint">{{hint}}</view>
       </view>
       <view wx:if="{{followup}}" class="followup">
         <view class="wp-line kaiti" wx:for="{{site.quiz.followup}}" wx:key="index"><gloss-text wx:if="{{item.parts}}" parts="{{item.parts}}" bind:glossary="onGlossary" /><block wx:else>{{item}}</block></view>
         <!-- 站尾文本谜题（飞书 v3 rev5614 §谐奇趣：两半字拼出黄花阵） -->
         <block wx:if="{{site.textPuzzle}}">
           <view class="wp-line kaiti">{{site.textPuzzle.prompt}}</view>
-          <view class="note-hand olive">{{site.textPuzzle.lead}}</view>
-          <view class="note-hand olive">信封封口和背面各有一半字。对着实物拼起来，再写下一站。</view>
+          <view class="handnote olive">{{site.textPuzzle.lead}}</view>
+          <view class="wp-steps">
+            <view wx:for="{{site.textPuzzle.steps}}" wx:key="index" class="wp-step">
+              <text class="wp-step-no">{{index + 1}}</text>
+              <text class="wp-step-text">{{item}}</text>
+            </view>
+          </view>
           <block wx:if="{{!textSolved}}">
-            <input class="answer-input" value="{{textInput}}" bindinput="onTextInput" placeholder="{{site.textPuzzle.placeholder}}" maxlength="8" />
-            <view wx:if="{{textHint}}" class="hint note-hand">{{textHint}}</view>
-            <button class="btn-seal wp-confirm-btn" bindtap="onTextSubmit" disabled="{{!textInput}}">提交</button>
+            <input class="answer-input" value="{{textInput}}" bindinput="onTextInput" placeholder="写下站名" maxlength="8" />
+            <view wx:if="{{textHint}}" class="hint">{{textHint}}</view>
           </block>
-          <view wx:else class="wp-line kaiti">{{site.textPuzzle.solvedText}}</view>
+          <view wx:else class="task-lead kaiti">{{site.textPuzzle.solvedText}}</view>
         </block>
-        <button wx:if="{{!site.textPuzzle || textSolved}}" class="btn-seal wp-next" bindtap="onNext">{{site.nextLabel}}</button>
       </view>
     </scroll-view>
+    <view class="task-dock">
+      <button wx:if="{{!followup && site.quiz.listenOnly}}" class="btn-seal" bindtap="onHeard">听完了</button>
+      <button wx:elif="{{!followup && !site.quiz.listenOnly}}" class="btn-seal" bindtap="onQuizConfirm" disabled="{{!selected.length || solved}}">提交</button>
+      <button wx:elif="{{followup && site.textPuzzle && !textSolved}}" class="btn-seal" bindtap="onTextSubmit">提交</button>
+      <button wx:elif="{{followup && (!site.textPuzzle || textSolved)}}" class="btn-seal" bindtap="onNext" disabled="{{advancing}}">{{advancing ? '正在前往……' : site.nextLabel}}</button>
+    </view>
     <history-card
       visible="{{showHistory}}"
       title="{{site.quiz.historyTitle}}"
@@ -104,14 +108,14 @@
   >
     <view class="wp-beat {{item.prop ? 'wp-prop' : ''}}">
       <view class="wp-kicker">{{item.kicker}}</view>
-      <view wx:if="{{item.fadeCard}}" class="wp-fade-card">
-        <image wx:if="{{item.fadeImage}}" class="wp-fade-img" src="{{item.fadeImage}}" mode="widthFix" />
-        <view class="wp-fade-name serif">容妃</view>
+      <view wx:if="{{item.fadeCard}}" class="wp-fade-card {{step === bi + 1 ? 'wp-fade-run' : ''}}">
+        <image wx:if="{{item.fadeImage}}" class="wp-fade-img" src="{{item.fadeImage}}" mode="aspectFill" />
+        <view class="wp-fade-name serif">{{item.fadeName}}</view>
       </view>
-      <view wx:if="{{item.image}}" class="wp-plate double-frame">
+      <view wx:if="{{item.image}}" class="wp-plate">
         <image class="wp-plate-img" src="{{item.image}}" mode="widthFix" />
       </view>
-      <view wx:if="{{item.imageNote}}" class="note-hand olive wp-plate-note">{{item.imageNote}}</view>
+      <view wx:if="{{item.imageNote}}" class="handnote olive wp-plate-note">{{item.imageNote}}</view>
       <view wx:if="{{item.action}}" class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">{{item.action}}</text></view>
       <view wx:for="{{item.lines}}" wx:for-item="line" wx:key="*this" class="wp-line kaiti">{{line}}</view>
       <view wx:if="{{item.parts}}" class="wp-line kaiti"><gloss-text parts="{{item.parts}}" bind:glossary="onGlossary" /></view>
@@ -126,7 +130,7 @@
         clip-id="{{dlg.clipId}}"
         note="{{dlg.note}}"
       />
-      <view wx:if="{{item.stageNote}}" class="wp-stage note-hand">{{item.stageNote}}</view>
+      <view wx:if="{{item.stageNote}}" class="wp-stage handnote">{{item.stageNote}}</view>
       <dialogue-block
         wx:for="{{item.dialogues2}}"
         wx:for-item="dlg"
@@ -158,13 +162,13 @@
   <!-- 尾屏：这一页的话 + 收好夹页 -->
   <view class="wp-step {{step === steps.length - 1 ? '' : 'wp-step-off'}}">
     <view wx:if="{{site.motif}}" class="wp-motif kaiti">{{site.motif}}</view>
-    <view class="wp-note note-hand olive">路上的页 · 翻多久由你决定，不翻也不缺什么。</view>
-    <button class="btn-seal wp-next" bindtap="onNext">{{site.nextLabel}}</button>
+    <view class="wp-note handnote olive">路上的页 · 翻多久由你决定，不翻也不缺什么。</view>
+    <button class="btn-seal wp-next" bindtap="onNext" disabled="{{advancing}}">{{advancing ? '正在前往……' : site.nextLabel}}</button>
   </view>
 
   <!-- 分页导航：随时可前进（可跳过红线），随时可回看 -->
   <view class="wp-pager">
-    <view class="wp-pager-pos note-hand olive">{{step + 1}} / {{steps.length}}</view>
+    <view class="wp-pager-pos handnote olive">{{step + 1}} / {{steps.length}}</view>
     <view class="wp-pager-btns">
       <button wx:if="{{step > 0}}" class="btn-line wp-prev" bindtap="onStepPrev">上一节</button>
       <button wx:if="{{step < steps.length - 1}}" class="btn-seal wp-step-next" bindtap="onStepNext">继 续</button>

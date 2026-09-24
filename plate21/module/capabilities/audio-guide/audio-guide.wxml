@@ -29,7 +29,7 @@
       <button class="ag-play" bindtap="onTogglePlay">{{playing ? '暂停' : '播放'}}</button>
       <view class="ag-track"><view class="ag-track-fill" style="width: {{progress}}%;"></view></view>
     </view>
-    <view wx:else class="ag-pending note-hand">音频导览即将上线，先读文稿。</view>
+    <view wx:else class="ag-pending handnote">音频导览即将上线，先读文稿。</view>
 
     <scroll-view scroll-y class="ag-script">
       <view wx:for="{{guide.script}}" wx:key="index" class="ag-line kaiti">{{item}}</view>

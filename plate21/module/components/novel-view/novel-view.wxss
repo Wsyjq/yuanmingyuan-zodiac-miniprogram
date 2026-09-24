@@ -178,7 +178,7 @@
   border-top: 1rpx solid rgba(70, 56, 42, 0.34);
 }
 
-.title-rule text {
+.title-rule .tr-dot {
   display: block;
   width: 7rpx;
   height: 7rpx;
@@ -376,17 +376,6 @@
   animation: photo-settle 0.55s ease both;
 }
 
-.photo-tape {
-  position: absolute;
-  left: 50%;
-  top: -17rpx;
-  z-index: 3;
-  width: 150rpx;
-  height: 34rpx;
-  margin-left: -75rpx;
-  background: rgba(169, 143, 95, 0.35);
-  transform: rotate(1.5deg);
-}
 
 .page-photo,
 .photo-code {
@@ -396,8 +385,6 @@
 
 .page-photo {
   display: block;
-  filter: sepia(0.18) saturate(0.78) contrast(0.96);
-  mix-blend-mode: multiply;
 }
 
 .photo-code {

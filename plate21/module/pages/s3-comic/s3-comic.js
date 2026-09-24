@@ -1,14 +1,12 @@
 // 海晏堂 · 十二生肖水力钟（飞书 v3 rev5614 §海晏堂）。
-// 观看不同时辰喷水示意 → 回答 14 时对应哪个兽首（未时·羊）→ 推测正午哪个兽首（午马）。
+// 观看不同时辰喷水示意 → 14 时未羊；正午值班是马，盛景是十二首齐喷，两种都算对。
 // 答完接转盘花纹匹配（s3-zodiac）。文案与答案按飞书原文。
 const session = require('../../store/session')
 const audioSrc = require('../../utils/audio-src')
 const audioBus = require('../../utils/audio-bus')
 const glossHost = require('../../utils/gloss-host')
 
-// 时辰→兽首：14 时落在未时（13-15 点），正午是午马
-const Q1_ANSWERS = ['羊', '羊首', '未羊']
-const Q2_ANSWERS = ['马', '马首', '午马', '全部', '十二', '十二个', '都喷', '一起喷', '同时喷', '十二个都喷', '全部一起']
+const hourAnswers = require('../../play/hour-answers')
 
 Page({
   behaviors: [glossHost],
@@ -48,8 +46,7 @@ Page({
   onConfirm() {
     audioBus.stopKind('voice')
     if (this.data.solved || !this.data.q1 || !this.data.q2) return
-    const norm = function (s) { return String(s).replace(/\s+/g, '') }
-    const ok = Q1_ANSWERS.indexOf(norm(this.data.q1)) >= 0 && Q2_ANSWERS.indexOf(norm(this.data.q2)) >= 0
+    const ok = hourAnswers.matchHour14(this.data.q1) && hourAnswers.matchNoon(this.data.q2)
     const attempts = this.data.attempts + 1
     if (ok) {
       session.attemptPuzzle('s3-hour', attempts, true, 'text')

@@ -29,6 +29,7 @@ Page({
     holding: '',
     huntAttempts: 0,
     huntHint: '',
+    advancing: false,
     narrSrc: audioSrc.clip('narr-dashuifa-hunt'),
     // 史料卡挂点（飞书 v3）：到站「大水法」SL-14
     introParts: [
@@ -82,9 +83,14 @@ Page({
   },
 
   onNext() {
+    if (this.data.advancing) return
+    this.setData({ advancing: true })
     wx.redirectTo({
       url: '/plate21/module/pages/transit/transit?leg=ds-s4',
-      fail: () => wx.showToast({ title: '页面跳转失败，请重试', icon: 'none' })
+      fail: () => {
+        this.setData({ advancing: false })
+        wx.showToast({ title: '页面跳转失败，请重试', icon: 'none' })
+      }
     })
   },
 

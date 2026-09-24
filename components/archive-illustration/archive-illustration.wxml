@@ -11,7 +11,7 @@
         <view class="plate-arch arch-c"></view>
       </view>
     </view>
-    <view class="plate-fountain"><view></view><view></view><view></view></view>
+    <view class="plate-fountain"><view class="ai-bar"></view><view class="ai-bar"></view><view class="ai-bar"></view></view>
     <view class="plate-basin"></view>
     <view class="plate-mark">XXI</view>
   </block>
@@ -29,7 +29,7 @@
     <view class="map-contour contour-a"></view>
     <view class="map-contour contour-b"></view>
     <view class="map-water"></view>
-    <view class="map-compass"><text>北</text></view>
+    <view class="map-compass"><text class="ai-txt">北</text></view>
     <view class="map-path path-a"></view>
     <view class="map-path path-b"></view>
   </block>
@@ -64,13 +64,13 @@
   <block wx:elif="{{type === 'detail-lotus'}}">
     <view class="detail-target"></view>
     <view class="detail-vase"><view class="vase-neck"></view><view class="vase-body"></view></view>
-    <view class="detail-lotus"><view></view><view></view><view></view></view>
+    <view class="detail-lotus"><view class="ai-lp"></view><view class="ai-lp"></view><view class="ai-lp"></view></view>
     <view class="detail-code">03 · LOTUS / VASE</view>
   </block>
 
   <block wx:elif="{{type === 'detail-swan'}}">
     <view class="detail-target"></view>
-    <view class="detail-swan swan-a"><view></view></view><view class="detail-swan swan-b"><view></view></view>
+    <view class="detail-swan swan-a"><view class="ai-wing"></view></view><view class="detail-swan swan-b"><view class="ai-wing"></view></view>
     <view class="detail-bat">福</view>
     <view class="detail-code">04 · SWAN / BAT</view>
   </block>
@@ -80,7 +80,7 @@
   </block>
 
   <block wx:elif="{{type === 'pattern-lotus'}}">
-    <view class="pattern-lotus"><view class="lp lp1"></view><view class="lp lp2"></view><view class="lp lp3"></view><view class="lp lp4"></view><view class="lp-core"></view></view>
+    <view class="pattern-lotus"><view class="lp lp1 ai-lp"></view><view class="lp lp2 ai-lp"></view><view class="lp lp3 ai-lp"></view><view class="lp lp4 ai-lp"></view><view class="lp-core"></view></view>
   </block>
 
   <block wx:elif="{{type === 'pattern-scroll'}}">

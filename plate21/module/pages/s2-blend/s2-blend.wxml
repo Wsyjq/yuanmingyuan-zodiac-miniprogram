@@ -2,20 +2,15 @@
 <nav-back />
 <page-overlays />
 <bgm-ambience />
-<view class="page page-shell paper-grain paper-real">
+<view class="page page-shell task-shell paper-grain">
 <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
-  <view class="binder"></view>
-  <view class="tag-no tag-no-fixed">No.S2-3</view>
-  
-
-  <view class="title serif">亭子线稿对眼前这座亭</view>
-  <view class="hatch-divider title-div"></view>
-  <view class="lead kaiti">终于到了中心亭了，融合了中西审美，好别致的亭子！</view>
-  <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">你能找到这座亭子建筑风格中西结合的具体体现吗，找到后请拍照记录你的考察结果</text></view>
-  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
+  <view class="task-kicker">黄花阵 · 本题</view>
+  <view class="task-lead kaiti">终于到了中心亭了，融合了中西审美，好别致的亭子！</view>
+  <view class="task-lead">你能找到这座亭子建筑风格中西结合的具体体现吗，找到后请拍照记录你的考察结果</view>
+  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" autoplay="{{true}}" kind="voice" label="听 · 本页讲述" />
 
   <view class="capture-grid">
-    <view wx:for="{{points}}" wx:key="key" class="capture-card archive-sheet {{item.photoPath ? 'captured' : ''}}">
+    <view wx:for="{{points}}" wx:key="key" class="capture-card plate {{item.photoPath ? 'captured' : ''}}">
       <view class="slot-head">
         <view class="slot-no">{{item.no}}</view>
         <view class="slot-title serif">{{item.title}}</view>
@@ -40,35 +35,36 @@
     </view>
   </view>
 
-  <view wx:if="{{captureError || persistenceWarning}}" class="capture-message record-field">
+  <view wx:if="{{captureError || persistenceWarning}}" class="capture-message stitch-strip">
     <view wx:if="{{captureError}}" class="capture-error">{{captureError}}</view>
     <view wx:if="{{persistenceWarning}}" class="capture-warning">{{persistenceWarning}}</view>
     <button wx:if="{{captureError}}" class="settings-btn" bindtap="onOpenSettings">打开权限设置</button>
   </view>
 
-  <view class="progress-slip record-field">
+  <view class="progress-slip stitch-strip">
     <view class="progress-meta">
       <view class="progress-label">现场记录进度</view>
       <view class="progress-count">{{photoCount}} / {{points.length}}</view>
     </view>
     <view class="progress-track"><view class="progress-fill" style="width: {{photoCount / points.length * 100}}%"></view></view>
-    <view class="note-hand progress-note">拍到一处就可以确定。</view>
-    <button class="btn-seal complete-btn record-action {{photoCount < 1 ? 'btn-disabled' : ''}}" bindtap="onComplete" disabled="{{photoCount < 1}}">确定</button>
-    <button class="skip-line" bindtap="onSkipShot">跳过</button>
+    <view class="progress-note">拍到一处就可以确定。</view>
   </view>
-  <view wx:if="{{readyNext}}" class="progress-slip record-field">
-    <view class="note-hand olive progress-note">四图考察结论已经收入手册，可继续辨认墙体纹样。</view>
-    <button class="btn-seal complete-btn record-action" bindtap="onNext">继续观察墙体纹样</button>
+  <view wx:if="{{readyNext}}" class="progress-slip stitch-strip">
+    <view class="progress-note">四图考察结论已经收入手册，可继续辨认墙体纹样。</view>
   </view>
 </scroll-view>
+  <view class="task-dock">
+    <button wx:if="{{!readyNext}}" class="btn-seal" bindtap="onComplete" disabled="{{photoCount < 1}}">确定</button>
+    <button wx:else class="btn-seal" bindtap="onNext" disabled="{{advancing}}">{{advancing ? '正在前往……' : '继续观察墙体纹样'}}</button>
+  </view>
 </view>
 
 <!-- 四张现场照片合成的考察卡，不进行虚假场景识别。 -->
 <view wx:if="{{showRecordCard}}" class="record-mask" bindtap="onCloseRecord">
-  <view class="record-card archive-sheet" catchtap="noop">
+  <view class="record-card plate" catchtap="noop">
     <view class="record-kicker">FIELD RECORD · S2-3</view>
     <view class="record-title serif">西学东渐后的皇家审美转译</view>
-    <view class="archive-rule"></view>
+    <view class="rule"></view>
     <view class="record-grid">
       <view wx:for="{{points}}" wx:key="key" class="record-photo">
         <image class="record-photo-image" src="{{item.photoPath}}" mode="aspectFill" />

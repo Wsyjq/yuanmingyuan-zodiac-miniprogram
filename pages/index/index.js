@@ -50,14 +50,15 @@ Page({
   },
 
   goPlate21() {
-    // 门票制：入口先过 gate。导航失败就整页重开，避免返回后点了没反应。
-    let url = '/plate21/module/pages/gate/gate'
+    let url = '/pages/ticket/ticket'
     const entry = this.entry || {}
     if (entry.from === 'nfc' && entry.prop === 'dj06') {
       url += '?from=nfc&prop=dj06&next=xieqiqu'
     }
-    try { wx.removeStorageSync('plate21_trail') } catch (err) {}
-    wx.reLaunch({ url: url })
+    wx.navigateTo({
+      url: url,
+      fail: function () { wx.reLaunch({ url: url }) }
+    })
   },
 
   goRevisit() {
@@ -73,8 +74,9 @@ Page({
   },
 
   goHandbook() {
-    wx.navigateTo({ url: '/plate21/module/pages/handbook/handbook' })
-  },
-
-  noop() {}
+    wx.navigateTo({
+      url: '/plate21/module/pages/handbook/handbook',
+      fail: function () { wx.showToast({ title: '完成一次考察后可打开手册', icon: 'none' }) }
+    })
+  }
 })

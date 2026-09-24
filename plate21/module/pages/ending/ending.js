@@ -50,7 +50,7 @@ Page({
   // 「返回」：清理模块页栈并直接回宿主首页。
   onBack() {
     this.emitExit()
-    wx.reLaunch({ url: '/pages/index/index' })
+    wx.reLaunch({ url: '/pages/ticket/ticket' })
   },
 
   // 侧滑/手势退出同样补一条 module_exit

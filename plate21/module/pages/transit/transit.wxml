@@ -3,15 +3,8 @@
 
 <nav-back wx:if="{{!touring}}" />
 <page-overlays />
-<view class="page page-shell paper-grain paper-real" wx:if="{{leg}}">
-  <!-- v1.3.1 手账：左侧活页装订孔列（叙事过渡页） -->
-  <view class="binder"></view>
-  <!-- 归档编号标签（右上角，避让返回按钮） -->
-  <view class="tag-no page-no">No.003</view>
-
-  <!-- 路线标题（拱券顶饰呼应大水法拱门） -->
-  <view class="arch route-arch"></view>
-  <view class="route serif">{{leg.from}} → {{leg.to}}</view>
+<view class="page page-shell task-shell paper-grain" wx:if="{{leg}}">
+  <view class="task-kicker">{{leg.from}} → {{leg.to}}</view>
 
   <map
     class="nav-map"
@@ -37,13 +30,7 @@
     </view>
   </view>
 
-  <!-- 考察者手记批注（图旁页边，不压正文） -->
-  <view class="note-hand olive map-note" style="transform: rotate(-1.5deg);">缓步徐行，约八分可达</view>
-
-  <!-- 该段环境叙事 -->
-  <view class="narr">
-    <view class="narr-text">{{leg.text}}</view>
-  </view>
+  <view class="task-lead">{{leg.text}}</view>
 
   <!-- v2 顺路散页：可选入口（一段可挂多张），停不停由你；走完支线一键回主线 -->
   <view
@@ -59,11 +46,13 @@
     <view class="side-tag">档案里还夹着一页 · 可选</view>
     <view class="side-title serif">{{item.title}}</view>
     <view class="side-hook kaiti">{{item.hook}}</view>
-    <view wx:if="{{sideVisited[item.key]}}" class="side-done note-hand olive">✓ 已翻过</view>
+    <view wx:if="{{sideVisited[item.key]}}" class="side-done handnote olive">✓ 已翻过</view>
     <view class="side-arrow">›</view>
   </view>
 
-  <button id="coachGo" class="btn-seal next-btn" bindtap="onNext" disabled="{{advancing}}">{{advancing ? '正在前往……' : '前往' + leg.to}}</button>
+  <view class="task-dock">
+    <button id="coachGo" class="btn-seal" bindtap="onNext" disabled="{{advancing}}">{{advancing ? '正在前往……' : '前往' + leg.to}}</button>
+  </view>
 </view>
 <coach-spot
   class="coach-host"

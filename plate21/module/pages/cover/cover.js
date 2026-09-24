@@ -7,8 +7,9 @@ const progressFlow = require('../../store/progress-flow')
 const sessionDate = require('../../utils/session-date')
 const playGuide = require('../../capabilities/play-guide/guide')
 const coachHost = require('../../capabilities/play-guide/coach-host')
+const coachBusy = require('../../capabilities/play-guide/coach-busy')
 const PROLOGUE_URL = '/plate21/module/pages/prologue/prologue'
-const GATE_URL = '/plate21/module/pages/gate/gate'
+const GATE_URL = '/pages/ticket/ticket'
 
 function windowSize() {
   const info = (wx.getWindowInfo && wx.getWindowInfo()) || wx.getSystemInfoSync() || {}
@@ -27,7 +28,7 @@ Page({
     guideClosing: false,
     showRestartConfirm: false,
     restarting: false,
-    loading: true,
+    loading: false,
     navigating: false,
     archiveDate: ''
   },
@@ -37,13 +38,11 @@ Page({
     session.init({}).then((snap) => {
       return session.checkPremiumUnlocked().then((unlocked) => {
         if (!unlocked) {
-          wx.redirectTo({ url: GATE_URL })
+          this.setData({ loading: false, navigating: false, hasRecord: false })
           return
         }
         const hasRecord = this.hasProgress(snap)
         const completed = this.isCompleted(snap)
-        const steps = playGuide.coverSteps(hasRecord, completed)
-        const showCoach = playGuide.shouldShow(snap) && !hasRecord
         this.setData({
           hasRecord: hasRecord,
           completed: completed,
@@ -51,12 +50,8 @@ Page({
           loading: false,
           navigating: false
         })
-        if (showCoach) {
-          playGuide.resetTour()
-          const self = this
-          const kick = function () { self.beginCoach(steps, null) }
-          if (wx.nextTick) wx.nextTick(kick)
-          else setTimeout(kick, 0)
+        if (playGuide.shouldShow(snap) && !hasRecord) {
+          session.setFlag(playGuide.FLAG, Date.now()).catch(function () {})
         }
       })
     }).catch(() => {
@@ -66,10 +61,29 @@ Page({
   },
 
   onShow() {
+    this.refreshEntry()
+  },
+
+  onHide() {
     this.setData({ navigating: false })
   },
 
+  refreshEntry() {
+    const snap = session.getSnapshot()
+    this.setData({
+      navigating: false,
+      loading: false,
+      hasRecord: this.hasProgress(snap),
+      completed: this.isCompleted(snap),
+      archiveDate: sessionDate.formatArchiveDate(snap && snap.sessionDate)
+    })
+  },
+
   hasProgress(snap) {
+    try {
+      const run = wx.getStorageSync('plate21-mainline-run')
+      if (run && run.pageId) return true
+    } catch (err) {}
     if (!snap) return false
     if (progressFlow.deriveCheckpoint(snap) !== 'prologue') return true
     if (Object.keys(snap.puzzles || {}).length || Object.keys(snap.cards || {}).length) return true
@@ -90,8 +104,10 @@ Page({
   onStart() {
     if (this.data.navigating || this.data.showGuide) return
     if (this.data.showCoach) {
-      this.onCoachNext()
-      return
+      playGuide.resetTour()
+      coachBusy.resetBusy()
+      this.setData({ showCoach: false, coachHole: null })
+      session.setFlag(playGuide.FLAG, Date.now()).catch(function () {})
     }
     this.goPrologue()
   },
@@ -99,17 +115,29 @@ Page({
   goPrologue() {
     if (this.data.navigating) return
     this.setData({ navigating: true })
-    wx.navigateTo({ url: PROLOGUE_URL, fail: () => this.setData({ navigating: false }) })
+    const self = this
+    wx.navigateTo({
+      url: PROLOGUE_URL,
+      fail: function () { self.setData({ navigating: false }) }
+    })
   },
 
   onContinue() {
     if (this.data.navigating) return
     if (this.data.showCoach) {
-      this.onCoachNext()
-      return
+      playGuide.resetTour()
+      coachBusy.resetBusy()
+      this.setData({ showCoach: false, coachHole: null })
     }
     this.setData({ navigating: true })
-    wx.navigateTo({ url: this.resumeUrl(), fail: () => this.setData({ navigating: false }) })
+    const self = this
+    const url = this.data.completed
+      ? '/plate21/module/pages/report/report'
+      : this.resumeUrl()
+    wx.navigateTo({
+      url: url,
+      fail: function () { self.setData({ navigating: false }) }
+    })
   },
 
   onRestart() {

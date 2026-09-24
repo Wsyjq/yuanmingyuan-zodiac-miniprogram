@@ -1,22 +1,10 @@
 /* 第二站 · 谜题4 墙体花纹观察（采风修订版，复古手账风） */
-.page { padding: 0 36rpx 48rpx; height: 100%; overflow: hidden; }
+.page { padding: 0; height: 100%; overflow: hidden; }
 
 /* 编号签 */
-.tag-no-fixed { position: absolute; top: 88rpx; right: 210rpx; }
+.plateno-fixed { position: absolute; top: 88rpx; right: 210rpx; }
 
 /* 经历感贴纸：吊牌（右上）+ 邮票（左上页边）+ 票根（右下页边）*/
-.sticker-hangtag {
-  position: absolute; top: 84rpx; right: 28rpx;
-  width: 130rpx; height: 78rpx; opacity: .88; z-index: 9;
-  transform: rotate(-5deg); pointer-events: none;
-  filter: drop-shadow(0 3rpx 6rpx rgba(70, 56, 42, 0.22));
-}
-.sticker-stamp {
-  position: absolute; top: 18rpx; left: 176rpx;
-  width: 96rpx; height: 110rpx; opacity: .85; z-index: 9;
-  transform: rotate(-8deg); pointer-events: none;
-  filter: drop-shadow(0 2rpx 4rpx rgba(70, 56, 42, 0.2));
-}
 
 /* 标题区 */
 .title { padding-top: 130rpx; font-size: 42rpx; font-weight: 700; color: var(--patina); letter-spacing: 4rpx; }
@@ -55,7 +43,7 @@
   margin: 36rpx 0 28rpx; padding: 20rpx 0;
   border-top: 1rpx dashed var(--dash);
 }
-.stamp-date.mini { width: 100rpx; height: 100rpx; font-size: 18rpx; }
+.plateno.mini { width: 100rpx; height: 100rpx; font-size: 18rpx; }
 .date-note { font-size: 26rpx; color: var(--ink60); transform: rotate(-1deg); }
 
 /* 解谜后独白 */

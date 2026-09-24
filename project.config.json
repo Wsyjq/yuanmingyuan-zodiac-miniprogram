@@ -1,5 +1,5 @@
 {
-  "description": "西洋楼铜版图·第二十一图 —— 1.1.1 测试版（v3 按页独立旁白）",
+  "description": "西洋楼铜版图·第二十一图 —— 1.2.3 plate21-clean",
   "appid": "wxa284707129230b80",
   "compileType": "miniprogram",
   "libVersion": "2.30.0",
@@ -43,6 +43,22 @@
       {
         "value": "test",
         "type": "folder"
+      },
+      {
+        "value": "preview",
+        "type": "folder"
+      },
+      {
+        "value": "定稿",
+        "type": "folder"
+      },
+      {
+        "value": "assets/host/entry-screen.png",
+        "type": "file"
+      },
+      {
+        "value": "assets/host/entry-hero.jpg",
+        "type": "file"
       },
       {
         "value": "showcase",

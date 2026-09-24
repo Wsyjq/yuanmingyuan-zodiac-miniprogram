@@ -16,38 +16,9 @@
   z-index: 3;
 }
 /* v1.3.1：邮戳贴纸压在编号签左下方，归档封缄感 */
-.end-postmark {
-  position: absolute;
-  top: 28rpx;
-  right: 150rpx;
-  width: 170rpx;
-  height: 120rpx;
-  transform: rotate(-8deg);
-  opacity: 0.9;
-  z-index: 3;
-  pointer-events: none;
-  filter: drop-shadow(0 3rpx 6rpx rgba(70, 56, 42, 0.22));
-}
 /* v1.3.1：干花标本贴纸压在视频框左下角 */
-.end-botanical {
-  position: absolute;
-  bottom: -24rpx;
-  left: -22rpx;
-  width: 180rpx;
-  height: 160rpx;
-  transform: rotate(-5deg);
-  opacity: 0.9;
-  z-index: 9;
-  pointer-events: none;
-  filter: drop-shadow(0 3rpx 6rpx rgba(70, 56, 42, 0.22));
-}
 
 /* v1.3 手账：VID-E01 主图顶边和纸胶带（视频块贴屏顶，胶带收进内侧防裁切） */
-.video-block .tape {
-  top: 24rpx;
-  left: 50%;
-  margin-left: -90rpx;
-}
 
 /* v1.3 手账：归途批注，靠右落于叙事与完结卡之间 */
 .end-note {
@@ -56,7 +27,7 @@
   text-align: right;
 }
 
-/* VID-E01 占位块：双框线（double-frame） */
+/* VID-E01 占位块：双框线（plate） */
 .video-block {
   position: relative;
   width: 100%;
@@ -77,7 +48,6 @@
   width: 100%;
   height: 100%;
   z-index: 0;
-  filter: sepia(0.55) contrast(1.05) brightness(0.95);
   opacity: 0.92;
 }
 /* 视频区内容提到背景之上 */

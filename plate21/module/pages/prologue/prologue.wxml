@@ -1,8 +1,10 @@
-<view class="page page-shell paper-grain paper-real">
+<view class="page page-shell paper-grain">
   <!-- v1.3.1 手账：左侧活页装订孔列（叙事页） -->
-  <view class="binder"></view>
   <nav-back />
 <bgm-ambience />
+  <view class="narr-bar">
+    <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" autoplay="{{true}}" kind="voice" label="听 · 本页讲述" />
+  </view>
   <novel-view
     style="flex: 1; min-height: 0; height: 0;"
     title="序章"
@@ -12,7 +14,6 @@
     bind:finish="onNovelFinish"
     bind:glossary="onGlossary"
   />
-  <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 序章讲述" dock="{{true}}" />
 
   <!-- 术语史料卡（正文铜绿词点入，如《西洋楼铜版图》SL-01） -->
   <history-card

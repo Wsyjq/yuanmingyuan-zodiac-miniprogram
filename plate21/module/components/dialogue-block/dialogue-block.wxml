@@ -2,9 +2,9 @@
 <view class="db-block">
   <view class="db-head">
     <view class="db-speaker serif">{{speaker}}</view>
-    <view wx:if="{{aside}}" class="db-aside note-hand olive">{{aside}}</view>
+    <view wx:if="{{aside}}" class="db-aside handnote olive">{{aside}}</view>
     <audio-clip wx:if="{{clipSrc}}" class="db-play" src="{{clipSrc}}" label="听这句" icon="{{true}}" />
   </view>
   <view class="db-text kaiti">{{text}}</view>
-  <view wx:if="{{note}}" class="db-note note-hand">{{note}}</view>
+  <view wx:if="{{note}}" class="db-note handnote">{{note}}</view>
 </view>

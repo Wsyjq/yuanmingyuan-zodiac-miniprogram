@@ -5,12 +5,7 @@
 const session = require('../../store/session')
 const playGuide = require('./guide')
 const coachMeasure = require('./measure')
-
-let busy = false
-
-function resetBusy() {
-  busy = false
-}
+const coachBusy = require('./coach-busy')
 
 module.exports = Behavior({
   data: {
@@ -26,7 +21,7 @@ module.exports = Behavior({
   lifetimes: {
     detached() {
       this._clearCoachRetry()
-      if (this.data.showCoach) busy = false
+      if (this.data.showCoach) coachBusy.resetBusy()
     }
   },
 
@@ -46,8 +41,8 @@ module.exports = Behavior({
 
     beginCoach(steps, doneFlag) {
       if (!steps || !steps.length) return false
-      if (busy) return false
-      busy = true
+      if (coachBusy.isBusy()) return false
+      coachBusy.setBusy(true)
       this._coachFlag = doneFlag || null
       this.setData({
         showCoach: true,
@@ -152,7 +147,7 @@ module.exports = Behavior({
       this.setData({ coachClosing: true })
       const self = this
       const close = function () {
-        busy = false
+        coachBusy.resetBusy()
         self.setData({ showCoach: false, coachClosing: false, coachHole: null })
         if (typeof after === 'function') after()
       }
@@ -173,9 +168,7 @@ module.exports = Behavior({
         clearTimeout(this._coachTimer)
         this._coachTimer = null
       }
-      busy = false
+      coachBusy.resetBusy()
     }
   }
 })
-
-module.exports.resetBusy = resetBusy

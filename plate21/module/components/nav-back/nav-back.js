@@ -36,25 +36,30 @@ Component({
     onTap() {
       this.triggerEvent('back')
       try {
-        const coach = require('../../capabilities/play-guide/coach-host')
-        if (coach.resetBusy) coach.resetBusy()
+        const coachBusy = require('../../capabilities/play-guide/coach-busy')
+        coachBusy.resetBusy()
         const session = require('../../store/session')
         const cloud = require('../../store/cloud-sync')
         cloud.push(session.getSnapshot())
       } catch (err) { /* 返回不能被存档失败挡住 */ }
       if (this.data.custom) return
-      let prev = ''
-      try {
-        prev = require('../../store/trail').popBack()
-      } catch (err) {}
-      if (prev) {
-        wx.redirectTo({
-          url: prev,
-          fail: function () { wx.reLaunch({ url: '/pages/index/index' }) }
+      const stack = typeof getCurrentPages === 'function' ? getCurrentPages() : []
+      const route = stack.length && stack[stack.length - 1] ? String(stack[stack.length - 1].route || '') : ''
+      const onCover = route.indexOf('pages/cover/cover') >= 0
+      if (stack.length > 1) {
+        wx.navigateBack({
+          fail: function () {
+            if (onCover) wx.reLaunch({ url: '/pages/ticket/ticket' })
+            else wx.reLaunch({ url: '/plate21/module/pages/cover/cover' })
+          }
         })
         return
       }
-      wx.reLaunch({ url: '/pages/index/index' })
+      if (!onCover) {
+        wx.reLaunch({ url: '/plate21/module/pages/cover/cover' })
+        return
+      }
+      wx.reLaunch({ url: '/pages/ticket/ticket' })
     }
   }
 })

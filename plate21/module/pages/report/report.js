@@ -425,7 +425,7 @@ Page({
     session.completeExperience().then(() => {
       session.emit({ name: 'module_exit' })
       wx.reLaunch({
-        url: '/pages/index/index',
+        url: '/plate21/module/pages/cover/cover',
         fail: () => this.setData({ completing: false })
       })
     }).catch(() => {

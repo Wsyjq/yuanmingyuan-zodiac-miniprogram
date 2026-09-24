@@ -1,19 +1,15 @@
 <!-- v1.3.1 手账：左侧活页装订孔列（移到 .page 外，避免 flex 影响 fixed） -->
-<view class="binder"></view>
-<view class="page paper-grain paper-real">
+<view class="page paper-grain">
 
   <!-- v1.3 手账：归档编号签 -->
-  <view class="tag-no page-tag">No.016</view>
+  <view class="plateno page-tag">No.016</view>
   <!-- v1.3.1 手账：邮戳贴纸压在编号签旁，归档封缄感 -->
-  <image class="end-postmark" src="/plate21/module/assets/img/stickers/st-postmark-02.png" mode="aspectFit" />
 
   <!-- VID-E01 离场视频区：真视频就位用 <video>，未就位 poster 兜底显示 IMG-R01 夕照 -->
-  <view class="video-block double-frame">
+  <view class="video-block">
     <video wx:if="{{videoSrc}}" id="endVideo" class="video-bg" src="{{videoSrc}}" poster="/plate21/module/assets/img/IMG-R01.jpg" objectFit="cover" controls></video>
     <image wx:else class="video-bg" src="/plate21/module/assets/img/IMG-R01.jpg" mode="aspectFill" />
-    <view class="tape"></view>
     <!-- v1.3.1 手账：干花标本贴纸压在视频框左下角，标本感 -->
-    <image class="end-botanical" src="/plate21/module/assets/img/stickers/st-botanical-02.png" mode="aspectFit" />
     <image class="play-icon" src="/plate21/module/assets/img/icons/ic-play-ink.png" mode="aspectFit" bindtap="onPlay" />
     <text class="video-code">VID-E01</text>
     <text class="video-desc">结尾离场视频 · 30-60s</text>

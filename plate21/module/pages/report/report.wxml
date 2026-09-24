@@ -1,6 +1,5 @@
 <!-- v1.3.1 手账：左侧活页装订孔列（移到 .page 外，避免 flex 影响 fixed） -->
-<view class="binder"></view>
-<view class="page page-shell paper-grain paper-real">
+<view class="page page-shell paper-grain">
 <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
   
   <view class="title serif">西洋楼铜版图 · 第二十一图</view>
@@ -8,14 +7,10 @@
   <view class="archive-rule report-rule"></view>
 
   <!-- 万字纹画框（邮票齿孔框 + 角花）+ 完整第 21 图预览 -->
-  <view class="frame perfo-frame">
-    <view class="corner tl"></view>
-    <view class="corner tr"></view>
-    <view class="corner bl"></view>
-    <view class="corner br"></view>
+  <view class="frame plate">
     <!-- v1.3.1 手账：长尾夹贴纸压在画框左上角，像夹住档案 -->
     
-    <view class="stamp-date frame-stamp">
+    <view class="plateno frame-stamp">
       <text>考察之日</text>
       <text>{{today}}</text>
     </view>
@@ -35,7 +30,7 @@
     </view>
   </view>
 
-  <view class="field-record archive-sheet">
+  <view class="field-record plate stitched">
     <view class="field-head">
       <view>
         <view class="field-kicker">FIELD RECORD · S2-3</view>
@@ -86,9 +81,9 @@
       </button>
     </block>
 
-    <view wx:else class="echo-sent card-ticket">
+    <view wx:else class="echo-sent plate">
       <view class="echo-sent-text kaiti">{{submittedText}}</view>
-      <view class="echo-sent-note note-hand olive">已存入第21图的档案。下一位来到这里的人，会读到你写的那一句。</view>
+      <view class="echo-sent-note handnote olive">已存入第21图的档案。下一位来到这里的人，会读到你写的那一句。</view>
       <button class="btn-line echo-edit" bindtap="onEditMessage">重写这张明信片</button>
     </view>
 
@@ -113,7 +108,7 @@
   </view>
 
   <view class="meta">绘制者 {{name}} · 绘制时间 {{today}}</view>
-  <view class="note-hand olive frame-note" style="transform: rotate(-1.5deg);">中间那块空着的，就是你站着的位置。</view>
+  <view class="handnote olive frame-note">中间那块空着的，就是你站着的位置。</view>
 
   <view class="actions">
     <button class="btn-seal act-btn finish-btn" bindtap="onFinish" disabled="{{completing}}">{{completing ? '正在完成考察……' : (completed ? '返回考察模块首页' : '完成考察并返回首页')}}</button>
@@ -125,7 +120,7 @@
     <button class="btn-line act-btn" bindtap="onOpenHandbook">回看考察手册</button>
     <button class="btn-line act-btn" bindtap="onRubbingHint">拓印提示</button>
   </view>
-  <view wx:if="{{saveError}}" class="save-recovery record-field">
+  <view wx:if="{{saveError}}" class="save-recovery stitch-strip">
     <view class="save-error">{{saveError}}</view>
     <button wx:if="{{canOpenAlbumSettings}}" class="btn-line settings-btn" bindtap="onOpenAlbumSettings">打开权限设置</button>
   </view>
@@ -133,10 +128,9 @@
   <!-- 拓印提示：轻提示条 + 剧情文字 -->
   <view wx:if="{{showRubbing}}" class="rubbing">
     <view class="rubbing-tip">提示 · 手册最后的折页留着一方空白</view>
-    <view class="rubbing-panel card-ticket">
+    <view class="rubbing-panel plate">
       <view class="rubbing-text">翻开考察手册最后的折页，那里留着一方空白，边缘印着细弱的万字纹……数字版归数字记录，纸上的痕迹，归这一路真实做过的动作。</view>
     </view>
-    <view class="ticket-edge"></view>
   </view>
 
 </scroll-view>

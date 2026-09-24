@@ -19,7 +19,8 @@ Component({
     compact: { type: Boolean, value: false },
     icon: { type: Boolean, value: false },
     kind: { type: String, value: 'voice' },
-    dock: { type: Boolean, value: false }
+    dock: { type: Boolean, value: false },
+    autoplay: { type: Boolean, value: false }
   },
 
   data: {
@@ -35,7 +36,7 @@ Component({
       const wasPlaying = this.data.playing
       this.destroyCtx()
       this.setData({ playing: false, progress: 0, failed: false })
-      if (wasPlaying && src && this.data.enabled) {
+      if (src && this.data.enabled && (wasPlaying || this.data.autoplay)) {
         const self = this
         setTimeout(function () { self.onToggle() }, 0)
       }
@@ -66,12 +67,6 @@ Component({
       this.setData({ enabled: enabled })
     },
 
-    onMute() {
-      const settings = require('../../utils/audio-settings')
-      const cur = settings.get()
-      settings.set('voice', !cur.voice)
-    },
-
     onToggle() {
       if (!this.data.src || this.data.failed || !this.data.enabled) return
       if (this.data.playing) {
@@ -92,15 +87,24 @@ Component({
           this.triggerEvent('ended')
         })
         ctx.onError(() => {
-          this.setData({ playing: false, progress: 0, failed: true })
+          this.setData({ playing: false, progress: 0 })
           if (audioBus.isActive(this)) audioBus.release()
+          if (wx.showToast) wx.showToast({ title: '这段没有播出来', icon: 'none' })
         })
         this._ctx = ctx
       }
-      audioBus.activate(this)
-      this._ctx.play()
-      this.setData({ playing: true })
-      this.triggerEvent('play')
+      const start = () => {
+        audioBus.activate(this)
+        this._ctx.play()
+        this.setData({ playing: true })
+        this.triggerEvent('play')
+      }
+      const pack = String(this.data.src || '').match(/^\/(voice-[a-z]+)\//)
+      if (pack && typeof wx.loadSubpackage === 'function') {
+        wx.loadSubpackage({ name: pack[1], success: start, fail: start })
+        return
+      }
+      start()
     },
 
     // dock 形态：收起为小圆钮 / 展开回播放条

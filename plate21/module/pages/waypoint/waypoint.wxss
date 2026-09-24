@@ -5,7 +5,7 @@
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  padding-top: 220rpx;
+  padding-top: 0;
 }
 .page-no {
   position: absolute;
@@ -18,6 +18,7 @@
   letter-spacing: 4rpx;
   color: var(--ink-deep);
 }
+.ac-wrap { margin: 12rpx 0 20rpx; }
 .wp-intro {
   margin-top: 22rpx;
   font-size: 31rpx;
@@ -38,13 +39,16 @@
 .wp-fade-card {
   margin: 20rpx 0;
   padding: 28rpx 24rpx;
-  border: 1rpx solid var(--dash);
-  background: var(--paper2);
+  border: 1rpx solid var(--rule);
+  background: var(--paper-hi);
+}
+.wp-fade-run {
   animation: wp-fade-in 1.2s ease both;
 }
 .wp-fade-img {
   display: block;
   width: 100%;
+  height: 380rpx;
   margin-bottom: 16rpx;
 }
 .wp-fade-name {
@@ -120,6 +124,46 @@
 }
 .wp-confirm-btn {
   margin-top: 32rpx;
+}
+.wp-steps {
+  margin: 20rpx 0 8rpx;
+}
+.wp-step {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 16rpx;
+}
+.wp-step-no {
+  flex-shrink: 0;
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 16rpx;
+  margin-top: 4rpx;
+  line-height: 40rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: var(--paper);
+  background: var(--cinnabar, #A63A2E);
+  border-radius: 50%;
+}
+.wp-step-text {
+  flex: 1;
+  font-size: 30rpx;
+  line-height: 1.7;
+  color: var(--ink);
+}
+.answer-input {
+  display: block;
+  width: 100%;
+  min-height: 96rpx;
+  box-sizing: border-box;
+  margin-top: 24rpx;
+  padding: 0 24rpx;
+  font-size: 34rpx;
+  line-height: 96rpx;
+  color: var(--ink);
+  background: rgba(255, 252, 245, 0.85);
+  border: 2rpx solid rgba(70, 56, 42, 0.45);
 }
 .wp-listen { margin: 24rpx 0; }
 .q-title { font-size: 34rpx; letter-spacing: 4rpx; margin: 24rpx 0 12rpx; }

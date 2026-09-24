@@ -24,6 +24,7 @@ function currentUrl() {
   if (!cur || !cur.route) return ''
   const route = '/' + cur.route
   if (route.indexOf('/pages/index/index') >= 0) return ''
+  if (route.indexOf('/pages/ticket/ticket') >= 0) return ''
   const opt = cur.options || {}
   const query = Object.keys(opt).map(function (key) {
     return key + '=' + encodeURIComponent(opt[key] == null ? '' : opt[key])
