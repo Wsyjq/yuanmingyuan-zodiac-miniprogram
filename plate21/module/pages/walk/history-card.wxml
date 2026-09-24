@@ -1,0 +1,16 @@
+<view class="history-detail">
+<button class="text-button history-back" bindtap="onHistoryList">‹ 返回史料目录</button>
+          <view class="title small">{{card.title}}</view>
+          <text class="caption">完整史料 · 共 {{card.layers.length}} 层 · 向下阅读全部内容</text>
+          <view wx:if="{{card.layers.length > 1}}" class="history-levels"><button wx:for="{{card.layers}}" wx:key="index" class="chip" data-level="{{index}}" bindtap="onCardLevel">跳至第 {{index + 1}} 层</button></view>
+          <image wx:if="{{card.image && !cardImageFailed}}" src="{{card.image}}" mode="widthFix" class="illustration" data-src="{{card.image}}" bindtap="onPreview" binderror="onCardImageError"/>
+          <button wx:if="{{card.image && cardImageFailed}}" class="text-button" bindtap="onRetryCardImage">配图暂未加载，点击重试</button>
+          <text wx:if="{{card.caption}}" class="caption">{{card.caption}}</text>
+          <view wx:for="{{card.layers}}" wx:key="index" id="history-layer-{{index}}" class="history-section">
+            <view class="history-level-title"><text class="history-level-number">{{index + 1}}</text><text>{{index === 0 ? '概览' : index === 1 ? '深入' : '延伸'}}</text></view>
+            <text class="paragraph" user-select>{{item}}</text>
+          </view>
+          <view wx:if="{{card.years.length}}" class="caption">相关年份：<text wx:for="{{card.years}}" wx:key="*this">{{item}}　</text></view>
+          <text class="history-end caption">本篇史料已完整展示</text>
+          <button class="secondary" bindtap="onCloseDrawer">读完，返回剧情</button>
+</view>

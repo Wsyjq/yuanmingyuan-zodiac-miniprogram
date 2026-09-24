@@ -36,7 +36,7 @@ function fmt(at) { return dates.formatArchiveDate(dates.dateKeyFromTimestamp(at)
 function errorText(err) { return err && (err.message || err.errMsg) || '操作未完成，请重试' }
 Page({
   data: { loading: true, busy: false, error: '', pageVisible: true, screen: {}, ui: {}, rows: [], records: [],
-    narrClips: [], voiceEnabled: false, drawer: '', card: null, waterClockState: {}, clockPlaying: false,
+    narrClips: [], voiceEnabled: false, drawer: '', card: null, drawerScrollTop: 0, cardAnchor: '', cardImageFailed: false, waterClockState: {}, clockPlaying: false,
     soundSrc: nfc.SOUND, relayItems: [], relayState: 'idle', contributions: [], archives: [], scrollTop: 0, navX: 0, navY: 0, locating: false, location: null, locationError: '' },
   async onLoad(query) {
     const window = wx.getWindowInfo ? wx.getWindowInfo() : (wx.getSystemInfoSync ? wx.getSystemInfoSync() : { windowWidth: 375, windowHeight: 667 })
@@ -97,7 +97,7 @@ Page({
     const unlockedCards = []
     Object.keys(this.run.visited).forEach((id) => {
       require('../../flow/glossary').termsFor(id).forEach((term) => {
-        if (!unlockedCards.some((x) => x.key === term.key)) unlockedCards.push(term)
+        if (!unlockedCards.some((x) => x.key === term.key)) unlockedCards.push({ key: term.key, label: (cards.get(term.key) || {}).title || term.label })
       })
     })
     this.setData({ letterScene: page.kind === 'letter' && !(this.ui.letterSceneDone && ['LT6', 'LT7'].includes(page.id)),
@@ -109,7 +109,7 @@ Page({
       narrClips: cue.clipsFor(page, Object.assign({}, this.run, { uiByPage: Object.assign({}, this.run.uiByPage, { [page.id]: this.ui }) })),
       voiceEnabled: settings.get().voice, soundSrc: resources.resolve(nfc.SOUND, 'audio'), waterClockState: this.ui.waterClock || {},
       clockPlaying: !!(this.ui.waterClock && this.ui.waterClock.playing),
-      narrative: model.lines.map(line => glossary.segments(line, model.terms || [])),
+      narrative: model.lines.map(line => glossary.segments(line, glossary.inlineTermsFor(page.id, unlockedCards))),
       routeRows: view.rows.filter(r => navModel.listSites().some(s => s.id === r.id)).map(r => Object.assign({}, r, { openPageId: r.current ? view.resumePageId : view.openPageId(r.id) })),
       routeCurrent: (view.rows.find(r => r.current) || {}).title || '考察尚未开始',
       historyCards: unlockedCards, hasHint: !!HINTS[page.playId], hint: this.ui.hint ? HINTS[page.playId] : '',
@@ -205,23 +205,27 @@ Page({
     })
   },
   onOpenPage(e) { const id = ds(e, 'page'); if (!id) return; this.setData({ drawer: '' }); this.action(() => session.navigate(id, { sessionId: this.sessionId })) },
-  onDrawer(e) { this.setData({ drawer: ds(e, 'name') || '', card: null }); audioBus.pauseAll() },
+  onDrawer(e) { this.setData({ drawer: ds(e, 'name') || '', card: null, drawerScrollTop: 0, cardAnchor: '' }); audioBus.pauseAll() },
   onCloseDrawer() { this.setData({ drawer: '', card: null }) },
   noop() {},
   onOpenCard(e) {
     const key = ds(e, 'key'); const card = cards.get ? cards.get(key) : cards.SL_CARDS[key]
     if (!card || !this.data.historyCards.some(item => item.key === key)) return
     audioBus.pauseAll()
-    const required = { sl07: 'quiz-lantern', sl12: 'quiz-hour', sl14: 'place-animals' }[key]
-    const status = this.run.puzzles[required]
-    const locked = !!required && status !== 'solved' && status !== 'assisted'
-    this.setData({ drawer: 'history', card: Object.assign({}, card, { key, level: 0, image: locked ? '' : resources.resolve(card.image, 'asset'), caption: locked ? '' : card.caption, layers: locked ? card.layers.slice(0, key === 'sl07' ? 1 : 0) : card.layers,
-      answerHidden: locked, years: locked ? [] : card.years || [] }) })
+    this.setData({ drawer: 'history', drawerScrollTop: 0, cardAnchor: '', cardImageFailed: false,
+      card: Object.assign({}, card, { key, image: resources.resolve(card.image, 'asset'), layers: card.layers.slice(), years: card.years || [] }) })
   },
   onCardLevel(e) {
     const level = Number(ds(e, 'level'))
-    if (this.data.card && Number.isInteger(level) && level >= 0 && level < this.data.card.layers.length) this.setData({ 'card.level': level })
+    if (!this.data.card || !Number.isInteger(level) || level < 0 || level >= this.data.card.layers.length) return
+    const key = this.data.card.key
+    this.setData({ cardAnchor: '' })
+    wx.nextTick(() => { if (this._active && this.data.card && this.data.card.key === key) this.setData({ cardAnchor: 'history-layer-' + level }) })
   },
+  onDrawerScroll(e) { this.setData({ drawerScrollTop: Math.max(0, Number(e.detail.scrollTop) || 0) }) },
+  onHistoryList() { this.setData({ card: null, cardAnchor: '', drawerScrollTop: 0 }) },
+  onCardImageError() { this.setData({ cardImageFailed: true }) },
+  onRetryCardImage() { this.setData({ cardImageFailed: false }) },
   onRoute() { this.setData({ drawer: 'route', card: null }); audioBus.pauseAll() },
   onNavStart(e) {
     const t = e.touches[0]; this._drag = { x: t.clientX, y: t.clientY, left: this.data.navX, top: this.data.navY, moved: false }

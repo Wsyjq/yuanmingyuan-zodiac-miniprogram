@@ -24,9 +24,9 @@ function fixture(id, ui) {
     createdAt: at, updatedAt: at, run, records: [], contributions: [], archives: [], sync: { status: 'local' } },
   pending: [], remoteRevision: null }
 }
-async function render(id, ui) {
+async function render(id, ui, drive) {
   const store = { 'plate21_v3_session:demo:demo': fixture(id, ui) }
-  return renderPage({ route: ROUTE, settleMs: 40, wxOverrides: {
+  return renderPage({ route: ROUTE, settleMs: 40, drive, wxOverrides: {
     getStorageSync: key => store[key] ? JSON.parse(JSON.stringify(store[key])) : '',
     setStorageSync: (key, value) => { store[key] = JSON.parse(JSON.stringify(value)) },
     nextTick: fn => fn()
@@ -136,4 +136,36 @@ test('restored original prose actually reaches WXML instead of only remaining in
     for (const phrase of phrases) assert.ok(actual.includes(phrase), id + ': ' + phrase)
     assert.doesNotMatch(actual, /【DJ|【SL|【小程序/)
   }
+})
+
+test('clicking each of 17 inline historical terms renders every Word layer and its figure', async () => {
+  const glossary = require('../plate21/module/flow/glossary')
+  const cards = require('../plate21/module/utils/sl-cards')
+  const original = require('./fixtures/v3-script-coverage.json')
+  const visited = new Set()
+  for (const page of pages.list) for (const term of glossary.termsFor(page.id)) {
+    if (visited.has(term.key)) continue
+    visited.add(term.key)
+    const result = await render(page.id, { flipped: true, arrived: true }, inst => {
+      // Drive the real click handler with the key actually carried by a narrative span.
+      const span = inst.data.narrative.flat().find(part => part.key === term.key)
+      assert.ok(span, page.id + ' has no clickable term for ' + term.key)
+      const before = JSON.stringify(inst.run)
+      inst.onDrawerScroll({ detail: { scrollTop: 1200 } })
+      inst.onOpenCard({ currentTarget: { dataset: { key: span.key } } })
+      assert.equal(inst.data.card.key, term.key)
+      assert.equal(inst.data.drawerScrollTop, 0)
+      assert.equal(JSON.stringify(inst.run), before)
+    })
+    assert.deepEqual(result.errors, [], term.key)
+    const actual = text(result.html).replace(/\s/g, '')
+    for (const paragraph of original.history.filter(p => p.key === term.key)) {
+      assert.ok(actual.includes(paragraph.text.replace(/\s/g, '')), term.key + ' missing Word paragraph ' + paragraph.paragraph)
+    }
+    const source = cards.get(term.key)
+    if (source.image) assert.ok(result.html.includes(source.image), term.key + ' image missing')
+    assert.match(actual, /本篇史料已完整展示/)
+    assert.doesNotMatch(actual, /完成对应互动后展示|undefined/)
+  }
+  assert.equal(visited.size, 17)
 })

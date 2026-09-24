@@ -304,18 +304,40 @@ test('field tools preserve progress, suppress tap after dragging and handle loca
   } finally { await h.close() }
 })
 
-test('history only opens encountered cards and hides puzzle answers and illustrations until solved', async () => {
+test('encountered history opens every original layer and illustration before solving the puzzle', async () => {
   const h = await harness()
   try {
     h.page.onOpenCard(event({ key: 'sl12' }))
     assert.equal(h.page.data.card, null)
     await h.arrange('H1')
     h.page.onOpenCard(event({ key: 'sl07' }))
-    assert.equal(h.page.data.card.layers.length, 1)
-    assert.equal(h.page.data.card.answerHidden, true)
-    assert.equal(h.page.data.card.image, '')
+    assert.equal(h.page.data.card.layers.length, 3)
+    assert.equal(h.page.data.card.answerHidden, undefined)
+    assert.ok(h.page.data.card.image)
     h.page.onOpenCard(event({ key: 'sl01' }))
     assert.equal(h.page.data.card.layers.length, 2)
     assert.ok(h.page.data.card.image)
+  } finally { await h.close() }
+})
+
+test('history is complete before solving or after skipping, and catalog return resets its scroll', async () => {
+  const h = await harness()
+  const cards = require('../plate21/module/utils/sl-cards')
+  try {
+    for (const [page, key, puzzle] of [['H1', 'sl07', 'quiz-lantern'], ['HY1', 'sl12', 'quiz-hour'], ['DS1', 'sl14', 'place-animals']]) {
+      await h.arrange(page)
+      h.page.onOpenCard(event({ key }))
+      assert.deepEqual(h.page.data.card.layers, cards.get(key).layers)
+      h.page.run.puzzles[puzzle] = 'skipped'
+      h.page.onOpenCard(event({ key }))
+      assert.deepEqual(h.page.data.card.layers, cards.get(key).layers)
+      h.page.onCardLevel(event({ level: 1 }))
+      assert.equal(h.page.data.cardAnchor, 'history-layer-1')
+      h.page.onDrawerScroll({ detail: { scrollTop: 900 } })
+      h.page.onHistoryList()
+      assert.equal(h.page.data.card, null)
+      assert.equal(h.page.data.drawerScrollTop, 0)
+      assert.equal(h.page.data.cardAnchor, '')
+    }
   } finally { await h.close() }
 })
