@@ -80,6 +80,27 @@
       "source": "main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json"
     },
     {
+      "path": "plate21/module/assets/img/dashuifa-deer.png",
+      "bytes": 108539,
+      "sha256": "3d92d6a3cb3290040c69dae356007595d5feb97ffdebc50d24fed28447001e97",
+      "published": true,
+      "source": "用户提供的大水法图片，经 imagegen 制作空景与透明雕塑素材；见 docs/v3-dashuifa.md"
+    },
+    {
+      "path": "plate21/module/assets/img/dashuifa-dogs.png",
+      "bytes": 237278,
+      "sha256": "3e9ad20046d1b39802a302aac4601c5ad64f9e01237f0b7bbb58e9bc2023eeea",
+      "published": true,
+      "source": "用户提供的大水法图片，经 imagegen 制作空景与透明雕塑素材；见 docs/v3-dashuifa.md"
+    },
+    {
+      "path": "plate21/module/assets/img/dashuifa-empty.jpg",
+      "bytes": 327958,
+      "sha256": "0788c6214232bdf147c33ebd9354e86c62b67baa57071173d59e75ff545bb00f",
+      "published": true,
+      "source": "用户提供的大水法图片，经 imagegen 制作空景与透明雕塑素材；见 docs/v3-dashuifa.md"
+    },
+    {
       "path": "plate21/module/assets/img/icons/ic-play-ink.png",
       "bytes": 1709,
       "sha256": "a4a96aa1a47a90f9ac4d44ee20da43f87342acad599c246b963e9457e31f4c3c",

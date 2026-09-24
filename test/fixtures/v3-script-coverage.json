@@ -958,7 +958,8 @@
       "destination": {
         "page": "DS1",
         "field": "interaction"
-      }
+      },
+      "displayText": "画中还缺少鹿与猎犬。请对照铜版图，将它们拖回水池中的位置。"
     },
     {
       "paragraph": 245,

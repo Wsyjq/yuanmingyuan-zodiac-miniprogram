@@ -1,0 +1,20 @@
+<view class="fountain-game">
+  <view class="fountain-scene {{flowing ? 'is-flowing' : ''}}">
+    <image wx:if="{{!failed}}" class="scene-bg" src="{{base}}" mode="aspectFill" binderror="onImageError" />
+    <view wx:if="{{failed}}" class="scene-fallback">水池<view class="fallback-ring"></view></view>
+    <button wx:if="{{!settled.dogs}}" class="drop-zone dogs-zone {{selected === 'dogs' ? 'target-active' : ''}}" data-id="dogs" bindtap="onTarget" disabled="{{readOnly}}" aria-label="环绕水池中央的位置"><text class="dogs-zone-label">环绕中央</text></button>
+    <button wx:if="{{!settled.deer}}" class="drop-zone deer-zone {{selected === 'deer' ? 'target-active' : ''}}" data-id="deer" bindtap="onTarget" disabled="{{readOnly}}" aria-label="水池中央的位置"><text>池中</text></button>
+    <image wx:if="{{settled.deer}}" class="placed-deer" src="{{pieces[0].src}}" mode="aspectFit" />
+    <image wx:if="{{settled.dogs}}" class="placed-dogs" src="{{pieces[1].src}}" mode="aspectFit" />
+    <view wx:if="{{complete}}" class="water-layer">
+      <view wx:for="{{jets}}" wx:key="id" class="water-arc" style="left:{{item.x}}%;top:{{item.y}}%;width:{{item.w}}%;height:{{item.h}}%;transform:rotate({{item.angle}}deg);animation-delay:{{item.delay}}s"><view class="water-droplet" style="animation-delay:{{item.delay}}s"></view></view>
+      <view class="water-mist"></view>
+    </view>
+  </view>
+  <text class="instruction">把鹿与猎犬拖回画中。也可以先点选，再点位置。</text>
+  <view class="piece-tray"><view wx:for="{{pieces}}" wx:key="id" class="piece {{settled[item.id] ? 'piece-done' : ''}} {{selected === item.id ? 'piece-selected' : ''}}" data-id="{{item.id}}" catchtouchstart="onStart" catchtouchmove="onMove" catchtouchend="onEnd" catchtouchcancel="cancel"><image wx:if="{{!failed}}" class="piece-image" src="{{item.src}}" mode="aspectFit" binderror="onImageError"/><button class="piece-label" data-id="{{item.id}}" bindtap="onSelect" disabled="{{readOnly || settled[item.id]}}">{{item.label}}{{settled[item.id] ? ' · 已归位' : ''}}</button></view></view>
+  <view wx:if="{{drag}}" class="drag-ghost" style="left:{{drag.x}}px;top:{{drag.y}}px"><image class="ghost-image" src="{{drag.src}}" mode="aspectFit"/></view>
+  <text wx:if="{{notice}}" class="fountain-notice" role="status">{{notice}}</text>
+  <button wx:if="{{failed}}" class="fountain-button" bindtap="onRetry">画卷暂未展开，点此重试</button>
+  <button wx:if="{{complete}}" class="fountain-button" bindtap="onReplay">{{flowing ? '暂停水流' : '再次唤起水流'}}</button>
+</view>

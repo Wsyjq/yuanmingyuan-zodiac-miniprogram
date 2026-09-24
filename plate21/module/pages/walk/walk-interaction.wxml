@@ -30,11 +30,7 @@
       <view wx:if="{{screen.figures.length}}" class="pattern-grid"><button wx:for="{{screen.figures}}" wx:key="id" data-id="{{item.id}}" bindtap="onChoice" class="pattern {{item.selected ? 'selected' : ''}}" disabled="{{review}}"><image src="{{item.src}}" mode="aspectFill"/><text>{{item.label}}</text></button></view>
       <water-clock wx:if="{{playId === 'quiz-hour'}}" state="{{waterClockState}}" active="{{pageVisible && !drawer}}" bind:change="onWaterClockChange" bind:complete="onWaterClockComplete"/>
       <view wx:if="{{playId === 'prop-dial'}}" class="activity"><checkbox-group bindchange="onConfirmDial"><label class="check-label"><checkbox value="done" checked="{{ui.confirmed}}" disabled="{{review}}" color="#716743"/>我已完成实体转盘操作，准备继续</label></checkbox-group></view>
-      <view wx:if="{{playId === 'place-animals'}}" class="activity">
-        <text class="caption">先选择构件，再点它在喷水池中的位置；可重新放置。</text>
-        <view class="pieces"><button wx:for="{{screen.board.pieces}}" wx:key="id" class="chip {{item.on ? 'selected' : ''}}" data-id="{{item.id}}" bindtap="onPiece">{{item.text}}</button></view>
-        <view class="pool"><view class="stone-front">大水法石构</view><button wx:for="{{screen.board.slots}}" wx:key="id" class="pool-slot slot-{{item.id}}" data-id="{{item.id}}" bindtap="onSlot">{{item.text}}</button></view>
-      </view>
+      <fountain-puzzle wx:if="{{playId === 'place-animals'}}" placed="{{ui.placed}}" active="{{pageVisible && !drawer && !restartScreen}}" read-only="{{review}}" bind:change="onFountainPlacement"/>
       <view wx:if="{{pageId === 'DS2'}}" class="activity">
         <view class="subheading">旧画与眼前</view><view class="fountain-frame">
           <view class="ruins-line"><view class="column c1"></view><view class="column c2"></view><view class="arch"></view><view class="column c3"></view><view class="column c4"></view><text>抬头看看，眼前还留下了什么</text></view>

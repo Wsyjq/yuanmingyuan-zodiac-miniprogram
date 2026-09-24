@@ -8,6 +8,7 @@ const files=[...scan(path.join(root,'assets')),...scan(path.join(root,'plate21/m
  ...fs.readdirSync(root).filter(n=>/^voice-[a-z]+$/.test(n)).flatMap(n=>scan(path.join(root,n)))].filter(p=>/\.(jpg|jpeg|png|webp|mp3|wav|ttf|woff2)$/i.test(p))
 const rows=files.map(p=>{const rel=path.relative(root,p).replace(/\\/g,'/');let source='main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json'
  if(rel.includes('water-clock/assets/'))source='用户提供的海晏堂HTML原型；图像提取压缩，水声由代码合成，见 reference/海晏堂水力钟-谜题互动版.html'
+ else if(rel.includes('/dashuifa-'))source='用户提供的大水法图片，经 imagegen 制作空景与透明雕塑素材；见 docs/v3-dashuifa.md'
  else if(rel.startsWith('voice-'))source=rel.includes('dj06-')?'main 原版 DJ-06 声景':'feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md'
  else if(rel==='assets/cover.jpg')source='main 的 IMG-RUNTIME-COVER.jpg 原样移至演示主包；原授权证据保留'
  return {path:rel,bytes:fs.statSync(p).size,sha256:crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex'),published:!ignored(rel),source}

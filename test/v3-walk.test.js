@@ -139,9 +139,11 @@ test('walk normal play requires correct answers, sound completion, field record,
     if (id === 'HY3') await h.invoke('onConfirmDial', event({}, ['confirmed']))
     if (id === 'XS1') await h.invoke('onChoice', event({ id: 'high' }))
     if (id === 'DS1') {
-      for (const [piece, slot] of [['deer', 'center'], ['dogs', 'ring'], ['beasts', 'ends']]) {
-        await h.invoke('onPiece', event({ id: piece })); await h.invoke('onSlot', event({ id: slot }))
-      }
+      await h.invoke('onFountainPlacement', { detail: { placed: { deer: 'center' } } })
+      assert.equal(h.session.getRun().pageId, 'DS1')
+      await h.invoke('onFountainPlacement', { detail: { placed: { deer: 'center', dogs: 'ring' } } })
+      assert.equal(h.session.getRun().pageId, 'DS1', 'water reveal does not auto-advance')
+      assert.equal(h.page.ui.placed.beasts, 'ends')
     }
     await h.invoke('onPrimary')
     assert.equal(h.page.data.error, '', id)

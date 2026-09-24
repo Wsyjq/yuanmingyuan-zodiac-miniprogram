@@ -274,6 +274,11 @@ Page({
     this.ui.note = ''; this.ui.again = false; await this.persist()
   },
   onConfirmDial(e) { if (this.data.review) return; this.draft({ confirmed: e.detail.value.length > 0 }) },
+  onFountainPlacement(e) {
+    if (this.data.review || this.data.pageId !== 'DS1') return
+    const placed = require('../../play/fountain-placement').normalize(e.detail.placed)
+    this.draft({ placed, again: false })
+  },
   onPiece(e) { if (!this.data.review) this.draft({ selectedPiece: ds(e, 'id') }) },
   onSlot(e) {
     if (!this.ui.selectedPiece || this.data.review) return
