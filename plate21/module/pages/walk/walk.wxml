@@ -16,7 +16,7 @@
   </scroll-view>
   <view wx:if="{{pageId && !letterScene}}" class="footer"><button class="primary" bindtap="onPrimary" disabled="{{busy}}" loading="{{busy}}">{{review ? '继续回看 / 返回进度' : completed && pageId === 'FN4' ? '查看我的作品' : pageId === 'LT8' ? '读完来信，查看作品' : screen.primary || '继续'}}</button><button wx:if="{{screen.showSkip && !review}}" class="text-button skip" bindtap="onSkip" disabled="{{busy}}">{{screen.skipLabel || '这题跳过'}}</button></view>
   <view wx:if="{{pageId && !drawer}}" class="nav-float" style="left:{{navX}}px;top:{{navY}}px" catchtouchstart="onNavStart" catchtouchmove="onNavMove" catchtouchend="onNavEnd" catchtouchcancel="onNavCancel" role="button" aria-label="实地导引，可拖动"><text class="nav-symbol">⌖</text><text>导引</text></view>
-  <view wx:if="{{drawer}}" class="overlay" bindtap="onCloseDrawer"><view class="drawer" catchtap="noop"><view class="row"><text class="subheading">{{drawer === 'history' ? '考察簿 · 史料' : drawer === 'route' ? '实地导引' : drawer === 'script' ? '剧本创作说明' : '考察设置'}}</text><button class="text-button" bindtap="onCloseDrawer">关闭 ✕</button></view>
+  <view wx:if="{{drawer}}" class="overlay" bindtap="onCloseDrawer"><view class="drawer" catchtap="noop"><view class="row"><text class="subheading">{{drawer === 'history' ? '考察簿 · 史料' : drawer === 'route' ? '实地导引' : '考察设置'}}</text><button class="text-button" bindtap="onCloseDrawer">关闭 ✕</button></view>
     <scroll-view wx:if="{{drawer === 'history' && card}}" scroll-y class="drawer-scroll" scroll-top="{{drawerScrollTop}}" scroll-into-view="{{cardAnchor}}" bindscroll="onDrawerScroll"><include src="history-card.wxml" /></scroll-view>
     <scroll-view wx:else scroll-y class="drawer-scroll" scroll-top="{{drawerScrollTop}}" bindscroll="onDrawerScroll">
       <block wx:if="{{drawer === 'route'}}">
@@ -28,12 +28,10 @@
         <view class="route-stop {{item.current ? 'route-active' : ''}}" wx:for="{{routeRows}}" wx:key="id"><text class="route-number">{{index + 1}}</text><view class="route-copy"><text>{{item.title}}</text><text class="caption">{{item.state}}</text></view><button class="text-button" data-page="{{item.openPageId}}" bindtap="onOpenPage" disabled="{{!item.canOpen}}">{{item.current ? '继续' : item.canOpen ? '回看' : '待考察'}}</button></view>
       </block>
 
-      <block wx:elif="{{drawer === 'script'}}"><text wx:for="{{scriptAppendix}}" wx:key="index" class="paragraph">{{item}}</text></block>
       <block wx:elif="{{drawer === 'history'}}">
         <block>
           <text wx:if="{{!historyCards.length}}" class="caption">随着考察进行，遇见的史料会收录在这里。</text>
           <button wx:for="{{historyCards}}" wx:key="key" class="choice" data-key="{{item.key}}" bindtap="onOpenCard">{{item.label}}</button>
-          <button wx:if="{{completed}}" class="text-button" data-name="script" bindtap="onDrawer">剧本创作说明</button>
           <button class="text-button" data-name="menu" bindtap="onDrawer">音频、作品与考察设置</button>
         </block>
       </block>

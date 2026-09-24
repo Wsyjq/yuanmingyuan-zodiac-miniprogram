@@ -3,7 +3,6 @@ const test = require('node:test')
 const assert = require('node:assert/strict')
 const fixture = require('./fixtures/v3-script-coverage.json')
 const pages = require('../plate21/module/flow/pages')
-const script = require('../plate21/module/flow/script-content')
 const { buildScreen } = require('../plate21/module/flow/screen')
 const { createRun } = require('../plate21/module/flow/contract')
 const normalized = text => String(text).replace(/\s/g, '')
@@ -45,7 +44,6 @@ test('restored passages retain action gates without being discarded or replacing
   assert.doesNotMatch(visibleAt('FN4', { completedAt: null }).lines.join(''), /生成完成/)
   assert.match(visibleAt('FN4').lines.join(''), /几秒后，一份新的档案生成/)
   assert.match(visibleAt('LT8').lines.join(''), /你留下的内容，在经过审核之后，也许会出现在/)
-  assert.deepEqual(script.appendix, fixture.appendix)
 })
 
 test('all 17 history cards preserve the source layers and figure captions', () => {

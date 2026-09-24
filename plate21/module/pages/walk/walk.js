@@ -102,7 +102,6 @@ Page({
     })
     this.setData({ letterScene: page.kind === 'letter' && !(this.ui.letterSceneDone && ['LT6', 'LT7'].includes(page.id)),
       letterSceneImage: resources.resolve('/assets/fig/letter-teacher.jpg', 'asset'), screen: model, pageId: page.id, playId: page.playId, ui: clone(this.ui),
-      scriptAppendix: this.run.completedAt ? require('../../flow/script-content').appendix : [],
       completed: !!this.run.completedAt, review: engine.isReview(this.run),
       rows: view.rows.map((r) => Object.assign({}, r, { openPageId: view.openPageId(r.id) })),
       records: field, photoCount: field.filter((r) => r.kind === 'photo').length,
