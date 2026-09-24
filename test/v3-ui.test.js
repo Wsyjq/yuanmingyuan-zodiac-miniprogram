@@ -59,7 +59,7 @@ test('sampled mainline and relay screens render through the runtime with their i
     LT6: /接力记录/, LT7: /公开投稿/
   }
   for (const [id, pattern] of Object.entries(expected)) {
-    const result = await render(id, id.startsWith('LT') ? { letterSceneDone: true } : undefined)
+    const result = await render(id, id.startsWith('LT') ? { letterSceneDone: true } : { screenPart: 'activity' })
     assert.deepEqual(result.errors, [], id)
     assert.equal(result.data.pageId, id)
     assert.match(text(result.html), pattern, id)
@@ -130,7 +130,7 @@ test('restored original prose actually reaches WXML instead of only remaining in
     ['X2', {}, ['日记和信封会指引你第一站的方向', '信封的封口处和信的背面都有一半的字']]
   ]
   for (const [id, state, phrases] of cases) {
-    const result = await render(id, state)
+    const result = await render(id, Object.assign({ screenPart: 'activity' }, state))
     assert.deepEqual(result.errors, [], id)
     const actual = text(result.html).replace(/\s/g, '')
     for (const phrase of phrases) assert.ok(actual.includes(phrase), id + ': ' + phrase)
@@ -146,7 +146,7 @@ test('clicking each of 17 inline historical terms renders every Word layer and i
   for (const page of pages.list) for (const term of glossary.termsFor(page.id)) {
     if (visited.has(term.key)) continue
     visited.add(term.key)
-    const result = await render(page.id, { flipped: true, arrived: true }, inst => {
+    const result = await render(page.id, { flipped: true, arrived: true, screenPart: 'story' }, inst => {
       // Drive the real click handler with the key actually carried by a narrative span.
       const span = inst.data.narrative.flat().find(part => part.key === term.key)
       assert.ok(span, page.id + ' has no clickable term for ' + term.key)
@@ -175,7 +175,7 @@ test('gameplay instructions, controls and submit button render inside one distin
   const tpl = fs.readFileSync(path.join(ROOT, ROUTE.replace(/walk$/, 'walk-content') + '.wxml'), 'utf8')
   assert.ok(tpl.includes('walk-interaction.wxml'))
   for (const id of ['E1', 'X1', 'X2', 'H1', 'H3', 'H4', 'H5', 'HY1', 'HY3', 'XS1', 'DS1']) {
-    const result = await render(id, { arrived: true, flipped: true })
+    const result = await render(id, { arrived: true, flipped: true, screenPart: 'activity' })
     assert.deepEqual(result.errors, [], id)
     const ast = parse(result.html)
     const find = (nodes, cls) => {
@@ -194,5 +194,21 @@ test('gameplay instructions, controls and submit button render inside one distin
     const narrative = find(ast, 'narrative')
     assert.doesNotMatch(flatten(narrative), /互动玩法｜/)
     assert.ok(!find(ast, 'footer'), id + ' duplicated submit footer')
+  }
+})
+
+test('story and gameplay occupy mutually exclusive full screens for every mixed node', async () => {
+  for (const page of pages.list.filter(p => p.interaction)) {
+    const activity = await render(page.id, { screenPart: 'activity', arrived: true, flipped: true })
+    assert.deepEqual(activity.errors, [], page.id)
+    assert.equal(activity.data.narrative.length, 0, page.id + ' gameplay must not include story prose')
+    assert.ok(activity.html.includes('interaction-module'), page.id)
+    const story = await render(page.id, { screenPart: 'story', arrived: true, flipped: true })
+    assert.deepEqual(story.errors, [], page.id)
+    assert.equal(story.data.screen.interaction, null, page.id)
+    assert.equal(story.data.screen.play, null, page.id)
+    assert.ok(story.data.narrative.length, page.id)
+    assert.ok(!story.html.includes('interaction-module'), page.id)
+    assert.ok(!story.html.includes('class="choices"'), page.id)
   }
 })

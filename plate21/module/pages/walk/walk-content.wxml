@@ -8,7 +8,7 @@
         <view class="route-strip"><text wx:for="{{rows}}" wx:key="id" wx:if="{{index > 0 && index < 9}}" class="route-stop {{item.current ? 'current' : ''}}">{{item.title}}</text></view>
 
       </view>
-      <view wx:if="{{screen.prop.items.length && !screen.interaction}}" class="prop">
+      <view wx:if="{{screen.prop.items.length && !screen.interaction && !screen.separateStory}}" class="prop">
         <view class="prop-title">{{screen.prop.title || '实体道具'}}</view>
         <view wx:for="{{screen.prop.items}}" wx:key="what" class="prop-item">
           <text class="prop-what">取出 · {{item.what}}</text><text wx:for="{{item.steps}}" wx:for-item="step" wx:key="index">{{step}}</text><text class="caption">{{item.returnWhen}}</text>

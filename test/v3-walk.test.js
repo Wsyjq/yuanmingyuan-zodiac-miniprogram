@@ -110,8 +110,9 @@ test('walk loads without a payment gate and a skipped route reaches a durable na
 test('walk normal play requires correct answers, sound completion, field record, water-clock sequence and placement', async () => {
   const h = await harness()
   let guard = 0
-  while (h.page.data.pageId !== 'FN4' && guard++ < 70) {
+  while (h.page.data.pageId !== 'FN4' && guard++ < 100) {
     const id = h.page.data.pageId
+    if (h.page.data.screen.screenPart !== 'activity' && require('../plate21/module/flow/pages').byId[id].interaction) { await h.invoke('onPrimary'); continue }
     if (id === 'E1') {
       await h.invoke('onChoice', event({ id: 'nw' }))
       for (let i = 0; i < 3; i++) await h.invoke('onPrimary')
@@ -183,6 +184,7 @@ test('NFC launch cannot unlock a future node; an actual tag only starts sound an
   assert.equal(h.page.data.pageId, 'P1')
   assert.ok(h.page.data.notice)
   await h.arrange('X1')
+  await h.invoke('onPrimary') // Story leads to the independent listening screen.
   assert.equal(h.calls.discoveries, 1)
   h.tag('not-our-tag')
   assert.equal(h.calls.replays, 0)
@@ -206,6 +208,7 @@ test('narration stays opt-in, page hide pauses audio and NFC without marking a p
   await h.invoke('onVoice', event({}, true))
   assert.equal(h.page.data.voiceEnabled, true)
   await h.arrange('X1')
+  await h.invoke('onPrimary') // Story leads to the independent listening screen.
   await h.invoke('onHide')
   assert.equal(h.page.data.pageVisible, false)
   assert.ok(h.calls.pauses > 0)
@@ -351,6 +354,8 @@ test('field note submits directly, persists once, and remains a normal completio
     await h.invoke('onArrived')
     await h.invoke('onInput', event({ key: 'note' }, '飞檐和穹顶在一起'))
     await h.invoke('onPrimary')
+    assert.equal(h.page.data.screen.screenPart, 'story')
+    await h.invoke('onPrimary')
     assert.equal(h.page.data.pageId, 'H5')
     assert.equal(h.session.getRun().puzzles['photo-pavilion'], 'solved')
     const records = copy(h.session.getSnapshot().records)
@@ -368,6 +373,7 @@ test('empty answers give an action; wrong answers give an observation cue; expla
   const h = await harness()
   try {
     await h.arrange('X2')
+    await h.invoke('onPrimary') // Read introduction.
     await h.invoke('onPrimary')
     assert.match(h.page.ui.feedback, /先填写/)
     await h.invoke('onInput', event({ key: 'text' }, '错误地点'))
@@ -424,4 +430,47 @@ test('home restart entry opens without resetting an unfinished expedition', asyn
     await h.invoke('onCancelRestart')
     assert.equal(h.page.data.pageId, 'X2')
   } finally { await h.close() }
+})
+
+test('story-to-play transition persists independently, back preserves answer and resume restores the screen', async () => {
+  const storage = {}
+  let h = await harness({ storage })
+  await h.arrange('XS1')
+  assert.equal(h.page.data.screen.screenPart, 'story')
+  assert.equal(h.page.data.screen.play, null)
+  await h.invoke('onPrimary')
+  assert.equal(h.page.data.screen.screenPart, 'activity')
+  assert.equal(h.session.getRun().puzzles['quiz-height'], undefined)
+  await h.invoke('onChoice', event({ id: 'high' }))
+  await h.invoke('onBack')
+  assert.equal(h.page.data.screen.screenPart, 'story')
+  assert.equal(h.page.ui.choice, 'high')
+  await h.invoke('onPrimary'); await h.close()
+  h = await harness({ storage })
+  assert.equal(h.page.data.pageId, 'XS1')
+  assert.equal(h.page.data.screen.screenPart, 'activity')
+  assert.equal(h.page.ui.choice, 'high')
+  await h.invoke('onPrimary')
+  assert.notEqual(h.page.data.pageId, 'XS1')
+  assert.equal(h.session.getRun().puzzles['quiz-height'], 'solved')
+  await h.close()
+})
+
+test('physical flip reveals its answer on a separate screen before the story', async () => {
+  const h = await harness()
+  await h.arrange('H3')
+  assert.equal(h.page.data.screen.screenPart, 'activity')
+  assert.deepEqual(h.page.data.narrative, [])
+  await h.invoke('onPrimary')
+  assert.equal(h.page.data.screen.screenPart, 'reveal')
+  assert.equal(h.page.data.screen.play, null)
+  assert.deepEqual(h.page.data.narrative, [])
+  await h.invoke('onPrimary')
+  assert.equal(h.page.data.screen.screenPart, 'story')
+  assert.equal(h.page.data.screen.interaction, null)
+  assert.ok(h.page.data.narrative.length)
+  await h.invoke('onPrimary')
+  assert.equal(h.page.data.pageId, 'H4')
+  assert.equal(h.session.getRun().puzzles['prop-flip'], 'solved')
+  await h.close()
 })

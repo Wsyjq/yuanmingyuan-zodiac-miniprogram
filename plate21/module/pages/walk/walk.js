@@ -4,6 +4,7 @@ const session = require('../../store/session')
 const engine = require('../../flow/engine')
 const pages = require('../../flow/pages')
 const screen = require('../../flow/screen')
+const parts = require('../../flow/screen-parts')
 const play = require('../../play/index')
 const cue = require('../../audio/cue')
 const progress = require('../../progress/build')
@@ -81,6 +82,9 @@ Page({
     const model = (screen.buildScreen || screen.screen)(this.run, Object.assign({}, this.ui, {
       relay: { status: this.data.relayState, records: this.data.relayItems, viewed: this.ui.relayViewed, submitStatus: this.ui.submitStatus }, records: snap.records, contributions: snap.contributions
     }))
+    parts.project(page, model, this.ui, this.run)
+    const letterActivity = ['LT6', 'LT7'].includes(page.id) && this.ui.letterSceneDone
+    if (letterActivity) { model.lines = []; model.teacher = '' }
     model.portrait = resources.resolve(model.portrait, 'asset'); model.teacher = resources.resolve(model.teacher, 'asset')
     model.figures.forEach((item, i) => { item.src = resources.resolve(item.src, 'asset'); item.label = '图样' + (i + 1) })
     model.spots.forEach((item) => { item.src = resources.resolve(item.src, 'asset') })
@@ -98,7 +102,7 @@ Page({
       completed: !!this.run.completedAt, review: engine.isReview(this.run),
       rows: view.rows.map((r) => Object.assign({}, r, { openPageId: view.openPageId(r.id) })),
       records: page.id === 'H4' ? field.filter(r => r.siteId === 'maze' || !r.siteId) : field, photoCount: field.filter((r) => r.kind === 'photo').length,
-      narrClips: cue.clipsFor(page, Object.assign({}, this.run, { uiByPage: Object.assign({}, this.run.uiByPage, { [page.id]: this.ui }) })),
+      narrClips: letterActivity || model.screenPart !== 'story' && page.interaction ? [] : cue.clipsFor(page, Object.assign({}, this.run, { uiByPage: Object.assign({}, this.run.uiByPage, { [page.id]: this.ui }) })),
       voiceEnabled: settings.get().voice, soundSrc: resources.resolve(nfc.SOUND, 'audio'), waterClockState: this.ui.waterClock || {},
       clockPlaying: !!(this.ui.waterClock && this.ui.waterClock.playing),
       interactionText: (model.interaction ? model.interaction.lines : []).map(line => glossary.segments(line, glossary.inlineTermsFor(page.id, unlockedCards))),
@@ -150,9 +154,19 @@ Page({
     if (['LT6', 'LT7'].includes(this.data.pageId)) this.draft({ letterSceneDone: true })
     else this.onPrimary()
   },
+  async changePart(part) {
+    audioBus.pauseAll(); this.stopNfc(); clearTimeout(this._scrollTimer)
+    await this.draft({ screenPart: part, scrollTop: 0 })
+    this.setData({ scrollTop: 0 })
+    if (wx.pageScrollTo) wx.pageScrollTo({ scrollTop: 0, duration: 0 })
+  },
   onPrimary() {
     this.action(async () => {
       const page = pages.byId[this.run.pageId]
+      const part = parts.current(page, this.ui, this.run), nextPart = parts.adjacent(page, this.ui, 1, this.run)
+      if (nextPart && (this.data.review || part !== 'activity' || !page.playId)) {
+        await this.changePart(nextPart); return
+      }
       if (this.data.review) {
         if (page.next && engine.canEnter(this.run, page.next)) await session.navigate(page.next, { sessionId: this.sessionId })
         else await session.resume(this.sessionId)
@@ -164,7 +178,7 @@ Page({
       }
       let assisted = !!this.ui.hint
       if (page.playId) {
-        if (page.playId === 'prop-flip' && !this.ui.flipped) { await this.draft({ flipped: true }); return }
+        if (page.playId === 'prop-flip' && !this.ui.flipped) { await this.draft({ flipped: true }); await this.changePart('reveal'); return }
         let answer = { optionId: this.ui.optionId || this.ui.choice, value: this.ui.text, played: this.ui.heard,
           confirmed: page.playId === 'prop-flip' ? this.ui.flipped : this.ui.confirmed,
           waterClock: this.ui.waterClock }
@@ -182,6 +196,7 @@ Page({
           await this.draft({ again: true, feedback: taskGuide.feedback(page.playId, this.ui) }); return
         }
       }
+      if (nextPart) { await this.changePart(nextPart); return }
       if (page.id === 'LT6' && this.data.relayItems.length) { this.ui.relayViewed = true; await this.persist() }
       if (page.id === 'LT7' && (this.ui.relayText || this.ui.relayPath)) await this.saveRelayDraft('private')
       await session.completePage(page.id, { sessionId: this.sessionId, assisted })
@@ -203,6 +218,8 @@ Page({
   onResume() { this.action(() => session.resume(this.sessionId)) },
   onBack() {
     this.action(async () => {
+      const previousPart = parts.adjacent(pages.byId[this.run.pageId], this.ui, -1, this.run)
+      if (previousPart) { await this.changePart(previousPart); return }
       const index = pages.list.findIndex((p) => p.id === this.run.pageId)
       for (let i = index - 1; i >= 0; i--) {
         if (engine.canEnter(this.run, pages.list[i].id)) { await session.navigate(pages.list[i].id, { sessionId: this.sessionId }); return }
@@ -296,7 +313,7 @@ Page({
   },
   onWaterClockComplete(e) { this.onWaterClockChange(e) },
   syncNfc() {
-    if (this.run.pageId !== 'X1' || !this.data.pageVisible || this.data.restartScreen) { this.stopNfc(); return }
+    if (this.run.pageId !== 'X1' || this.data.screen.screenPart !== 'activity' || !this.data.pageVisible || this.data.restartScreen) { this.stopNfc(); return }
     if (this._nfcStarting || this._nfc) return
     this._nfcStarting = true
     this._nfc = nfc.start({ onTag: () => { const player = this.selectComponent('#soundscape'); if (player && this.data.pageVisible) player.onReplay() },

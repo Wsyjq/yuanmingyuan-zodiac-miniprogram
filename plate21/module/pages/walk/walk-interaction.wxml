@@ -8,6 +8,7 @@
         </view>
       </view>
   <view class="interaction-copy"><text wx:for="{{interactionText}}" wx:for-item="paragraph" wx:key="index" class="paragraph"><text wx:for="{{paragraph}}" wx:key="index" class="{{item.key ? 'history-link' : ''}}" data-key="{{item.key}}" bindtap="onOpenCard">{{item.text}}</text></text></view>
+  <block wx:if="{{screen.screenPart === 'activity'}}">
       <view wx:if="{{screen.choices.length && playId !== 'quiz-pattern'}}" class="choices"><button wx:for="{{screen.choices}}" wx:key="id" class="choice {{item.selected ? 'selected' : ''}}" data-id="{{item.id}}" bindtap="onChoice" disabled="{{review}}">{{item.label}}</button></view>
       <view wx:if="{{playId === 'quiz-envelope'}}" class="input-group"><label>拼出的三个字</label><input data-key="text" value="{{ui.text}}" maxlength="20" placeholder="输入地点名称" bindinput="onInput" disabled="{{review}}"/></view>
       <view wx:if="{{playId === 'listen-nfc'}}" class="activity">
@@ -37,8 +38,9 @@
           <view class="reconstruction" style="opacity:{{1 - (ui.fountainProgress || 0) / 100}}"><view class="jet jet-left"></view><view class="jet jet-right"></view><view class="deer">鹿</view><view class="dogs">猎狗 · 猎狗 · 猎狗</view><text class="reconstruction-label"></text></view>
         </view><slider min="0" max="100" value="{{ui.fountainProgress || 0}}" activeColor="#627d77" bindchange="onFade"/><view class="row caption"><text>旧时构件与水流</text><text>眼前遗址</text></view>
       </view>
-      <view wx:if="{{hint}}" class="notice">{{hint}}</view><button wx:if="{{hasHint && !review}}" class="text-button" bindtap="onHint">给我一点提示</button>
+  </block>
+      <view wx:if="{{hint && screen.play}}" class="notice">{{hint}}</view><button wx:if="{{hasHint && !review && screen.play}}" class="text-button" bindtap="onHint">给我一点提示</button>
       <view wx:if="{{ui.again}}" class="error" role="alert">{{ui.feedback || '再观察一下，或选择跳过。'}}</view>
-  <button wx:if="{{canExplain && !review}}" class="text-button" bindtap="onExplain">想先看解读</button>
+  <button wx:if="{{canExplain && !review && screen.play}}" class="text-button" bindtap="onExplain">想先看解读</button>
   <view wx:if="{{screen.play}}" class="interaction-actions"><button class="primary" bindtap="onPrimary" disabled="{{busy}}" loading="{{busy}}">{{review ? screen.primary : completed && pageId === 'FN4' ? '查看我的作品' : pageId === 'LT8' ? '读完来信，查看作品' : screen.primary || '继续'}}</button><button wx:if="{{screen.showSkip && !review}}" class="text-button skip" bindtap="onSkip" disabled="{{busy}}">{{screen.skipLabel || '这题跳过'}}</button></view>
 </view>
