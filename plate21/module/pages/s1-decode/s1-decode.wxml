@@ -15,7 +15,7 @@
     <view class="prop-card archive-sheet" wx:if="{{!solved}}">
       <view class="prop-label archive-tab">线下道具 · 西洋楼遗址地图</view>
       <view class="prop-title serif">我打开了地图，从上面可以看出来西洋楼的地理位置。</view>
-      <image class="s1-map" src="/plate21/module/assets/img/IMG-RUNTIME-MAP.jpg" mode="widthFix" />
+      <map class="s1-map" longitude="{{mapLng}}" latitude="{{mapLat}}" scale="15" markers="{{markers}}" polyline="{{polyline}}" enable-rotate="{{false}}" enable-3D="{{false}}"></map>
       <view class="archive-rule"></view>
       <view class="q-title serif">西洋楼在圆明三园中的长春园（　）部</view>
       <view class="opts">
@@ -33,7 +33,7 @@
         </view>
       </view>
       <view wx:if="{{hintText}}" class="hint">{{hintText}}</view>
-      <button class="btn-seal confirm-btn record-action" bindtap="onConfirm" disabled="{{!selected}}">就 是 这 里</button>
+      <button class="btn-seal confirm-btn record-action" bindtap="onConfirm" disabled="{{!selected}}">提交</button>
     </view>
 
     <!-- 揭晓（飞书原文） -->

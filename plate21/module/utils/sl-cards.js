@@ -6,7 +6,12 @@
 'use strict'
 
 function card(title, layers, figure) {
-  const out = { title: title, source: '', layers: layers, lines: layers }
+  const out = {
+    title: String(title || '').replace(/^SL-\d+\s*·\s*/, ''),
+    source: '',
+    layers: layers,
+    lines: layers
+  }
   if (figure && figure.image) out.image = figure.image
   if (figure && figure.caption) out.caption = figure.caption
   return out

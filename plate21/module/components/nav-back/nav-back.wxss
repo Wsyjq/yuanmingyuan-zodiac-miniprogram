@@ -9,11 +9,8 @@
   height: 72rpx;
   border: 0;
   border-radius: 50%;
-  background-color: transparent;
-  background-image: url("/plate21/module/assets/img/ui/btn-label-round.png");
-  background-repeat: no-repeat;
-  background-position: center 62%;
-  background-size: cover;
+  background: rgba(247, 244, 236, 0.92);
+  border: 2rpx solid rgba(70, 56, 42, 0.35);
   display: flex;
   align-items: center;
   justify-content: center;

@@ -2,14 +2,14 @@
 <page-overlays />
 <view class="page page-shell paper-grain paper-real dsf-page">
   <view class="binder"></view>
-  <view class="tag-no page-no">No.DS</view>
+  
   <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
   <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
 
   <block wx:if="{{stage === 'hunt'}}">
     <view class="dsf-quote kaiti"><gloss-text parts="{{introParts}}" bind:glossary="onGlossary" /></view>
     <view class="dsf-quote kaiti">我翻了翻档案，正好找到了一幅《大水法南面》的铜版图。图中的石构轮廓和眼前能够对得上。但真正吸引我注意的，反而是前面的喷水池。不过水池中间怎么还有一只鹿？周围那些动物又是在做什么？</view>
-    <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">档案中缺少了三组重要构件，请根据铜版图，把它们放回原本的位置：</text></view>
+    <view class="act-strip"><text class="act-strip-tag">做</text><text class="act-strip-text">先点一个构件，再点它原来的位置。</text></view>
     <view class="dsf-plate double-frame">
       <view class="tape" style="top:-20rpx; left:50%; margin-left:-90rpx;"></view>
       <image class="dsf-plate-img" src="/plate21/module/assets/img/plate-dashuifa.jpg" mode="widthFix" />
@@ -18,7 +18,7 @@
       <view wx:for="{{zones}}" wx:key="key" class="dsf-zone" data-zone="{{item.key}}" bindtap="onDrop">{{item.label}}</view>
     </view>
     <view class="dsf-pieces">
-      <view wx:for="{{pieces}}" wx:key="key" class="dsf-piece {{holding === item.key ? 'on' : ''}}" data-key="{{item.key}}" bindtap="onHold">{{item.label}}{{placed[item.key] ? ' · 已放' : ''}}</view>
+      <view wx:for="{{pieces}}" wx:key="key" class="dsf-piece {{holding === item.key ? 'on' : ''}}" data-key="{{item.key}}" bindtap="onHold">{{item.label}}{{placed[item.key] ? ' · 已放回' : ''}}</view>
     </view>
     <view class="hint note-hand" wx:if="{{huntHint}}">{{huntHint}}</view>
     <button class="btn-seal" bindtap="onHuntConfirm">放 好 了</button>

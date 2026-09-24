@@ -158,14 +158,13 @@ Page({
   cardView() {
     const found = cards.get(this.ui.cardKey)
     if (!found) return null
-    const count = Math.min(this.ui.cardLayer || 1, found.layers.length)
     return {
-      title: found.title,
+      title: String(found.title || '').replace(/^SL-\d+\s*·\s*/, ''),
       source: found.source,
       image: found.image || '',
       caption: found.caption || '',
-      lines: found.layers.slice(0, count),
-      more: count < found.layers.length
+      lines: found.layers,
+      more: false
     }
   },
 

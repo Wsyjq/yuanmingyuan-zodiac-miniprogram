@@ -6,6 +6,7 @@ const adapter = require('../adapters/local-adapter')
 const contract = require('../contracts/adapter-api')
 const progressFlow = require('./progress-flow')
 const sessionDate = require('../utils/session-date')
+const cloudSync = require('./cloud-sync')
 
 const OUTBOX_KEY = 'plate21_pending_mutations'
 const MAX_CONFLICT_RETRIES = 3
@@ -180,6 +181,9 @@ function submit(command) {
 function mutateStatus(command) {
   const task = mutationChain.then(function () {
     return submit(command)
+  }).then(function (status) {
+    if (status && status.snapshot) cloudSync.push(status.snapshot)
+    return status
   })
   mutationChain = task.catch(function () {})
   return task
@@ -208,6 +212,18 @@ function finishInit(input) {
   return snapshot
 }
 
+function settleCloud(input) {
+  return cloudSync.pull().then(function (remote) {
+    if (remote && snapshot && Number(remote.updatedAt) > Number(snapshot.updatedAt || 0)) {
+      snapshot = migrateSnapshot(remote).snapshot
+    }
+    cloudSync.push(snapshot)
+    return finishInit(input)
+  }).catch(function () {
+    return finishInit(input)
+  })
+}
+
 function init(input) {
   return adapter.getIdentity().catch(function (err) {
     console.warn('[plate21] getIdentity 失败，匿名游玩', err)
@@ -217,7 +233,7 @@ function init(input) {
   }).then(function (snap) {
     const migration = migrateSnapshot(snap)
     snapshot = migration.snapshot
-    if (!migration.changed) return finishInit(input)
+    if (!migration.changed) return settleCloud(input)
 
     const mutation = {
       sessionId: snap.sessionId,
@@ -226,10 +242,10 @@ function init(input) {
       command: { type: 'migrate_snapshot', snapshot: migration.snapshot }
     }
     return sendWithRetry(mutation, 0).then(function () {
-      return finishInit(input)
+      return settleCloud(input)
     }).catch(function (err) {
       console.warn('[plate21] 存档迁移落库失败，本次以内存迁移结果继续', err)
-      return finishInit(input)
+      return settleCloud(input)
     })
   })
 }

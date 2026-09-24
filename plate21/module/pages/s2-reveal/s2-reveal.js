@@ -30,7 +30,7 @@ Page({
       solved: !!puzzle,
       skipped: skipped,
       showHistory: !!puzzle && !skipped,
-      showCardNumber: !!puzzle && !skipped
+      showCardNumber: false
     })
   },
 
@@ -41,8 +41,8 @@ Page({
     audioBus.stopKind('voice')
     this.setData({
       solved: true,
-      showHistory: true,
-      showCardNumber: true
+      showHistory: false,
+      showCardNumber: false
     })
     session.attemptPuzzle(PUZZLE, 1, true, 'tap')
     session.completePuzzle(PUZZLE, { action: 'flip', attempts: 1 }, { collectCard: true })

@@ -31,7 +31,7 @@
     <button class="hint-btn" bindtap="onHint">显影提示</button>
     <view class="hint-copy note-hand" wx:if="{{hintText}}">{{hintText}}</view>
     <view class="wrong-tip" wx:if="{{wrongTip}}">{{wrongTip}}</view>
-    <button class="btn-seal confirm-btn record-action" bindtap="onSubmit">核 对 纸 上 答 案</button>
+    <button class="btn-seal confirm-btn record-action" bindtap="onSubmit">提交</button>
   </view>
   <button class="skip-btn note-hand olive" bindtap="onSkip" wx:if="{{!solved && !showHandoff}}">纸先不湿了，往下走</button>
 

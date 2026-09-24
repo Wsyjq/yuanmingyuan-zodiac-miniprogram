@@ -75,17 +75,17 @@
   position: relative;
   display: flex;
   align-items: center;
-  background: var(--paper2);
-  border: 1rpx solid var(--dash);
+  background: var(--paper);
+  border: 4rpx solid rgba(70, 56, 42, 0.55);
   padding: 28rpx 88rpx 28rpx 32rpx;
   overflow: hidden;
   min-height: 96rpx;
   box-sizing: border-box;
 }
 .opt-sel {
-  border: 3rpx solid var(--patina);
-  background: rgba(74, 107, 100, 0.12);
-  box-shadow: inset 8rpx 0 0 rgba(74, 107, 100, 0.22);
+  border: 4rpx solid var(--cinnabar);
+  background: rgba(166, 58, 46, 0.14);
+  box-shadow: inset 10rpx 0 0 var(--cinnabar);
 }
 .opt-key {
   font-size: 32rpx;

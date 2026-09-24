@@ -62,9 +62,19 @@ Page({
   },
 
   goRevisit() {
-    wx.navigateTo({
-      url: '/plate21/module/pages/board/board'
-    })
+    wx.navigateTo({ url: '/plate21/module/pages/board/board' })
+  },
+
+  goAtlas() {
+    wx.navigateTo({ url: '/plate21/module/pages/atlas/atlas' })
+  },
+
+  goArchive() {
+    wx.navigateTo({ url: '/plate21/module/pages/archive/archive' })
+  },
+
+  goHandbook() {
+    wx.navigateTo({ url: '/plate21/module/pages/handbook/handbook' })
   },
 
   noop() {}

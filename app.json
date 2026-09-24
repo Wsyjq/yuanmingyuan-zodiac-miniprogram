@@ -31,6 +31,8 @@
         "pages/finale/finale",
         "pages/report/report",
         "pages/handbook/handbook",
+        "pages/archive/archive",
+        "pages/atlas/atlas",
         "pages/letter/letter",
         "pages/board/board"
       ]

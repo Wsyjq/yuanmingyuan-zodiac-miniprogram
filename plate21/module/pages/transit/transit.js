@@ -79,8 +79,45 @@ const POINTS = [
   { name: '雨果', x: 620, y: 65 }
 ]
 
-const playGuide = require('../../capabilities/play-guide/guide')
 const coachHost = require('../../capabilities/play-guide/coach-host')
+const mainline = require('../../capabilities/map/sites-mainline')
+const session = require('../../store/session')
+
+function mapModel() {
+  const sites = mainline.visitState(session.getSnapshot())
+  return {
+    sites: sites,
+    markers: mainline.SITES.map(function (site, index) {
+      const row = sites[index]
+      return {
+        id: index + 1,
+        latitude: site.latitude,
+        longitude: site.longitude,
+        width: 28,
+        height: 28,
+        iconPath: '/plate21/module/assets/img/icons/ic-map-pin-brass.png',
+        callout: {
+          content: site.name + (row && row.opened ? '' : ' · 未到'),
+          display: 'ALWAYS',
+          padding: 4,
+          borderRadius: 4,
+          fontSize: 11,
+          color: '#46382A',
+          bgColor: '#F7F4EC'
+        }
+      }
+    }),
+    polyline: [{
+      points: mainline.SITES.map(function (site) {
+        return { latitude: site.latitude, longitude: site.longitude }
+      }),
+      color: '#8C6239',
+      width: 4,
+      dottedLine: true,
+      arrowLine: true
+    }]
+  }
+}
 
 Page({
   behaviors: [coachHost],
@@ -88,55 +125,44 @@ Page({
     leg: null,
     sides: [],
     sideVisited: {},
-    points: POINTS,
-    lines: [],
-    advancing: false
+    advancing: false,
+    sites: [],
+    markers: [],
+    polyline: [],
+    center: { latitude: 40.0132, longitude: 116.311 }
   },
 
   onLoad(options) {
-    if (playGuide.enterTourPage('pages/transit/transit', options)) {
-      this.setData({ touring: true })
-    }
     const leg = LEGS[options.leg] || LEGS['s1-s2']
-    // 计算各段连线的位置 / 长度 / 角度，当前段用铜绿加粗示意
-    const lines = []
-    for (let i = 0; i < POINTS.length - 1; i++) {
-      const a = POINTS[i]
-      const b = POINTS[i + 1]
-      const dx = b.x - a.x
-      const dy = b.y - a.y
-      lines.push({
-        left: a.x,
-        top: a.y,
-        width: Math.sqrt(dx * dx + dy * dy),
-        angle: (Math.atan2(dy, dx) * 180) / Math.PI,
-        current: i === leg.seg
-      })
-    }
-    // INT-405：点位状态——已过点（index <= seg）打勾变暗，当前目标点（seg+1）呼吸高亮
-    const points = POINTS.map((p, i) => ({
-      ...p,
-      done: i <= leg.seg,           // 已抵达（含起点）
-      current: i === leg.seg + 1    // 当前前往的目标点
-    }))
-    this.setData({ leg: leg, sides: leg.sides || [], sideVisited: {}, lines: lines, points: points })
+    const focus = mainline.SITES[Math.min(leg.seg + 1, mainline.SITES.length - 1)]
+    this.setData(Object.assign({
+      leg: leg,
+      sides: leg.sides || [],
+      sideVisited: {},
+      center: { latitude: focus.latitude, longitude: focus.longitude }
+    }, mapModel()))
     this.refreshSideVisited()
   },
 
-  onReady() {
-    if (playGuide.isTouring()) {
-      playGuide.runPageStop(this)
-      return
-    }
-    const spots = (this.data.sides || []).length
-      ? [playGuide.SPOTS.side, playGuide.SPOTS.go]
-      : [playGuide.SPOTS.go]
-    this.scheduleCoach(spots)
-  },
+  onReady() {},
 
   onShow() {
-    // 从支线返回本页时刷新「已走过」标记
+    this.setData(Object.assign({ advancing: false }, mapModel()))
     this.refreshSideVisited()
+  },
+
+  onOpenVisited(e) {
+    const id = e.currentTarget.dataset.id
+    const site = (this.data.sites || []).filter(function (row) { return row.id === id })[0]
+    if (!site || !site.opened || !site.page) return
+    wx.navigateTo({ url: site.page })
+  },
+
+  onMarker(e) {
+    const index = Number(e.detail && e.detail.markerId) - 1
+    const site = (this.data.sites || [])[index]
+    if (!site || !site.opened || !site.page) return
+    wx.navigateTo({ url: site.page })
   },
 
   refreshSideVisited() {

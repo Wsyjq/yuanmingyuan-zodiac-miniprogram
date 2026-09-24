@@ -37,10 +37,20 @@
   justify-content: space-between;
 }
 .capture-card {
-  width: 318rpx;
+  width: 48%;
   margin-bottom: 28rpx;
   padding: 18rpx;
   overflow: hidden;
+  box-sizing: border-box;
+}
+.capture-card.captured { width: 100%; }
+.skip-line {
+  display: block;
+  margin: 18rpx auto 0;
+  background: transparent;
+  color: #46382A;
+  font-size: 30rpx;
+  border-bottom: 2rpx solid #46382A;
 }
 .capture-card.captured { border-top: 5rpx solid var(--patina); }
 .slot-head { position: relative; min-height: 66rpx; padding-left: 50rpx; }

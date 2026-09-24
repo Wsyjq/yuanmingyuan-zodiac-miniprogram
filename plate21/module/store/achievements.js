@@ -15,8 +15,8 @@ const RULES = [
     when: (snap) => !!(snap.puzzles && snap.puzzles['prologue-envelope'])
   },
   {
-    id: 'decode-s1', title: '破译半字', desc: '从信封半字中破译出第一站',
-    when: (snap) => !!(snap.puzzles && snap.puzzles['s1-decode'])
+    id: 'decode-s1', title: '破译成功', desc: '从信封半字中拼出黄花阵',
+    when: (snap) => !!(snap.puzzles && snap.puzzles['xq-next'])
   },
   {
     // V2.1 对读三改为「一处即算」，四图全拍降为厚记录的奖励性印记：

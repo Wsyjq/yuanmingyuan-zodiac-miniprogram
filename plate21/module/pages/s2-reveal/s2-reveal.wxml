@@ -4,25 +4,21 @@
 <bgm-ambience />
 <view class="page page-shell paper-grain paper-real">
   <view class="binder"></view>
-  <view class="tag-no tag-no-fixed">No.S2-2</view>
-
   <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
   <view class="title serif">黄花阵名字的由来</view>
   <view class="lead kaiti">可是这又和“黄花”有什么关系呢？</view>
   <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
 
-  <!-- DJ-09 黄花阵图：屏上弹出宫女游玩图，手里对照迷宫平面 -->
-  <view class="ref-img">
-    <image class="ref-pic img-aged" src="/plate21/module/assets/img/IMG-RUNTIME-LANTERN.jpg" mode="aspectFill" />
+  <view class="answer" wx:if="{{!solved}}" bindtap="onFlip">
+    <view class="flip-card">
+      <view class="kaiti">实体道具 · 黄花阵图</view>
+      <view class="flip-face">正面。点这里翻到背面。</view>
+    </view>
   </view>
 
-  <view class="answer" wx:if="{{!solved}}">
-    <button class="btn-seal ans-btn" bindtap="onFlip">翻面揭晓答案</button>
-  </view>
-
-  <view wx:if="{{solved && !showHistory}}" class="followup double-frame">
-    <view class="kaiti">由于宫女们手持黄色彩绸扎成的莲花灯，所以这个迷宫也得名黄花阵。</view>
-    <view class="novel-p">这迷宫看上去很难走？我也要试试看，也许黄花阵的中央，还有什么我值得考察的东西呢。</view>
+  <view wx:if="{{solved && !showHistory}}" class="followup">
+    <view class="lead">由于宫女们手持黄色彩绸扎成的莲花灯，所以这个迷宫也得名黄花阵。</view>
+    <view class="lead">这迷宫看上去很难走？我也要试试看，也许黄花阵的中央，还有什么我值得考察的东西呢。</view>
     <button class="btn-seal" bindtap="onNext">进 阵</button>
   </view>
   </scroll-view>
@@ -33,8 +29,6 @@
     title="黄花阵 · 名字由来"
     source="圆明园西洋楼景区史料"
     lines="{{historyLines}}"
-    corner-number="{{cardNumber}}"
-    show-corner="{{showCardNumber}}"
     btn-text="继续"
     bind:next="onCloseHistory"
     bind:close="onCloseHistory"

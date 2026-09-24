@@ -5,13 +5,9 @@
 'use strict'
 
 const registry = require('../registry')
+const mainline = require('./sites-mainline')
 
-const SITES = [
-  { id: 's1', station: 's1', name: '西洋楼景区入口', latitude: 40.00702, longitude: 116.30653 },
-  { id: 's2', station: 's2', name: '黄花阵', latitude: 40.0072, longitude: 116.30892 },
-  { id: 's3', station: 's3', name: '海晏堂 · 大水法', latitude: 40.00628, longitude: 116.31235 },
-  { id: 's4', station: 's4', name: '雨果雕像', latitude: 40.0059, longitude: 116.31218 }
-]
+const SITES = mainline.SITES
 
 const EARTH_RADIUS = 6371000
 
@@ -32,13 +28,8 @@ function formatDistance(meters) {
   return '约 ' + (meters / 1000).toFixed(1) + ' 公里'
 }
 
-// 下一处未完成站点；全部完成返回 null。
 function nextSite(snapshot) {
-  const stations = (snapshot && snapshot.stations) || {}
-  for (const site of SITES) {
-    if (!stations[site.station]) return site
-  }
-  return null
+  return mainline.nextSite(snapshot)
 }
 
 // 拉起导航。native provider 直接用微信内置地图；

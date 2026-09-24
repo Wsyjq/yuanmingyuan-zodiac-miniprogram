@@ -14,10 +14,12 @@
   </view>
   <block wx:elif="{{dock}}">
     <view wx:if="{{dockOpen}}" id="coachListen" class="ac-dock-bar">
-      <button class="ac-btn" bindtap="onToggle" aria-label="{{label}}">
-        <image class="ac-icon" src="/plate21/module/assets/img/icons/ic-play-ink.png" mode="aspectFit" />
+      <button class="ac-btn" bindtap="onToggle" aria-label="{{playing ? '暂停' : label}}">
+        <image wx:if="{{!playing}}" class="ac-icon" src="/plate21/module/assets/img/icons/ic-play-ink.png" mode="aspectFit" />
+        <view wx:else class="ac-iconbtn-pause"><view class="ac-iconbtn-bar"></view><view class="ac-iconbtn-bar"></view></view>
         <text class="ac-label">{{playing ? '暂停' : label}}</text>
       </button>
+      <button class="ac-mute" bindtap="onMute">{{muted ? '开声音' : '静音'}}</button>
       <view class="ac-track ac-dock-track"><view class="ac-track-fill" style="width: {{progress}}%;"></view></view>
       <view class="ac-dock-fold" bindtap="onDockFold" role="button" aria-label="收起播放条">⌄</view>
     </view>
@@ -27,10 +29,14 @@
     </view>
   </block>
   <view wx:else id="coachListen" class="ac-wrap {{compact ? 'ac-compact' : ''}}">
-    <button class="ac-btn" bindtap="onToggle" aria-label="{{label}}">
-      <image class="ac-icon" src="/plate21/module/assets/img/icons/ic-play-ink.png" mode="aspectFit" />
+    <button class="ac-btn" bindtap="onToggle" aria-label="{{playing ? '暂停' : label}}">
+      <image wx:if="{{!playing}}" class="ac-icon" src="/plate21/module/assets/img/icons/ic-play-ink.png" mode="aspectFit" />
+      <view wx:else class="ac-iconbtn-pause"><view class="ac-iconbtn-bar"></view><view class="ac-iconbtn-bar"></view></view>
       <text class="ac-label">{{playing ? '暂停' : label}}</text>
     </button>
     <view class="ac-track"><view class="ac-track-fill" style="width: {{progress}}%;"></view></view>
   </view>
 </block>
+<view wx:if="{{src && !failed && !enabled}}" class="ac-dock-bar">
+  <button class="ac-mute" bindtap="onMute">开声音</button>
+</view>

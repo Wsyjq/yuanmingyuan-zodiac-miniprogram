@@ -6,9 +6,7 @@
   <view class="binder"></view>
 
   <!-- ============ 编号区 ============ -->
-  <view class="tag-no tag-no-fixed">No.S2-4</view>
-  <image class="sticker-hangtag" src="/plate21/module/assets/img/stickers/st-hang-tag-01.png" mode="aspectFit" />
-  <image class="sticker-stamp" src="/plate21/module/assets/img/stickers/st-stamp-02.png" mode="aspectFit" />
+  
 
   <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
   <!-- ============ 标题区 ============ -->
@@ -23,16 +21,13 @@
     <view
       wx:for="{{patterns}}"
       wx:key="key"
-      class="cell double-frame {{picked === item.key ? 'on' : ''}}"
+      class="cell {{picked === item.key ? 'on' : ''}}"
       bindtap="onPick"
       data-key="{{item.key}}"
       role="button"
       aria-pressed="{{picked === item.key}}"
       aria-label="{{item.name}}，{{item.desc}}{{picked === item.key ? '，已选择' : ''}}"
     >
-      <view class="cell-img">
-        <image class="pattern-photo" src="{{item.src}}" mode="aspectFill" />
-      </view>
       <view class="cell-name serif">{{item.name}}</view>
       <view class="cell-desc">{{item.desc}}</view>
       <view wx:if="{{picked === item.key}}" class="cell-pin">✓</view>
@@ -59,7 +54,7 @@
       class="btn-seal {{!picked ? 'btn-disabled' : ''}}"
       bindtap="onConfirm"
       disabled="{{!picked}}"
-    >我 认 出 了</button>
+    >提交</button>
 
   </block>
 

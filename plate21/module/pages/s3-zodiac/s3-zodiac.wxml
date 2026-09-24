@@ -3,12 +3,12 @@
 <bgm-ambience />
 <view class="page page-shell paper-grain paper-real">
   <view class="binder"></view>
-  <view class="tag-no tag-no-fixed">No.S3-2</view>
+  
 
   <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
-  <view class="title serif">转盘花纹匹配</view>
+  <view class="title serif">十二生肖</view>
   <view class="hatch-divider title-div"></view>
-  <view class="lead kaiti">使用DJ-转盘，根据花纹匹配寻找信息</view>
+  <view class="lead kaiti">如果带着生肖转盘，转出七个生肖再填在下面。没有转盘也可以先往下走。</view>
   <audio-clip wx:if="{{narrSrc}}" src="{{narrSrc}}" label="听 · 本页讲述" dock="{{true}}" />
 
   <view class="prop-card archive-sheet">
@@ -21,6 +21,7 @@
       <view class="step-row"><view class="step-no">3</view><view class="step-copy">依次记录出现的七个生肖，再把结果填入下方。</view></view>
     </view>
     <button wx:if="{{!operated}}" class="btn-seal confirm-btn record-action" bindtap="onOperationComplete">我已转出七个生肖</button>
+    <button wx:if="{{!solved}}" class="skip-line" bindtap="onSkip">没有转盘</button>
   </view>
 
   <view class="answer-area record-field" wx:if="{{operated && !solved}}">
@@ -29,7 +30,7 @@
     <button class="hint-btn" bindtap="onHint">操作提示</button>
     <view class="hint-copy note-hand" wx:if="{{hintText}}">{{hintText}}</view>
     <view class="wrong-tip" wx:if="{{wrongTip}}">{{wrongTip}}</view>
-    <button class="btn-seal confirm-btn record-action" bindtap="onConfirm">核 对 转 盘 结 果</button>
+    <button class="btn-seal confirm-btn record-action" bindtap="onConfirm">提交</button>
     <button class="skip-btn note-hand olive" bindtap="onSkip">转盘先不转了，往下走</button>
   </view>
 

@@ -23,7 +23,11 @@
         <audio-clip src="{{listenSrc}}" label="听 · 约三十秒" kind="clip" bind:play="onListenPlay" />
         <view class="note-hand olive">{{site.quiz.listenNote}}</view>
       </view>
-      <view wx:if="{{!followup}}" class="quiz">
+      <view wx:if="{{!followup && site.quiz.listenOnly}}" class="quiz">
+        <view class="q-title serif">{{site.quiz.prompt}}</view>
+        <button class="btn-seal wp-confirm-btn" bindtap="onHeard">听完了</button>
+      </view>
+      <view wx:if="{{!followup && !site.quiz.listenOnly}}" class="quiz">
         <view class="hatch-divider wp-hatch"></view>
         <view class="q-title serif">{{site.quiz.prompt}}</view>
         <view
@@ -39,7 +43,7 @@
           <text class="wp-opt-text">{{item.text}}</text>
         </view>
         <view wx:if="{{hint}}" class="hint note-hand">{{hint}}</view>
-        <button class="btn-seal wp-confirm-btn" bindtap="onQuizConfirm" disabled="{{!selected.length || solved}}">{{revealed ? '记 下 了' : '就 是 这 些'}}</button>
+        <button class="btn-seal wp-confirm-btn" bindtap="onQuizConfirm" disabled="{{!selected.length || solved}}">提交</button>
       </view>
       <view wx:if="{{followup}}" class="followup">
         <view class="wp-line kaiti" wx:for="{{site.quiz.followup}}" wx:key="index"><gloss-text wx:if="{{item.parts}}" parts="{{item.parts}}" bind:glossary="onGlossary" /><block wx:else>{{item}}</block></view>
@@ -47,16 +51,11 @@
         <block wx:if="{{site.textPuzzle}}">
           <view class="wp-line kaiti">{{site.textPuzzle.prompt}}</view>
           <view class="note-hand olive">{{site.textPuzzle.lead}}</view>
-          <view class="wp-plate double-frame">
-            <image class="wp-plate-img" src="/plate21/module/assets/img/IMG-ENVELOPE-FRONT.png" mode="widthFix" />
-          </view>
-          <view class="wp-plate double-frame">
-            <image class="wp-plate-img" src="/plate21/module/assets/img/IMG-ENVELOPE-BACK.png" mode="widthFix" />
-          </view>
+          <view class="note-hand olive">信封封口和背面各有一半字。对着实物拼起来，再写下一站。</view>
           <block wx:if="{{!textSolved}}">
             <input class="answer-input" value="{{textInput}}" bindinput="onTextInput" placeholder="{{site.textPuzzle.placeholder}}" maxlength="8" />
             <view wx:if="{{textHint}}" class="hint note-hand">{{textHint}}</view>
-            <button class="btn-seal wp-confirm-btn" bindtap="onTextSubmit" disabled="{{!textInput}}">就 是 这 里</button>
+            <button class="btn-seal wp-confirm-btn" bindtap="onTextSubmit" disabled="{{!textInput}}">提交</button>
           </block>
           <view wx:else class="wp-line kaiti">{{site.textPuzzle.solvedText}}</view>
         </block>

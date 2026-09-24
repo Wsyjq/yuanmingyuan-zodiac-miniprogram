@@ -3,9 +3,9 @@
 // 文案与选项按飞书原文；页面保留 puzzleId「s1-decode」与既有存档/检查点兼容。
 const session = require('../../store/session')
 const audioSrc = require('../../utils/audio-src')
-const playGuide = require('../../capabilities/play-guide/guide')
 const coachHost = require('../../capabilities/play-guide/coach-host')
 const glossHost = require('../../utils/gloss-host')
+const mainline = require('../../capabilities/map/sites-mainline')
 
 const ANSWER = 'D'
 const OPTIONS = [
@@ -38,22 +38,44 @@ Page({
       { t: '长春园', g: 'sl05' },
       { t: '的北界东西展开。虽然叫“楼”，但它不是一栋楼，而是一组楼殿、喷泉和庭园的总称。谐奇趣、方外观、大水法……今天我将一一踏足，去找寻第二十一幅图的线索。' }
     ],
-    followup: '档案袋里还有几张西洋楼的铜版画，或许我在现场中能对应起来这几幅铜版画对应的建筑名字，以及现在长什么样。'
+    followup: '档案袋里还有几张西洋楼的铜版画，或许我在现场中能对应起来这几幅铜版画对应的建筑名字，以及现在长什么样。',
+    mapLat: mainline.SITES[0].latitude,
+    mapLng: mainline.SITES[0].longitude,
+    markers: mainline.SITES.map(function (site, index) {
+      return {
+        id: index + 1,
+        latitude: site.latitude,
+        longitude: site.longitude,
+        width: 24,
+        height: 24,
+        iconPath: '/plate21/module/assets/img/icons/ic-map-pin-brass.png',
+        callout: {
+          content: site.name,
+          display: 'BYCLICK',
+          padding: 4,
+          fontSize: 11,
+          color: '#46382A',
+          bgColor: '#F7F4EC'
+        }
+      }
+    }),
+    polyline: [{
+      points: mainline.SITES.map(function (site) {
+        return { latitude: site.latitude, longitude: site.longitude }
+      }),
+      color: '#8C6239',
+      width: 3,
+      dottedLine: true
+    }]
   },
 
-  onReady() {
-    if (playGuide.isTouring()) {
-      playGuide.runPageStop(this)
-      return
-    }
-    if (!this.data.solved) this.scheduleCoach([playGuide.SPOTS.listen])
+  onReady() {},
+
+  onShow() {
+    this.setData({ advancing: false })
   },
 
-  onLoad(options) {
-    if (playGuide.enterTourPage('pages/s1-decode/s1-decode', options)) {
-      this.setData({ touring: true })
-      return
-    }
+  onLoad() {
     session.viewPuzzle('s1-decode')
     const puzzle = session.getPuzzle('s1-decode')
     if (puzzle) {
@@ -72,6 +94,10 @@ Page({
   },
 
   onConfirm() {
+    if (this.data.showCoach) {
+      this.onCoachNext()
+      return
+    }
     if (!this.data.selected || this.data.solved) return
     const attempts = this.data.attempts + 1
     if (this.data.selected === ANSWER) {
@@ -104,6 +130,10 @@ Page({
   },
 
   onGoNext() {
+    if (this.data.showCoach) {
+      this.onCoachNext()
+      return
+    }
     if (this.data.advancing) return
     this.setData({ advancing: true })
     session.completePuzzle('s1-decode', { answer: ANSWER, attempts: this.data.attempts }, {
