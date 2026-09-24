@@ -37,7 +37,7 @@ Page({
     draftText: '', editingTextId: '', busy: false, recordError: '',
     generating: false, saving: false, previewImages: [], saveError: '',
     savedCount: 0, exportWarning: '', canOpenAlbumSettings: false,
-    letterAvailable: false, letterChecking: false, letterOpening: false,
+    bonusError: '', letterAvailable: false, letterChecking: false, letterOpening: false,
     letterMessage: '', sheetCount: 1, reminderSupported: false,
     reminderAccepted: false, reminderRequesting: false, reminderMessage: ''
   },
@@ -110,6 +110,15 @@ Page({
             : '来信开放时间需要联网校验；考察作品可以继续查看。' })
     } catch (error) { this.update({ letterAvailable: false, letterMessage: '来信状态暂时无法读取，稍后可以再试。' }) }
     finally { this.update({ letterChecking: false }) }
+  },
+  onOpenBonus: async function () {
+    if (this.data.letterOpening || !this.data.model || !this.data.model.completed) return
+    this.update({ letterOpening: true, bonusError: '' })
+    try {
+      await session.openBonus(this._sessionId)
+      await invoke('redirectTo', { url: WALK + '?sessionId=' + encodeURIComponent(this._sessionId) + '&entry=letter' })
+    } catch (error) { this.update({ bonusError: '彩蛋暂时无法打开，请重试。' }) }
+    finally { this.update({ letterOpening: false }) }
   },
   onOpenLetter: async function () {
     if (this.data.letterOpening || !this.data.model || !this.data.model.completed) return

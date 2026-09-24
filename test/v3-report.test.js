@@ -102,6 +102,7 @@ function pageHarness(options) {
     getSnapshot(){return clone(current)},
     getArchive(id){return id===old.sessionId?clone(old):null},
     async getLetterState(id){calls.push(['letterState',id]);return {available:true}},
+    async openBonus(id){calls.push(['openBonus',id]);return clone(target(id))},
     async openLetter(id){calls.push(['openLetter',id]);if(opts.lockLetter){const e=new Error('locked');e.code='LETTER_LOCKED';throw e}return clone(target(id))},
     async requestReminder(id){calls.push(['reminder',id]);return opts.reminderAck||{accepted:false,status:'failed'}},
     async saveMedia(input){calls.push(['media',input]);return opts.failMedia?{status:'failed'}:{status:'local',localPath:'/saved/new.jpg'}},
@@ -250,4 +251,12 @@ test('reminder needs host capability and an explicit accepted acknowledgement', 
     assert.equal(h.calls.find(c=>c[0]==='reminder')[1],'old-run')
     assert.equal(h.page.data.reminderMessage.includes('已受理'),ack.accepted===true)
   }
+})
+
+test('direct bonus button opens the selected archive without waiting for the next day', async function () {
+  const h=pageHarness();await h.page.onLoad({sessionId:'old-run'});await h.page.onOpenBonus()
+  assert.equal(h.calls.find(c=>c[0]==='openBonus')[1],'old-run')
+  assert.equal(h.redirects[0],'/plate21/module/pages/walk/walk?sessionId=old-run&entry=letter')
+  assert.equal(h.page.data.letterOpening,false)
+  assert.equal(h.page.data.bonusError,'')
 })

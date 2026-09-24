@@ -65,9 +65,10 @@
     </view>
 
     <view wx:if="{{model.completed}}" class="section letter-card">
-      <view class="section-title">{{letterAvailable ? '来信已可启封' : '一封稍后来到的信'}}</view>
-      <view class="letter-message">{{letterChecking ? '正在确认来信状态……' : letterMessage}}</view>
-      <button class="report-button" bindtap="onOpenLetter" disabled="{{letterOpening || letterChecking}}">{{letterOpening ? '正在启封…' : (letterAvailable ? '阅读来信' : '检查来信')}}</button>
+      <view class="section-title">旅程之后 · 彩蛋来信</view>
+      <view class="letter-message">考察已经完成，可以现在进入彩蛋，也可以留到明天再读。</view>
+      <button class="report-button primary" bindtap="onOpenBonus" disabled="{{letterOpening}}">{{letterOpening ? '正在打开…' : '直接进入彩蛋'}}</button>
+      <view wx:if="{{bonusError}}" class="notice error">{{bonusError}}</view>
       <button wx:if="{{reminderSupported && !letterAvailable}}" class="report-button reminder-button" bindtap="onRequestReminder" disabled="{{reminderRequesting || reminderAccepted}}">{{reminderRequesting ? '请求中…' : (reminderAccepted ? '提醒请求已受理' : '申请来信提醒')}}</button>
       <view wx:if="{{reminderMessage}}" class="small-note reminder-message">{{reminderMessage}}</view>
     </view>

@@ -337,3 +337,7 @@ V3 设备存储命名空间为 plate21_v3_session:模式:编码后用户ID。不
 ~~~sh
 node --test test/v3-session.test.js test/v3-flow.test.js test/v3-walk.test.js
 ~~~
+
+### 完成后主动进入彩蛋
+
+2026-09-25 产品更新：完成考察后，玩家可主动点击“直接进入彩蛋”，不再必须等待自然日开放。游戏通过统一 session.openBonus 开启所选已完成档案，未完成考察仍不能进入。首次主动开启以 letterTimeSource=player_choice 标识（若已按原规则开放则保留原来源），不伪造完成日或可信校时回执。宿主自然解锁与提醒接口仍用于选择次日回访的路径；该时间条件不再限制玩家主动提前阅读。

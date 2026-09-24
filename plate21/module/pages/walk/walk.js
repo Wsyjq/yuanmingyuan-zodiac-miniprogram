@@ -204,6 +204,10 @@ Page({
     this.setData({ drawer: 'explanation', explanation: (next.interaction ? next.interaction.lines : []).concat(next.lines) })
   },
   onSkip() { this.setData({ drawer: '' }); this.action(() => session.skipPage(this.run.pageId, { sessionId: this.sessionId })) },
+  onOpenBonus() {
+    if (!this.run.completedAt) return
+    this.action(() => session.openBonus(this.sessionId))
+  },
   onResume() { this.action(() => session.resume(this.sessionId)) },
   onBack() {
     this.action(async () => {

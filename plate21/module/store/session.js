@@ -395,6 +395,19 @@ function getLetterState(sessionId) {
     return { available: available, reason: available ? 'available' : 'not_due', timeSource: time.source, unlockAt: unlockAt }
   })
 }
+function openBonus(sessionId) {
+  return mutate(function (snap) {
+    const target = targetOf(snap, sessionId)
+    if (!target.run.completedAt) throw fault('LETTER_LOCKED', '请先完成考察并保存署名')
+    // Explicit player choice, not a fabricated date or a trusted-time acknowledgement.
+    target.run.letterAvailable = true
+    target.run.letterTimeSource = target.run.letterTimeSource || 'player_choice'
+    if (!target.run.letterOpenedAt) target.run.letterOpenedAt = now()
+    if (target.run.resumePageId === 'FN4') target.run = engine.openLetter(target.run)
+    else target.run = engine.resume(target.run)
+    if (target !== snap) return target
+  })
+}
 async function openLetter(sessionId) { return navigate('LT1', { sessionId: sessionId }) }
 function setFlag(key, value) { return mutate(function (snap) { snap.run.flags[key] = clone(value) }) }
 
@@ -653,7 +666,7 @@ function onEvent(listener) {
 }
 module.exports = {
   configure, init, getSnapshot, getRun, getArchives, getArchive, saveRun, saveDraft, navigate, resume, completePage, skipPage,
-  sign, restart, reset: restart, getLetterState, openLetter, saveRecord, updateContributionDraft, deleteRecord,
+  sign, restart, reset: restart, getLetterState, openLetter, openBonus, saveRecord, updateContributionDraft, deleteRecord,
   saveMedia, submitContribution, getContribution, withdrawContribution, listContributions, claimEdition, requestReminder, flush, exit,
   setFlag, emit, onEvent,
   viewPuzzle: function (puzzle) { emit({ name: 'puzzle_viewed', puzzle: puzzle }) },
