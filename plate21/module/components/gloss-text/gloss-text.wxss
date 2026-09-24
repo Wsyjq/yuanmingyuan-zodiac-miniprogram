@@ -1,8 +1,14 @@
 /* 正文行内术语超链接：铜绿 + 虚线下划线，与 history-card 卡内 .hc-link 同一视觉 */
+.gloss-text {
+  display: block;
+  color: #2E1F0D;
+  font-size: 32rpx;
+  line-height: 1.85;
+}
 .gt-link {
-  color: var(--patina);
+  color: #4A6B64;
   font-weight: 700;
-  border-bottom: 2rpx dashed var(--patina);
+  border-bottom: 4rpx solid #4A6B64;
   padding-bottom: 2rpx;
 }
 .gt-link:active {

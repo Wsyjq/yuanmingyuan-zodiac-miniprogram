@@ -26,20 +26,35 @@ Component({
       } catch (e) {
         this.setData({ statusBarHeight: 20 })
       }
+      try {
+        require('../../store/trail').remember()
+      } catch (err) {}
     }
   },
 
   methods: {
     onTap() {
       this.triggerEvent('back')
+      try {
+        const coach = require('../../capabilities/play-guide/coach-host')
+        if (coach.resetBusy) coach.resetBusy()
+        const session = require('../../store/session')
+        const cloud = require('../../store/cloud-sync')
+        cloud.push(session.getSnapshot())
+      } catch (err) { /* 返回不能被存档失败挡住 */ }
       if (this.data.custom) return
-      const pages = getCurrentPages()
-      if (pages.length > this.data.delta) {
-        wx.navigateBack({ delta: this.data.delta })
-      } else {
-        // 栈内没有上一页（如直接以分包页面启动）：回演示主页
-        wx.reLaunch({ url: '/pages/index/index' })
+      let prev = ''
+      try {
+        prev = require('../../store/trail').popBack()
+      } catch (err) {}
+      if (prev) {
+        wx.redirectTo({
+          url: prev,
+          fail: function () { wx.reLaunch({ url: '/pages/index/index' }) }
+        })
+        return
       }
+      wx.reLaunch({ url: '/pages/index/index' })
     }
   }
 })

@@ -8,6 +8,10 @@ const coachMeasure = require('./measure')
 
 let busy = false
 
+function resetBusy() {
+  busy = false
+}
+
 module.exports = Behavior({
   data: {
     showCoach: false,
@@ -80,12 +84,11 @@ module.exports = Behavior({
 
     runAfterCoach(fn) {
       const self = this
-      const go = function () { if (typeof fn === 'function') fn.call(self) }
       if (this.data.showCoach) {
-        this.finishCoach(go)
+        this.onCoachNext()
         return
       }
-      go()
+      if (typeof fn === 'function') fn.call(self)
     },
 
     measureCoach() {
@@ -96,10 +99,6 @@ module.exports = Behavior({
       coachMeasure.measureIn(this, step.selector).then(function (got) {
         if (self.data.coachStep && self.data.coachStep.selector !== step.selector) return
         if (!got) {
-          if (step.skipIfMissing) {
-            self.onCoachNext()
-            return
-          }
           self.setData({ coachHole: null })
           return
         }
@@ -156,7 +155,6 @@ module.exports = Behavior({
         busy = false
         self.setData({ showCoach: false, coachClosing: false, coachHole: null })
         if (typeof after === 'function') after()
-        else if (playGuide.isTouring()) playGuide.continueTour()
       }
       const flag = this._coachFlag
       this._coachTimer = setTimeout(function () {
@@ -175,7 +173,9 @@ module.exports = Behavior({
         clearTimeout(this._coachTimer)
         this._coachTimer = null
       }
-      if (this.data.showCoach) busy = false
+      busy = false
     }
   }
 })
+
+module.exports.resetBusy = resetBusy

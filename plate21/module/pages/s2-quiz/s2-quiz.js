@@ -7,6 +7,7 @@ const coachHost = require('../../capabilities/play-guide/coach-host')
 const glossHost = require('../../utils/gloss-host')
 const quizHost = require('../../utils/quiz-host')
 const content = require('../../content/s2-quiz')
+const sl07 = require('../../utils/sl-cards').get('sl07')
 
 Page({
   behaviors: [coachHost, glossHost, quizHost],
@@ -15,7 +16,8 @@ Page({
     options: content.options,
     cardNumber: content.cardNumber,
     introParts: content.introParts,
-    historyLines: content.historyLines,
+    historyLines: sl07.lines,
+    historyImage: sl07.image || '',
     narrSrc: audioSrc.clip(content.clips.main)
   },
 

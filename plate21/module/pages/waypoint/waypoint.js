@@ -22,26 +22,19 @@ const SITES = {
       { t: '谐奇趣', g: 'sl03' },
       { t: '。我记得这是西洋楼景区建成的第一座欧式建筑，也是中国皇家园林史上首座西洋建筑。主楼前后都曾设有水法，这里还曾用于演奏中西音乐。怪不得叫“谐奇趣”，要是能听听当时的音乐就好了。' }
     ],
-    image: '/plate21/module/assets/img/plate-xieqiqu.jpg',
+    image: '',
     quiz: {
       puzzleId: 'xq-sound',
+      listenOnly: true,
       listenFile: '/voice-a/dj06-xieqiqu-soundscape-30s-v2.mp3',
       prompt: '喷泉声、少数民族音乐和西洋音乐',
-      multi: true,
-      options: [
-        { key: 'A', text: '喷泉声' },
-        { key: 'B', text: '少数民族音乐' },
-        { key: 'C', text: '西洋音乐' }
-      ],
-      correct: ['A', 'B', 'C'],
+      multi: false,
+      options: [],
+      correct: [],
       hints: [],
-      revealText: '喷泉声、少数民族音乐和西洋音乐',
-      passMinCorrect: 3,
-      passMaxWrong: 0,
+      revealText: '',
       historyTitle: '谐奇趣',
-      historyLines: [
-        { parts: [{ t: '喷泉声、少数民族音乐和西洋音乐' }] }
-      ],
+      historyLines: [],
       followup: [
         '如此悠扬动耳的音乐，真不愧“谐奇趣”三字之名。'
       ]
@@ -111,7 +104,7 @@ const SITES = {
       { t: '方外观', g: 'sl09' },
       { t: '只剩下部分台基和石构，不过档案中的铜版图还保存着它原本的样子：两层西式楼体、半环形石阶，上面却盖着中国传统样式的重檐屋顶，内部曾设置阿拉伯文碑刻。可是西式楼体、中式屋顶、阿拉伯文碑刻，为什么会同时出现在一座建筑里？' }
     ],
-    image: '/plate21/module/assets/img/plate-fangwaiguan.jpg',
+    image: '',
     beats: [
       {
         kicker: '档案 · 页边',
@@ -163,7 +156,7 @@ const SITES = {
       { t: '蓄水楼', g: 'sl13' },
       { t: '。这里是海晏堂北面的高台蓄水，不是谐奇趣西北那座。刚才在海晏堂看见兽首喷水，水源在这里。可是为什么能把水提高呢？特刊里似乎有线索' }
     ],
-    image: '/plate21/module/assets/img/plate-haiyantang-north.jpg',
+    image: '',
     quiz: {
       puzzleId: 'xs-height',
       cardPuzzleId: 's3-water',
@@ -181,9 +174,7 @@ const SITES = {
       ],
       revealText: '抬高蓄水，用高度差换成水压，再从喷嘴喷出。',
       historyTitle: '蓄水楼 · 喷泉原理',
-      historyLines: [
-        '抬高蓄水，用高度差换成水压，再从喷嘴喷出。'
-      ],
+      historyLines: require('../../utils/sl-cards').get('sl04').lines,
       followup: [
         { parts: [
           { t: '原来喷泉里面的' },
@@ -421,6 +412,18 @@ Page({
     this.setData({ listened: true })
   },
 
+  onHeard() {
+    const site = this.data.site
+    if (!site || !site.quiz || !site.quiz.listenOnly || this.data.followup) return
+    session.completePuzzle(site.quiz.puzzleId, { heard: true }, { checkpoint: site.checkpoint }).catch(function () {})
+    this.setData({
+      followup: true,
+      solved: true,
+      showHistory: false,
+      narrSrc: narrForSite(site, { followup: true })
+    })
+  },
+
   onQuizConfirm() {
     const site = this.data.site
     const quiz = site.quiz
@@ -507,6 +510,7 @@ Page({
   // 支线记账：走过即记（幂等一次），供 transit「已走过」与手册统计使用。
   recordVisit(key) {
     try {
+      if (key === 'xieqiqu' || key === 'fangwaiguan' || key === 'xushuilou') return
       const snap = session.getSnapshot()
       if (!snap) return
       if (snap.flags && snap.flags['sideVisited_' + key]) return

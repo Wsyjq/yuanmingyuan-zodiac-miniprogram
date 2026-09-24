@@ -149,15 +149,7 @@ function advanceTour() {
 }
 
 function continueTour() {
-  if (typeof wx === 'undefined' || !wx.redirectTo) return
-  const next = advanceTour()
-  const go = function () { wx.redirectTo({ url: next.url }) }
-  if (next.done) {
-    const session = require('../../store/session')
-    session.setFlag(FLAG, Date.now()).then(go).catch(go)
-    return
-  }
-  go()
+  resetTour()
 }
 
 function abortTour() {

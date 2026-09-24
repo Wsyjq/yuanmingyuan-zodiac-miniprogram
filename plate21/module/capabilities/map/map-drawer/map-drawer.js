@@ -8,6 +8,7 @@
 const session = require('../../../store/session')
 const registry = require('../../registry')
 const siteGeo = require('../site-geo')
+const mainline = require('../sites-mainline')
 
 const PIN_ICON = '/plate21/module/assets/img/icons/ic-map-pin-brass.png'
 const CHECKIN_RADIUS = 80 // 米；geofence 开关打开时的到场判定半径
@@ -75,6 +76,14 @@ Component({
       try { session.emit({ name: 'map_opened' }) } catch (e) {}
     },
 
+    onOpenSite(e) {
+      const id = e.currentTarget.dataset.id
+      const site = (this.data.sites || []).filter(function (row) { return row.id === id })[0]
+      if (!site || !site.opened || !site.page) return
+      this.close()
+      wx.navigateTo({ url: site.page })
+    },
+
     close() {
       if (this.data.closing) return
       this.setData({ closing: true })
@@ -85,15 +94,12 @@ Component({
 
     refreshSites(userLoc) {
       const snap = session.getSnapshot()
-      const stations = (snap && snap.stations) || {}
-      const flags = (snap && snap.flags) || {}
-      const next = siteGeo.nextSite(snap)
-      const sites = siteGeo.SITES.map(function (site) {
+      const next = mainline.nextSite(snap)
+      const sites = mainline.visitState(snap).map(function (site) {
         const dist = userLoc ? siteGeo.distanceMeters(userLoc, site) : null
         return Object.assign({}, site, {
-          done: !!stations[site.station],
-          arrived: !!flags['station_arrived_' + site.station],
-          isNext: !!(next && next.id === site.id),
+          done: site.opened && !site.current,
+          arrived: site.current,
           distanceText: dist == null ? '' : siteGeo.formatDistance(dist)
         })
       })

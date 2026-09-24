@@ -6,7 +6,7 @@
 <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
   <view class="binder"></view>
   <view class="tag-no tag-no-fixed">No.S2-3</view>
-  <image class="page-tag-sticker" src="/plate21/module/assets/img/stickers/st-postmark-01.png" mode="aspectFit" />
+  
 
   <view class="title serif">亭子线稿对眼前这座亭</view>
   <view class="hatch-divider title-div"></view>
@@ -24,13 +24,10 @@
 
       <view class="photo-stage" data-key="{{item.key}}" bindtap="onStageTap">
         <image wx:if="{{item.photoPath}}" class="photo-result" src="{{item.photoPath}}" mode="aspectFill" />
-        <block wx:else>
-          <image class="photo-guide" src="{{item.guideSrc}}" mode="aspectFill" />
-          <view class="guide-mask">
-            <view class="guide-mark">＋</view>
-            <view class="guide-copy">按参考位置拍摄</view>
-          </view>
-        </block>
+        <view wx:else class="guide-mask">
+          <view class="guide-mark">＋</view>
+          <view class="guide-copy">拍下这一处</view>
+        </view>
         <view wx:if="{{busyKey === item.key}}" class="photo-busy">正在保存照片…</view>
       </view>
 
@@ -55,8 +52,9 @@
       <view class="progress-count">{{photoCount}} / {{points.length}}</view>
     </view>
     <view class="progress-track"><view class="progress-fill" style="width: {{photoCount / points.length * 100}}%"></view></view>
-    <view class="note-hand olive progress-note">拍到一处就可以记下。另外三处还在，想再记也可以。</view>
-    <button class="btn-seal complete-btn record-action {{photoCount < 1 ? 'btn-disabled' : ''}}" bindtap="onComplete" disabled="{{photoCount < 1}}">{{done ? '查看亭下考察卡' : '记 下 了'}}</button>
+    <view class="note-hand progress-note">拍到一处就可以确定。</view>
+    <button class="btn-seal complete-btn record-action {{photoCount < 1 ? 'btn-disabled' : ''}}" bindtap="onComplete" disabled="{{photoCount < 1}}">确定</button>
+    <button class="skip-line" bindtap="onSkipShot">跳过</button>
   </view>
   <view wx:if="{{readyNext}}" class="progress-slip record-field">
     <view class="note-hand olive progress-note">四图考察结论已经收入手册，可继续辨认墙体纹样。</view>

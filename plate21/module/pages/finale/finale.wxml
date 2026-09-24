@@ -101,7 +101,7 @@
     </view>
 
     <!-- v1.3 手账：考察者手记批注 -->
-    <view class="note-hand fin-note" style="transform: rotate(-1.5deg);">可以订阅关注小程序，第二天会推送彩蛋～</view>
+    
 
     <!-- V2.3 回显：全程仅有的两处游客输入，只在结局以屏幕文字出现（不进音频） -->
     <view class="echo-panel" wx:if="{{echoDashuifa || echoPostcard}}">

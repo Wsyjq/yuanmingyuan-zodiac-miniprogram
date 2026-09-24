@@ -5,10 +5,6 @@
 <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="page-doc">
   <view class="binder"></view>
   <image class="comic-botanical" src="/plate21/module/assets/img/stickers/st-botanical-01.png" mode="aspectFit" />
-  <view class="page-head">
-    <view class="tag-no">No.S3</view>
-  </view>
-
   <view class="novel">
     <view class="novel-p"><gloss-text parts="{{introParts}}" bind:glossary="onGlossary" /></view>
   </view>
@@ -32,13 +28,13 @@
     <view class="q-title serif">正午时候由哪个兽首喷水？</view>
     <input class="answer-input" value="{{q2}}" bindinput="onInputQ2" placeholder="写一个生肖" maxlength="4" disabled="{{solved}}" />
     <view class="hint" wx:if="{{hint}}">{{hint}}</view>
-    <button class="btn-seal" bindtap="onConfirm" disabled="{{!q1 || !q2 || solved}}">就 是 这 样</button>
+    <button class="btn-seal" bindtap="onConfirm" disabled="{{!q1 || !q2 || solved}}">提交</button>
   </view>
 
   <view class="followup" wx:if="{{followup}}">
     <view class="novel-p">答案确认后，画面里的十二生肖一个接一个亮起，到了正午，十二道水流同时喷出。</view>
     <view class="novel-p">昔日竟然如此壮观，可如今却只剩下断壁残垣。这些兽首流离失所，有七尊归来了，但还有五尊不知所踪。</view>
-    <button class="btn-seal" bindtap="onNext" disabled="{{advancing}}">前往转盘花纹匹配</button>
+    <button class="btn-seal" bindtap="onNext" disabled="{{advancing}}">前往十二生肖</button>
   </view>
 </scroll-view>
 </view>
@@ -48,8 +44,7 @@
   title="海晏堂 · 水力钟"
   source="《西洋楼铜版图·海晏堂西面》"
   lines="{{historyLines}}"
-  corner-number="{{cardNumber}}"
-  show-corner="{{showHistory}}"
+  
   btn-text="继 续"
   bind:next="onHistoryNext"
   bind:close="onCloseHistory"

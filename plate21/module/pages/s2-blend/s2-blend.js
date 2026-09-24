@@ -260,7 +260,7 @@ Page({
       return Promise.resolve(false)
     }
     if (this.data.done) {
-      this.setData({ showRecordCard: true })
+      this.onNext()
       return Promise.resolve(true)
     }
     session.attemptPuzzle(PUZZLE, completeAttempts, true, 'camera')
@@ -282,7 +282,7 @@ Page({
       dateLabel: this.data.dateLabel,
       completedAt: Date.now()
     }
-    this.setData({ done: true, showRecordCard: true })
+    this.setData({ done: true })
     return session.setFlag('s2PhotoRecord', record)
       .then(function () {
         return session.completePuzzle(PUZZLE, {
@@ -290,7 +290,10 @@ Page({
           completedAt: record.completedAt
         }, { collectCard: true })
       })
-      .then(function () { return true })
+      .then(() => {
+        this.onNext()
+        return true
+      })
       .catch((error) => {
         console.warn('[s2-blend] 四图考察卡进度保存失败', error && error.message)
         this.setData({ done: false, showRecordCard: false, captureError: '考察卡保存失败，请重新生成。' })
@@ -314,6 +317,19 @@ Page({
 
   onCloseHistory() {
     this.setData({ showHistory: false, readyNext: this.data.done })
+  },
+
+  onSkipShot() {
+    if (this.data.advancing) return
+    this.setData({ advancing: true })
+    session.completePuzzle(PUZZLE, { action: 'skipped' }, {
+      checkpoint: content.next.checkpoint
+    }).then(() => {
+      wx.redirectTo({
+        url: content.next.url,
+        fail: () => this.setData({ advancing: false })
+      })
+    }).catch(() => this.setData({ advancing: false }))
   },
 
   onNext() {

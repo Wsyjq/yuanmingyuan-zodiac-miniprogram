@@ -8,7 +8,7 @@ const glossHost = require('../../utils/gloss-host')
 
 // 时辰→兽首：14 时落在未时（13-15 点），正午是午马
 const Q1_ANSWERS = ['羊', '羊首', '未羊']
-const Q2_ANSWERS = ['马', '马首', '午马']
+const Q2_ANSWERS = ['马', '马首', '午马', '全部', '十二', '十二个', '都喷', '一起喷', '同时喷', '十二个都喷', '全部一起']
 
 Page({
   behaviors: [glossHost],
@@ -16,9 +16,7 @@ Page({
     narrSrc: audioSrc.clip('narr-s3-comic'),
     showHistory: false,
     cardNumber: 0,
-    historyLines: [
-      '池周分布十二兽首铜像代表十二时辰，依次喷水构成报时系统。'
-    ],
+    historyLines: require('../../utils/sl-cards').get('sl12').lines,
     // 「海晏堂」= SL-12 挂点（飞书 v3 rev5614 §海晏堂开场）
     introParts: [
       { t: '海晏堂', g: 'sl12' },
@@ -61,8 +59,6 @@ Page({
         hint: '',
         showHistory: true
       })
-      const stamp = this.selectComponent('#stamp')
-      if (stamp && stamp.show) stamp.show('考察记录已保存')
       session.completePuzzle('s3-hour', {
         answer: ['羊', '马'],
         attempts: attempts

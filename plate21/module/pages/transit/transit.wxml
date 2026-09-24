@@ -13,29 +13,27 @@
   <view class="arch route-arch"></view>
   <view class="route serif">{{leg.from}} → {{leg.to}}</view>
 
-  <!-- 已授权 AI 路线示意 + 黄铜点位 + 连线 -->
-  <view class="map">
-    <view class="tape" style="top: -20rpx; left: 50%; margin-left: -90rpx;"></view>
-    <!-- v1.3.1 手账：邮戳贴纸压在地图右上角，像盖在地图上的行程章 -->
-    <image class="map-postmark" src="/plate21/module/assets/img/stickers/st-postmark-02.png" mode="aspectFit" />
-    <image class="map-bg" src="/plate21/module/assets/img/IMG-RUNTIME-MAP.jpg" mode="aspectFill" />
+  <map
+    class="nav-map"
+    longitude="{{center.longitude}}"
+    latitude="{{center.latitude}}"
+    scale="16"
+    markers="{{markers}}"
+    polyline="{{polyline}}"
+    enable-rotate="{{false}}"
+    enable-3D="{{false}}"
+    bindmarkertap="onMarker"
+  ></map>
+  <view class="site-list">
     <view
-      wx:for="{{lines}}"
-      wx:key="index"
-      class="line {{item.current ? 'line-now' : ''}}"
-      style="left: {{item.left}}rpx; top: {{item.top}}rpx; width: {{item.width}}rpx; transform: rotate({{item.angle}}deg);"
-    ></view>
-    <view
-      wx:for="{{points}}"
-      wx:key="name"
-      class="dot-wrap {{item.done ? 'done' : ''}} {{item.current ? 'cur' : ''}}"
-      style="left: {{item.x}}rpx; top: {{item.y}}rpx;"
+      wx:for="{{sites}}"
+      wx:key="id"
+      class="site-row {{item.current ? 'cur' : ''}} {{item.opened ? '' : 'locked'}}"
+      data-id="{{item.id}}"
+      bindtap="onOpenVisited"
     >
-      <view class="dot"></view>
-      <!-- INT-405：已过点叠加铜绿打勾图标 -->
-      <image wx:if="{{item.done}}" class="dot-check" src="/plate21/module/assets/img/icons/ic-check-patina.png" mode="aspectFit" />
-      <image class="dot-pin" src="/plate21/module/assets/img/icons/ic-map-pin-brass.png" mode="aspectFit" />
-      <view class="dot-name">{{item.name}}</view>
+      <text class="site-name">{{item.name}}</text>
+      <text class="site-state">{{item.current ? '这一站' : (item.opened ? '回看' : '未到')}}</text>
     </view>
   </view>
 
@@ -65,7 +63,7 @@
     <view class="side-arrow">›</view>
   </view>
 
-  <button id="coachGo" class="btn-seal next-btn" bindtap="onNext" disabled="{{advancing}}">{{advancing ? '正在前往……' : '继 续 前 往'}}</button>
+  <button id="coachGo" class="btn-seal next-btn" bindtap="onNext" disabled="{{advancing}}">{{advancing ? '正在前往……' : '前往' + leg.to}}</button>
 </view>
 <coach-spot
   class="coach-host"

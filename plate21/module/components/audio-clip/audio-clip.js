@@ -66,6 +66,12 @@ Component({
       this.setData({ enabled: enabled })
     },
 
+    onMute() {
+      const settings = require('../../utils/audio-settings')
+      const cur = settings.get()
+      settings.set('voice', !cur.voice)
+    },
+
     onToggle() {
       if (!this.data.src || this.data.failed || !this.data.enabled) return
       if (this.data.playing) {

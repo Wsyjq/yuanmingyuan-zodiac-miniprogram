@@ -6,6 +6,7 @@
 //     source="{{gloss.source}}" lines="{{gloss.lines}}" btn-text="学到了"
 //     bind:next="onGlossClose" bind:close="onGlossClose" />
 const slCards = require('./sl-cards')
+const session = require('../store/session')
 
 module.exports = Behavior({
   data: {
@@ -16,9 +17,9 @@ module.exports = Behavior({
       const key = e.detail && e.detail.key
       const g = key && slCards.get(key)
       if (!g) return
-      const layers = g.layers || g.lines || []
+      session.setFlag('cardSeen_' + key, Date.now()).catch(function () {})
       this.setData({
-        gloss: Object.assign({}, g, { layered: layers.length > 1 })
+        gloss: Object.assign({}, g, { layered: false, key: key })
       })
     },
     onGlossClose() {

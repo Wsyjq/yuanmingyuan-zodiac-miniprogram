@@ -4,7 +4,6 @@
 // 文案单点在 content/prologue.js。
 const session = require('../../store/session')
 const audioSrc = require('../../utils/audio-src')
-const playGuide = require('../../capabilities/play-guide/guide')
 const coachHost = require('../../capabilities/play-guide/coach-host')
 const glossHost = require('../../utils/gloss-host')
 const content = require('../../content/prologue')
@@ -26,21 +25,7 @@ Page({
   },
 
   onNovelFinish() {
-    // 叙事结束：清点档案袋里的考察资料
     this.setData({ showHandover: true, narrSrc: audioSrc.clip(content.clips.handover) })
-    this.scheduleCoach([playGuide.SPOTS.go])
-  },
-
-  // 确认收好档案。西洋楼入口一章在 s1-decode 完成。
-  onTakeArchive() {
-    session.attemptPuzzle('prologue-envelope', 1, true, 'physical')
-    session.completePuzzle('prologue-envelope', { action: 'archive-received' }).catch(function () {
-      wx.showToast({ title: '进度暂未保存，继续时会重试', icon: 'none' })
-    })
-    this._timers.push(setTimeout(() => {
-      const stamp = this.selectComponent('#stamp')
-      if (stamp) stamp.show('档案已收好')
-    }, 800))
   },
 
   onGoS1() {
@@ -59,11 +44,11 @@ Page({
     })
   },
 
-  onReady() {
-    const spots = [playGuide.SPOTS.listen]
-    if (this.data.showHandover) spots.push(playGuide.SPOTS.go)
-    this.scheduleCoach(spots)
+  onShow() {
+    this.setData({ advancing: false })
   },
+
+  onReady() {},
 
   onLoad() {
     this._timers = []

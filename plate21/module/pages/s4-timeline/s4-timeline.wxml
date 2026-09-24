@@ -5,7 +5,7 @@
 <!-- 雨果雕像（飞书 v3 rev5614 §雨果雕像：纯叙事） -->
 <view class="page page-shell paper-grain paper-real">
   <view class="binder"></view>
-  <view class="tag-no page-tag">No.S4</view>
+  
   <view class="navi-title serif">雨果雕像</view>
   <view class="hatch-divider navi-line"></view>
   <scroll-view class="navi-body" scroll-y>

@@ -290,9 +290,17 @@ button.skip-btn {
 /* 手写批注行：页边/图旁的手写小字，橄榄绿或褐墨淡 */
 .note-hand {
   font-family: "Plate21WenKai", "STXingkai", "HanziPen SC", "STKaiti", "KaiTi", cursive;
-  color: var(--ink60);
-  font-size: 26rpx;
-  line-height: 1.6;
+  color: var(--ink);
+  font-size: 30rpx;
+  line-height: 1.7;
+}
+.skip-line {
+  display: block;
+  margin: 20rpx auto 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 30rpx;
+  border-bottom: 3rpx solid var(--ink-deep);
 }
 .note-hand.olive {
   color: var(--olive);
@@ -760,7 +768,7 @@ button.skip-btn {
 }
 .act-strip-tag {
   flex-shrink: 0;
-  font-size: 20rpx;
+  font-size: 26rpx;
   letter-spacing: 2rpx;
   color: var(--cinnabar);
   border: 2rpx solid var(--cinnabar);
@@ -768,7 +776,7 @@ button.skip-btn {
   padding: 2rpx 10rpx;
 }
 .act-strip-text {
-  font-size: 26rpx;
+  font-size: 32rpx;
   line-height: 1.6;
   color: var(--ink);
 }

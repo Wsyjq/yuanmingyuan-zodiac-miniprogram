@@ -30,7 +30,7 @@
         <text class="md-next-dist">{{nextSite.distanceText}}</text>
       </view>
       <view wx:else class="md-next">
-        <text class="md-next-name serif">四站皆已走遍</text>
+        <text class="md-next-name serif">主线已走完</text>
       </view>
     </block>
     <view wx:elif="{{locState === 'loading'}}" class="md-loc-tip">正在取得你的位置……</view>
@@ -45,7 +45,9 @@
       <view
         wx:for="{{sites}}"
         wx:key="id"
-        class="md-site {{item.isNext ? 'is-next' : ''}}"
+        class="md-site {{item.isNext ? 'is-next' : ''}} {{item.opened ? '' : 'is-locked'}}"
+        data-id="{{item.id}}"
+        bindtap="onOpenSite"
       >
         <view class="md-site-dot {{item.done ? 'done' : ''}} {{item.isNext ? 'cur' : ''}}"></view>
         <view class="md-site-name serif">{{item.name}}</view>

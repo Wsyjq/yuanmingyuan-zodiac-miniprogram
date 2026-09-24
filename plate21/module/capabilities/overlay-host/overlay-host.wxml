@@ -2,7 +2,6 @@
   <button wx:if="{{caps.map}}" id="coachMap" class="ov-fab ov-map" bindtap="onOpenMap" aria-label="打开实地导引地图">
     <image src="/plate21/module/assets/img/icons/ic-map-pin-brass.png" mode="aspectFit" />
   </button>
-  <audio-guide id="audioGuide" wx:if="{{caps.audio || audioStation}}" station="{{audioStation ? audioStation : caps.audio}}" />
   <map-drawer id="mapDrawer" />
 </block>
 <stamp-toast id="achStamp" />

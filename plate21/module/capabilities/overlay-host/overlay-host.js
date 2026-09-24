@@ -48,9 +48,7 @@ Component({
         const stamp = this.selectComponent('#achStamp')
         if (stamp && stamp.show) stamp.show('成就 · ' + rule.title)
       })
-      if (playGuide.runOverlayStop(this)) return
       if (playGuide.isTouring()) return
-      if (caps.map) this.scheduleCoach([playGuide.SPOTS.map], 700)
     }
   },
 

@@ -60,7 +60,8 @@
           </view>
 
           <view wx:else class="narrative-copy {{index === leadIndex ? 'lead-copy' : ''}}">
-            <text class="reveal-copy {{showAll ? 'show-all' : ''}}" style="animation-duration: {{revealDuration}}ms; animation-delay: {{index * blockDelay}}ms;"><gloss-text wx:if="{{block.parts}}" parts="{{block.parts}}" bind:glossary="onGlossary" /><block wx:else>{{block.text}}</block></text>
+            <gloss-text wx:if="{{block.parts}}" class="reveal-copy show-all" parts="{{block.parts}}" bind:glossary="onGlossary" />
+            <text wx:else class="reveal-copy show-all">{{block.text}}</text>
           </view>
         </block>
       </scroll-view>

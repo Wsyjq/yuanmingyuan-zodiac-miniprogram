@@ -3,7 +3,7 @@
   width: 100%;
   height: 100%;
   min-height: 0;
-  padding: 138rpx 28rpx calc(22rpx + env(safe-area-inset-bottom)) 34rpx;
+  padding: 0;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -44,7 +44,7 @@
 .book-stage {
   position: relative;
   flex: 1;
-  min-height: 660rpx;
+  min-height: 0;
   perspective: 1800rpx;
   transform-style: preserve-3d;
 }
@@ -63,14 +63,9 @@
   background: var(--paper2);
 }
 
-.stack-back {
-  transform: translate(9rpx, 9rpx) rotate(0.7deg);
-  box-shadow: 0 10rpx 22rpx rgba(46, 31, 13, 0.17);
-}
-
+.stack-back,
 .stack-mid {
-  transform: translate(5rpx, 5rpx) rotate(-0.35deg);
-  background: #EFE9DA;
+  display: none;
 }
 
 .paper-leaf {
@@ -271,11 +266,11 @@
 }
 
 .first-leaf .page-body {
-  top: 238rpx;
+  top: 148rpx;
 }
 
 .continued-leaf .page-body {
-  top: 126rpx;
+  top: 88rpx;
 }
 
 .narrative-copy {
@@ -316,10 +311,8 @@
   white-space: pre-wrap;
   overflow-wrap: anywhere;
   word-break: break-all;
-  opacity: 0;
-  animation-name: copy-reveal;
-  animation-timing-function: ease-out;
-  animation-fill-mode: forwards;
+  opacity: 1;
+  animation: none;
 }
 
 .reveal-copy.show-all {

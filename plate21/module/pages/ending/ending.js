@@ -26,11 +26,7 @@ Page({
     } catch (e) { /* 台架环境静默 */ }
   },
 
-  onShow() {
-    // 终章仪式感：进页即落「考察完结」朱砂印
-    const stamp = this.selectComponent('#stamp')
-    if (stamp) stamp.show('考察完结')
-  },
+  onShow() {},
 
   // 播放图标点击：有真视频则播放，无则诚实提示生成中
   onPlay() {

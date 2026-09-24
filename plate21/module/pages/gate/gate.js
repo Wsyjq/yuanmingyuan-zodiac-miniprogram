@@ -12,6 +12,10 @@ Page({
     purchasing: false
   },
 
+  onShow() {
+    try { require('../../store/trail').remember() } catch (err) {}
+  },
+
   onLoad(options) {
     this.entry = options || {}
     const ready = session.getSnapshot()

@@ -6,7 +6,7 @@ Page({
     sites: [],
     markers: [],
     polyline: [],
-    center: { latitude: 40.0067, longitude: 116.3092 }
+    center: { latitude: 40.0132, longitude: 116.311 }
   },
 
   onShow() {

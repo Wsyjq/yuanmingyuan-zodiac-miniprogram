@@ -56,10 +56,8 @@ Page({
     if (entry.from === 'nfc' && entry.prop === 'dj06') {
       url += '?from=nfc&prop=dj06&next=xieqiqu'
     }
-    wx.navigateTo({
-      url: url,
-      fail: function () { wx.reLaunch({ url: url }) }
-    })
+    try { wx.removeStorageSync('plate21_trail') } catch (err) {}
+    wx.reLaunch({ url: url })
   },
 
   goRevisit() {
