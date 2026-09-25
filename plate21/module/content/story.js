@@ -157,9 +157,7 @@ module.exports = {
       ],
       "interaction": {
         "title": "地图辨位",
-        "lines": [
-          "答案：d"
-        ],
+        "lines": [],
         "requires": "quiz-direction",
         "position": "before"
       },
