@@ -247,7 +247,8 @@
       "destination": {
         "page": "E2",
         "field": "interaction"
-      }
+      },
+      "displayText": "答案：东北"
     },
     {
       "paragraph": 158,

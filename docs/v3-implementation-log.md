@@ -130,6 +130,6 @@ npm test 153 项通过，新增判题/跳过/门控、旧存档回看兼容、�
 未改动的两处：D:\kc\ymy-check-5ac1255 是本次清理期间出现的活动 worktree（分支 fix/report-exit-navigation，今日 15:14 创建、16:10 仍有修改），属他人/其他会话正在进行的工作，按规则不删除；GitHub 远程的 feat/banhen-ui、feat/plate21-cultural-experience-v4、feat/ui-fixes-and-ticket 三条旧分支未动（共享远程，需用户明确指示）。本仓库本地分支 main、feat/game-module-v3 保持不变。Pollux 不可用，按约定记录于此。
 ## 清理 E2 剧本批注泄露（2026-09-25）
 
-按用户要求复查最新分支各页面状态与按钮跳转逻辑：先用仓库 harness 生成 78 份状态快照做文本层体检，再用微信开发者工具（CLI + miniprogram-automator，模拟器，AppID wxa284707129230b80）真实点击复核。发现 E2"地图辨位"互动正文向玩家显示编辑批注"答案：d"（content/story.js 的 interaction.lines，随 5ac1255 剧本同步带入），与 quiz-direction 的答案（ne，选项 d）对应，属于答案泄露。本次删除该行，interaction 结构与 requires 关联保持不变；正式揭晓文案待剧本方补充，不擅自改写。
+按用户要求复查最新分支各页面状态与按钮跳转逻辑：先用仓库 harness 生成 78 份状态快照做文本层体检，再用微信开发者工具（CLI + miniprogram-automator，模拟器，AppID wxa284707129230b80）真实点击复核。发现 E2"地图辨位"互动正文向玩家显示批注式文本"答案：d"（content/story.js 的 interaction.lines，随 5ac1255 剧本同步带入）。该模块本是 quiz-direction（辨认方向题）的揭晓屏（requires 门控，解题后才出现），但正文把选项编号当作文案。本次按答案 ID（ne）对应的选项标签，把揭晓文案规范化为"答案：东北"；原文"答案：d"保留在 test/fixtures/v3-script-coverage.json 的 source/text 字段，并以 displayText 记录本次规范化映射。feishu-import 原始提取不动，不擅自扩写解读。
 
 npm run check:story 通过（46 节点，流程、史料、道具与答案引用完整）。微信开发者工具内为模拟器验证，iOS/Android 真机另行安排。Pollux 当前不可用，记录于此。
