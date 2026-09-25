@@ -5,6 +5,7 @@ const pages = require('./pages')
 const play = require('../play/index')
 const nav = require('../capabilities/map/nav-model')
 const glossary = require('./glossary')
+const gate = require('./term-gate')
 const props = require('./props')
 const taskGuide = require('./task-guide')
 
@@ -262,6 +263,6 @@ function buildScreen(run, ui) {
     model.title = '这一页尚未解锁'; model.teacher = ''; model.relay.records = [];
     model.primary = '返回当前进度'; model.primaryAction = 'resume'; model.showSkip = false
   }
-  return model
+  return gate.maskDeep(model, run)
 }
 module.exports = { buildScreen, screen: buildScreen, bodyLines, beijingDate, PIECES, SLOTS, BEASTS, PATTERN_FIGURES, SPOTS }

@@ -11,6 +11,7 @@ const play = require('../../play/index')
 const cue = require('../../audio/cue')
 const progress = require('../../progress/build')
 const cards = require('../../utils/sl-cards')
+const gate = require('../../flow/term-gate')
 const settings = require('../../utils/audio-settings')
 const audioBus = require('../../utils/audio-bus')
 const audioSrc = require('../../utils/audio-src')
@@ -107,7 +108,7 @@ Page({
     const unlockedCards = []
     Object.keys(this.run.visited).forEach((id) => {
       require('../../flow/glossary').termsFor(id).forEach((term) => {
-        if (!unlockedCards.some((x) => x.key === term.key)) unlockedCards.push({ key: term.key, label: (cards.get(term.key) || {}).title || term.label })
+        if (!unlockedCards.some((x) => x.key === term.key)) unlockedCards.push({ key: term.key, label: gate.maskText((cards.get(term.key) || {}).title || term.label, this.run) })
       })
     })
     const letterLines = letterParagraphs.build(page, model.lines)
@@ -276,7 +277,7 @@ Page({
     if (!card || !this.data.historyCards.some(item => item.key === key)) return
     audioBus.pauseAll()
     this.setData({ drawer: 'history', drawerScrollTop: 0, cardAnchor: '', cardImageFailed: false,
-      card: Object.assign({}, card, { key, image: resources.resolve(card.image, 'asset'), layers: card.layers.slice(), years: card.years || [] }) })
+      card: gate.maskDeep(Object.assign({}, card, { key, image: resources.resolve(card.image, 'asset'), layers: card.layers.slice(), years: card.years || [] }), this.run) })
   },
   onCardLevel(e) {
     const level = Number(ds(e, 'level'))

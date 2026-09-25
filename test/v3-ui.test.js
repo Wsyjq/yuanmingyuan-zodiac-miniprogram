@@ -18,6 +18,8 @@ function fixture(id, ui) {
     run.unlocked[page.id] = true; run.visited[page.id] = true
     if (page.id !== id) { run.completedPages[page.id] = true; if (page.playId) run.puzzles[page.playId] = 'solved' }
   })
+  // UI 渲染检查以信封谜题已解为前提；术语遮蔽的门控行为由 v3-term-gate 测试覆盖。
+  run.puzzles['quiz-envelope'] = 'solved'
   run.uiByPage[id] = ui || {}
   if (id.startsWith('LT')) { run.completedAt = at; run.signedAt = at; run.name = '考察者'; run.letterAvailable = true }
   return { snapshot: { schemaVersion: 3, sessionId: 'fixture-' + id, userId: 'demo', revision: 0,

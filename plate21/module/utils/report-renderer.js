@@ -1,5 +1,6 @@
 'use strict'
 
+const gate = require('../flow/term-gate')
 const WIDTH = 700
 const SITES = [
   { id: 'gate', label: '西洋楼入口' }, { id: 'xieqiqu', label: '谐奇趣' },
@@ -23,6 +24,9 @@ function isReferencePath(path) {
   return /^(?:\/?assets\/|\/?plate21\/|data:)/i.test(String(path || ''))
 }
 function buildModel(snapshot) {
+  return gate.maskDeep(buildModelRaw(snapshot), snapshot && snapshot.run)
+}
+function buildModelRaw(snapshot) {
   const source = snapshot || {}, run = source.run || {}
   const records = (source.records || []).filter(function (record) {
     return record && record.purpose === 'field' && (record.kind === 'photo' || record.kind === 'text')

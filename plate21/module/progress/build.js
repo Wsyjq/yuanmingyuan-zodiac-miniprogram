@@ -3,6 +3,7 @@
 // 进度视图只读：恢复点决定进度，显示页仅用于回看标记。
 const { SITE_IDS } = require('../flow/contract')
 const engine = require('../flow/engine')
+const gate = require('../flow/term-gate')
 const pageTable = require('../flow/pages')
 const TITLE = { prologue: '序章', gate: '西洋楼入口', xieqiqu: '谐奇趣', maze: '黄花阵',
   fangwaiguan: '方外观', haiyantang: '海晏堂', xushuilou: '蓄水楼', dashuifa: '大水法',
@@ -10,6 +11,9 @@ const TITLE = { prologue: '序章', gate: '西洋楼入口', xieqiqu: '谐奇趣
 const HOME = { prologue: 'P1', gate: 'E1', xieqiqu: 'M1', maze: 'M2', fangwaiguan: 'M3',
   haiyantang: 'M4', xushuilou: 'M5', dashuifa: 'M6', hugo: 'M7', finale: 'FN1', letter: 'LT1' }
 function buildProgress(run, pagesById) {
+  return gate.maskDeep(buildProgressRaw(run, pagesById), run)
+}
+function buildProgressRaw(run, pagesById) {
   const source = run || {}
   const pages = pagesById || pageTable.byId
   const sites = source.sites || {}
