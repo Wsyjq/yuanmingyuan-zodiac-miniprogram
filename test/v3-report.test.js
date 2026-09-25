@@ -95,7 +95,7 @@ test('missing player image produces a named placeholder and never substitutes st
 
 function pageHarness(options) {
   const opts=options||{}, old=clone(opts.archive||snapshot()), current=clone(opts.current||snapshot('current-run'))
-  const calls=[], saved=[], canvas=fakeCanvas(opts.missing), redirects=[]
+  const calls=[], saved=[], canvas=fakeCanvas(opts.missing), redirects=[], backs=[]
   let nextId=1, exportCount=0, failAlbumAt=opts.failAlbumAt||0
   const target=id=>id===current.sessionId?current:old
   const api={
@@ -120,6 +120,7 @@ function pageHarness(options) {
     showModal(input){input.success({confirm:true})},
     previewImage(input){calls.push(['preview',input.current]);input.success({})},
     redirectTo(input){redirects.push(input.url);input.success({})},
+    navigateBack(input){backs.push(input);if(opts.failBack){input.fail&&input.fail({errMsg:'navigateBack:fail'})}else{input.success&&input.success({})}},
     canvasToTempFilePath(input){exportCount++;if(opts.failExport)input.fail(new Error('export_failed'));else input.success({tempFilePath:'/tmp/report-'+exportCount+'.jpg'})},
     saveImageToPhotosAlbum(input){
       const index=Number(/report-(\d+)/.exec(input.filePath)[1])
@@ -131,7 +132,7 @@ function pageHarness(options) {
   const filename=path.join(__dirname,'../plate21/module/pages/report/report.js'),ownRequire=createRequire(filename)
   let definition
   vm.runInNewContext(fs.readFileSync(filename,'utf8'),{
-    Page(value){definition=value},wx,setTimeout,clearTimeout,encodeURIComponent,
+    Page(value){definition=value},wx,setTimeout,clearTimeout,encodeURIComponent,getCurrentPages:()=>opts.opener,
     require(name){
       if(name.includes('store/session'))return api
       if(name.includes('game-entry'))return {async init(input){calls.push(['entry',input]);return api.getSnapshot()}}
@@ -142,7 +143,7 @@ function pageHarness(options) {
   },{filename})
   const page={data:clone(definition.data),setData(patch){Object.assign(this.data,patch)}}
   Object.keys(definition).filter(k=>typeof definition[k]==='function').forEach(k=>{page[k]=definition[k].bind(page)})
-  return {page,calls,saved,old,current,canvas,redirects}
+  return {page,calls,saved,old,current,canvas,redirects,backs}
 }
 const event=id=>({currentTarget:{dataset:{id}}})
 
@@ -259,4 +260,32 @@ test('direct bonus button opens the selected archive without waiting for the nex
   assert.equal(h.redirects[0],'/plate21/module/pages/walk/walk?sessionId=old-run&entry=letter')
   assert.equal(h.page.data.letterOpening,false)
   assert.equal(h.page.data.bonusError,'')
+})
+
+test('report exits return to the existing walk instance instead of stacking a duplicate', async function () {
+  const events=[]
+  const walk={route:'plate21/module/pages/walk/walk',onRestart(){events.push('restart')}}
+  const h=pageHarness({opener:[{route:'pages/index/index'},walk,{route:'plate21/module/pages/report/report'}]})
+  await h.page.onLoad({sessionId:'old-run'})
+  await h.page.onReturn()
+  assert.equal(h.backs.length,1);assert.equal(h.redirects.length,0)
+  await h.page.onRestart()
+  assert.deepEqual(events,['restart']);assert.equal(h.backs.length,2);assert.equal(h.redirects.length,0)
+  await h.page.onOpenBonus()
+  assert.equal(h.calls.find(c=>c[0]==='openBonus')[1],'old-run')
+  assert.equal(h.backs.length,3);assert.equal(h.redirects.length,0)
+  assert.equal(h.page.data.letterOpening,false);assert.equal(h.page.data.bonusError,'')
+})
+
+test('report exits still reach walk when there is no walk page to return to', async function () {
+  const h=pageHarness({opener:[{route:'pages/index/index'},{route:'plate21/module/pages/report/report'}]})
+  await h.page.onLoad({sessionId:'old-run'})
+  await h.page.onReturn()
+  assert.equal(h.backs.length,0)
+  assert.equal(h.redirects[0],'/plate21/module/pages/walk/walk?sessionId=old-run')
+  const failed=pageHarness({opener:[{route:'pages/index/index'},{route:'plate21/module/pages/walk/walk'},{route:'plate21/module/pages/report/report'}],failBack:true})
+  await failed.page.onLoad({sessionId:'old-run'})
+  await failed.page.onReturn()
+  assert.equal(failed.backs.length,1)
+  assert.equal(failed.redirects[0],'/plate21/module/pages/walk/walk?sessionId=old-run')
 })

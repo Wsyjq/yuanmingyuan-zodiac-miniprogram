@@ -31,6 +31,20 @@ function invoke(name, options) {
 function errorText(error) { return String(error && (error.errMsg || error.message || error.code) || '') }
 function cancelled(error) { return /cancel/i.test(errorText(error)) }
 
+// 来路页就是考察页时返回原实例：redirectTo 会再压入一个 walk 页面实例，
+// 返回链多出一层相同画面，“合上档案”也会先退到重复页。
+// 没有可返回来路（例如直达档案）时才重定向重建；返回失败同样退回重定向。
+function backToWalk(url, apply) {
+  const pages = (typeof getCurrentPages === 'function' ? getCurrentPages() : null) || []
+  const opener = pages.length > 1 ? pages[pages.length - 2] : null
+  if (opener && /pages\/walk\/walk$/.test(String(opener.route || ''))) {
+    return invoke('navigateBack').then(function () {
+      try { if (apply) apply(opener) } catch (error) { /* 已回到考察页，入口意图失败不阻断返回 */ }
+    }).catch(function () { return invoke('redirectTo', { url: url }) })
+  }
+  return invoke('redirectTo', { url: url })
+}
+
 Page({
   data: {
     loading: true, loadError: '', model: null, siteOptions: SITE_OPTIONS, siteIndex: 0,
@@ -116,7 +130,7 @@ Page({
     this.update({ letterOpening: true, bonusError: '' })
     try {
       await session.openBonus(this._sessionId)
-      await invoke('redirectTo', { url: WALK + '?sessionId=' + encodeURIComponent(this._sessionId) + '&entry=letter' })
+      await backToWalk(WALK + '?sessionId=' + encodeURIComponent(this._sessionId) + '&entry=letter')
     } catch (error) { this.update({ bonusError: '彩蛋暂时无法打开，请重试。' }) }
     finally { this.update({ letterOpening: false }) }
   },
@@ -125,14 +139,14 @@ Page({
     this.update({ letterOpening: true })
     try {
       await session.openLetter(this._sessionId)
-      await invoke('redirectTo', { url: WALK + '?sessionId=' + encodeURIComponent(this._sessionId) + '&entry=letter' })
+      await backToWalk(WALK + '?sessionId=' + encodeURIComponent(this._sessionId) + '&entry=letter')
     } catch (error) {
       this.update({ letterMessage: error.code === 'LETTER_LOCKED' ? '这封信尚未开放，或需要联网确认时间。到期后仍可从这里进入。' : '来信暂时无法打开，请重试。' })
     } finally { this.update({ letterOpening: false }) }
   },
-  onRestart: function () { return invoke('redirectTo', { url: WALK + '?entry=restart' }) },
+  onRestart: function () { return backToWalk(WALK + '?entry=restart', function (opener) { if (opener.onRestart) opener.onRestart() }) },
   onReturn: function () {
-    return invoke('redirectTo', { url: WALK + (this._sessionId ? '?sessionId=' + encodeURIComponent(this._sessionId) : '') })
+    return backToWalk(WALK + (this._sessionId ? '?sessionId=' + encodeURIComponent(this._sessionId) : ''))
       .catch(() => this.update({ saveError: '暂时无法返回考察，请使用左上角返回后重试。' }))
   },
   onRequestReminder: async function () {
