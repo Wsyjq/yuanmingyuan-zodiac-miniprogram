@@ -10,7 +10,6 @@
     <view class="narration-heading"><text>{{listenMode === 'listen' ? '随声入园' : '静读档案'}}</text><button class="text-button mode-switch" bindtap="onChooseModeOpen">切换</button></view>
     <audio-clip wx:if="{{narrClips.length}}" id="narration" clips="{{narrClips}}" context-key="{{narrationKey}}" listen-key="{{listenKey}}" compact active="{{pageVisible && !drawer && !showModeChoice && !restartScreen && !busy}}" label="听这一段" bind:state="onNarrationState" bind:ended="onNarrationEnded" bind:error="cancelAuto" />
     <view wx:if="{{autoSeconds}}" class="narration-countdown"><text>{{autoSeconds}} 秒后继续</text><button class="text-button" bindtap="cancelAuto">留在这一页</button></view>
-    <text wx:elif="{{listenMode === 'listen' && !narrClips.length}}" class="narration-hint">{{screen.play ? '轮到你来探索了' : screen.kind === 'nav' ? '到达后，再继续' : '这一页，请读一读'}}</text>
   </view>
   <view class="toolbar">
     <button class="text-button" bindtap="onBack" disabled="{{busy || loading}}">‹ 返回</button>
@@ -57,5 +56,5 @@
     </scroll-view>
   </view></view>
   </block>
-  <view wx:if="{{showModeChoice && !restartScreen}}" class="mode-overlay" catchtouchmove="noop"><view class="mode-paper"><text class="eyebrow">翻开档案之前</text><view class="mode-title">你想怎样走进这段故事？</view><button class="mode-choice" data-mode="listen" bindtap="onChooseMode"><text class="mode-choice-title">以听为主</text><text class="mode-choice-copy">听完停留三秒，继续下一段。遇到互动，等你来探索。</text></button><button class="mode-choice" data-mode="read" bindtap="onChooseMode"><text class="mode-choice-title">以阅读为主</text><text class="mode-choice-copy">按自己的节奏翻页，也可以随时听一段。</text></button></view></view>
+  <view wx:if="{{showModeChoice && !restartScreen}}" class="mode-overlay" catchtouchmove="noop"><view class="mode-paper"><text class="eyebrow">翻开档案之前</text><view class="mode-title">你想怎样走进这段故事？</view><button class="mode-choice" data-mode="listen" bindtap="onChooseMode"><text class="mode-choice-title">以听为主</text><text class="mode-choice-copy">听完停留三秒自动继续，互动页暂停。</text></button><button class="mode-choice" data-mode="read" bindtap="onChooseMode"><text class="mode-choice-title">以阅读为主</text><text class="mode-choice-copy">手动翻页，可随时播放录音。</text></button></view></view>
 </view>

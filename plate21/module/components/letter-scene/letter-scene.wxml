@@ -9,11 +9,11 @@
   <view class="dialogue" bindtap="onNext">
     <view class="speaker">老师<text class="counter">{{index + 1}} / {{total}}</text></view>
     <scroll-view scroll-y class="dialogue-scroll" scroll-top="{{scrollTop}}" bindscroll="onDialogueScroll" catchtap="noop"><text class="words">{{text}}</text><text wx:if="{{typing}}" class="cursor">▏</text></scroll-view>
-    <button class="advance" catchtap="onNext" disabled="{{busy}}">{{typing ? '轻触补全文字' : index + 1 === total ? '继续' : '下一段'}} ▾</button>
+    <button class="advance" catchtap="onNext" disabled="{{busy}}">{{typing ? '补全文字' : index + 1 === total ? '继续' : '下一段'}} ▾</button>
     <button class="history-button" catchtap="onHistory">剧情回顾</button>
   </view>
   <view wx:if="{{history}}" class="history">
     <view class="speaker">已读对白<button class="close" bindtap="onHistory">返回剧情</button></view>
-    <scroll-view scroll-y class="history-scroll"><text wx:for="{{past}}" wx:key="index" class="past">{{item}}</text><text wx:if="{{!past.length}}">轻触对白，即可开始阅读。</text></scroll-view>
+    <scroll-view scroll-y class="history-scroll"><text wx:for="{{past}}" wx:key="index" class="past">{{item}}</text><text wx:if="{{!past.length}}">点击开始阅读。</text></scroll-view>
   </view>
 </view>
