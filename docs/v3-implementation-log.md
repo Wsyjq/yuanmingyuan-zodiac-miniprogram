@@ -122,3 +122,9 @@ npm test 153 项通过，新增判题/跳过/门控、旧存档回看兼容、�
 同时把 .projectmem、.grok、.kimi-code、.playwright-cli、.env、CLAUDE.md、docs/compliance/sources* 补进 project.config.json 打包排除清单，并重建 docs/v3-resource-manifest.json。npm test 153 项全部通过，资源哈希与包体预算通过：主包 0.71 MiB、游戏分包 1.60 MiB、总计 6.67 MiB，均在主包/每分包 2 MiB、总计 20 MiB 预算内。清理前该检查因本地生成源与工具残留计入主包而失败（主包 99.34 MiB、总计 115.21 MiB）。
 
 本轮为文件清理，未改动玩法、剧情与录音；16 个冻结录音的补录清单、37 个新版录音的逐条听审、iOS/Android 真机与微信开发者工具人工验收均未在本轮进行。Pollux 不可用（本环境无该工具接口），按约定记录于此。
+
+## 残留工作区清理（2026-09-25）
+
+按用户要求清理 D:\kc 下与本项目相关的残留文件夹，只保留 D:\kc\ymy（feat/game-module-v3）与 main 的工作能力。已删除 12 个残留文件夹共约 1.56 GB：ymy-cdce962、ymy-upload（本仓库 worktree，已 git worktree remove）、ymy2、ymy2-wt-nfc、plate21-clean、plate21-player-fix、plate21-ui、plate21-ui-pass、yuanmingyuan、yuanmingyuan-zodiac-miniprogram、ymy-web、ymy-audio-backup-20260912。删除前先把不能从 GitHub 找回的内容备份至 D:\kc\_archive-20260925（约 258 MB，含 git bundle、未提交改动 patch、未跟踪文件与无 git 目录的压缩包，说明见该目录 README.md）：未推送分支 fix/player-pass、backup-main-1.23、feat/xieqiqu-nfc、fix/word-plays、feature/water-demo-p0 均有 bundle 留存。
+
+未改动的两处：D:\kc\ymy-check-5ac1255 是本次清理期间出现的活动 worktree（分支 fix/report-exit-navigation，今日 15:14 创建、16:10 仍有修改），属他人/其他会话正在进行的工作，按规则不删除；GitHub 远程的 feat/banhen-ui、feat/plate21-cultural-experience-v4、feat/ui-fixes-and-ticket 三条旧分支未动（共享远程，需用户明确指示）。本仓库本地分支 main、feat/game-module-v3 保持不变。Pollux 不可用，按约定记录于此。
