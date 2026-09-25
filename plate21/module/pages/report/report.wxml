@@ -56,7 +56,7 @@
     <view class="section editor" id="recordEditor">
       <view class="section-title">{{editingTextId ? '修改这条观察' : '补充一条记录'}}</view>
       <picker mode="selector" range="{{siteOptions}}" range-key="label" value="{{siteIndex}}" bindchange="onSiteChange"><view class="site-picker">关联地点：{{siteOptions[siteIndex].label}} <text>⌄</text></view></picker>
-      <textarea class="note-input" value="{{draftText}}" bindinput="onTextInput" maxlength="500" auto-height placeholder="写下自己的观察；也可以只补充照片。" aria-label="个人观察笔记" />
+      <textarea class="note-input" value="{{draftText}}" bindinput="onTextInput" maxlength="500" auto-height placeholder="写下自己的观察；也可以只补充照片。" placeholder-class="ph-note" aria-label="个人观察笔记" />
       <view class="small-note counter">{{draftText.length}} / 500</view>
       <view class="button-row"><button class="report-button primary" bindtap="onSaveText" disabled="{{busy || generating || saving}}">{{busy ? '保存中…' : '保存文字'}}</button><button class="report-button" bindtap="onAddPhoto" disabled="{{busy || generating || saving}}">补充照片</button></view>
       <button wx:if="{{editingTextId}}" class="report-button" bindtap="onCancelEdit" disabled="{{busy}}">取消修改</button>

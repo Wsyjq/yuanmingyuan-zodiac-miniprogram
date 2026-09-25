@@ -24,7 +24,7 @@
       <view wx:if="{{pageId === 'FN1'}}" class="activity"><view class="subheading">这一次，我留下了</view><view class="photo-strip"><image wx:for="{{records}}" wx:key="id" wx:if="{{item.kind === 'photo'}}" src="{{item.filePath}}" mode="aspectFill" data-src="{{item.filePath}}" bindtap="onPreview"/></view><text wx:if="{{!records.length}}" class="caption">还没有照片或文字记录。完成署名后，也可以在个人作品中补录。</text><text wx:for="{{records}}" wx:key="id" wx:if="{{item.kind !== 'photo'}}" class="paragraph">{{item.text}}</text></view>
       <view wx:if="{{pageId === 'FN4'}}" class="activity"><button wx:if="{{completed}}" class="secondary" bindtap="onOpenBonus" disabled="{{busy}}">直接进入彩蛋 →</button><label>绘制者署名</label><text class="caption">绘制者：{{screen.signature.name}}
 绘制日期：{{screen.signature.date}}
-</text><input wx:if="{{!completed}}" data-key="name" value="{{ui.name}}" maxlength="40" placeholder="写下你的名字，也可以留白" bindinput="onInput" disabled="{{completed}}"/><text class="caption">{{completed ? '考察记录已保存。' : '完成后生成个人作品。'}}</text></view>
+</text><input wx:if="{{!completed}}" data-key="name" value="{{ui.name}}" maxlength="40" placeholder="写下你的名字，也可以留白" placeholder-class="ph-line" bindinput="onInput" disabled="{{completed}}"/><text class="caption">{{completed ? '考察记录已保存。' : '完成后生成个人作品。'}}</text></view>
       <view wx:if="{{pageId === 'LT6'}}" class="activity"><view class="subheading">探寻者的接力记录</view>
         <text wx:if="{{relayState === 'loading'}}">正在读取…</text><text wx:if="{{relayState === 'empty'}}">暂时没有可公开的接力记录。你仍可以留下自己的私人记录。</text><text wx:if="{{relayState === 'unavailable'}}">暂时没有收到后来者的来信。</text><text wx:if="{{relayState === 'failed'}}">暂时没有读到接力记录，请重试。</text>
         <view wx:for="{{relayItems}}" wx:key="id" class="record"><text class="caption">{{item.from}}</text><image wx:if="{{item.kind === 'photo' && item.url}}" src="{{item.url}}" mode="widthFix" data-src="{{item.url}}" bindtap="onPreview"/><text>{{item.text}}</text></view><button class="text-button" bindtap="loadRelay">重新读取</button>
@@ -33,7 +33,7 @@
         <view class="row"><button class="chip" data-kind="text" bindtap="onRelayKind">一句话</button><button class="chip" data-kind="photo" bindtap="onRelayKind">一张照片</button><button class="chip" data-kind="wish" bindtap="onRelayKind">一个心愿</button></view>
         <text class="caption">当前：{{ui.relayKind === 'photo' ? '照片' : ui.relayKind === 'wish' ? '心愿' : '文字'}}</text>
         <view wx:if="{{ui.relayKind === 'photo'}}"><image wx:if="{{ui.relayPath}}" src="{{ui.relayPath}}" mode="aspectFit" class="relay-photo"/><button class="secondary" bindtap="onRelayPhoto">{{ui.relayPath ? '替换照片' : '选择照片'}}</button></view>
-        <textarea data-key="relayText" value="{{ui.relayText}}" maxlength="500" placeholder="写下想留住的观察或心愿…" bindinput="onInput"/>
+        <textarea data-key="relayText" value="{{ui.relayText}}" maxlength="500" placeholder="写下想留住的观察或心愿…" placeholder-class="ph-block" bindinput="onInput"/>
         <button class="secondary" bindtap="onSaveRelay" disabled="{{busy}}">仅私人保存</button><text wx:if="{{ui.relaySaved}}" class="success">私人记录已保存在这份考察档案里</text>
         <checkbox-group bindchange="onRelayConsent"><label class="check-label"><checkbox value="public" checked="{{ui.consent}}" color="#716743"/>我同意将这份内容提交给官方，用于向其他探寻者公开展示。</label></checkbox-group>
         <button class="secondary" bindtap="onSubmitRelay" disabled="{{busy || !ui.consent}}">公开投稿</button><button class="text-button" bindtap="onNewRelay">另写一份</button>

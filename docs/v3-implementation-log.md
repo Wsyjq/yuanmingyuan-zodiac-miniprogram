@@ -145,3 +145,9 @@ npm test 155 项全通过（含新增 2 条），脚本/JSON/引用/WXML/资源�
 按用户要求：信封谜题（quiz-envelope，X3 揭晓答案为“黄花阵”）解开前，所有显示文本中的“黄花阵”三字隐藏为“？？？”，解出（solved/assisted）或诚实跳过者到达黄花阵导航站（M2）后恢复原文。新增 flow/term-gate.js 统一门控，在四个显示出口替换：flow/screen.js 屏幕模型、progress/build.js 进度与站点名、utils/report-renderer.js 考察档案（含导出图）、pages/walk/walk.js 史料词条目录与词条卡。剧本文本本身在 X3 前没有该词，实际泄露面是站点名、史料词条、道具提示与地图站点片；X3 揭晓块维持原门控，跳过者不揭答案，仅在到达站点后恢复普通文本显示。
 
 npm test 159 项全通过（新增 4 条术语门控测试；v3-ui 词条渲染测试的场景前提更新为信封已解，遮蔽行为由新测试覆盖）。包体总计 6.67 MiB。微信开发者工具内尚未复核渲染效果，iOS/Android 真机另行安排。Pollux 当前不可用，记录于此。
+
+## 输入框提示文字对齐修复（2026-09-25）
+
+按用户反馈“部分输入框的提示文字在点击时会移动”：排查 FN4 署名、X2 信封拼接、H4 观察笔记、LT7 接力与报告补充记录共 5 个输入控件。根因是 placeholder 与输入文字的行高不一致：walk 的 input 固定高度但无 line-height，textarea 的 1.7 行高只作用于输入文字，报告补充记录另有 auto-height 高度重算。为全部控件补 placeholder-class（.ph-line/.ph-block/.ph-note），字号与行高同正文对齐，input 另固定 line-height 48rpx 与内容区一致。
+
+npm test 159 项全通过。模拟器静态渲染正常；placeholder 点击抖动属真机像素行为，需 iOS/Android 真机确认修复效果。按用户规则本次改动只做本地提交，未推送 GitHub。Pollux 当前不可用，记录于此。
