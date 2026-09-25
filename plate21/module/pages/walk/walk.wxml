@@ -3,7 +3,7 @@
     <view class="restart-paper"><text class="restart-eyebrow">第廿一图 · 再访</text><view class="restart-mark">廿一</view><view class="restart-title">再走一遍，
 会看见什么？</view><text class="restart-prose">旧图仍在，新的足迹尚未落下。
 带上档案，再次走进西洋楼。</text><view class="restart-rule"></view><text class="restart-note">已完成的作品会保留。
-这次尚未完成的考察将从头开始。</text><view wx:if="{{error}}" class="error">{{error}}</view><button class="primary" bindtap="onConfirmRestart" disabled="{{busy || loading}}" loading="{{busy}}">重新启程 →</button><button class="text-button restart-cancel" bindtap="onCancelRestart" disabled="{{busy}}">回到这份档案</button></view>
+这次尚未完成的考察将从头开始。</text><view wx:if="{{error}}" class="error">{{error}}</view><button class="primary" bindtap="onConfirmRestart" disabled="{{busy || loading}}" loading="{{busy}}">重新启程<i class="entry-arrow">→</i></button><button class="text-button restart-cancel" bindtap="onCancelRestart" disabled="{{busy}}">回到这份档案</button></view>
   </scroll-view>
   <block wx:else>
   <view wx:if="{{pageId && !loading}}" class="narration-bar">
@@ -25,7 +25,7 @@
   <scroll-view wx:elif="{{pageId && !letterScene}}" scroll-y class="reading" scroll-top="{{scrollTop}}" bindscroll="onScroll">
     <include src="walk-content.wxml" />
   </scroll-view>
-  <view wx:if="{{pageId && !letterScene && !screen.play}}" class="footer"><button class="primary" bindtap="onPrimary" disabled="{{busy}}" loading="{{busy}}">{{review ? screen.primary : completed && pageId === 'FN4' ? '查看我的作品' : pageId === 'LT8' ? '读完来信，查看作品' : screen.primary || '继续'}}</button><button wx:if="{{screen.showSkip && !review}}" class="text-button skip" bindtap="onSkip" disabled="{{busy}}">{{screen.skipLabel || '这题跳过'}}</button></view>
+  <view wx:if="{{pageId && !letterScene && !screen.play}}" class="footer"><button class="primary" bindtap="onPrimary" disabled="{{busy}}" loading="{{busy}}">{{review ? screen.primary : completed && pageId === 'FN4' ? '查看我的作品' : pageId === 'LT8' ? '读完来信，查看作品' : screen.primary || '继续'}}<i class="entry-arrow">→</i></button><button wx:if="{{screen.showSkip && !review}}" class="text-button skip" bindtap="onSkip" disabled="{{busy}}">{{screen.skipLabel || '这题跳过'}}</button></view>
   <view wx:if="{{pageId && !drawer}}" class="nav-float" style="left:{{navX}}px;top:{{navY}}px" catchtouchstart="onNavStart" catchtouchmove="onNavMove" catchtouchend="onNavEnd" catchtouchcancel="onNavCancel" role="button" aria-label="实地导引，可拖动"><view class="nav-symbol"></view><text>导引</text></view>
   <view wx:if="{{drawer}}" class="overlay" bindtap="onCloseDrawer"><view class="drawer" catchtap="noop"><view class="row"><text class="subheading">{{drawer === 'history' ? '考察簿 · 史料' : drawer === 'route' ? '实地导引' : drawer === 'explanation' ? '互动解读' : '考察设置'}}</text><button class="text-button" bindtap="onCloseDrawer">关闭 ✕</button></view>
     <scroll-view wx:if="{{drawer === 'history' && card}}" scroll-y class="drawer-scroll" scroll-top="{{drawerScrollTop}}" scroll-into-view="{{cardAnchor}}" bindscroll="onDrawerScroll"><include src="history-card.wxml" /></scroll-view>
@@ -34,7 +34,7 @@
       <block wx:elif="{{drawer === 'route'}}">
         <view class="route-current"><text class="caption">当前考察进度</text><view class="subheading">{{routeCurrent}}</view></view>
         <map wx:if="{{location}}" class="field-map" latitude="{{location.latitude}}" longitude="{{location.longitude}}" scale="16" show-location />
-        <button class="secondary" bindtap="onLocate" loading="{{locating}}" disabled="{{locating}}">{{location ? '刷新我的实际位置' : '查看我的实际位置'}}</button>
+        <button class="secondary locate-btn" bindtap="onLocate" loading="{{locating}}" disabled="{{locating}}">{{location ? '刷新我的实际位置' : '查看我的实际位置'}}</button>
         <text wx:if="{{locationError}}" class="caption">{{locationError}}</text>
         <text class="caption">请循实体地图与沿途路标前行。</text>
         <view class="route-stop {{item.current ? 'route-active' : ''}}" wx:for="{{routeRows}}" wx:key="id"><text class="route-number">{{index + 1}}</text><view class="route-copy"><text>{{item.title}}</text><text wx:if="{{item.state}}" class="caption">{{item.state}}</text></view><button class="text-button" data-page="{{item.openPageId}}" bindtap="onOpenPage" disabled="{{!item.canOpen}}">{{item.current ? '继续' : item.canOpen ? '回看' : '待考察'}}</button></view>
