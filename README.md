@@ -42,6 +42,7 @@ npm run package:report
 - [音频迁移、冻结与补录清单](docs/v3-audio-migration.md)
 - [当前资源与发布状态](docs/v3-resource-manifest.json)
 - [测试及人工验收边界](docs/v3-validation.md)
+- [工作区清理清单（2026-09-25）](docs/v3-cleanup-20260925.json)
 - [v3 剧本原始提取](docs/feishu-import/第廿一图v3-docx.txt)
 
 37 个新版录音已迁入并核对静态映射；尚未逐条听审。16 个存在稿件/演出提示风险的录音已冻结、排除发布，页面仍能通过文字完成。需根据迁移清单完成听审/补录，之后才能放行相应音源。

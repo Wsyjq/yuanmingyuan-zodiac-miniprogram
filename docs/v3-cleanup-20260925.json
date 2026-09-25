@@ -1,0 +1,379 @@
+{
+  "date": "2026-09-25",
+  "scope": "D:/kc/ymy 工作区无用旧文件清理。全部条目均为 .git/info/exclude 隐藏的未入库内容，main 与 feat/game-module-v3 已入库文件不受影响；删除后不能由 Git 找回。",
+  "basis": [
+    "app.json 注册页、require 链、WXML/WXSS 资源引用、npm test 用例均不引用被删内容（删除前逐项核对）",
+    "来源与许可证记录保留：docs/plates-20/manifest.json、docs/compliance/、plate21/module/assets/licenses、NOTICE.md、third-party-lock.json、docs/v3-resource-manifest.json",
+    "可用资源工具保留：tools/fetch-plates-20.py（史料图重取）、tools/build-resource-manifest.js（哈希重建）",
+    "无同哈希副本的录音草稿保留于 docs/compliance/sources-audio/",
+    "人工验收结论保留于 docs/v3-validation.md；删除的是截图图像本体"
+  ],
+  "summary": {
+    "deleted": {
+      "items": 49,
+      "bytes": 547862786
+    },
+    "moved": {
+      "items": 9,
+      "bytes": 11768417
+    },
+    "totalMiB": "533.7"
+  },
+  "entries": [
+    {
+      "action": "deleted",
+      "path": "拾迹创游-项目介绍.html",
+      "bytes": 69042,
+      "note": "他项目“拾迹创游”介绍材料，与本仓库零引用（文件名含不可见字符，实际经 PowerShell 通配符删除确认）"
+    },
+    {
+      "action": "deleted",
+      "path": "拾迹创游-项目介绍-方格纸版.html",
+      "bytes": 69999,
+      "note": "他项目“拾迹创游”介绍材料，与本仓库零引用（文件名含不可见字符，实际经 PowerShell 通配符删除确认）"
+    },
+    {
+      "action": "deleted",
+      "path": "拾迹创游-项目介绍.pdf",
+      "bytes": 4747557,
+      "note": "他项目“拾迹创游”介绍材料，与本仓库零引用（文件名含不可见字符，实际经 PowerShell 通配符删除确认）"
+    },
+    {
+      "action": "deleted",
+      "path": "tunnel.bat",
+      "bytes": 1169,
+      "note": "内网隧道脚本（2026-08-11 真机预览用），已被开发者工具真机预览替代"
+    },
+    {
+      "action": "deleted",
+      "path": "tunnel-grab.ps1",
+      "bytes": 1083,
+      "note": "同上"
+    },
+    {
+      "action": "deleted",
+      "path": "tunnel-silent.vbs",
+      "bytes": 572,
+      "note": "同上"
+    },
+    {
+      "action": "deleted",
+      "path": "tunnel-stop.bat",
+      "bytes": 338,
+      "note": "同上"
+    },
+    {
+      "action": "deleted",
+      "path": "tunnel.log",
+      "bytes": 37263,
+      "note": "隧道日志"
+    },
+    {
+      "action": "deleted",
+      "path": "url.txt",
+      "bytes": 133,
+      "note": "临时隧道地址"
+    },
+    {
+      "action": "deleted",
+      "path": "根目录 *.txt 乱码残留（2 件）",
+      "bytes": 400,
+      "note": "“当前网址.txt”因编码问题生成的乱码重复件"
+    },
+    {
+      "action": "deleted",
+      "path": "test.ps1",
+      "bytes": 297,
+      "note": "一次性调试脚本（2026-08-11）"
+    },
+    {
+      "action": "deleted",
+      "path": "test2.ps1",
+      "bytes": 691,
+      "note": "一次性调试脚本（2026-08-11）"
+    },
+    {
+      "action": "deleted",
+      "path": "ps-debug.log",
+      "bytes": 167,
+      "note": "调试日志"
+    },
+    {
+      "action": "moved",
+      "from": "plate21/module/assets/img/IMG-S2C1.png 等 7 张（IMG-S2C1~4、IMG-P-WANZI、IMG-ENVELOPE-FRONT/BACK）",
+      "to": "docs/compliance/sources/",
+      "bytes": 0,
+      "note": "运行时只用压缩后的 IMG-RUNTIME-*.jpg；这 7 张为生成原图/来源存档（compliance 清单记录 source→target 与 sha256）。移出分包以符合包体预算，来源证明保留（逐张体积见下方 moved 条目）"
+    },
+    {
+      "action": "moved",
+      "from": "audio/mainline/narr-p1.mp3、narr-p2.mp3、narr-p3.mp3、narr-prologue-handover.mp3",
+      "to": "docs/compliance/sources-audio/",
+      "bytes": 1368000,
+      "note": "voice-* 中无同哈希副本的旧草稿（序章 p1~p3 与 handover，已被 voice-a 的 p01~p05 分段版替代），按“草稿据实保存”保留；其余 37 个 audio/mainline 录音与 voice-* 成品同哈希，属重复副本，随 audio/ 删除"
+    },
+    {
+      "action": "deleted-partial",
+      "path": "docs/plates-20",
+      "bytes": 62800000,
+      "kept": [
+        "docs/plates-20/manifest.json",
+        "docs/plates-20/今昔对照表.md",
+        "docs/plates-20/对照.html"
+      ],
+      "note": "删除 20 张来源 jpg 与 source-manchester-shuge.pdf（61 MB）。来源 URL、藏品号、字节数在 manifest.json；tools/fetch-plates-20.py 可重取"
+    },
+    {
+      "action": "deleted",
+      "path": "showcase",
+      "bytes": 2244987,
+      "note": ""
+    },
+    {
+      "action": "deleted",
+      "path": "showcase-demos",
+      "bytes": 416137,
+      "note": ""
+    },
+    {
+      "action": "deleted",
+      "path": "test/shots",
+      "bytes": 0,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/shots-ai-style",
+      "bytes": 3211257,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/shots-archive",
+      "bytes": 3914850,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/shots-devtools",
+      "bytes": 21233509,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/shots-fix",
+      "bytes": 3305261,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/shots-h5",
+      "bytes": 107854729,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/shots-play-guide",
+      "bytes": 4779143,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/shots-real",
+      "bytes": 10257908,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/shots-review",
+      "bytes": 6588892,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/shots-test",
+      "bytes": 7649761,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/shots-v2",
+      "bytes": 18875538,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/shots-v3fix",
+      "bytes": 6040732,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/shots-v3new",
+      "bytes": 11361214,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/gen-raw",
+      "bytes": 40537560,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/_archived",
+      "bytes": 4273762,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/ref-real",
+      "bytes": 726275,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/stickers-src",
+      "bytes": 2138120,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/harness/out",
+      "bytes": 10712099,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/screen.png",
+      "bytes": 89706,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/screen2.png",
+      "bytes": 120208,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/screen2-sim.png",
+      "bytes": 78362,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/screen3.png",
+      "bytes": 161674,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/screen4.png",
+      "bytes": 280943,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/screen-full.png",
+      "bytes": 132708,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/login-qr.png",
+      "bytes": 46828,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/login-result.json",
+      "bytes": 73,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/devtools-win.png",
+      "bytes": 50456,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/gen-img-c01.png",
+      "bytes": 1060393,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/probe-result.log",
+      "bytes": 20,
+      "note": "人工验收截图/生成原图/台架输出等完成档案；验收结论已记录在 docs/v3-validation.md，删除的是图像本体"
+    },
+    {
+      "action": "deleted",
+      "path": "test/node_modules",
+      "bytes": 107162293,
+      "note": "miniprogram-automator 依赖；npm test 不使用，需要时在 test/ 内 npm i 重装"
+    },
+    {
+      "action": "deleted",
+      "path": "bgm",
+      "bytes": 69811091,
+      "note": "BGM 生成源（ComfyUI 分轨/频谱/备份）；运行时未启用 BGM（无正式地址），成品不在其中"
+    },
+    {
+      "action": "deleted",
+      "path": "audio",
+      "bytes": 23466816,
+      "note": "录音生成源；37 个文件与 voice-* 成品同哈希（重复副本），4 个无副本旧草稿已移至 docs/compliance/sources-audio/"
+    },
+    {
+      "action": "deleted",
+      "path": "docs/sl-source-images",
+      "bytes": 11550770,
+      "note": "史料配图工作稿（含 _candidates 重复候选）；发布版在 assets/sl/，信源清单见 docs/西洋楼史料汇总包-20260909/附录B"
+    },
+    {
+      "action": "moved",
+      "path": "plate21/module/assets/img/IMG-S2C1.png",
+      "bytes": 1405320,
+      "note": "移至 docs/compliance/sources/"
+    },
+    {
+      "action": "moved",
+      "path": "plate21/module/assets/img/IMG-S2C2.png",
+      "bytes": 1730267,
+      "note": "移至 docs/compliance/sources/"
+    },
+    {
+      "action": "moved",
+      "path": "plate21/module/assets/img/IMG-S2C3.png",
+      "bytes": 1514713,
+      "note": "移至 docs/compliance/sources/"
+    },
+    {
+      "action": "moved",
+      "path": "plate21/module/assets/img/IMG-S2C4.png",
+      "bytes": 1657934,
+      "note": "移至 docs/compliance/sources/"
+    },
+    {
+      "action": "moved",
+      "path": "plate21/module/assets/img/IMG-P-WANZI.png",
+      "bytes": 2151073,
+      "note": "移至 docs/compliance/sources/"
+    },
+    {
+      "action": "moved",
+      "path": "plate21/module/assets/img/IMG-ENVELOPE-FRONT.png",
+      "bytes": 940323,
+      "note": "移至 docs/compliance/sources/"
+    },
+    {
+      "action": "moved",
+      "path": "plate21/module/assets/img/IMG-ENVELOPE-BACK.png",
+      "bytes": 1000787,
+      "note": "移至 docs/compliance/sources/"
+    }
+  ]
+}

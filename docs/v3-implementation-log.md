@@ -114,3 +114,11 @@ npm test 150 项通过，包含完整原文无丢失、分组数量、旧/新游
 按 第廿一图v3_副本2(1).docx 同步 22 个既有节点，新增方外观人物、用途及揭晓三节点（FQ1/FQ2/FR1）。史料卡正文不变；制作备注不进入玩家正文，明显标点/错字做最小修正。原有大水法、分页、听读模式与彩蛋段落保留。改稿节点旧录音暂停调用，补录清单明确保留，未声称新稿已配音。
 
 npm test 153 项通过，新增判题/跳过/门控、旧存档回看兼容、改稿音源禁播及原文覆盖检查；包体预算通过。具体差异和验收范围见 v3-latest-script-sync.md。本次尚未验收新增题的原生模拟器/真机，Pollux 不可用。
+
+## 工作区清理（2026-09-25）
+
+按用户要求清理 D:/kc/ymy 工作区无用旧文件，保留 main 与 feat/game-module-v3 已入库内容。删除 49 项未入库文件共约 522 MiB（他项目“拾迹创游”材料、内网隧道脚本与日志、一次性调试脚本、旧演示 showcase*、test 旧截图与生成原图/台架输出、test/node_modules、bgm 与 audio 生成源、docs/plates-20 来源图与源 PDF、docs/sl-source-images 工作稿），另将 7 张运行时未引用的生成原图与 4 个无同哈希副本的录音旧草稿移出分包至 docs/compliance/sources、docs/compliance/sources-audio。逐项去向见 docs/v3-cleanup-20260925.json。来源与许可证文字记录、史料来源 URL（docs/plates-20/manifest.json）、可用重取工具（tools/fetch-plates-20.py）与人工验收结论（docs/v3-validation.md）保留；未入库文件删除后不能由 Git 找回。
+
+同时把 .projectmem、.grok、.kimi-code、.playwright-cli、.env、CLAUDE.md、docs/compliance/sources* 补进 project.config.json 打包排除清单，并重建 docs/v3-resource-manifest.json。npm test 153 项全部通过，资源哈希与包体预算通过：主包 0.71 MiB、游戏分包 1.60 MiB、总计 6.67 MiB，均在主包/每分包 2 MiB、总计 20 MiB 预算内。清理前该检查因本地生成源与工具残留计入主包而失败（主包 99.34 MiB、总计 115.21 MiB）。
+
+本轮为文件清理，未改动玩法、剧情与录音；16 个冻结录音的补录清单、37 个新版录音的逐条听审、iOS/Android 真机与微信开发者工具人工验收均未在本轮进行。Pollux 不可用（本环境无该工具接口），按约定记录于此。

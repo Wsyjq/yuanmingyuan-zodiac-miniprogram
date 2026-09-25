@@ -175,6 +175,38 @@
       {
         "value": "voice-l",
         "type": "folder"
+      },
+      {
+        "value": ".projectmem",
+        "type": "folder"
+      },
+      {
+        "value": ".grok",
+        "type": "folder"
+      },
+      {
+        "value": ".kimi-code",
+        "type": "folder"
+      },
+      {
+        "value": ".playwright-cli",
+        "type": "folder"
+      },
+      {
+        "value": ".env",
+        "type": "file"
+      },
+      {
+        "value": "CLAUDE.md",
+        "type": "file"
+      },
+      {
+        "value": "docs/compliance/sources",
+        "type": "folder"
+      },
+      {
+        "value": "docs/compliance/sources-audio",
+        "type": "folder"
       }
     ],
     "include": []
