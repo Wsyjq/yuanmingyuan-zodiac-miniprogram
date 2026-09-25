@@ -166,7 +166,7 @@ test('clicking each of 17 inline historical terms renders every Word layer and i
     }
     const source = cards.get(term.key)
     if (source.image) assert.ok(result.html.includes(source.image), term.key + ' image missing')
-    assert.match(actual, /读完，返回剧情/)
+    assert.match(actual, /返回/)
     assert.doesNotMatch(actual, /完成对应互动后展示|undefined/)
   }
   assert.equal(visited.size, 17)

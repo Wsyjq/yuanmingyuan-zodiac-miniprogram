@@ -12,5 +12,5 @@
           </view>
           <view wx:if="{{card.years.length}}" class="caption">相关年份：<text wx:for="{{card.years}}" wx:key="*this">{{item}}　</text></view>
 
-          <button class="secondary" bindtap="onCloseDrawer">读完，返回剧情</button>
+          <button class="secondary" bindtap="onCloseDrawer">返回</button>
 </view>

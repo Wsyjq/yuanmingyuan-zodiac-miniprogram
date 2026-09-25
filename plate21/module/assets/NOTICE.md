@@ -123,3 +123,11 @@ SVG 源文件经 `test/stickers-src/build.js` 渲染/缩放为 PNG。
 - 综合证据与变更控制：`docs/compliance/IMG-AI-PROJECT-evidence.md`。
 
 所有 59 个受控路径均在 `assets/third-party-lock.json` 固定 SHA-256。新增、覆盖或重新生成图片后必须同步 manifest 与 lock，并重新运行图片、商业和包体门禁。
+
+
+## Lucide 图标（实地导引浮钮）
+
+2026-09-25 起，实地导引浮钮的指南针图标取自 Lucide Icons v1.48.0 的 compass（ISC 许可，允许商用与再分发）。图标以 base64 内联在 pages/walk/walk.wxss 的 .nav-symbol 样式中，不作为独立资源文件分发。
+
+- 项目地址：https://github.com/lucide-icons/lucide
+- 许可证全文：ssets/licenses/lucide-icons-ISC.txt
