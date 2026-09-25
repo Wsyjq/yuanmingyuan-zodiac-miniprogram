@@ -151,3 +151,11 @@ npm test 159 项全通过（新增 4 条术语门控测试；v3-ui 词条渲染�
 按用户反馈“部分输入框的提示文字在点击时会移动”：排查 FN4 署名、X2 信封拼接、H4 观察笔记、LT7 接力与报告补充记录共 5 个输入控件。根因是 placeholder 与输入文字的行高不一致：walk 的 input 固定高度但无 line-height，textarea 的 1.7 行高只作用于输入文字，报告补充记录另有 auto-height 高度重算。为全部控件补 placeholder-class（.ph-line/.ph-block/.ph-note），字号与行高同正文对齐，input 另固定 line-height 48rpx 与内容区一致。
 
 npm test 159 项全通过。模拟器静态渲染正常；placeholder 点击抖动属真机像素行为，需 iOS/Android 真机确认修复效果。按用户规则本次改动只做本地提交，未推送 GitHub。Pollux 当前不可用，记录于此。
+
+## MiMo 叙事录音生成案例（2026-09-25）
+
+按用户确认的 36 个稳定叙事节点范围，设计统一基础声线与逐页演出提示词，选型 `xiaomi-token-plan-cn/mimo-v2.5-tts-voicedesign`。先生成 A—D 四种同文音色案例和 A 音色的 P1、LT2、HY2、DS2、HG1 五条演出样批，保存至 docs/compliance/sources-audio/mimo-v3/cases/。工具与提示词位于 tools/generate-mimo-voice.js、tools/voice-prompts/v3-mimo-voices.json，记录原文哈希、提示词、请求 ID、模型用量及 WAV/MP3 哈希。
+
+小米 TTS 单次生成实测约 60 秒上限，因此按完整句/段边界切成不超过 160 字的连续片段，片段拼接文本与 story.js 正文逐字一致；LT1—LT8 使用 flow/letter-paragraphs.js 的实际语义段落。案例 MP3 均验证为 24 kHz 单声道。npm test 159 项全通过，包体总计 6.67 MiB；另将 OpenChamber 本地 .openchamber 工作目录加入 project.config.json 打包忽略和 .gitignore，避免临时截图计入主包，未删除该目录。
+
+本轮未实际试听生成音频，不宣称听审通过，也未修改 v3-manifest.js、narrationPending 或运行时音源。Pollux MCP/CLI 当前不可用（资源列表为空），按约定记录于此。

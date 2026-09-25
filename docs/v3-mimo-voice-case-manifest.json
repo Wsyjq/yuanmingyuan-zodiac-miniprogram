@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-25T12:54:09.217Z",
+  "model": "mimo-v2.5-tts-voicedesign",
+  "provider": "xiaomi-token-plan-cn",
+  "promptConfig": "tools/voice-prompts/v3-mimo-voices.json",
+  "generator": "tools/generate-mimo-voice.js",
+  "audioStorage": {
+    "directory": "docs/compliance/sources-audio/mimo-v3/cases",
+    "published": false,
+    "listeningVerified": false,
+    "note": "音频源稿目录被 .git/info/exclude 排除；本清单在 Git 中保存路径、字节数和 SHA-256。"
+  },
+  "format": {
+    "publishFormat": "mp3",
+    "bitrate": "64k",
+    "sampleRate": 24000,
+    "channels": 1,
+    "maxChunkChars": 160
+  },
+  "voiceCases": [
+    {
+      "voiceId": "A",
+      "name": "档案亲历者",
+      "nodeId": "P1",
+      "textSha256": "9b953a650c812adc7aa9e0105a70382aac95a92df4e61aeb881d5275dc0ba21e",
+      "files": [
+        {
+          "path": "docs/compliance/sources-audio/mimo-v3/cases/voice-scheme-A.mp3",
+          "bytes": 232365,
+          "sha256": "1c2280331e0e83fbb7e2ab3a0e4a7ed9953bd44e7686b30d3514c17cba50706e"
+        }
+      ]
+    },
+    {
+      "voiceId": "B",
+      "name": "清朗探索者",
+      "nodeId": "P1",
+      "textSha256": "9b953a650c812adc7aa9e0105a70382aac95a92df4e61aeb881d5275dc0ba21e",
+      "files": [
+        {
+          "path": "docs/compliance/sources-audio/mimo-v3/cases/voice-scheme-B.mp3",
+          "bytes": 181101,
+          "sha256": "2588afe4ca29e8d280ecd152586e5eadcc7b61cff435f52125ce534f622fdec3"
+        }
+      ]
+    },
+    {
+      "voiceId": "C",
+      "name": "纪录片讲述者",
+      "nodeId": "P1",
+      "textSha256": "9b953a650c812adc7aa9e0105a70382aac95a92df4e61aeb881d5275dc0ba21e",
+      "files": [
+        {
+          "path": "docs/compliance/sources-audio/mimo-v3/cases/voice-scheme-C.mp3",
+          "bytes": 241389,
+          "sha256": "faa51732fd2dd9e5b6ef6e4dbb3b4f831a70ed9ccefe7b9e030f22726d87fbf0"
+        }
+      ]
+    },
+    {
+      "voiceId": "D",
+      "name": "温厚书信者",
+      "nodeId": "P1",
+      "textSha256": "9b953a650c812adc7aa9e0105a70382aac95a92df4e61aeb881d5275dc0ba21e",
+      "files": [
+        {
+          "path": "docs/compliance/sources-audio/mimo-v3/cases/voice-scheme-D.mp3",
+          "bytes": 241389,
+          "sha256": "e45feab7e370affe0aac245ca7874f3d14fdd8189dfd2536f2cdaea5febcaf92"
+        }
+      ]
+    }
+  ],
+  "performanceCases": [
+    {
+      "nodeId": "P1",
+      "voiceId": "A",
+      "textSha256": "95f3e4d7f54b006aa68272b16373027ad15f06ab3831670ffb51a3e8b8af658b",
+      "files": [
+        {
+          "path": "docs/compliance/sources-audio/mimo-v3/cases/perf-A-P1-01.mp3",
+          "bytes": 224685,
+          "sha256": "7cda18b44ab81c4a359c43886a0cd89aebea6fb065e52c25bfbd6ada2a1f18ad"
+        },
+        {
+          "path": "docs/compliance/sources-audio/mimo-v3/cases/perf-A-P1-02.mp3",
+          "bytes": 351405,
+          "sha256": "3316c8c7ec4d50605393f1c3585241dc1f6a4e320c1074b198ec0c0b4e0c4a68"
+        },
+        {
+          "path": "docs/compliance/sources-audio/mimo-v3/cases/perf-A-P1-03.mp3",
+          "bytes": 132525,
+          "sha256": "630f064d448d902670537525383eef0fbd45b85a3727266ad8a1a84e273e3a55"
+        }
+      ]
+    },
+    {
+      "nodeId": "LT2",
+      "voiceId": "A",
+      "textSha256": "4573d1299a5e8dd1e8011c6a2371a6bcf6011a326d70db919c6e87f4117df736",
+      "files": [
+        {
+          "path": "docs/compliance/sources-audio/mimo-v3/cases/perf-A-LT2-01.mp3",
+          "bytes": 283629,
+          "sha256": "ae1a6bb3a8dfcecc53e88e4a6d580ce7f4cc6c1d95f56770ec10a05ade52ade6"
+        },
+        {
+          "path": "docs/compliance/sources-audio/mimo-v3/cases/perf-A-LT2-02.mp3",
+          "bytes": 278445,
+          "sha256": "f58091a640af9388e9eebec594bd33cd659985f03cdcf784360576c000ea0307"
+        }
+      ]
+    },
+    {
+      "nodeId": "HY2",
+      "voiceId": "A",
+      "textSha256": "f5b7e9e7fc697374d4f559576951b6466a3d29cc44ecccb1c14c0a663bcd8491",
+      "files": [
+        {
+          "path": "docs/compliance/sources-audio/mimo-v3/cases/perf-A-HY2.mp3",
+          "bytes": 243885,
+          "sha256": "49da109cf2a2f8f8194098bb6c0de94d9104f0717a81bce4b44ef4bd07f6993d"
+        }
+      ]
+    },
+    {
+      "nodeId": "DS2",
+      "voiceId": "A",
+      "textSha256": "93e7e9536dd27b57a872fef3670e6c55794bc2fb3e63883fbe67d7851b19b79d",
+      "files": [
+        {
+          "path": "docs/compliance/sources-audio/mimo-v3/cases/perf-A-DS2-01.mp3",
+          "bytes": 362925,
+          "sha256": "b32d5bad38f7d85db1288d4f936d12b79651217f37598dfbfc9ef5467ce0e3cc"
+        },
+        {
+          "path": "docs/compliance/sources-audio/mimo-v3/cases/perf-A-DS2-02.mp3",
+          "bytes": 345069,
+          "sha256": "7bbc74ec98f540a5814d617de8e3ebf51e91e0c7d0df488cdd2cfc034c60eae7"
+        },
+        {
+          "path": "docs/compliance/sources-audio/mimo-v3/cases/perf-A-DS2-03.mp3",
+          "bytes": 174765,
+          "sha256": "0da33f1d857b570ed92202f5ca7ffcbf210bf39291d1106e94e868b8b77cb70a"
+        }
+      ]
+    },
+    {
+      "nodeId": "HG1",
+      "voiceId": "A",
+      "textSha256": "0afda201f9b93586ffb5bcdaac57e9da04ebbb88b7a7b80a51d54e1ab83fed2e",
+      "files": [
+        {
+          "path": "docs/compliance/sources-audio/mimo-v3/cases/perf-A-HG1-01.mp3",
+          "bytes": 380781,
+          "sha256": "7a10e84eb9ff22035188cd8778c5d7c0d9c6d71665d5266609805555cbbdc0a5"
+        },
+        {
+          "path": "docs/compliance/sources-audio/mimo-v3/cases/perf-A-HG1-02.mp3",
+          "bytes": 92781,
+          "sha256": "07be0eb96d94cbb698a2532ee867b57cab2f96faaa8af7a227ff0cdc22161ee0"
+        }
+      ]
+    }
+  ]
+}

@@ -37,6 +37,10 @@
         "type": "folder"
       },
       {
+        "value": ".openchamber",
+        "type": "folder"
+      },
+      {
         "value": "docs",
         "type": "folder"
       },
