@@ -21,14 +21,14 @@
         <button disabled="{{review}}" wx:if="{{!ui.arrived}}" class="choice" bindtap="onArrived">我已到达中心亭</button>
         <block wx:if="{{ui.arrived}}">
           <view class="subheading">留一份自己的观察</view><text class="caption">可拍一张或多张照片，也可以用文字记录。</text>
-          <view class="spot-grid"><button wx:for="{{screen.spots}}" wx:key="id" data-id="{{item.id}}" bindtap="onSpot" disabled="{{review}}" class="spot {{item.on ? 'selected' : ''}}"><image src="{{item.src}}" mode="aspectFill"/><text>{{item.title}}</text></button></view>
+          <view class="spot-grid"><button wx:for="{{screen.spots}}" wx:key="id" data-id="{{item.id}}" bindtap="onSpot" disabled="{{review}}" class="spot {{item.on ? 'selected' : ''}}"><image src="{{item.src}}" mode="aspectFit"/><text>{{item.title}}</text></button></view>
           <button class="secondary" bindtap="onAddPhoto" disabled="{{busy || review}}">拍摄或选择照片</button>
           <view class="record" wx:for="{{records}}" wx:key="id"><image wx:if="{{item.kind === 'photo'}}" src="{{item.filePath}}" mode="aspectFit" data-src="{{item.filePath}}" bindtap="onPreview"/><text wx:else>{{item.text}}</text><view wx:if="{{!review}}" class="row"><button wx:if="{{item.kind === 'photo'}}" class="text-button" data-id="{{item.id}}" bindtap="onAddPhoto">替换</button><button class="text-button" data-id="{{item.id}}" bindtap="onDeleteRecord">删除</button></view></view>
           <textarea disabled="{{review}}" data-key="note" value="{{ui.note}}" maxlength="500" placeholder="无法拍摄也没关系，写下你看到的细节…" placeholder-class="ph-block" bindinput="onInput"/><button class="text-button" disabled="{{busy || review}}" bindtap="onSaveNote">保存文字记录</button>
           <text wx:if="{{screen.spotDetail}}" class="caption">{{screen.spotDetail}}</text>
         </block>
       </view>
-      <view wx:if="{{screen.figures.length}}" class="pattern-grid"><button wx:for="{{screen.figures}}" wx:key="id" data-id="{{item.id}}" bindtap="onChoice" class="pattern {{item.selected ? 'selected' : ''}}" disabled="{{review}}"><image src="{{item.src}}" mode="aspectFill"/><text>{{item.label}}</text></button></view>
+      <view wx:if="{{screen.figures.length}}" class="pattern-grid"><button wx:for="{{screen.figures}}" wx:key="id" data-id="{{item.id}}" bindtap="onChoice" class="pattern {{item.selected ? 'selected' : ''}}" disabled="{{review}}"><image src="{{item.src}}" mode="aspectFit"/><text>{{item.label}}</text></button></view>
       <water-clock wx:if="{{playId === 'quiz-hour'}}" state="{{waterClockState}}" active="{{pageVisible && !drawer}}" bind:change="onWaterClockChange" bind:complete="onWaterClockComplete"/>
       <view wx:if="{{playId === 'prop-dial'}}" class="activity"><checkbox-group bindchange="onConfirmDial"><label class="check-label"><checkbox value="done" checked="{{ui.confirmed}}" disabled="{{review}}" color="#716743"/>我已完成实体转盘操作，准备继续</label></checkbox-group></view>
       <fountain-puzzle wx:if="{{playId === 'place-animals'}}" placed="{{ui.placed}}" active="{{pageVisible && !drawer && !restartScreen}}" read-only="{{review}}" bind:change="onFountainPlacement"/>
