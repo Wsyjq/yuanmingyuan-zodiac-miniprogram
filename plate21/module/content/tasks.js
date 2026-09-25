@@ -2,7 +2,7 @@
 module.exports = {
   "quiz-direction": {
     "title": "对照地图，辨认西洋楼的方位",
-    "instruction": "先选一个方位，再确认答案。",
+    "instruction": "",
     "feedback": "再找找长春园的范围和地图方向标记，对照西洋楼的位置。",
     "hint": "对照地图上长春园与西洋楼的位置，找出它所在的方位。"
   },

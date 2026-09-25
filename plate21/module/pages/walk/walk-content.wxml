@@ -1,7 +1,7 @@
     <view class="paper">
       <view class="eyebrow">{{screen.siteTitle || '西洋楼现场考察档案'}} · {{screen.stageLabel}}</view>
       <view class="title">{{screen.title || '第二十一图'}}<text class="seal">考察</text></view>
-      <view wx:if="{{review}}" class="notice">重读这一页<button class="text-button" bindtap="onResume">回到当前进度 →</button></view>
+      <view wx:if="{{review}}" class="notice review-notice"><button class="review-resume" bindtap="onResume">回到当前进度</button></view>
       <view wx:if="{{screen.kind === 'nav'}}" class="route-card">
         <text class="eyebrow">前往下一站</text><view class="route-destination">{{screen.siteTitle}}</view>
         <text>{{screen.nav.instruction || '请对照实体地图与现场标识步行。'}}到达后，点击“我到达了”。</text>
@@ -22,7 +22,7 @@
       <view wx:if="{{screen.terms.length}}" class="terms"><button wx:for="{{screen.terms}}" wx:key="key" class="chip" data-key="{{item.key}}" bindtap="onOpenCard">史料 · {{item.label}}</button></view>
       <view wx:if="{{screen.interaction && screen.interaction.position !== 'before'}}"><include src="walk-interaction.wxml" /></view>
       <view wx:if="{{pageId === 'FN1'}}" class="activity"><view class="subheading">这一次，我留下了</view><view class="photo-strip"><image wx:for="{{records}}" wx:key="id" wx:if="{{item.kind === 'photo'}}" src="{{item.filePath}}" mode="aspectFill" data-src="{{item.filePath}}" bindtap="onPreview"/></view><text wx:if="{{!records.length}}" class="caption">还没有照片或文字记录。完成署名后，也可以在个人作品中补录。</text><text wx:for="{{records}}" wx:key="id" wx:if="{{item.kind !== 'photo'}}" class="paragraph">{{item.text}}</text></view>
-      <view wx:if="{{pageId === 'FN4'}}" class="activity"><button wx:if="{{completed}}" class="secondary" bindtap="onOpenBonus" disabled="{{busy}}">直接进入彩蛋 →</button><label>绘制者署名</label><text class="caption">绘制者：{{screen.signature.name}}
+      <view wx:if="{{pageId === 'FN4'}}" class="activity"><button wx:if="{{completed}}" class="secondary" bindtap="onOpenBonus" disabled="{{busy}}">直接进入彩蛋</button><label>绘制者署名</label><text class="caption">绘制者：{{screen.signature.name}}
 绘制日期：{{screen.signature.date}}
 </text><input wx:if="{{!completed}}" data-key="name" value="{{ui.name}}" maxlength="40" placeholder="写下你的名字，也可以留白" placeholder-class="ph-line" bindinput="onInput" disabled="{{completed}}"/><text class="caption">{{completed ? '考察记录已保存。' : '完成后生成个人作品。'}}</text></view>
       <view wx:if="{{pageId === 'LT6'}}" class="activity"><view class="subheading">探寻者的接力记录</view>

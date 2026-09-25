@@ -27,7 +27,7 @@ function project(page, model, ui, run) {
   if (part === 'story') {
     model.interaction = null; model.play = null; model.prop = null
     model.task = null; model.showSkip = false
-    if (page.playId) model.primary = '继续 →'
+    if (page.playId) model.primary = '继续'
     if (page.id === 'H4') model.lines = page.lines.slice()
   } else {
     model.lines = []; model.portrait = ''; model.teacher = ''
@@ -38,7 +38,7 @@ function project(page, model, ui, run) {
       model.interaction.lines = page.interaction.lines.slice()
     }
   }
-  if (adjacent(page, ui, 1, run) && (part !== 'activity' || !page.playId)) model.primary = part === 'story' ? '开始探索 →' : '继续 →'
+  if (adjacent(page, ui, 1, run) && (part !== 'activity' || !page.playId)) model.primary = part === 'story' ? '开始探索' : '继续'
   return model
 }
 module.exports = { sequence, current, adjacent, project }
