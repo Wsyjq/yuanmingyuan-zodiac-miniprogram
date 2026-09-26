@@ -31,14 +31,6 @@
     "kind": "puzzle",
     "playId": "quiz-envelope"
   },
-  "X3": {
-    "kind": "read",
-    "playId": ""
-  },
-  "M2": {
-    "kind": "nav",
-    "playId": ""
-  },
   "H1": {
     "kind": "puzzle",
     "playId": "quiz-lantern"

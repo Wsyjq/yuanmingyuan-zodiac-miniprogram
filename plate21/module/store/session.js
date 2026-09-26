@@ -38,7 +38,24 @@ function fresh(userId, archives) {
     createdAt: at, updatedAt: at, run: engine.createRun(), records: [], contributions: [],
     archives: archives || [], sync: { status: 'local' } }
 }
+// 节点迁移（2026-09-26）：X3 揭晓页与 M2 导航页并入 X2/H1，老存档指针与记录映射到 H1。
+const NODE_MIGRATION = { X3: 'H1', M2: 'H1' }
+function migrateRunIds(run) {
+  if (!run) return run
+  if (NODE_MIGRATION[run.pageId]) run.pageId = NODE_MIGRATION[run.pageId]
+  if (NODE_MIGRATION[run.resumePageId]) run.resumePageId = NODE_MIGRATION[run.resumePageId]
+  ;['visited', 'completedPages', 'unlocked', 'uiByPage'].forEach(function (key) {
+    const table = run[key]
+    if (!table) return
+    Object.keys(NODE_MIGRATION).forEach(function (old) {
+      if (table[old]) { table[NODE_MIGRATION[old]] = table[NODE_MIGRATION[old]] || table[old]; delete table[old] }
+    })
+  })
+  return run
+}
 function validateSnapshot(value, userId) {
+  if (value && value.run) migrateRunIds(value.run)
+  if (value && Array.isArray(value.archives)) value.archives.forEach(function (a) { if (a && a.run) migrateRunIds(a.run) })
   if (!value || value.schemaVersion !== 3 || value.userId !== userId || !value.sessionId ||
       !value.run || !pages.byId[value.run.resumePageId] || !pages.byId[value.run.pageId] ||
       !Array.isArray(value.records) || !Array.isArray(value.contributions) || !Array.isArray(value.archives)) {

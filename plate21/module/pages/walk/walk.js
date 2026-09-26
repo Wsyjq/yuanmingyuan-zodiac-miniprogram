@@ -127,7 +127,7 @@ Page({
       narrative: model.lines.map(line => glossary.segments(line, glossary.inlineTermsFor(page.id, unlockedCards))),
       routeRows: view.rows.filter(r => navModel.listSites().some(s => s.id === r.id)).map(r => Object.assign({}, r, { openPageId: r.current ? view.resumePageId : view.openPageId(r.id) })),
       routeCurrent: (view.rows.find(r => r.current) || {}).title || '考察尚未开始',
-      canExplain: !!(page.playId && page.playId !== 'quiz-hour' && pages.byId[page.next] && pages.byId[page.next].revealOf === page.playId),
+      canExplain: !!(page.playId && page.playId !== 'quiz-hour' && pages.byId[page.next] && (pages.byId[page.next].revealOf === page.playId || !pages.byId[page.next].revealOf)),
       historyCards: unlockedCards, hasHint: !!taskGuide.hint(page.playId), hint: this.ui.hint ? taskGuide.hint(page.playId) : '',
       contributions: snap.contributions.map((c) => Object.assign({}, c, { label: STATUS[c.status] || c.status })),
       archives: session.getArchives().map((a) => ({ id: a.sessionId, name: a.run.name, date: fmt(a.run.completedAt) })),

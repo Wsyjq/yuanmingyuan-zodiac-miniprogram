@@ -18,15 +18,15 @@ function frozen(value) {
   return value
 }
 
-test('all 46 page IDs build pure display models and caller state remains immutable', () => {
-  assert.equal(pages.list.length, 46)
+test('all 44 page IDs build pure display models and caller state remains immutable', () => {
+  assert.equal(pages.list.length, 44)
   for (const page of pages.list) {
     const run = frozen(runAt(page.id)), ui = frozen({ optionId: 'ne', text: '草稿', placed: { deer: 'ring' } })
     const view = buildScreen(run, ui)
     assert.equal(view.pageId, page.id)
     assert.ok(view.title)
     assert.ok(Array.isArray(view.lines))
-    assert.equal(view.pageCount, 46)
+    assert.equal(view.pageCount, 44)
     assert.equal(run.uiByPage[page.id], undefined)
   }
 })
@@ -70,7 +70,7 @@ test('physical flip needs explicit saved/UI confirmation; skipped status never r
 })
 
 test('answer pages are quiet when skipped or not solved; assisted answers may be reviewed', () => {
-  for (const id of ['X3', 'H2', 'H6', 'HY2', 'XS2', 'DS2']) {
+  for (const id of ['H2', 'H6', 'HY2', 'XS2', 'DS2']) {
     const page = pages.byId[id]
     assert.deepEqual(buildScreen(runAt(id, { puzzles: { [page.revealOf]: 'skipped' } })).lines, [], id)
     assert.deepEqual(buildScreen(runAt(id)).lines, [], id)

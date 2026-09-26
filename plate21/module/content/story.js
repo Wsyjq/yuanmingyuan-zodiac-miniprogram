@@ -208,7 +208,7 @@ module.exports = {
       "playId": "",
       "revealOf": "",
       "next": "X1",
-      "skipTo": "M2",
+      "skipTo": "H1",
       "presentation": null,
       "relayLines": [],
       "title": "",
@@ -279,8 +279,8 @@ module.exports = {
       "propPrompt": "信封的封口处和信的背面都有一半的字，拼接起来看一下！",
       "playId": "quiz-envelope",
       "revealOf": "",
-      "next": "X3",
-      "skipTo": "M2",
+      "next": "H1",
+      "skipTo": "M3",
       "presentation": null,
       "relayLines": [],
       "title": "寻找下一站",
@@ -291,66 +291,12 @@ module.exports = {
       "narrationPending": "最新稿正文已调整，待匹配录音"
     },
     {
-      "id": "X3",
-      "kind": "read",
-      "siteId": "xieqiqu",
-      "lines": [
-        "原来线索在这里！看来，下一步该往那里走了。"
-      ],
-      "interaction": {
-        "title": "下一站去哪",
-        "lines": [
-          "黄花阵"
-        ],
-        "position": "before"
-      },
-      "beforeLines": [],
-      "answerLines": [],
-      "signedLines": [],
-      "sectionTitle": "",
-      "narrId": "narr-x3",
-      "image": "",
-      "propPrompt": "",
-      "playId": "",
-      "revealOf": "quiz-envelope",
-      "next": "M2",
-      "skipTo": "",
-      "presentation": null,
-      "relayLines": [],
-      "title": "线索拼起来了",
-      "terms": [],
-      "props": [],
-      "narrationPending": "最新稿正文已调整，待匹配录音"
-    },
-    {
-      "id": "M2",
-      "kind": "nav",
-      "siteId": "maze",
-      "lines": [],
-      "interaction": null,
-      "beforeLines": [],
-      "answerLines": [],
-      "signedLines": [],
-      "sectionTitle": "",
-      "narrId": "",
-      "image": "整页导航图",
-      "propPrompt": "",
-      "playId": "",
-      "revealOf": "",
-      "next": "H1",
-      "skipTo": "M3",
-      "presentation": null,
-      "relayLines": [],
-      "title": "",
-      "terms": [],
-      "props": []
-    },
-    {
       "id": "H1",
       "kind": "puzzle",
       "siteId": "maze",
       "lines": [
-        "到了黄花阵的入口时，眼前景观让我有些震惊——这不是普通的园林道路，而是一个迷宫！可是皇家宫苑中为什么会有一座迷宫呢？"
+        "原来线索在这里！看来，下一步该往那里走了。",
+      "到了黄花阵的入口时，眼前景观让我有些震惊——这不是普通的园林道路，而是一个迷宫！可是皇家宫苑中为什么会有一座迷宫呢？"
       ],
       "interaction": {
         "title": "迷宫的修建目的",

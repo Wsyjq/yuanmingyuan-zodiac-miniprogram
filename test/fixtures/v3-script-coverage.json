@@ -372,8 +372,8 @@
       "source": "【谜题答案】：黄花阵",
       "text": "黄花阵",
       "destination": {
-        "page": "X3",
-        "field": "interaction"
+        "page": "H1",
+        "field": "sectionTitle"
       }
     },
     {
@@ -381,7 +381,7 @@
       "source": "原来线索在这里！看来，下一步该往那里走了。",
       "text": "原来线索在这里！看来，下一步该往那里走了。",
       "destination": {
-        "page": "X3",
+        "page": "H1",
         "field": "lines"
       },
       "previousSource": "原来线索在这里上！下一站的去处很明确了：黄花阵。",

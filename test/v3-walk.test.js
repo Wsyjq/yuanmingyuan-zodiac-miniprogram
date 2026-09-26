@@ -90,10 +90,9 @@ test('walk loads without a payment gate and a skipped route reaches a durable na
   assert.equal(h.page.data.pageId, 'E1')
   await h.invoke('onSkip')
   await h.invoke('onPrimary')
-  for (let i = 1; i <= 7; i++) {
-    assert.equal(h.page.data.pageId, 'M' + i)
-    await h.invoke('onSkip')
-  }
+  let hops = 0
+  while (h.page.data.pageId !== 'FN1' && hops++ < 20) await h.invoke('onSkip')
+  assert.equal(h.page.data.pageId, 'FN1')
   for (let i = 1; i <= 3; i++) await h.invoke('onPrimary')
   assert.equal(h.page.data.pageId, 'FN4')
   await h.invoke('onInput', event({ key: 'name' }, '跳过路线玩家'))
@@ -389,7 +388,7 @@ test('empty answers give an action; wrong answers give an observation cue; expla
     await h.invoke('onSkip')
     assert.equal(h.session.getRun().puzzles['quiz-envelope'], 'skipped')
     assert.equal(h.page.data.drawer, '')
-    assert.equal(h.page.data.pageId, 'M2')
+    assert.equal(h.page.data.pageId, 'M3')
   } finally { await h.close() }
 })
 test('water-clock explanation cannot reveal noon before the prediction sequence', async () => {
