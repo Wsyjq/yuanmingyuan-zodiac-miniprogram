@@ -558,3 +558,40 @@ test('relay submissions are throttled locally against burst repeats', async () =
   assert.ok(String(h.page.data.error).includes('频繁'))
   await h.close()
 })
+
+test('reporting a public contribution needs the host capability and a real receipt', async () => {
+  const calls = []
+  let clock = Date.UTC(2026, 8, 24)
+  const hidden = await harness({ config: { now: () => clock } })
+  await hidden.arrange('FN4'); await hidden.session.sign('考察者')
+  clock += 86400000
+  await hidden.session.openLetter()
+  await hidden.arrange('LT6')
+  await hidden.page.loadRelay(); await hidden.invoke('onPrimary')
+  await hidden.invoke('onInput', event({ key: 'relayText' }, '接力内容'))
+  await hidden.invoke('onRelayConsent', event({}, ['yes']))
+  await hidden.invoke('onSubmitRelay')
+  assert.equal(hidden.page.data.contributions.length, 1)
+  assert.equal(hidden.page.data.contributions[0].reportable, false, 'entry stays hidden without the capability')
+  await hidden.close()
+
+  const h = await harness({ config: { now: () => clock, host: {
+    async submitContribution() { return { receiptId: 'c1', status: 'published' } },
+    async reportContribution(input) { calls.push(input); return { acknowledged: true } }
+  } } })
+  await h.arrange('FN4'); await h.session.sign('考察者')
+  clock += 86400000
+  await h.session.openLetter()
+  await h.arrange('LT6')
+  await h.page.loadRelay(); await h.invoke('onPrimary')
+  await h.invoke('onInput', event({ key: 'relayText' }, '接力内容'))
+  await h.invoke('onRelayConsent', event({}, ['yes']))
+  await h.invoke('onSubmitRelay')
+  const item = h.page.data.contributions[0]
+  assert.equal(item.reportable, true)
+  await h.invoke('onReportContribution', event({ id: item.id }))
+  assert.equal(calls.length, 1)
+  assert.equal(calls[0].receiptId, 'c1')
+  assert.ok(String(calls[0].reason).includes('玩家举报'))
+  await h.close()
+})

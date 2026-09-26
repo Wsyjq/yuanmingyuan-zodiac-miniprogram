@@ -130,7 +130,8 @@ Page({
       routeCurrent: (view.rows.find(r => r.current) || {}).title || '考察尚未开始',
       canExplain: !!(page.playId && page.playId !== 'quiz-hour' && pages.byId[page.next] && pages.byId[page.next].revealOf === page.playId),
       historyCards: unlockedCards, hasHint: !!taskGuide.hint(page.playId), hint: this.ui.hint ? taskGuide.hint(page.playId) : '',
-      contributions: snap.contributions.map((c) => Object.assign({}, c, { label: STATUS[c.status] || c.status })),
+      contributions: snap.contributions.map((c) => Object.assign({}, c, { label: STATUS[c.status] || c.status,
+        reportable: bridge.available('reportContribution') && !!c.receiptId && c.status !== 'withdrawn' })),
       archives: session.getArchives().map((a) => ({ id: a.sessionId, name: a.run.name, date: fmt(a.run.completedAt) })),
       syncState: snap.sync && snap.sync.status || 'local', isDemo: bridge.getConfig().mode === 'demo'
     })
@@ -413,6 +414,17 @@ Page({
     this.action(async () => {
       const result = await session.withdrawContribution(ds(e, 'id'), this.sessionId)
       if (result.status !== 'withdrawn') throw new Error('尚未收到撤回回执，请重试')
+    })
+  },
+  onReportContribution(e) {
+    this.action(async () => {
+      const confirm = await new Promise((resolve) => wx.showModal({
+        title: '举报这条公开内容？', content: '将提交给管理方复查；是否处理以复查结果为准。',
+        success: (res) => resolve(!!res.confirm), fail: () => resolve(false) }))
+      if (!confirm) return
+      const result = await session.reportContribution(ds(e, 'id'), '内容不当或与考察无关（玩家举报）', this.sessionId)
+      if (result.status !== 'acknowledged') throw new Error('举报没有送达，可稍后重试')
+      if (wx.showToast) wx.showToast({ title: '已提交举报', icon: 'none' })
     })
   },
   onNewRelay() { this.draft({ relayRecordId: '', relayText: '', relayPath: '', relayKind: 'text', relaySaved: false, consent: false, submitStatus: '' }) },

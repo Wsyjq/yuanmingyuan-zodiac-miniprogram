@@ -135,6 +135,7 @@ getContext 的返回优先覆盖配置中的 userId。不要把 accessToken、�
 | submitContribution | { sessionId, record, operationId, consent:true } | { receiptId, status:'submitted'或'published'或'rejected', reason? } |
 | getContribution | { sessionId, receiptId?:string, operationId } | { receiptId, status:'submitted'或'published'或'rejected'或'withdrawn', reason? } |
 | withdrawContribution | { sessionId, receiptId, operationId } | { receiptId, status:'withdrawn', acknowledged:true } |
+| reportContribution（可选） | { sessionId, receiptId, reason, operationId } | { acknowledged:true }；玩家举报公开内容，复查改判仍走 getContribution |
 | listContributions | { sessionId, limit } | { items:[公开内容] }，正常空池必须返回 { items:[] } |
 | onComplete | { sessionId, completedAt, operationId } | { acknowledged:true } |
 | requestReminder | { sessionId, completedAt } | { accepted:boolean, reminderId?:string, reason?:string }；只有 accepted:true 算已受理 |
@@ -188,7 +189,7 @@ submitContribution.record 结构为：
 }
 ~~~
 
-kind 支持 text、wish、photo。图片稿必须带真实 mediaId；text/wish 不能为空。游戏当前私人正文最多保存 500 个 JavaScript 字符单元。
+kind 支持 text、wish、photo。图片稿必须带真实 mediaId；text/wish 不能为空。游戏当前私人正文按 Unicode 码点上限 500（见 `plate21/module/utils/input-guard.js`）；客户端清理与截断只是体验层，服务端必须独立再校验长度与内容。
 
 公开列表单项结构为：
 
@@ -209,6 +210,21 @@ kind 支持 text、wish、photo。图片稿必须带真实 mediaId；text/wish �
 getContribution 支持按 operationId 找回响应丢失的投稿回执。失败重试保留原操作 ID 和原投稿正文；不确定请求尚未确认时，不允许直接换正文重复发送。明确 rejected 后，玩家改稿可以创建新投稿操作。
 
 撤回与删除私人原稿是独立动作。没有真实 withdrawn 回执，公开副本仍保持原状态。删除私人记录会保留其公开副本状态；无其他私人记录引用时尝试清理已保存本地图片。删除私人记录不等于服务器公开副本已经下架。
+
+### 内容审核要求（宿主服务端）
+
+UGC 内容的安全边界在服务端。客户端已做输入清理、按码点上限、显式超限提示和提交节流（`docs/v3-input-and-moderation.md`），但服务端不得信任这些结果，必须独立再校验并完成审核。宿主接入验收至少满足：
+
+1. 服务端二次校验：长度、字符集、必填；忽略客户端传来的任何"已审核"标记。
+2. 文本机器初审：`security.msgSecCheck`（version 2，scene 取 2 评论或 4 社交日志，按宿主场景配置）。映射到既有状态机：`result.suggest` 为 `pass` 可直接 `published`（或按比例入抽查队列），`review` 返回 `submitted` 进人审队列，`risky` 返回 `rejected` 并给出可读 `reason`（可由 `detail[].label` 映射）。
+3. 图片机器初审：`security.mediaCheckAsync`（media_type=2，≤10M，公网 URL，结果约 30 分钟内回调）。结果未回前公开内容保持 `submitted`，不得先展示后补审。
+4. 自定义关键词：在小程序后台"内容风控"配置项目特有词（文物名滥用、广告导流等），命中按宿主策略映射到三态。
+5. 人工复核：`review` 必审；`pass` 按比例抽查（微信官方建议）；审核动作留审计日志（内容 ID、时间、判定、理由、审核人）。
+6. 举报与复查：`reportContribution` 收到玩家举报后复查，可改判 `rejected`/`withdrawn`；客户端以 `getContribution` 刷新为准，不缓存"已过审"永久有效。
+7. 服务端限流：对 `submitContribution` 按 userId 限频（建议 ≤10 条/小时），与客户端节流相互独立。
+8. 合规留存：投稿正文、机器判定结果、人审结论与处置动作留档，满足小程序 UGC 类目要求。
+
+微信小程序 UGC 类目提审时会要求提供内容安全接口调用成功的录屏与服务截图，接入方需按其要求准备材料。
 
 ### 次日回信与完成通知
 
@@ -256,6 +272,7 @@ onComplete 使用固定 operationId=complete:sessionId，宿主必须幂等。�
 | submitContribution(recordId,{consent:true,sessionId?}) | 独立投稿副本；仅 purpose=relay 可投稿 |
 | getContribution(id,sessionId?) | 最新公开回执；刷新失败不伪造新审核状态 |
 | withdrawContribution(id,sessionId?) | 只有有效宿主回执才变为 withdrawn |
+| reportContribution(id,reason,sessionId?) | 举报公开内容；缺能力 unavailable，不改写本地投稿状态 |
 | listContributions({sessionId?,limit?}) | { status,items }；失败与空池分开 |
 | claimEdition() | 完成后请求全局版号；返回 { status,editionNo? }，未接入不生成本地假号 |
 | requestReminder(sessionId?) | { accepted,status,reason?,reminderId? }；仅真实受理回执返回 accepted:true |

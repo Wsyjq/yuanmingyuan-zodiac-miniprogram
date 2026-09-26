@@ -592,6 +592,22 @@ function withdrawContribution(contributionId, sessionId) {
     return clone(item)
   })
 }
+function reportContribution(contributionId, reason, sessionId) {
+  return serial(async function () {
+    const current = findContribution(envelope.snapshot, contributionId, sessionId).item
+    const text = String(reason || '').trim().slice(0, 200)
+    if (!text) throw fault('REPORT_REASON_REQUIRED', '请先说明举报理由')
+    if (!bridge.available('reportContribution')) return unavailable('reportContribution')
+    if (!current.receiptId) return unavailable('no_receipt')
+    try {
+      const res = await bridge.call('reportContribution', { sessionId: current.sessionId, receiptId: current.receiptId,
+        reason: text, operationId: 'report:' + current.id })
+      if (!res || res.acknowledged !== true) return { status: 'failed', reason: 'invalid_report_ack' }
+      // 举报不改写本地投稿状态；复查改判以 getContribution 的真实回执为准。
+      return { status: 'acknowledged', receiptId: current.receiptId, acknowledgedAt: now() }
+    } catch (err) { return failure(err) }
+  })
+}
 async function listContributions(options) {
   const opts = options || {}
   if (!bridge.available('listContributions')) return Object.assign(unavailable('listContributions'), { items: [] })
@@ -669,7 +685,7 @@ function onEvent(listener) {
 module.exports = {
   configure, init, getSnapshot, getRun, getArchives, getArchive, saveRun, saveDraft, navigate, resume, completePage, skipPage,
   sign, restart, reset: restart, getLetterState, openLetter, openBonus, saveRecord, updateContributionDraft, deleteRecord,
-  saveMedia, submitContribution, getContribution, withdrawContribution, listContributions, claimEdition, requestReminder, flush, exit,
+  saveMedia, submitContribution, getContribution, withdrawContribution, reportContribution, listContributions, claimEdition, requestReminder, flush, exit,
   setFlag, emit, onEvent,
   viewPuzzle: function (puzzle) { emit({ name: 'puzzle_viewed', puzzle: puzzle }) },
   attemptPuzzle: function (puzzle, attempt, result, inputMode) { emit({ name: 'puzzle_attempted', puzzle, attempt, result: result ? 'correct' : 'incorrect', inputMode }) },

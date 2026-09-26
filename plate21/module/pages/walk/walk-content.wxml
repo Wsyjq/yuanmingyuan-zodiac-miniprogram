@@ -37,7 +37,7 @@
         <button class="secondary" bindtap="onSaveRelay" disabled="{{busy}}">仅私人保存</button><text wx:if="{{ui.relaySaved}}" class="success">私人记录已保存在这份考察档案里</text>
         <checkbox-group bindchange="onRelayConsent"><label class="check-label"><checkbox value="public" checked="{{ui.consent}}" color="#716743"/>我同意将这份内容提交给官方，用于向其他探寻者公开展示。</label></checkbox-group>
         <button class="secondary" bindtap="onSubmitRelay" disabled="{{busy || !ui.consent}}">公开投稿</button><button class="text-button" bindtap="onNewRelay">另写一份</button>
-        <view wx:for="{{contributions}}" wx:key="id" class="record"><text>{{item.label}}</text><text wx:if="{{item.reason}}" class="caption">{{item.reason}}</text><view class="row"><button class="text-button" data-id="{{item.id}}" bindtap="onRefreshContribution">检查状态</button><button wx:if="{{item.receiptId && item.status !== 'withdrawn'}}" class="text-button" data-id="{{item.id}}" bindtap="onWithdraw">撤回公开投稿</button></view></view>
+        <view wx:for="{{contributions}}" wx:key="id" class="record"><text>{{item.label}}</text><text wx:if="{{item.reason}}" class="caption">{{item.reason}}</text><view class="row"><button class="text-button" data-id="{{item.id}}" bindtap="onRefreshContribution">检查状态</button><button wx:if="{{item.receiptId && item.status !== 'withdrawn'}}" class="text-button" data-id="{{item.id}}" bindtap="onWithdraw">撤回公开投稿</button><button wx:if="{{item.reportable}}" class="text-button" data-id="{{item.id}}" bindtap="onReportContribution">举报这条公开内容</button></view></view>
       </view>
       <view class="page-end">· {{screen.siteTitle || '第廿一图'}} ·</view>
     </view>

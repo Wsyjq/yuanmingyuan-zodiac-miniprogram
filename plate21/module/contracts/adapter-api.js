@@ -22,6 +22,9 @@
  *   支持按 operationId 找回超时丢失的投稿回执。
  * withdrawContribution({sessionId,receiptId,operationId})
  *   -> {receiptId,status:'withdrawn',acknowledged:true}
+ * reportContribution({sessionId,receiptId,reason,operationId})（可选能力）
+ *   -> {acknowledged:true}；玩家举报公开内容，宿主复查后可改判 rejected/withdrawn。
+ *   缺能力返回 unavailable 并由客户端隐藏举报入口；举报不改变本地投稿状态，改判以 getContribution 为准。
  * listContributions({sessionId,limit}) -> {items:[{id,status:'published',kind,text?,url?,from?}]}
  *   仅返回过审公开内容，不回传身份或私人稿。模块投影可展示字段。
  * onComplete({sessionId,completedAt,operationId}) -> {acknowledged:true}
@@ -34,7 +37,7 @@
  * 无上传回执的图片不投稿，无提交回执不显示审核中，不生成本地全局编号。
  */
 module.exports = {
-  CONTRACT_VERSION: '3.0.0',
+  CONTRACT_VERSION: '3.1.0',
   SESSION_SCHEMA_VERSION: 3,
   STORAGE_PREFIX: 'plate21_v3_session:',
   RECORD_STATUSES: ['draft', 'private'],

@@ -493,3 +493,32 @@ test('saved record text is cleaned and capped at the board limit', async () => {
   const short = await session.saveRecord({ kind: 'text', purpose: 'field', text: '  黄花阵  ' })
   assert.equal(short.text, '黄花阵')
 })
+
+test('contribution reporting needs a reason and a real host acknowledgement', async () => {
+  const calls = []
+  const { session } = harness({ host: {
+    async submitContribution() { return { receiptId: 'c1', status: 'published' } },
+    async reportContribution(input) { calls.push(input); return { acknowledged: true } }
+  } })
+  await session.init({})
+  const record = await session.saveRecord({ kind: 'text', purpose: 'relay', text: '接力文字' })
+  const contribution = await session.submitContribution(record.id, { consent: true })
+  await assert.rejects(session.reportContribution(contribution.id, '  '), { code: 'REPORT_REASON_REQUIRED' })
+  const reported = await session.reportContribution(contribution.id, '内容不当')
+  assert.equal(reported.status, 'acknowledged')
+  assert.equal(calls.length, 1)
+  assert.equal(calls[0].receiptId, 'c1')
+  assert.equal(calls[0].reason, '内容不当')
+  assert.equal(calls[0].operationId, 'report:' + contribution.id)
+  assert.equal(session.getSnapshot().contributions[0].status, 'published', 'reporting rewrites no local status')
+  await assert.rejects(session.reportContribution(contribution.id, '再次举报', 'unknown-session'), { code: 'ARCHIVE_NOT_FOUND' })
+})
+
+test('missing report capability or receipt stays unavailable instead of claiming a report', async () => {
+  const { session } = harness()
+  await session.init({})
+  const record = await session.saveRecord({ kind: 'text', purpose: 'relay', text: '接力文字' })
+  const contribution = await session.submitContribution(record.id, { consent: true })
+  const result = await session.reportContribution(contribution.id, '内容不当')
+  assert.equal(result.status, 'unavailable')
+})
