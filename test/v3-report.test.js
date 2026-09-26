@@ -289,3 +289,20 @@ test('report exits still reach walk when there is no walk page to return to', as
   assert.equal(failed.backs.length,1)
   assert.equal(failed.redirects[0],'/plate21/module/pages/walk/walk?sessionId=old-run')
 })
+
+test('text saves are throttled and over-limit drafts are refused without silent truncation', async function () {
+  const h = pageHarness(); await h.page.onLoad({ sessionId: 'old-run' })
+  h.page._maybeGenerate = function () {}
+  for (let i = 0; i < 5; i++) {
+    h.page.onTextInput({ detail: { value: '第' + i + '条观察' } }); await h.page.onSaveText()
+    assert.equal(h.page.data.recordError, '')
+  }
+  h.page.onTextInput({ detail: { value: '第六条观察' } }); await h.page.onSaveText()
+  assert.ok(h.page.data.recordError.includes('频繁'))
+  assert.equal(h.calls.filter(c => c[0] === 'saveRecord').length, 5)
+  const over = pageHarness(); await over.page.onLoad({ sessionId: 'old-run' })
+  over.page._maybeGenerate = function () {}
+  over.page.onTextInput({ detail: { value: '长'.repeat(520) } }); await over.page.onSaveText()
+  assert.ok(over.page.data.recordError.includes('最多 500 字'))
+  assert.equal(over.calls.filter(c => c[0] === 'saveRecord').length, 0)
+})

@@ -401,6 +401,8 @@ Page({
   onSubmitRelay() {
     this.action(async () => {
       if (!this.ui.consent) throw new Error('请先选择是否同意公开；也可以仅私人保存')
+      if (!this._relayGate) this._relayGate = guard.createRateGate({ max: 3, intervalMs: 60000 })
+      if (!this._relayGate()) throw new Error('操作过于频繁，请稍候再试。')
       const record = await this.saveRelayDraft('private')
       const result = await session.submitContribution(record.id, { consent: true, sessionId: this.sessionId })
       this.ui.submitStatus = result.status; await this.persist()

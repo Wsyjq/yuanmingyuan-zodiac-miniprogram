@@ -528,3 +528,33 @@ test('saved signature keeps cleaned plain text and blank names stay 无名氏', 
   assert.equal(h.session.getRun().name, '考察者甲')
   await h.close()
 })
+
+test('over-limit drafts are refused with an explicit notice instead of silent truncation', async () => {
+  const h = await harness()
+  await h.arrange('H4')
+  h.page.ui.note = '长'.repeat(520)
+  await h.invoke('onSaveNote')
+  assert.ok(String(h.page.data.error).includes('最多 500 字'))
+  assert.equal(h.session.getSnapshot().records.length, 0)
+  await h.close()
+})
+
+test('relay submissions are throttled locally against burst repeats', async () => {
+  let clock = Date.UTC(2026, 8, 24)
+  const h = await harness({ config: { now: () => clock } })
+  await h.arrange('FN4'); await h.session.sign('考察者')
+  clock += 86400000
+  await h.session.openLetter()
+  await h.arrange('LT6')
+  await h.page.loadRelay()
+  await h.invoke('onPrimary')
+  await h.invoke('onInput', event({ key: 'relayText' }, '给下一位的接力'))
+  await h.invoke('onRelayConsent', event({}, ['yes']))
+  for (let i = 0; i < 3; i++) {
+    await h.invoke('onSubmitRelay')
+    assert.equal(h.page.data.error, '')
+  }
+  await h.invoke('onSubmitRelay')
+  assert.ok(String(h.page.data.error).includes('频繁'))
+  await h.close()
+})

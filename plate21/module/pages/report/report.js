@@ -187,6 +187,8 @@ Page({
     if (guarded.truncated) { this.update({ recordError: guard.truncateNotice('观察记录', guard.LIMITS.text) }); return }
     const text = guarded.text
     if (!text) { this.update({ recordError: '先写下一点观察，再保存这条记录。' }); return }
+    if (!this._textGate) this._textGate = guard.createRateGate({ max: 5, intervalMs: 60000 })
+    if (!this._textGate()) { this.update({ recordError: '操作过于频繁，请稍候再试。' }); return }
     this.update({ busy: true, recordError: '' })
     try {
       await session.saveRecord({ id: this.data.editingTextId || undefined, kind: 'text', purpose: 'field',
