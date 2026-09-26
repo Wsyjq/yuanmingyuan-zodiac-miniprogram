@@ -17,9 +17,7 @@ test('new Fangwai questions require their own answers and preserve honest skippi
   assert.equal(play.submit('quiz-fang-use', { optionId: 'worship' }).status, 'solved')
   const skipped = engine.skip(run, 'FQ2')
   assert.equal(skipped.pageId, 'F2'); assert.equal(skipped.puzzles['quiz-fang-use'], 'skipped')
-  assert.equal(engine.canEnter(skipped, 'FR1'), false)
-  run = engine.complete(run, 'FQ2'); assert.equal(run.pageId, 'FR1')
-  assert.equal(engine.canEnter(run, 'FR1'), true)
+  run = engine.complete(run, 'FQ2'); assert.equal(run.pageId, 'F2')
 })
 test('old saves can continue reviewing existing Fangwai content without marking new quizzes complete', () => {
   const run = Object.assign(engine.createRun(), { pageId: 'F1', resumePageId: 'HY1', unlocked: { F1: true, F2: true, HY1: true } })

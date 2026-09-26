@@ -39,7 +39,7 @@ function fresh(userId, archives) {
     archives: archives || [], sync: { status: 'local' } }
 }
 // 节点迁移（2026-09-26）：X3 揭晓页与 M2 导航页并入 X2/H1，老存档指针与记录映射到 H1。
-const NODE_MIGRATION = { X3: 'H1', M2: 'H1' }
+const NODE_MIGRATION = { X3: 'H1', M2: 'H1', M1: 'X1', M3: 'F1', M4: 'HY1', M5: 'XS1', M6: 'DS1', M7: 'HG1', FR1: 'F2' }
 function migrateRunIds(run) {
   if (!run) return run
   if (NODE_MIGRATION[run.pageId]) run.pageId = NODE_MIGRATION[run.pageId]

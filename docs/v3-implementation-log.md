@@ -265,3 +265,9 @@ npm test 159 项全通过。本地提交，未推送 GitHub，微信平台未更
 按用户要求连续处理四项：(52) 选择题选项统一 A/B/C/D 编号（显示层前缀，判题仍用稳定 id，原文比较走 rawLabel）；(51) 正午预测答错给原因并引导看演示（“这次没猜中：正午时十二兽首会一起喷水报时，而平时每个时辰只有一只生肖喷水。看下面的演示。”），14 时题答错原因已有；(50) 道具卡归还尾注整类删除（“看完放回”等）；(X3/M2 迁移) 减掉“输完黄花阵后的两个空页面”：X2 答对直达 H1（X3 确认句归并 H1 开头），M1 跳过改指 H1、X2 跳过改指 M3（跳过黄花阵站保留），按存档兼容规则迁移（session.js NODE_MIGRATION 迁移指针与记录、story-compatibility.json 移除条目、check:story 过检 46→44 节点），术语门控恢复条件同步为 visited.H1，“想先看解读”放宽为下一页是揭晓页或普通下一页。测试连锁同步（flow/walk/screen/term-gate/script-coverage/latest-script-changes）。
 
 npm test 162 项全通过。本地提交，未推送 GitHub，微信平台未更新。Pollux 当前不可用，记录于此。
+
+## 迁移删除 M 站导航页与 FR1（44→37 节点，2026-09-26）
+
+按用户批准的减页方案：M1/M3/M4/M5/M6/M7 六个导航页并入下一站首屏（E2→X1、H6→F1、F2→HY1、HY3→XS1、XS2→DS1、DS2→HG1 直达），FR1 并入 F2（正文归并、FQ2→F2）；站级“这次不去”入口随 M 站移除（页级“这题先跳过”保留，黄花阵站级跳过由 X2→F1 承接）。按存档兼容规则迁移：NODE_MIGRATION 扩展（M1→X1、M3→F1、M4→HY1、M5→XS1、M6→DS1、M7→HG1、FR1→F2），story-compatibility.json 移除 7 条（现 37 条），check:story 过检。测试连锁同步（flow 站级跳过场景、latest-script FR1→F2、ui 用例、screen 节点数、coverage fixture、walk 跳过链混合推进）。
+
+npm test 162 项全通过。本地提交，未推送 GitHub，微信平台未更新。Pollux 当前不可用，记录于此。

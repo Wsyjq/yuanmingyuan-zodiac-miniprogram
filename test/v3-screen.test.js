@@ -18,15 +18,15 @@ function frozen(value) {
   return value
 }
 
-test('all 44 page IDs build pure display models and caller state remains immutable', () => {
-  assert.equal(pages.list.length, 44)
+test('all 37 page IDs build pure display models and caller state remains immutable', () => {
+  assert.equal(pages.list.length, 37)
   for (const page of pages.list) {
     const run = frozen(runAt(page.id)), ui = frozen({ optionId: 'ne', text: '草稿', placed: { deer: 'ring' } })
     const view = buildScreen(run, ui)
     assert.equal(view.pageId, page.id)
     assert.ok(view.title)
     assert.ok(Array.isArray(view.lines))
-    assert.equal(view.pageCount, 44)
+    assert.equal(view.pageCount, 37)
     assert.equal(run.uiByPage[page.id], undefined)
   }
 })
