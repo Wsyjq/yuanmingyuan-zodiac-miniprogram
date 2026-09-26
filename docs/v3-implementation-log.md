@@ -158,4 +158,17 @@ npm test 159 项全通过。模拟器静态渲染正常；placeholder 点击抖�
 
 小米 TTS 单次生成实测约 60 秒上限，因此按完整句/段边界切成不超过 160 字的连续片段，片段拼接文本与 story.js 正文逐字一致；LT1—LT8 使用 flow/letter-paragraphs.js 的实际语义段落。案例 MP3 均验证为 24 kHz 单声道。npm test 159 项全通过，包体总计 6.67 MiB；另将 OpenChamber 本地 .openchamber 工作目录加入 project.config.json 打包忽略和 .gitignore，避免临时截图计入主包，未删除该目录。
 
-本轮未实际试听生成音频，不宣称听审通过，也未修改 v3-manifest.js、narrationPending 或运行时音源。Pollux MCP/CLI 当前不可用（资源列表为空），按约定记录于此。
+本轮未实际试听生成音频，不宣称听审通过，也未修改 v3-manifest.js、narrationPending 或运行时音源。另新增 docs/v3-mimo-voice-review.html 试听工作台（由 tools/build-mimo-voice-review.js 生成），支持 A—D 同文音色对比、五条演出整组连播、正文/提示词对照、听审评级、备注与 JSON 导出；已在本地浏览器验证布局和选择/判断交互，未验证真实听感。针对“缺乏感情、人物语气单一”反馈，又生成 MiMo / MiniMax 同文 A/B 情绪案例，拆分研究者、旧日记、老师、历史沉重段四类声部，并用 MiniMax speech-02-hd 的 voice_id/emotion 与 MiMo 强化演出提示词对照；8 个案例共 16 个 MP3 保存于 docs/compliance/sources-audio/voice-emotion-cases/，对照页为 docs/v3-voice-emotion-review.html。进一步按用户要求改为逐段独立提示词：P1、LT2、HY2、DS2、HG1 拆为 30 个演出段，每段单独指定 MiMo 演出提示词和 MiniMax emotion/speed/pitch，生成 MiMo/MiniMax 共 60 个 MP3，逐段试听页为 docs/v3-voice-beat-review.html。根据用户反馈“MiMo 整体更好、老师回信不符合、偏向女声”，将研究者、老师、历史段统一调整为年轻/年长/沉稳三类女声，老师明确改为五十岁以上温厚女声；MiMo 逐段生成 30 个新 MP3，试听页为 docs/v3-voice-female-review.html。再按用户最终口径收敛为两种人物：自己／我使用年轻女声，老师／写信人恢复为年长男声；主线、遗址、历史、内心活动全部归入“自己”，不再拆分子声部。参考官方 MiMo TTS 经验，改用“音色身份卡 + 导演模式”提示词，先以 mimo-v2.5-tts-voicedesign 生成 self/teacher 参考音色，再以 mimo-v2.5-tts-voiceclone 固定音色生成 30 段 × 自然版/演出版共 60 个 MP3；逐段提示词明确情绪、语速范围、停顿和语气词处理，并禁止添加原文外句子。增加 mimo-v2.5-asr 自动转写校验，平均相似度约 0.965，低分项主要是年份数字读法和短句 ASR 误判，未据此宣称听审通过。两人物试听页为 docs/v3-voice-two-person-review.html，单文件内嵌版为 docs/v3-voice-two-person-review-standalone.html。npm test 159 项通过；仍未实际听审、未接入运行时。按用户要求本轮 HTML 与音频案例不提交 Git。Pollux MCP/CLI 当前不可用（资源列表为空），按约定记录于此。
+
+## 输入限制与内容审核方案（2026-09-26）
+
+调研 FN4 署名、X2 拼字、H4 观察笔记、LT7 接力、报告补充记录 5 个输入控件现状：已有 maxlength、非空校验与 BOARD_MESSAGE_MAX_LEN 截断，缺字符清洗、按码点计数、提交节流与显式截断提示。对照微信小程序 UGC 内容安全要求（msgSecCheck 2.0、mediaCheckAsync、后台内容风控自定义关键词）与 Discourse（WatchedWords 分级处置、Reviewable 人审队列）、OWASP 输入校验等开源做法，形成分层方案：L0 客户端输入卫生、L1 提交节流与幂等（本仓库实现），L2 机器初审、L3 人审抽查、L4 举报撤回（写入宿主契约，由官方宿主实现）。
+
+产出 docs/v3-input-and-moderation.md：输入控件规则表、input-guard.js 接口与接入点、宿主审核服务要求（含可选能力 reportContribution）、状态文案映射、测试验收与三阶段提交计划。Pollux MCP/CLI 当前不可用，按约定记录于此。
+
+## 输入限制与内容审核落地（2026-09-26）
+
+按方案分三阶段实现并各成一次提交（基线标签 checkpoint/input-safety-start，既有标签未改动）。阶段 1（8e2a4fe）：新增 plate21/module/utils/input-guard.js（cleanLive/clampText/count/sanitizeName/truncateNotice/createRateGate），5 个控件接入统一清洗与码点计数，X2 拼字按用户批准收紧为 ≤10 码点（maxlength 20→10，task-guide 确认时显式提示），存档层 clampText 兜底替换裸 slice。阶段 2（81e3d29）：公开投稿与报告文本保存加窗口计数节流（60 秒内 3 次/5 次），超限与越界一律显式提示并阻止保存，不做静默截断。阶段 3：契约 CONTRACT_VERSION 升 3.1.0，新增可选能力 reportContribution（举报不改写本地投稿状态，改判以 getContribution 为准），walk 投稿区增加举报入口（缺能力隐藏），docs/v3-host-integration.md 增补“内容审核要求（宿主服务端）”章节，明确 msgSecCheck/mediaCheckAsync 三态映射、人审抽查、审计留存与服务端限流为宿主验收条件。
+
+npm test 全绿，共 176 项通过（较基线 159 项新增 17 项）。本轮仅 Node 自动测试；微信开发者工具模拟器输入与举报入口、真机输入法行为、宿主审核服务联调未执行，不以 Node 结果冒充。本仓库未接入任何内容安全服务，不声称已具备审核能力；真机与联调结果另行记录。Pollux MCP/CLI 当前不可用，按约定记录于此。
+
