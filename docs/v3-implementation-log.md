@@ -194,6 +194,12 @@ npm test 159 项全通过。本地提交，未推送 GitHub，微信平台未更
 
 npm test 159 项全通过。本地提交，未推送 GitHub，微信平台未更新。Pollux 当前不可用，记录于此。
 
+## 修复拖放槽位被页面样式压掉定位（2026-09-26）
+
+用户截图确认大水法拖动的“池中/环绕中央”槽位偏移（即此前反馈的“拖动改毁了”）：根因是为按钮箭头加的 .p21-page button{position:relative} 穿透进 fountain-puzzle 组件，且特异性（类+标签）压过组件的 .drop-zone{position:absolute}，使两个拖放槽掉回文档流、堆在场景图下方。修复：移除全局 button 的 position:relative（入口页按钮规则保留，因其无组件），箭头锚点改为仅 .primary 等具体按钮类持有；并把组件槽位选择器加固为 .fountain-game .drop-zone，防止再次被页面样式覆盖。
+
+npm test 159 项全通过。本地提交，未推送 GitHub，微信平台未更新。Pollux 当前不可用，记录于此。
+
 ## 回看跳转修复与跳转流程图（2026-09-26）
 
 按用户反馈“从黄花阵后面直接跳到最后”：定位为 engine.reviewNext 在遇到打不开的节点（被跳过谜题的揭晓节点，如 H2 是 H1 的 revealOf；或未解锁站内页）时提前返回空，回看主按钮落到 session.resume（断点=最后完成处）。修复为跳过打不开的节点继续向后找下一个可回看页，仅真正链尾才“返回当前进度”；v3-screen 回看断言同步（跳过谜题页回看也提供“继续回看”）。全部按钮跳转重新核对：46 节点 next/skipTo 链无断链，report 三出口 navigateBack，页内回看回退不换页，门控（LT/揭晓/解锁）正常。新增 docs/v3-navigation-flow.md：页面栈、节点主链与跳过线、按钮行为映射、onPrimary 决策图、门控规则与本次修复（mermaid 流程图）。
