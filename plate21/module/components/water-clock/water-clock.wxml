@@ -35,7 +35,7 @@
   </view>
   <view wx:if="{{completed}}" class="clock-result">
     <view class="question-title">水力钟的秘密，已揭晓</view>
-    <view>{{prediction === 'all' ? '你的正午预测正确！' : '正午的特别之处，是十二兽首共同报时。'}}日常轮流报时，正午共同报时。</view>
+    <view>{{prediction === 'all' ? '你的正午预测正确！正午十二兽首一起喷水报时，平时则轮流报时。' : '这次没猜中：正午时十二兽首会一起喷水报时，而平时每个时辰只有一只生肖喷水。看下面的演示。'}}</view>
     <view class="clock-controls"><button class="clock-button" bindtap="onReplay">回看完整动画</button><button class="clock-button" bindtap="onReplayNoon">重看正午</button></view>
   </view>
   <button class="hours-toggle" bindtap="onToggleHours">十二时辰对照表 {{showHours ? '－' : '＋'}}</button>
