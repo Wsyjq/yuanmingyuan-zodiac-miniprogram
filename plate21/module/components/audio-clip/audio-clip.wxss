@@ -148,3 +148,6 @@
 .ac-dock-bar { max-width: calc(100vw - 52rpx); flex-wrap: wrap; }
 .ac-action { padding: 6rpx 12rpx; font-size: 22rpx; }
 .ac-segment { font-size: 22rpx; color: #4a402e; }
+
+.ac-wrap{justify-content:center}
+.ac-compact{justify-content:center}
