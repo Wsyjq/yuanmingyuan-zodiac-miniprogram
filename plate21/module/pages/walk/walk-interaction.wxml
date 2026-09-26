@@ -8,21 +8,17 @@
     </view>
   </view>
   <view class="puzzle-card question-card">
-    <view class="card-label">回答{{screen.interaction.title ? ' · ' + screen.interaction.title : ''}}</view>
-    <text wx:if="{{screen.task && screen.task.instruction}}" class="question-hint">{{screen.task.instruction}}</text>
     <view class="interaction-copy"><text wx:for="{{interactionText}}" wx:for-item="paragraph" wx:key="index" class="paragraph"><text wx:for="{{paragraph}}" wx:key="index" class="{{item.key ? 'history-link' : ''}}" data-key="{{item.key}}" bindtap="onOpenCard">{{item.text}}</text></text></view>
   <block wx:if="{{screen.screenPart === 'activity'}}">
       <view wx:if="{{screen.choices.length && playId !== 'quiz-pattern'}}" class="choices"><button wx:for="{{screen.choices}}" wx:key="id" class="choice {{item.selected ? 'selected' : ''}}" data-id="{{item.id}}" bindtap="onChoice" disabled="{{review}}">{{item.label}}</button></view>
       <view wx:if="{{playId === 'quiz-envelope'}}" class="input-group"><label>拼出的三个字</label><input data-key="text" value="{{ui.text}}" maxlength="20" placeholder="输入地点名称" placeholder-class="ph-line" bindinput="onInput" disabled="{{review}}"/></view>
       <view wx:if="{{playId === 'listen-nfc'}}" class="activity">
-        <view class="subheading">听见谐奇趣</view><text class="caption">把手机靠近音乐贴片，或点下方按钮直接听。是否读到贴片不影响考察。</text>
         <audio-clip id="soundscape" src="{{soundSrc}}" kind="clip" active="{{pageVisible && !drawer}}" label="直接听 · 声景" bind:ended="onHeard" bind:error="onSoundError"/>
         <button wx:if="{{!ui.heard && !review}}" class="secondary" bindtap="onHeard">我已听过，确认完成听音</button><text class="caption">{{nfcStatus}}</text><text wx:if="{{ui.heard}}" class="success">已听完这一段</text>
       </view>
             <view wx:if="{{playId === 'photo-pavilion'}}" class="activity">
         <button disabled="{{review}}" wx:if="{{!ui.arrived}}" class="choice" bindtap="onArrived">我已到达中心亭</button>
         <block wx:if="{{ui.arrived}}">
-          <view class="subheading">留一份自己的观察</view>
           <view class="spot-grid"><button wx:for="{{screen.spots}}" wx:key="id" data-id="{{item.id}}" bindtap="onSpot" disabled="{{review}}" class="spot {{item.on ? 'selected' : ''}}"><image src="{{item.src}}" mode="aspectFit"/><text>{{item.title}}</text></button></view>
           <button class="secondary" bindtap="onAddPhoto" disabled="{{busy || review}}">拍摄或选择照片</button>
           <view class="record" wx:for="{{records}}" wx:key="id"><image wx:if="{{item.kind === 'photo'}}" src="{{item.filePath}}" mode="aspectFit" data-src="{{item.filePath}}" bindtap="onPreview"/><text wx:else>{{item.text}}</text><view wx:if="{{!review}}" class="row"><button wx:if="{{item.kind === 'photo'}}" class="text-button" data-id="{{item.id}}" bindtap="onAddPhoto">替换</button><button class="text-button" data-id="{{item.id}}" bindtap="onDeleteRecord">删除</button></view></view>
