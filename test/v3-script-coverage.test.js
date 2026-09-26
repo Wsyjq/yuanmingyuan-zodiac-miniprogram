@@ -21,7 +21,7 @@ test('every non-bracketed main-script paragraph has a verified visible destinati
     const screen = visibleAt(page)
     if (field === 'choices') {
       const labels = p.choiceLabels || (page === 'H1' ? p.text.split(/[A-D]\./).filter(Boolean) : [p.text.replace(/^[a-d]\s*/, '')])
-      for (const label of labels) assert.ok(screen.choices.some(choice => normalized(choice.label) === normalized(label)), 'missing option ' + label)
+      for (const label of labels) assert.ok(screen.choices.some(choice => normalized(choice.rawLabel || choice.label) === normalized(label)), 'missing option ' + label)
       continue
     }
     if (field === 'signature') {

@@ -123,7 +123,7 @@ function bodyLines(page, run, ui) {
   let lines = page.lines.slice()
   const choices = play.CHOICES[page.playId] || []
   lines = lines.filter(function (line) {
-    return !choices.some(function (choice) { return choice.label === line }) &&
+    return !choices.some(function (choice) { return choice.rawLabel === line }) &&
       !(page.id === 'DS1' && /^(梅花鹿|十只猎狗|两只大型卷尾铜兽) → /.test(line))
   })
   // Non-bracketed script is screen copy, including scene descriptions.
@@ -182,8 +182,8 @@ function buildScreen(run, ui) {
   const review = !!(run.resumePageId && run.pageId !== run.resumePageId)
   const status = page.playId ? ((run.puzzles || {})[page.playId] || '') : ''
   const selected = state.optionId || state.choice || ''
-  const choices = (play.CHOICES[page.playId] || []).map(function (item) {
-    return { id: item.id, label: item.label, selected: selected === item.id || selected === item.label }
+  const choices = (play.CHOICES[page.playId] || []).map(function (item, index) {
+    return { id: item.id, label: 'ABCD'[index] + '. ' + item.label, rawLabel: item.label, selected: selected === item.id || selected === item.label }
   })
   const playSpec = page.playId ? play.start(page.playId) : null
   const index = pages.list.indexOf(page)
