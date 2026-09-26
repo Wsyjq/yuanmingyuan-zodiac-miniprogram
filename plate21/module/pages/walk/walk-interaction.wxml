@@ -37,7 +37,7 @@
       <view wx:if="{{pageId === 'DS2'}}" class="activity">
         <view class="subheading">旧画与眼前</view><view class="fountain-frame">
           <view class="ruins-line"><view class="column c1"></view><view class="column c2"></view><view class="arch"></view><view class="column c3"></view><view class="column c4"></view><text>抬头看看，眼前还留下了什么</text></view>
-          <view class="reconstruction" style="opacity:{{1 - (ui.fountainProgress || 0) / 100}}"><view class="jet jet-left"></view><view class="jet jet-right"></view><view class="deer">鹿</view><view class="dogs">猎狗 · 猎狗 · 猎狗</view><text class="reconstruction-label"></text></view>
+          <view class="reconstruction" style="opacity:{{1 - (ui.fountainProgress || 0) / 100}}"><view class="jet jet-left"></view><view class="jet jet-right"></view><image class="deer" src="/plate21/module/assets/img/dashuifa-deer.png" mode="aspectFit"/><image class="dogs" src="/plate21/module/assets/img/dashuifa-dogs.png" mode="aspectFit"/><text class="reconstruction-label"></text></view>
         </view><slider min="0" max="100" value="{{ui.fountainProgress || 0}}" activeColor="#627d77" bindchange="onFade"/><view class="row caption"><text>旧时构件与水流</text><text>眼前遗址</text></view>
       </view>
   </block>

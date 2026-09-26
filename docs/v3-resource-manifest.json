@@ -165,15 +165,15 @@
     },
     {
       "path": "plate21/module/components/water-clock/assets/close.jpg",
-      "bytes": 119018,
-      "sha256": "053f010e1698d904e8b5c2db75c148ebfafc6205a7e6d0a5de067c823d65728f",
+      "bytes": 198445,
+      "sha256": "387639658ab2419f3bbd7db8e0ecb22f1b4c8536210f07784c00d2f91e180d95",
       "published": true,
       "source": "用户提供的海晏堂HTML原型；图像提取压缩，水声由代码合成，见 reference/海晏堂水力钟-谜题互动版.html"
     },
     {
       "path": "plate21/module/components/water-clock/assets/paint.jpg",
-      "bytes": 87367,
-      "sha256": "cd9879a499bf8b2db3491a52d286c2a5c9fe36ca31a50f33e0e8aaf333015459",
+      "bytes": 153971,
+      "sha256": "44e9b7ba2dd13be359731ccb9f7467918d0f45b0eef38e9687e3345670b607cb",
       "published": true,
       "source": "用户提供的海晏堂HTML原型；图像提取压缩，水声由代码合成，见 reference/海晏堂水力钟-谜题互动版.html"
     },
@@ -186,8 +186,8 @@
     },
     {
       "path": "plate21/module/components/water-clock/assets/wide.jpg",
-      "bytes": 186272,
-      "sha256": "023d865f5c0a5b4c8dd5308db5b599ef7d673204fca1e2ccf41234fe1446ea48",
+      "bytes": 253910,
+      "sha256": "27c813aab3527faae115941141c956f6aef57bb9f2a056cabf380ac29c0872ed",
       "published": true,
       "source": "用户提供的海晏堂HTML原型；图像提取压缩，水声由代码合成，见 reference/海晏堂水力钟-谜题互动版.html"
     },
