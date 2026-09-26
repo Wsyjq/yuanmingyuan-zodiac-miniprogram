@@ -24,16 +24,9 @@
       <button wx:if="{{canOpenAlbumSettings}}" class="report-button" bindtap="onOpenAlbumSettings">打开相册权限设置</button>
     </view>
 
-    <view class="section">
-      <view class="section-title">八站记录</view>
-      <view class="stations">
-        <view wx:for="{{model.stations}}" wx:key="id" class="station"><text>{{item.label}}</text><text class="station-status {{item.status}}">{{item.stateLabel}}</text></view>
-      </view>
-    </view>
 
-    <view class="section">
+    <view wx:if="{{model.photos.length}}" class="section">
       <view class="section-title">我的现场照片 <text class="count">{{model.photos.length}}</text></view>
-      <view wx:if="{{!model.photos.length}}" class="small-note">还没有现场照片。可以补上一张，也可以保留文字作品。</view>
       <view class="photos">
         <view wx:for="{{model.photos}}" wx:key="id" class="photo-card">
           <image wx:if="{{item.filePath}}" class="field-photo" src="{{item.filePath}}" mode="aspectFill" data-id="{{item.id}}" bindtap="onPreviewPhoto" aria-label="预览{{item.title}}照片" />
@@ -66,8 +59,8 @@
 
     <view wx:if="{{model.completed}}" class="section letter-card">
       <view class="section-title">旅程之后 · 彩蛋来信</view>
-      <view class="letter-message">考察已经完成，可以现在进入彩蛋，也可以留到明天再读。</view>
-      <button class="report-button primary" bindtap="onOpenBonus" disabled="{{letterOpening}}">{{letterOpening ? '正在打开…' : '直接进入彩蛋'}}</button>
+      <view class="letter-message">{{model.letterRead ? '彩蛋已经读完，可以随时重读。' : '考察已经完成，可以现在进入彩蛋，也可以留到明天再读。'}}</view>
+      <button class="report-button primary" bindtap="onOpenBonus" disabled="{{letterOpening}}">{{letterOpening ? '正在打开…' : (model.letterRead ? '重读彩蛋' : '直接进入彩蛋')}}</button>
       <view wx:if="{{bonusError}}" class="notice error">{{bonusError}}</view>
       <button wx:if="{{reminderSupported && !letterAvailable}}" class="report-button reminder-button" bindtap="onRequestReminder" disabled="{{reminderRequesting || reminderAccepted}}">{{reminderRequesting ? '请求中…' : (reminderAccepted ? '提醒请求已受理' : '申请来信提醒')}}</button>
       <view wx:if="{{reminderMessage}}" class="small-note reminder-message">{{reminderMessage}}</view>

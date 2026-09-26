@@ -44,7 +44,7 @@ function buildModelRaw(snapshot) {
         text: String(record.text).trim(), createdAt: record.createdAt, updatedAt: record.updatedAt }
     })
   return {
-    sessionId: source.sessionId || '', name: String(run.name || '').trim() || '无名氏',
+    sessionId: source.sessionId || '', name: String(run.name || '').trim() || '无名氏', letterRead: !!run.letterRead,
     completed: !!run.completedAt, completedAt: run.completedAt || null,
     dateLabel: dateLabel(run.completedAt),
     photos: photos, texts: texts,
@@ -78,11 +78,37 @@ function buildSheets(model) {
       notes.push(Object.assign({}, note, { text: text, title: note.title + (i ? '（续 ' + (i + 1) + '）' : '') }))
     })
   })
-  const count = Math.max(1, Math.ceil(model.photos.length / 4), notes.length)
+  // 记录按高度预算装箱：照片每页至多 4 张、笔记多条同页，避免每条记录各占一个画框
+  const noteHeight = function (note) {
+    const lines = String(note.text).split('\n').reduce(function (sum, para) { return sum + Math.max(1, Math.ceil(para.length / 26)) }, 0)
+    return lines * 32 + 52
+  }
+  const pages = []
+  const photoBatches = []
+  for (let i = 0; i < model.photos.length; i += 4) photoBatches.push(model.photos.slice(i, i + 4))
+  let idx = 0
+  photoBatches.forEach(function (batch) {
+    const page = { photos: batch, notes: [] }
+    let used = batch.length > 2 ? 520 : 280
+    while (idx < notes.length && used + noteHeight(notes[idx]) <= 860) {
+      used += noteHeight(notes[idx]); page.notes.push(notes[idx++])
+    }
+    pages.push(page)
+  })
+  while (idx < notes.length) {
+    const page = { photos: [], notes: [] }
+    let used = 0
+    while (idx < notes.length && used + noteHeight(notes[idx]) <= 1320) {
+      used += noteHeight(notes[idx]); page.notes.push(notes[idx++])
+    }
+    pages.push(page)
+  }
+  const count = Math.max(1, pages.length)
   return Array.from({ length: count }, function (_, i) {
+    const page = pages[i] || { photos: [], notes: [] }
     return { name: model.name, completed: model.completed, dateLabel: model.dateLabel,
-      stations: model.stations, photos: model.photos.slice(i * 4, i * 4 + 4),
-      text: notes[i] || null, number: i + 1, total: count }
+      stations: model.stations, photos: page.photos, texts: page.notes,
+      text: page.notes[0] || null, number: i + 1, total: count }
   })
 }
 
@@ -102,14 +128,17 @@ function measure(ctx, sheet) {
   ctx.font = '24px sans-serif'
   const nameLines = wrapText(ctx, '署名：' + sheet.name, WIDTH - 100)
   ctx.font = '22px sans-serif'
-  const textLines = sheet.text ? wrapText(ctx, sheet.text.text, WIDTH - 124) : []
+  const notes = (sheet.texts || (sheet.text ? [sheet.text] : [])).map(function (note) {
+    return { title: note.title, lines: wrapText(ctx, note.text, WIDTH - 124) }
+  })
+  const textLines = notes.length ? notes[0].lines : []
   const artY = 146 + nameLines.length * 30
   const stationsY = artY + 310
   const photosY = stationsY + 180
-  const photoHeight = sheet.photos.length ? Math.ceil(sheet.photos.length / 2) * 236 + 35 : 110
-  const textY = photosY + photoHeight + 22
-  const textHeight = textLines.length ? textLines.length * 32 + 74 : 0
-  return { nameLines: nameLines, textLines: textLines, artY: artY, stationsY: stationsY,
+  const photoHeight = sheet.photos.length ? Math.ceil(sheet.photos.length / 2) * 236 + 35 : 0
+  const textY = photosY + photoHeight + (sheet.photos.length ? 22 : 8)
+  const textHeight = notes.reduce(function (sum, n) { return sum + 34 + n.lines.length * 32 + 18 }, 0)
+  return { nameLines: nameLines, notes: notes, textLines: textLines, artY: artY, stationsY: stationsY,
     photosY: photosY, textY: textY, height: Math.ceil(textY + textHeight + 112) }
 }
 
@@ -120,36 +149,13 @@ function stroke(ctx, points, close) {
   ctx.stroke()
 }
 function drawPlate(ctx, x, y, w, h) {
+  // 作品留白区：不再绘制遗址示意线稿（避免生成图式的“AI 配图”观感），由文字、照片与署名构成作品
   ctx.save(); ctx.translate(x, y); ctx.scale(w / 600, h / 260)
-  ctx.beginPath(); ctx.rect(0, 0, 600, 260); ctx.clip()
   ctx.fillStyle = '#e9ddc5'; ctx.fillRect(0, 0, 600, 260)
-  ctx.strokeStyle = 'rgba(86,71,48,.14)'; ctx.lineWidth = 0.65
-  for (let i = -200; i < 850; i += 13) stroke(ctx, [[i, 0], [i - 140, 260]])
-  ctx.strokeStyle = '#62533b'; ctx.lineWidth = 1.5
-  // An original schematic of pavilion, palace arches and ruined columns, not a visitor photograph.
-  stroke(ctx, [[20,211],[49,198],[89,207],[117,204],[175,212],[238,207],[278,217],[345,208],[396,219],[458,210],[582,220]])
-  stroke(ctx, [[38,116],[93,74],[149,116],[137,112],[127,119],[60,119],[49,112]], true)
-  stroke(ctx, [[52,109],[92,93],[136,109]])
-  for (const px of [62, 83, 108, 129]) {
-    ctx.strokeRect(px, 122, 5, 68); stroke(ctx, [[px-4,193],[px+10,193]])
-  }
-  stroke(ctx, [[48,197],[147,197],[155,204],[40,204]], true)
-  stroke(ctx, [[196,124],[196,100],[236,100],[248,79],[260,100],[306,100],[306,124],[320,124],[320,202],[183,202],[183,124]], true)
-  for (const px of [210, 250, 290]) {
-    ctx.beginPath(); ctx.arc(px, 160, 13, Math.PI, 0); ctx.lineTo(px+13,198); ctx.lineTo(px-13,198); ctx.closePath(); ctx.stroke()
-    ctx.strokeRect(px-5,111,10,15)
-  }
-  stroke(ctx, [[176,208],[328,208],[337,216],[168,216]], true)
-  for (let i = 0; i < 5; i++) {
-    const px = 378 + i * 38, top = [96,72,113,83,124][i]
-    stroke(ctx, [[px,211],[px,top+9],[px+6,top],[px+12,top+6],[px+15,top+3],[px+15,211]])
-    stroke(ctx, [[px-5,top+11],[px+20,top+11],[px+20,top+18],[px-5,top+18]], true)
-    for (let n = 0; n < 3; n++) stroke(ctx, [[px+3+n*4,top+21],[px+3+n*4,205]])
-  }
-  stroke(ctx, [[390,96],[427,65],[469,102],[481,108]])
+  ctx.strokeStyle = '#b79c6d'; ctx.lineWidth = 1.5
+  ctx.strokeRect(1, 1, 598, 258)
   ctx.lineWidth = 0.7
-  for (let i = 0; i < 10; i++) stroke(ctx, [[342+i*20,226+(i%3)*4],[360+i*20,225+(i%3)*4]])
-  ctx.strokeStyle = '#967448'; ctx.strokeRect(1,1,598,258)
+  ctx.strokeRect(12, 12, 576, 236)
   ctx.restore()
 }
 
@@ -192,8 +198,6 @@ async function draw(ctx, canvas, sheet, layout) {
   ctx.font = '18px sans-serif'; ctx.fillStyle = '#76634a'
   ctx.fillText('完成日期：' + sheet.dateLabel, 50, box.artY - 8)
   drawPlate(ctx, 50, box.artY + 8, 600, 260)
-  ctx.font = '15px sans-serif'; ctx.textAlign = 'center'
-  ctx.fillText('遗址线稿 · 示意底图', WIDTH / 2, box.artY + 291)
   ctx.textAlign = 'left'; ctx.font = 'bold 22px serif'; ctx.fillStyle = '#493d2c'
   ctx.fillText('八站记录', 50, box.stationsY + 8)
   sheet.stations.forEach(function (site, i) {
@@ -202,28 +206,31 @@ async function draw(ctx, canvas, sheet, layout) {
     ctx.font = '16px sans-serif'; ctx.fillStyle = site.status === 'done' ? '#47685e' : '#88775e'
     ctx.textAlign = 'right'; ctx.fillText(site.stateLabel, xx + 284, yy); ctx.textAlign = 'left'
   })
-  ctx.font = 'bold 22px serif'; ctx.fillStyle = '#493d2c'; ctx.fillText('我的现场照片', 50, box.photosY)
-  if (!sheet.photos.length) {
-    ctx.font = '19px sans-serif'; ctx.fillStyle = '#89765b'
-    ctx.fillText('这一页没有照片，文字与观察同样属于这份记录。', 50, box.photosY + 47)
+  ctx.textAlign = 'left'
+  if (sheet.photos.length) {
+    ctx.font = 'bold 22px serif'; ctx.fillStyle = '#493d2c'; ctx.fillText('我的现场照片', 50, box.photosY)
+    sheet.photos.forEach(function (photo, i) {
+      const x = 50 + i % 2 * 310, y = box.photosY + 23 + Math.floor(i / 2) * 236
+      ctx.fillStyle = '#e5dac3'; ctx.fillRect(x, y, 290, 188)
+      if (loaded[i]) coverPhoto(ctx, loaded[i], x, y, 290, 188)
+      else {
+        missing.push(photo.id)
+        ctx.textAlign = 'center'; ctx.fillStyle = '#89765b'; ctx.font = '18px sans-serif'
+        ctx.fillText('这张照片暂不可用', x+145, y+92); ctx.textAlign = 'left'
+      }
+      ctx.strokeStyle = '#a18b68'; ctx.lineWidth = 1; ctx.strokeRect(x,y,290,188)
+      ctx.font = '17px sans-serif'; ctx.fillStyle = '#6c573c'; ctx.fillText(photo.title, x, y+214)
+    })
   }
-  sheet.photos.forEach(function (photo, i) {
-    const x = 50 + i % 2 * 310, y = box.photosY + 23 + Math.floor(i / 2) * 236
-    ctx.fillStyle = '#e5dac3'; ctx.fillRect(x, y, 290, 188)
-    if (loaded[i]) coverPhoto(ctx, loaded[i], x, y, 290, 188)
-    else {
-      missing.push(photo.id)
-      ctx.textAlign = 'center'; ctx.fillStyle = '#89765b'; ctx.font = '18px sans-serif'
-      ctx.fillText('这张照片暂不可用', x+145, y+92); ctx.textAlign = 'left'
-    }
-    ctx.strokeStyle = '#a18b68'; ctx.lineWidth = 1; ctx.strokeRect(x,y,290,188)
-    ctx.font = '17px sans-serif'; ctx.fillStyle = '#6c573c'; ctx.fillText(photo.title, x, y+214)
-  })
-  if (sheet.text) {
-    ctx.font = 'bold 22px serif'; ctx.fillStyle = '#493d2c'
-    ctx.fillText('观察笔记 · ' + sheet.text.title, 50, box.textY+9)
-    ctx.font = '22px sans-serif'
-    box.textLines.forEach(function (line,i) { ctx.fillText(line,62,box.textY+48+i*32) })
+  if (box.notes && box.notes.length) {
+    let noteY = box.textY
+    box.notes.forEach(function (note) {
+      ctx.font = 'bold 22px serif'; ctx.fillStyle = '#493d2c'
+      ctx.fillText('观察笔记 · ' + note.title, 50, noteY + 9)
+      ctx.textAlign = 'left'; ctx.font = '22px sans-serif'
+      note.lines.forEach(function (line,i) { ctx.fillText(line,62,noteY+48+i*32) })
+      noteY += 34 + note.lines.length * 32 + 18
+    })
   }
   ctx.textAlign = 'center'; ctx.fillStyle = '#8b7658'; ctx.font = '15px sans-serif'
   ctx.fillText('补充照片与文字不改变原完成日期，也不改变站点状态。', WIDTH/2,box.height-65)

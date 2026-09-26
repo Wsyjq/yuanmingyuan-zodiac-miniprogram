@@ -60,7 +60,7 @@ test('all photos and complete long/multiline notes are retained across bounded s
   ])
   const model = renderer.buildModel(s), sheets = renderer.buildSheets(model)
   assert.deepEqual(sheets.flatMap(x=>x.photos.map(p=>p.id)), model.photos.map(p=>p.id))
-  for(const n of model.texts) assert.equal(sheets.filter(s=>s.text&&s.text.id===n.id).map(s=>s.text.text).join(''),n.text)
+  for(const n of model.texts) assert.equal(sheets.flatMap(s=>s.texts||[]).filter(t=>t.id===n.id).map(t=>t.text).join(''),n.text)
   for(const sheet of sheets) {
     assert.ok(sheet.photos.length <= 4)
     assert.ok(renderer.measure(fakeCanvas().getContext('2d'),sheet).height < 2200)
@@ -77,7 +77,7 @@ test('renderer draws supplied player photos, truthful labels, signature and orig
   assert.deepEqual(canvas.drawing,['/saved/p1.jpg'])
   assert.ok(canvas.words.includes('署名：考察者甲'))
   assert.ok(canvas.words.includes('完成日期：2026 年 9 月 25 日'))
-  assert.ok(canvas.words.includes('遗址线稿 · 示意底图'))
+  assert.doesNotMatch(canvas.words.join(''), /遗址线稿/)
   assert.ok(canvas.words.includes('本次跳过'))
   assert.equal(/第\s*123\s*版|密码|日期卡/.test(canvas.words.join('')),false)
   assert.deepEqual(result.missingPhotos,[])
