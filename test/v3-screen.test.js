@@ -83,7 +83,7 @@ test('review only offers unlocked next page or resume, with no repeat submission
   const view = buildScreen(run)
   assert.equal(view.review, true)
   assert.equal(view.play.readOnly, true)
-  assert.equal(view.primaryAction, 'resume')
+  assert.equal(view.primaryAction, 'review-next')
   assert.equal(view.showSkip, false)
   assert.match(view.completionHint, /跳过/)
   const solved = buildScreen(Object.assign({}, run, { puzzles: { 'quiz-lantern': 'assisted' } }))
