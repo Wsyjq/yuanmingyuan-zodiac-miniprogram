@@ -4,7 +4,6 @@
     <view wx:for="{{screen.prop.items}}" wx:key="what" class="prop-item">
       <text class="prop-what">{{item.what}}</text>
       <text wx:for="{{item.steps}}" wx:for-item="step" wx:key="index" class="prop-step">{{index + 1}}. {{step}}</text>
-      <text wx:if="{{item.returnWhen}}" class="prop-note">{{item.returnWhen}}</text>
     </view>
   </view>
   <view class="puzzle-card question-card">
