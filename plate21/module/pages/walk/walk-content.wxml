@@ -1,6 +1,7 @@
     <view class="paper">
       <view class="eyebrow">{{screen.siteTitle || '西洋楼现场考察档案'}} · {{screen.stageLabel}}</view>
       <view class="title">{{screen.title || '第二十一图'}}<text class="seal">考察</text></view>
+      <view wx:if="{{screen.terms.length}}" class="terms terms-inline"><text class="terms-label">本页史料</text><button wx:for="{{screen.terms}}" wx:key="key" class="chip" data-key="{{item.key}}" bindtap="onOpenCard">{{item.label}}</button></view>
       <view wx:if="{{review}}" class="notice review-notice"><button class="review-resume" bindtap="onResume">回到当前进度</button></view>
       <view wx:if="{{screen.kind === 'nav'}}" class="route-card">
         <text class="eyebrow">前往下一站</text><view class="route-destination">{{screen.siteTitle}}</view>
@@ -16,12 +17,12 @@
           <text wx:if="{{item.returnWhen}}" class="prop-note">{{item.returnWhen}}</text>
         </view>
       </view>
-      <text wx:if="{{screen.sectionTitle}}" class="caption">{{screen.sectionTitle}}</text>
+      <text wx:if="{{screen.sectionTitle}}" class="section-tag">{{screen.sectionTitle}}</text>
       <view wx:if="{{screen.interaction.position === 'before'}}"><include src="walk-interaction.wxml" /></view>
       <view class="narrative"><text wx:for="{{narrative}}" wx:for-item="paragraph" wx:key="index" class="paragraph"><text wx:for="{{paragraph}}" wx:key="index" class="{{item.key ? 'history-link' : ''}}" data-key="{{item.key}}" bindtap="onOpenCard">{{item.text}}</text></text></view>
       <image wx:if="{{screen.portrait}}" src="{{screen.portrait}}" mode="widthFix" class="illustration" data-src="{{screen.portrait}}" bindtap="onPreview"/>
       <image wx:if="{{screen.teacher}}" src="{{screen.teacher}}" mode="widthFix" class="illustration"/>
-      <view wx:if="{{screen.terms.length}}" class="terms"><button wx:for="{{screen.terms}}" wx:key="key" class="chip" data-key="{{item.key}}" bindtap="onOpenCard">史料 · {{item.label}}</button></view>
+      
       <view wx:if="{{screen.interaction && screen.interaction.position !== 'before'}}"><include src="walk-interaction.wxml" /></view>
       <view wx:if="{{pageId === 'FN1'}}" class="activity"><view class="subheading">这一次，我留下了</view><view class="photo-strip"><image wx:for="{{records}}" wx:key="id" wx:if="{{item.kind === 'photo'}}" src="{{item.filePath}}" mode="aspectFill" data-src="{{item.filePath}}" bindtap="onPreview"/></view><text wx:if="{{!records.length}}" class="caption">还没有照片或文字记录。完成署名后，也可以在个人作品中补录。</text><text wx:for="{{records}}" wx:key="id" wx:if="{{item.kind !== 'photo'}}" class="paragraph">{{item.text}}</text></view>
       <view wx:if="{{pageId === 'FN4'}}" class="activity"><button wx:if="{{completed}}" class="secondary" bindtap="onOpenBonus" disabled="{{busy}}">直接进入彩蛋</button><label>绘制者署名</label><text class="caption">绘制者：{{screen.signature.name}}
@@ -32,13 +33,13 @@
         <view wx:for="{{relayItems}}" wx:key="id" class="record"><text class="caption">{{item.from}}</text><image wx:if="{{item.kind === 'photo' && item.url}}" src="{{item.url}}" mode="widthFix" data-src="{{item.url}}" bindtap="onPreview"/><text>{{item.text}}</text></view><button class="text-button" bindtap="loadRelay">重新读取</button>
       </view>
       <view wx:if="{{pageId === 'LT7'}}" class="activity"><view class="subheading">给后来者，也给自己</view>
-        <view class="row"><button class="chip" data-kind="text" bindtap="onRelayKind">一句话</button><button class="chip" data-kind="photo" bindtap="onRelayKind">一张照片</button><button class="chip" data-kind="wish" bindtap="onRelayKind">一个心愿</button></view>
+        <view class="row relay-kinds"><button class="chip" data-kind="text" bindtap="onRelayKind">一句话</button><button class="chip" data-kind="photo" bindtap="onRelayKind">一张照片</button><button class="chip" data-kind="wish" bindtap="onRelayKind">一个心愿</button></view>
         <text class="caption">当前：{{ui.relayKind === 'photo' ? '照片' : ui.relayKind === 'wish' ? '心愿' : '文字'}}</text>
         <view wx:if="{{ui.relayKind === 'photo'}}"><image wx:if="{{ui.relayPath}}" src="{{ui.relayPath}}" mode="aspectFit" class="relay-photo"/><button class="secondary" bindtap="onRelayPhoto">{{ui.relayPath ? '替换照片' : '选择照片'}}</button></view>
         <textarea data-key="relayText" value="{{ui.relayText}}" maxlength="500" placeholder="写下想留住的观察或心愿…" placeholder-class="ph-block" bindinput="onInput"/>
         <button class="secondary" bindtap="onSaveRelay" disabled="{{busy}}">仅私人保存</button><text wx:if="{{ui.relaySaved}}" class="success">私人记录已保存在这份考察档案里</text>
         <checkbox-group bindchange="onRelayConsent"><label class="check-label"><checkbox value="public" checked="{{ui.consent}}" color="#716743"/>我同意将这份内容提交给官方，用于向其他探寻者公开展示。</label></checkbox-group>
-        <button class="secondary" bindtap="onSubmitRelay" disabled="{{busy || !ui.consent}}">公开投稿</button><button class="text-button" bindtap="onNewRelay">另写一份</button>
+        <button class="secondary" bindtap="onSubmitRelay" disabled="{{busy || !ui.consent}}">公开投稿</button><button class="text-button" bindtap="onNewRelay">重写</button>
         <view wx:for="{{contributions}}" wx:key="id" class="record"><text>{{item.label}}</text><text wx:if="{{item.reason}}" class="caption">{{item.reason}}</text><view class="row"><button class="text-button" data-id="{{item.id}}" bindtap="onRefreshContribution">检查状态</button><button wx:if="{{item.receiptId && item.status !== 'withdrawn'}}" class="text-button" data-id="{{item.id}}" bindtap="onWithdraw">撤回公开投稿</button></view></view>
       </view>
       <view class="page-end">· {{screen.siteTitle || '第廿一图'}} ·</view>

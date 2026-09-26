@@ -8,8 +8,7 @@
     </view>
   </view>
   <view class="puzzle-card question-card">
-    <view class="card-label">回答</view>
-    <view wx:if="{{screen.interaction.title}}" class="question-title">{{screen.interaction.title}}</view>
+    <view class="card-label">回答{{screen.interaction.title ? ' · ' + screen.interaction.title : ''}}</view>
     <text wx:if="{{screen.task && screen.task.instruction}}" class="question-hint">{{screen.task.instruction}}</text>
     <view class="interaction-copy"><text wx:for="{{interactionText}}" wx:for-item="paragraph" wx:key="index" class="paragraph"><text wx:for="{{paragraph}}" wx:key="index" class="{{item.key ? 'history-link' : ''}}" data-key="{{item.key}}" bindtap="onOpenCard">{{item.text}}</text></text></view>
   <block wx:if="{{screen.screenPart === 'activity'}}">
