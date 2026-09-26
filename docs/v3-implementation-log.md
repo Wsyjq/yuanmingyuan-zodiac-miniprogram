@@ -200,6 +200,12 @@ npm test 159 项全通过。本地提交，未推送 GitHub，微信平台未更
 
 npm test 162 项全通过。本地提交，未推送 GitHub，微信平台未更新。Pollux 当前不可用，记录于此。
 
+## 谜题页结构重构：道具卡 / 问题卡两段式（2026-09-26）
+
+按用户确认的方案重构实体道具与解谜页结构（此前删句子未解决结构杂乱）：原一屏含三层标题（页面标题/任务卡标题/模块标题）与两套指令（任务说明/道具指令/模块提示）、三种混杂边框。现统一为“实体道具卡 → 问题卡”两段流线：道具卡为唯一指令来源（卡标签用道具动作短语，步骤编号 ①②，归还提示为尾注小字）；问题卡含小标签“回答”、问题标题、任务提示小字、谜面与全部控件；主按钮与跳过留在模块尾部。任务卡层删除（任务即页面标题，task.instruction 降级为问题卡内提示小字），walk-content 的道具卡同步同款结构与样式，边框统一为一种卡框。
+
+实现面：walk-interaction.wxml / walk-content.wxml 模板重构、walk.wxss 新增 .puzzle-card/.card-label/.question-title/.question-hint/.prop-step/.prop-note 统一样式、v3-ui 结构锚点断言同步（question-card）。13 个谜题页全部套用，剧情/导航/来信页不变。npm test 162 项全通过；模拟器 DOM 实测两卡布局正常。本地提交，未推送 GitHub，微信平台未更新。Pollux 当前不可用，记录于此。
+
 ## 修复拖放槽位被页面样式压掉定位（2026-09-26）
 
 用户截图确认大水法拖动的“池中/环绕中央”槽位偏移（即此前反馈的“拖动改毁了”）：根因是为按钮箭头加的 .p21-page button{position:relative} 穿透进 fountain-puzzle 组件，且特异性（类+标签）压过组件的 .drop-zone{position:absolute}，使两个拖放槽掉回文档流、堆在场景图下方。修复：移除全局 button 的 position:relative（入口页按钮规则保留，因其无组件），箭头锚点改为仅 .primary 等具体按钮类持有；并把组件槽位选择器加固为 .fountain-game .drop-zone，防止再次被页面样式覆盖。

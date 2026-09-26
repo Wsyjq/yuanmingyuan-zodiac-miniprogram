@@ -191,7 +191,7 @@ test('gameplay instructions, controls and submit button render inside one distin
     const flatten = node => node.type === 'text' ? node.value || node.text || '' : (node.children || []).map(flatten).join('')
     const module = find(ast, 'interaction-module')
     assert.ok(module, id)
-    assert.ok(find(module.children, 'interaction-heading'), id)
+    assert.ok(find(module.children, 'question-card'), id)
     assert.ok(find(module.children, 'primary'), id + ' submit is outside module')
     const narrative = find(ast, 'narrative')
     assert.doesNotMatch(flatten(narrative), /互动玩法｜/)

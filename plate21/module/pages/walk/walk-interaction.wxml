@@ -1,13 +1,17 @@
 <view class="interaction-module">
-  <view wx:if="{{screen.task}}" class="task-summary"><text class="task-title">{{screen.task.title}}</text><text class="caption">{{screen.task.instruction}}</text></view>
-  <view class="interaction-heading">{{screen.interaction.title}}</view>
-      <view wx:if="{{screen.prop.items.length}}" class="prop">
-        <view class="prop-title">{{screen.prop.title || '实体道具'}}</view>
-        <view wx:for="{{screen.prop.items}}" wx:key="what" class="prop-item">
-          <text class="prop-what">取出 · {{item.what}}</text><text wx:for="{{item.steps}}" wx:for-item="step" wx:key="index">{{step}}</text><text class="caption">{{item.returnWhen}}</text>
-        </view>
-      </view>
-  <view class="interaction-copy"><text wx:for="{{interactionText}}" wx:for-item="paragraph" wx:key="index" class="paragraph"><text wx:for="{{paragraph}}" wx:key="index" class="{{item.key ? 'history-link' : ''}}" data-key="{{item.key}}" bindtap="onOpenCard">{{item.text}}</text></text></view>
+  <view wx:if="{{screen.prop.items.length}}" class="puzzle-card prop-card">
+    <view class="card-label">{{screen.prop.title || '实体道具'}}</view>
+    <view wx:for="{{screen.prop.items}}" wx:key="what" class="prop-item">
+      <text class="prop-what">{{item.what}}</text>
+      <text wx:for="{{item.steps}}" wx:for-item="step" wx:key="index" class="prop-step">{{index + 1}}. {{step}}</text>
+      <text wx:if="{{item.returnWhen}}" class="prop-note">{{item.returnWhen}}</text>
+    </view>
+  </view>
+  <view class="puzzle-card question-card">
+    <view class="card-label">回答</view>
+    <view wx:if="{{screen.interaction.title}}" class="question-title">{{screen.interaction.title}}</view>
+    <text wx:if="{{screen.task && screen.task.instruction}}" class="question-hint">{{screen.task.instruction}}</text>
+    <view class="interaction-copy"><text wx:for="{{interactionText}}" wx:for-item="paragraph" wx:key="index" class="paragraph"><text wx:for="{{paragraph}}" wx:key="index" class="{{item.key ? 'history-link' : ''}}" data-key="{{item.key}}" bindtap="onOpenCard">{{item.text}}</text></text></view>
   <block wx:if="{{screen.screenPart === 'activity'}}">
       <view wx:if="{{screen.choices.length && playId !== 'quiz-pattern'}}" class="choices"><button wx:for="{{screen.choices}}" wx:key="id" class="choice {{item.selected ? 'selected' : ''}}" data-id="{{item.id}}" bindtap="onChoice" disabled="{{review}}">{{item.label}}</button></view>
       <view wx:if="{{playId === 'quiz-envelope'}}" class="input-group"><label>拼出的三个字</label><input data-key="text" value="{{ui.text}}" maxlength="20" placeholder="输入地点名称" placeholder-class="ph-line" bindinput="onInput" disabled="{{review}}"/></view>
@@ -38,6 +42,7 @@
         </view><slider min="0" max="100" value="{{ui.fountainProgress || 0}}" activeColor="#627d77" bindchange="onFade"/><view class="row caption"><text>旧时构件与水流</text><text>眼前遗址</text></view>
       </view>
   </block>
+  </view>
       <view wx:if="{{hint && screen.play}}" class="notice">{{hint}}</view><button wx:if="{{hasHint && !review && screen.play}}" class="text-button" bindtap="onHint">给我一点提示</button>
       <view wx:if="{{ui.again}}" class="error" role="alert">{{ui.feedback || '再观察一下，或选择跳过。'}}</view>
   <button wx:if="{{canExplain && !review && screen.play}}" class="text-button" bindtap="onExplain">想先看解读</button>
