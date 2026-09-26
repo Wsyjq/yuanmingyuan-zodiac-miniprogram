@@ -505,3 +505,26 @@ test('listening preference gates auto narration and only current-page audio can 
   assert.equal(h.page.data.listenKey, '')
   await h.close()
 })
+
+test('inputs drop invisible characters and the envelope answer keeps its ten character limit', async () => {
+  const h = await harness()
+  await h.arrange('X2')
+  while (h.page.data.screen.screenPart !== 'activity') await h.invoke('onPrimary')
+  await h.invoke('onInput', event({ key: 'text' }, '黄\u200B花\u202E阵'))
+  assert.equal(h.page.ui.text, '黄花阵')
+  await h.invoke('onInput', event({ key: 'text' }, '错误地点名称超过十个字符'))
+  await h.invoke('onPrimary')
+  assert.ok(String(h.page.ui.feedback || '').includes('最多 10 字'))
+  await h.invoke('onInput', event({ key: 'text' }, '黄花阵'))
+  await h.invoke('onPrimary')
+  assert.equal(h.session.getRun().puzzles['quiz-envelope'], 'solved')
+  await h.close()
+})
+
+test('saved signature keeps cleaned plain text and blank names stay 无名氏', async () => {
+  const h = await harness()
+  await h.arrange('FN4')
+  await h.session.sign('考察\u200B者甲')
+  assert.equal(h.session.getRun().name, '考察者甲')
+  await h.close()
+})

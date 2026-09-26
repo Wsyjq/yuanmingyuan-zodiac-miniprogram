@@ -26,6 +26,7 @@ const glossary = require('../../flow/glossary')
 const navigation = require('../../host/navigation')
 const navModel = require('../../capabilities/map/nav-model')
 const taskGuide = require('../../flow/task-guide')
+const guard = require('../../utils/input-guard')
 const STATUS = { draft: '草稿', private: '仅自己可见', unavailable: '暂时无法分享，私人记录已保留', failed: '提交未确认，可重试', submitted: '已收到投稿，等待处理', published: '已公开', rejected: '未获公开', withdrawn: '已撤回' }
 function clone(value) { return JSON.parse(JSON.stringify(value)) }
 function ds(e, key) { return e.currentTarget.dataset[key] }
@@ -181,7 +182,13 @@ Page({
   onUnload() { clearTimeout(this._scrollTimer); this.onHide(); this._active = false; settings.unsubscribe(this._settings) },
   onPageScroll(e) { if (this.data.playId === 'quiz-hour') this.onScroll({ detail: e }) },
   onScroll(e) { this.cancelAuto(); this.ui.scrollTop = Math.max(0, Number(e.detail.scrollTop) || 0); clearTimeout(this._scrollTimer); this._scrollTimer = setTimeout(() => this.persist().catch(() => {}), 250) },
-  onInput(e) { if (this.data.review) return; this.draft({ [ds(e, 'key')]: e.detail.value, again: false }, false); this.setData({ 'ui.again': false }) },
+  onInput(e) {
+    if (this.data.review) return
+    const key = ds(e, 'key')
+    // 输入过程只做无损清理；长度上限由 maxlength 承担，超限在保存/确认时显式提示。
+    const value = guard.cleanLive(e.detail.value, { multiline: key === 'note' || key === 'relayText' })
+    this.draft({ [key]: value, again: false }, false); this.setData({ 'ui.again': false })
+  },
   onChoice(e) { if (!this.data.review) this.draft({ choice: ds(e, 'id'), optionId: ds(e, 'id'), again: false }) },
   onSpot(e) { if (this.data.review) return; this.draft({ spot: ds(e, 'id') }) },
   onHint() { if (this.data.review) return; this.draft({ hint: true }); session.viewHint(this.data.playId, 1) },
@@ -326,9 +333,10 @@ Page({
     })
   },
   async saveObservation() {
-    const text = String(this.ui.note || '').trim()
-    if (!text) return
-    await session.saveRecord({ purpose: 'field', kind: 'text', siteId: 'maze', text, status: 'private' }, this.sessionId)
+    const guarded = guard.clampText(this.ui.note, { max: guard.LIMITS.text, multiline: true })
+    if (guarded.truncated) throw new Error(guard.truncateNotice('观察笔记', guard.LIMITS.text))
+    if (!guarded.text) return
+    await session.saveRecord({ purpose: 'field', kind: 'text', siteId: 'maze', text: guarded.text, status: 'private' }, this.sessionId)
     this.ui.note = ''; this.ui.again = false; await this.persist()
   },
   onConfirmDial(e) { if (this.data.review) return; this.draft({ confirmed: e.detail.value.length > 0 }) },
@@ -375,9 +383,11 @@ Page({
   async saveRelayDraft(status) {
     const kind = this.ui.relayKind || 'text'
     if (kind === 'photo' && !this.ui.relayPath) throw new Error('请先选择一张照片')
-    if (kind !== 'photo' && !String(this.ui.relayText || '').trim()) throw new Error('请先写下内容')
+    const guarded = kind === 'photo' ? { text: '', truncated: false } : guard.clampText(this.ui.relayText, { max: guard.LIMITS.text, multiline: true })
+    if (guarded.truncated) throw new Error(guard.truncateNotice('接力文字', guard.LIMITS.text))
+    if (kind !== 'photo' && !guarded.text) throw new Error('请先写下内容')
     const record = await session.saveRecord({ id: this.ui.relayRecordId || undefined, purpose: 'relay', kind,
-      text: this.ui.relayText || '', filePath: this.ui.relayPath || '', status }, this.sessionId)
+      text: guarded.text, filePath: this.ui.relayPath || '', status }, this.sessionId)
     this.ui.relayRecordId = record.id; this.ui.relaySaved = true; await this.persist(); return record
   },
   onRelayPhoto() {

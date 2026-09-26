@@ -4,6 +4,7 @@ const session = require('../../store/session')
 const gameEntry = require('../../utils/game-entry')
 const bridge = require('../../host/bridge')
 const renderer = require('../../utils/report-renderer')
+const guard = require('../../utils/input-guard')
 const { normalizePhoto } = require('../../utils/photo-pipeline')
 const WALK = '/plate21/module/pages/walk/walk'
 const SITE_OPTIONS = [{ id: '', label: '现场记录（不指定地点）' }].concat(renderer.SITES)
@@ -168,7 +169,9 @@ Page({
     const index = Number(event.detail.value)
     this.update({ siteIndex: Number.isInteger(index) && SITE_OPTIONS[index] ? index : 0 })
   },
-  onTextInput: function (event) { this.update({ draftText: event.detail.value, recordError: '' }) },
+  onTextInput: function (event) {
+    this.update({ draftText: guard.cleanLive(event.detail.value, { multiline: true }), recordError: '' })
+  },
   onEditText: function (event) {
     const record = this.data.model.texts.find(function (item) { return item.id === event.currentTarget.dataset.id })
     if (!record) return
@@ -180,12 +183,14 @@ Page({
   recordLocked: function () { return this.data.busy || this.data.saving || this.data.generating || !this.data.model },
   onSaveText: async function () {
     if (this.recordLocked()) return
-    const text = String(this.data.draftText || '').trim()
+    const guarded = guard.clampText(this.data.draftText, { max: guard.LIMITS.text, multiline: true })
+    if (guarded.truncated) { this.update({ recordError: guard.truncateNotice('观察记录', guard.LIMITS.text) }); return }
+    const text = guarded.text
     if (!text) { this.update({ recordError: '先写下一点观察，再保存这条记录。' }); return }
     this.update({ busy: true, recordError: '' })
     try {
       await session.saveRecord({ id: this.data.editingTextId || undefined, kind: 'text', purpose: 'field',
-        text: text.slice(0, 500), siteId: SITE_OPTIONS[this.data.siteIndex].id, status: 'private' }, this._sessionId)
+        text: text, siteId: SITE_OPTIONS[this.data.siteIndex].id, status: 'private' }, this._sessionId)
       this.update({ editingTextId: '', draftText: '' })
       this.refresh(false)
     } catch (error) { this.update({ recordError: '文字记录没有保存成功，原内容仍保留，请重试。' }) }

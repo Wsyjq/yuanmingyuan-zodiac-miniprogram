@@ -482,3 +482,14 @@ test('explicit bonus entry works on completion day, survives reload and preserve
   assert.equal(h.session.getArchive(original.sessionId).run.pageId, 'LT2')
   assert.equal(h.session.getArchive(original.sessionId).run.completedAt, original.run.completedAt)
 })
+
+test('saved record text is cleaned and capped at the board limit', async () => {
+  const { session } = harness()
+  await session.init({})
+  const record = await session.saveRecord({ kind: 'text', purpose: 'field', text: '观\u200B察\n\n\n\n记录' + '长'.repeat(520) })
+  assert.equal(record.text.includes('\u200B'), false)
+  assert.equal(record.text.includes('\n\n\n'), false)
+  assert.equal(Array.from(record.text).length, 500)
+  const short = await session.saveRecord({ kind: 'text', purpose: 'field', text: '  黄花阵  ' })
+  assert.equal(short.text, '黄花阵')
+})

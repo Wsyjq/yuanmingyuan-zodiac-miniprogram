@@ -5,6 +5,7 @@ const pages = require('../flow/pages')
 const bridge = require('../host/bridge')
 const local = require('../adapters/local-adapter')
 const contract = require('../contracts/adapter-api')
+const guard = require('../utils/input-guard')
 
 let envelope = null
 let storageKey = ''
@@ -313,7 +314,7 @@ function sign(name) {
     if (!snap.run.completedAt) {
       const time = await trustedTime(snap.sessionId)
       check()
-      snap.run.name = String(name || '').trim().slice(0, 40) || '无名氏'
+      snap.run.name = guard.sanitizeName(name) || '无名氏'
       snap.run.signedAt = now()
       snap.run.completedAt = time.now || snap.run.signedAt
       snap.run.completedTimeSource = time.source || 'device_unverified'
@@ -426,7 +427,8 @@ function saveRecord(input, sessionId) {
       createdAt: previous.createdAt || value.createdAt || now(), updatedAt: now(),
       status: value.status || previous.status || 'private' })
     if (contract.RECORD_STATUSES.indexOf(record.status) < 0) throw fault('INVALID_RECORD_STATUS', '私人记录只能是草稿或已保存')
-    record.text = String(record.text || '').slice(0, contract.BOARD_MESSAGE_MAX_LEN)
+    // 非 UI 调用的兜底清洗与上限；页面侧已按 guard 显式提示超限，不依赖这里的静默收紧。
+    record.text = guard.clampText(record.text, { max: contract.BOARD_MESSAGE_MAX_LEN, multiline: true }).text
     if (index < 0) target.records.push(record)
     else target.records[index] = record
     return record
