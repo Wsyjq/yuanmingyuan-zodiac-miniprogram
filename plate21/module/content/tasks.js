@@ -8,7 +8,7 @@ module.exports = {
   },
   "listen-nfc": {
     "title": "听一听谐奇趣的声音",
-    "instruction": "留意声景中的水声与音乐；已听过可手动确认。",
+    "instruction": "留意声景中的水声与音乐。",
     "feedback": "可以直接播放声景；已听过请确认，无法收听也可以跳过。",
     "hint": ""
   },
@@ -26,7 +26,7 @@ module.exports = {
   },
   "prop-flip": {
     "title": "翻看实体黄花阵图",
-    "instruction": "翻到背面后点确认，再读名字背后的故事。",
+    "instruction": "翻到背面，读名字背后的故事。",
     "feedback": "请先翻到实体图背面，再确认。",
     "hint": ""
   },

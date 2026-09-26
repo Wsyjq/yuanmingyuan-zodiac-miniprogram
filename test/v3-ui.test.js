@@ -129,7 +129,7 @@ test('restored original prose actually reaches WXML instead of only remaining in
     ['DS2', {}, ['大水法中央原有一只铜制梅花鹿', '鹿角喷水', '大型卷尾铜兽']],
     ['FN1', {}, ['密集交错的线条构成明暗']],
     ['FN2', {}, ['如果你看到这里', '等待被后来者完成']],
-    ['X2', {}, ['日记和信封会指引你第一站的方向', '信封的封口处和信的背面都有一半的字']]
+    ['X2', {}, ['日记和信封会指引你第一站的方向']]
   ]
   for (const [id, state, phrases] of cases) {
     const result = await render(id, Object.assign({ screenPart: 'activity' }, state))

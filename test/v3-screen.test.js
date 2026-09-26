@@ -59,7 +59,7 @@ test('physical flip needs explicit saved/UI confirmation; skipped status never r
   const skipped = runAt('H3', { puzzles: { 'prop-flip': 'skipped' } })
   const before = buildScreen(skipped)
   assert.deepEqual(before.lines, [])
-  assert.deepEqual(before.interaction.lines, ['翻面揭晓答案'])
+  assert.deepEqual(before.interaction.lines, [])
   assert.doesNotMatch(before.lines.join(''), /黄色彩绸/)
   assert.equal(before.holdReveal, true)
   assert.equal(before.primaryAction, 'flip')

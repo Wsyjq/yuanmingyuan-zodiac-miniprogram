@@ -364,7 +364,8 @@
       "destination": {
         "page": "X2",
         "field": "interaction"
-      }
+      },
+      "displayText": ""
     },
     {
       "paragraph": 174,
@@ -463,7 +464,8 @@
       "destination": {
         "page": "H3",
         "field": "interaction"
-      }
+      },
+      "displayText": ""
     },
     {
       "paragraph": 187,
@@ -1020,7 +1022,7 @@
         "page": "DS1",
         "field": "interaction"
       },
-      "displayText": "画中还缺少鹿与猎犬。请对照铜版图，将它们拖回水池中的位置。"
+      "displayText": "画中还缺少鹿与猎犬。"
     },
     {
       "paragraph": 260,
