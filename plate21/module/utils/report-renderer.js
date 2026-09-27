@@ -24,7 +24,10 @@ function isReferencePath(path) {
   return /^(?:\/?assets\/|\/?plate21\/|data:)/i.test(String(path || ''))
 }
 function buildModel(snapshot) {
-  return gate.maskDeep(buildModelRaw(snapshot), snapshot && snapshot.run)
+  const raw = buildModelRaw(snapshot)
+  const model = gate.maskDeep(raw, snapshot && snapshot.run)
+  model.name = raw.name
+  return model
 }
 function buildModelRaw(snapshot) {
   const source = snapshot || {}, run = source.run || {}

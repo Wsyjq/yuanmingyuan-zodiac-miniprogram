@@ -263,6 +263,8 @@ function buildScreen(run, ui) {
     model.title = '这一页尚未解锁'; model.teacher = ''; model.relay.records = [];
     model.primary = '返回当前进度'; model.primaryAction = 'resume'; model.showSkip = false
   }
-  return gate.maskDeep(model, run)
+  const masked = gate.maskDeep(model, run)
+  if (model.signature) masked.signature = model.signature
+  return masked
 }
 module.exports = { buildScreen, screen: buildScreen, bodyLines, beijingDate, PIECES, SLOTS, BEASTS, PATTERN_FIGURES, SPOTS }
