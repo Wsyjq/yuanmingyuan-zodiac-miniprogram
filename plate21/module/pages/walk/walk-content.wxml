@@ -1,6 +1,6 @@
     <view class="paper">
       <view class="eyebrow">{{screen.siteTitle || '西洋楼现场考察档案'}} · {{screen.stageLabel}}</view>
-      <view class="title">{{screen.title || '第二十一图'}}<text class="seal">考察</text></view>
+      <view class="title">{{screen.title || '第二十一图'}}</view>
       <view wx:if="{{screen.terms.length}}" class="terms terms-inline"><text class="terms-label">本页史料</text><button wx:for="{{screen.terms}}" wx:key="key" class="chip" data-key="{{item.key}}" bindtap="onOpenCard">{{item.label}}</button></view>
       <view wx:if="{{screen.kind === 'nav'}}" class="route-card">
         <text class="eyebrow">前往下一站</text><view class="route-destination">{{screen.siteTitle}}</view>
