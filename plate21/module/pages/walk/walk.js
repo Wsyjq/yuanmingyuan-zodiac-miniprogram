@@ -358,7 +358,7 @@ Page({
     if (this._nfcStarting || this._nfc) return
     this._nfcStarting = true
     this._nfc = nfc.start({ onTag: () => { const player = this.selectComponent('#soundscape'); if (player && this.data.pageVisible) player.onReplay() },
-      onStatus: (status) => this.setData({ nfcStatus: status === 'unsupported' ? '此设备未启用贴片读取，可直接听。' : '贴片未读到，可直接听。' }) })
+      onStatus: () => this.setData({ nfcStatus: '' }) })
     this._nfcStarting = false
   },
   stopNfc() { if (this._nfc) this._nfc.stop(); this._nfc = null },
