@@ -152,3 +152,5 @@
 .ac-wrap{justify-content:center}
 .ac-btn{background:transparent;border:0;color:#3a3126;font-family:sans-serif;font-weight:600;padding:12rpx 10rpx;min-height:0}
 .ac-compact{justify-content:center}
+
+.ac-play-triangle{width:0;height:0;margin-left:4rpx;border-left:16rpx solid #3a3126;border-top:10rpx solid transparent;border-bottom:10rpx solid transparent}
