@@ -150,5 +150,5 @@
 .ac-segment { font-size: 22rpx; color: #4a402e; }
 
 .ac-wrap{justify-content:center}
-.ac-btn{background:transparent;border:1rpx solid #a8946f;border-radius:6rpx;color:#3a3126;font-family:sans-serif;font-weight:600;padding:12rpx 22rpx;min-height:0}
+.ac-btn{background:transparent;border:0;color:#3a3126;font-family:sans-serif;font-weight:600;padding:12rpx 10rpx;min-height:0}
 .ac-compact{justify-content:center}
