@@ -1,5 +1,5 @@
-    <view class="{{screen.kind === 'read' && !screen.interaction ? 'read-sheet' : 'paper'}}">
-      <block wx:if="{{screen.kind === 'read' && !screen.interaction}}">
+    <view class="{{(screen.kind === 'read' || screen.kind === 'puzzle') && !screen.interaction && !screen.play ? 'read-sheet' : 'paper'}}">
+      <block wx:if="{{(screen.kind === 'read' || screen.kind === 'puzzle') && !screen.interaction && !screen.play}}">
         <text class="read-kicker">{{screen.siteTitle || '西洋楼现场考察档案'}} · {{screen.stageLabel}}</text>
         <view class="read-title-row"><text class="read-title">{{screen.title || '第二十一图'}}</text><text class="seal">{{pageId === 'P1' ? '存疑' : '考察'}}</text></view>
         <view wx:if="{{review}}" class="notice">重读这一页<button class="text-button" bindtap="onResume">回到当前进度 →</button></view>
@@ -24,7 +24,7 @@
         <text class="eyebrow">前往下一站</text><view class="route-destination">{{screen.siteTitle}}</view>
         <text>{{screen.nav.instruction || '请对照实体地图与现场标识步行。'}}到达后，点击“我到达了”。</text>
         <view class="route-strip"><text wx:for="{{rows}}" wx:key="id" wx:if="{{index > 0 && index < 9}}" class="route-stop {{item.current ? 'current' : ''}}">{{item.title}}</text></view>
-
+        <view class="interaction-actions"><button class="primary" bindtap="onPrimary" disabled="{{busy}}" loading="{{busy}}">{{screen.primary || '我到达了'}}</button><button wx:if="{{screen.showSkip && !review}}" class="text-button skip" bindtap="onSkip" disabled="{{busy}}">{{screen.skipLabel || '这次不去'}}</button></view>
       </view>
       <view wx:if="{{screen.prop.items.length && !screen.interaction && !screen.separateStory}}" class="prop">
         <view class="prop-title">{{screen.prop.title || '实体道具'}}</view>

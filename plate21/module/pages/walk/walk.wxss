@@ -190,6 +190,11 @@
 .read-rule{position:absolute;left:342rpx;top:332rpx;width:187rpx;height:2rpx;background:#a45442}
 .read-card .paragraph{font-size:31rpx;font-weight:500;line-height:53rpx;letter-spacing:1rpx}
 .puzzle-kicker{display:block;font-size:23rpx;font-weight:500;line-height:32rpx;letter-spacing:4rpx;color:#947864}
+.puzzle-steps{margin:8rpx 0 28rpx}
+.puzzle-step{display:flex;gap:12rpx;margin:0 0 12rpx;font-size:31rpx;font-weight:500;line-height:53rpx;color:#43362d}
+.puzzle-step-index{flex-shrink:0;color:#302f29}
+.puzzle-rule{height:2rpx;margin:28rpx 0 18rpx;background:#c7b99b}
+.puzzle-explain{display:block;text-align:left;color:#43362d;font-size:31rpx;font-weight:400}
 .history-foot{display:block;margin-top:28rpx;text-align:center;font-size:12rpx;font-weight:400;line-height:23rpx;letter-spacing:4rpx;color:#947864}
 .progress-dots{position:relative;z-index:3;display:flex;justify-content:center;gap:12rpx;padding:8rpx 0}
 .progress-dot{box-sizing:border-box;width:11rpx;height:11rpx;border-radius:50%;background:transparent;border:1rpx solid #c0a88a}
