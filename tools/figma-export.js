@@ -58,25 +58,31 @@ function loadToken () {
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
+// Figma 对 /v1/images/ 之类端点限流较紧，重试次数和退避要给足；429 时 lastStatus 才是有用信息。
 async function apiGet (pathname, token, asBuffer) {
   let lastErr = null
-  for (let attempt = 1; attempt <= 4; attempt++) {
+  let lastStatus = 0
+  for (let attempt = 1; attempt <= 8; attempt++) {
     let res
     try {
       res = await fetch(API + pathname, { headers: { 'X-Figma-Token': token } })
     } catch (e) {
       lastErr = e
-      await sleep(800 * attempt)
+      await sleep(1000 * attempt)
       continue
     }
-    if (res.status === 429) { await sleep(1500 * attempt); continue }
+    lastStatus = res.status
+    if (res.status === 429 || res.status >= 500) {
+      await sleep(2000 * attempt)
+      continue
+    }
     if (!res.ok) {
       const body = await res.text()
       throw new Error('GET ' + pathname + ' -> ' + res.status + ' ' + body.slice(0, 300))
     }
     return asBuffer ? Buffer.from(await res.arrayBuffer()) : res.json()
   }
-  throw new Error('GET ' + pathname + ' failed after retries: ' + (lastErr && lastErr.message))
+  throw new Error('GET ' + pathname + ' failed after 8 attempts (last status ' + lastStatus + '): ' + (lastErr ? lastErr.message : 'rate limited'))
 }
 
 async function download (url, dest) {
@@ -208,20 +214,31 @@ function relToRoot (p) {
   return path.relative(ROOT, p).replace(/\\/g, '/')
 }
 
+// 分批渲染。单批失败只记账不中断：Figma 的 /v1/images/ 限流会让个别批次 429，不该毁掉整次导出。
 async function renderNodes (fileKey, nodeIds, scale, token, destDir) {
   const results = []
-  for (const group of chunk(nodeIds, 20)) {
+  const groups = chunk(nodeIds, 8)
+  for (let g = 0; g < groups.length; g++) {
+    const group = groups[g]
     const query = '/v1/images/' + fileKey + '?ids=' + encodeURIComponent(group.join(',')) +
       '&format=png&scale=' + scale + '&use_absolute_bounds=true'
-    const body = await apiGet(query, token, false)
+    let body = null
+    try {
+      body = await apiGet(query, token, false)
+    } catch (e) {
+      for (const id of group) results.push({ id, ok: false, error: e.message })
+      console.error('  批次 ' + (g + 1) + '/' + groups.length + ' 渲染失败：' + e.message)
+      continue
+    }
     for (const id of group) {
       const url = body.images && body.images[id]
       if (!url) { results.push({ id, ok: false, error: 'no render url' }); continue }
       const dest = path.join(destDir, id.replace(/[:/\\]/g, '_') + '@' + scale + 'x.png')
       const saved = await download(url, dest)
       results.push(Object.assign({ id, url }, saved))
-      await sleep(120)
+      await sleep(150)
     }
+    await sleep(400)
   }
   return results
 }
@@ -277,6 +294,13 @@ function writeMarkdown (dest, fileKey, node, tokens, tree, rendered, imageRefs, 
   L.push('')
   for (const p of rendered.filter(r => r.ok)) L.push('- `nodes/' + path.basename(p.dest) + '`')
   for (const p of imageFiles.filter(r => r.ok)) L.push('- `image-fills/' + path.basename(p.dest) + '`')
+  const failed = rendered.filter(r => !r.ok).concat(imageFiles.filter(r => !r.ok))
+  if (failed.length) {
+    L.push('')
+    L.push('## 未取到（' + failed.length + '，多为限流，可重跑）')
+    L.push('')
+    for (const f of failed) L.push('- ' + (f.id || f.dest) + '：' + (f.error || '?'))
+  }
   L.push('')
   fs.writeFileSync(dest, L.join('\n'))
 }
