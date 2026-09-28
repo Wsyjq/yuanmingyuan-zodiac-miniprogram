@@ -11,6 +11,7 @@ const rows=files.map(p=>{const rel=path.relative(root,p).replace(/\\/g,'/');let 
  else if(rel.includes('/dashuifa-'))source='用户提供的大水法图片，经 imagegen 制作空景与透明雕塑素材；见 docs/v3-dashuifa.md'
  else if(rel.startsWith('voice-'))source=rel.includes('dj06-')?'main 原版 DJ-06 声景':'feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md'
  else if(rel==='assets/cover.jpg')source='main 的 IMG-RUNTIME-COVER.jpg 原样移至演示主包；原授权证据保留'
+ else if(rel.startsWith('assets/figma/'))source='Figma 4x0FQff5l1vAbWt5kRpBym 的图片填充，排除画板 5:6 低保真原型重新排版；见 docs/v3-figma-ui-assets.json'
  return {path:rel,bytes:fs.statSync(p).size,sha256:crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex'),published:!ignored(rel),source}
 }).sort((a,b)=>a.path.localeCompare(b.path))
 const output={schemaVersion:1,description:'当前真实资源及工程发布排除状态；校验哈希不等同重新认定素材版权。原许可证、授权证据和来源说明保留。',resources:rows}

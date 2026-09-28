@@ -1,0 +1,30 @@
+{
+  "file": "4x0FQff5l1vAbWt5kRpBym",
+  "excludedFrame": {
+    "id": "5:6",
+    "name": "低保真原型重新排版"
+  },
+  "icons": "未导出。返回、菜单、拱门、听一听、引导不是独立组件，嵌在画板组合里；Figma Images API 返回 429。",
+  "images": [
+    {
+      "file": "paper.jpg",
+      "imageRef": "1103282a45df4e1064aa4c423a93180171e4f52f",
+      "node": "18:125 Rectangle 1"
+    },
+    {
+      "file": "paper-entry.jpg",
+      "imageRef": "ace2d7a51471079cbfc33eca7ba9f41613a3690c",
+      "node": "入场页古纸背景"
+    },
+    {
+      "file": "hills.png",
+      "imageRef": "5d2c63d3dcbfed6d2c5bc2fa3986403c53b1cb9e",
+      "node": "22:2 底部山水装饰"
+    },
+    {
+      "file": "wash.png",
+      "imageRef": "e3a41d6d76b7ac0c7c188b099c7a127e3ab60720",
+      "node": "新版画板装饰插图"
+    }
+  ]
+}

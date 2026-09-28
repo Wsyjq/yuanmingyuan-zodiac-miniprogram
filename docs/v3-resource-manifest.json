@@ -24,6 +24,34 @@
       "source": "main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json"
     },
     {
+      "path": "assets/figma/hills.png",
+      "bytes": 109653,
+      "sha256": "f680b134b5cebb3539294cc1799254948e0916feb76100b930bd7e7889b6d8e4",
+      "published": true,
+      "source": "Figma 4x0FQff5l1vAbWt5kRpBym 的图片填充，排除画板 5:6 低保真原型重新排版；见 docs/v3-figma-ui-assets.json"
+    },
+    {
+      "path": "assets/figma/paper-entry.jpg",
+      "bytes": 153592,
+      "sha256": "2898125e6f7b548f989b2e55cdbbee7359c01b525bdc4ff5faeef8dfc61069c1",
+      "published": true,
+      "source": "Figma 4x0FQff5l1vAbWt5kRpBym 的图片填充，排除画板 5:6 低保真原型重新排版；见 docs/v3-figma-ui-assets.json"
+    },
+    {
+      "path": "assets/figma/paper.jpg",
+      "bytes": 52767,
+      "sha256": "294b4a87bfdbf9eabbf014db2015bc6fb57d0c8a5f8e88a81b82627128837537",
+      "published": true,
+      "source": "Figma 4x0FQff5l1vAbWt5kRpBym 的图片填充，排除画板 5:6 低保真原型重新排版；见 docs/v3-figma-ui-assets.json"
+    },
+    {
+      "path": "assets/figma/wash.png",
+      "bytes": 190672,
+      "sha256": "a95c314109749f223a571a5bc6e694fde2e1f3e1b309a1d51143024ca3b49f7a",
+      "published": true,
+      "source": "Figma 4x0FQff5l1vAbWt5kRpBym 的图片填充，排除画板 5:6 低保真原型重新排版；见 docs/v3-figma-ui-assets.json"
+    },
+    {
       "path": "assets/sl/sl00-ganzhi.jpg",
       "bytes": 96894,
       "sha256": "c09940e70a01a68485823ae37409871171d02eef83e12354b4c3be265f52f90b",
