@@ -17,7 +17,7 @@
   border-radius: 999rpx;
   line-height: 1.5;
   font-size: 24rpx;
-  color: #4a402e;
+  color: #43362d;
 }
 
 .ac-btn::after { border: none; }
@@ -80,7 +80,7 @@
 .ac-iconbtn-bar {
   width: 6rpx;
   height: 20rpx;
-  background: #4a402e;
+  background: #43362d;
   border-radius: 2rpx;
 }
 
@@ -147,4 +147,4 @@
 .ac-wrap { flex-wrap: wrap; max-width: 100%; box-sizing: border-box; }
 .ac-dock-bar { max-width: calc(100vw - 52rpx); flex-wrap: wrap; }
 .ac-action { padding: 6rpx 12rpx; font-size: 22rpx; }
-.ac-segment { font-size: 22rpx; color: #4a402e; }
+.ac-segment { font-size: 22rpx; color: #43362d; }
