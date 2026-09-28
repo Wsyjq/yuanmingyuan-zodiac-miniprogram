@@ -140,6 +140,27 @@ Page({
   },
   cancelAuto() { if (this._countdown) this._countdown.cancel() },
   onUserInteraction() { this.cancelAuto() },
+  rememberSwipe(e) {
+    const t = e.touches && e.touches[0]
+    if (t) this._swipe = { x: t.clientX, y: t.clientY }
+  },
+  onPageTouchStart(e) { this.onUserInteraction(); this.rememberSwipe(e) },
+  onReadTouchStart(e) { this.rememberSwipe(e) },
+  onPageTouchEnd(e) {
+    const start = this._swipe
+    this._swipe = null
+    if (!start) return
+    const t = e.changedTouches && e.changedTouches[0]
+    if (!t) return
+    const dx = t.clientX - start.x
+    const dy = t.clientY - start.y
+    // 阅读页没有底栏。向左滑过约 48px，且比上下滑更明显，才翻页。
+    if (!(dx < -48 && Math.abs(dx) > Math.abs(dy) * 1.2)) return
+    const screen = this.data.screen || {}
+    if (this.data.busy || this.data.drawer || this.data.letterScene || this.data.review || this.data.restartScreen || this.data.showModeChoice) return
+    if (screen.kind !== 'read' || screen.play || screen.primaryAction !== 'continue') return
+    this.onPrimary()
+  },
   syncListen() {
     const key = listenFlow.eligible(this.data) ? this.data.narrationKey + ':' + (this._listenEpoch || 0) : ''
     if (this.data.listenKey !== key) this.setData({ listenKey: key })

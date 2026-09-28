@@ -1,5 +1,4 @@
 <view class="history-detail">
-<button class="text-button history-back bar-side" bindtap="onHistoryList"><image class="icon-back" src="/assets/figma/icon-back.png" mode="aspectFit"/><text>返回史料目录</text></button>
           <text class="history-kicker">ARCHIVE NOTE · 史料收录</text>
           <view class="history-rule"></view>
           <view class="history-head"><text class="history-id">{{card.key}}</text><view class="title small">{{card.title}}<text class="seal">收录</text></view><text class="history-index">{{cardLevel + 1}} / {{card.layers.length}}</text></view>

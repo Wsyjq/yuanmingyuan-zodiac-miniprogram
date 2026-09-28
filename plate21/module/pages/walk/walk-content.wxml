@@ -1,6 +1,6 @@
     <view class="paper">
       <view class="eyebrow">{{screen.siteTitle || '西洋楼现场考察档案'}} · {{screen.stageLabel}}</view>
-      <view class="title">{{screen.title || '第二十一图'}}<text class="seal">考察</text></view>
+      <view class="title">{{screen.title || '第二十一图'}}<text class="seal">{{pageId === 'P1' ? '存疑' : '考察'}}</text></view>
       <view wx:if="{{review}}" class="notice">重读这一页<button class="text-button" bindtap="onResume">回到当前进度 →</button></view>
       <view wx:if="{{screen.kind === 'nav'}}" class="route-card">
         <text class="eyebrow">前往下一站</text><view class="route-destination">{{screen.siteTitle}}</view>

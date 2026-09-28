@@ -1,4 +1,4 @@
-<view bindtouchstart="onUserInteraction" class="p21-page {{playId === 'quiz-hour' ? 'canvas-page' : ''}}">
+<view bindtouchstart="onPageTouchStart" bindtouchend="onPageTouchEnd" class="p21-page {{playId === 'quiz-hour' ? 'canvas-page' : ''}}">
   <image class="page-paper" src="/assets/figma/paper.jpg" mode="aspectFill"/>
   <image wx:if="{{!letterScene}}" class="page-wash" src="/assets/figma/wash.png" mode="scaleToFill"/>
   <image wx:if="{{!letterScene && !restartScreen}}" class="page-hills" src="/assets/figma/hills.png" mode="widthFix"/>
@@ -26,14 +26,16 @@
   <view wx:if="{{letterScene}}" class="letter-stage"><letter-scene chapter="{{pageId}}" heading="{{screen.sectionTitle}}" lines="{{letterLines}}" cursor="{{letterCursor || 0}}" scene="{{letterSceneImage}}" active="{{pageVisible && !drawer}}" busy="{{busy}}" bind:progress="onLetterProgress" bind:complete="onLetterComplete" /></view>
   <!-- Native Canvas uses page scrolling, avoiding a nested native scroll layer. -->
   <view wx:if="{{pageId && !letterScene && playId === 'quiz-hour'}}" class="stage"><include src="walk-content.wxml" /></view>
-  <scroll-view wx:elif="{{pageId && !letterScene}}" scroll-y class="reading" scroll-top="{{scrollTop}}" bindscroll="onScroll">
+  <scroll-view wx:elif="{{pageId && !letterScene}}" scroll-y class="reading" scroll-top="{{scrollTop}}" bindscroll="onScroll" bindtouchstart="onReadTouchStart" bindtouchend="onPageTouchEnd">
     <include src="walk-content.wxml" />
   </scroll-view>
   <view wx:if="{{pageId && !letterScene && !screen.play && screen.sectionCount > 1}}" class="progress-dots"><view wx:for="{{screen.sectionDots}}" wx:for-index="dotIndex" wx:key="dotIndex" class="progress-dot {{item ? 'progress-dot-on' : ''}}"></view></view>
-  <view wx:if="{{pageId && !letterScene && !screen.play}}" class="footer"><button class="primary" bindtap="onPrimary" disabled="{{busy}}" loading="{{busy}}">{{review ? screen.primary : completed && pageId === 'FN4' ? '查看我的作品' : pageId === 'LT8' ? '读完来信，查看作品' : screen.primary || '继续'}}</button><button wx:if="{{screen.showSkip && !review}}" class="text-button skip" bindtap="onSkip" disabled="{{busy}}">{{screen.skipLabel || '这题跳过'}}</button></view>
+  <view wx:if="{{pageId && !letterScene && !screen.play && screen.kind === 'read' && !review && screen.primaryAction === 'continue'}}" class="read-advance"><button class="primary" bindtap="onPrimary" disabled="{{busy}}" loading="{{busy}}">← 左滑继续</button><button wx:if="{{screen.showSkip}}" class="text-button skip" bindtap="onSkip" disabled="{{busy}}">{{screen.skipLabel || '这题跳过'}}</button></view>
+  <view wx:elif="{{pageId && !letterScene && !screen.play}}" class="footer"><button class="primary" bindtap="onPrimary" disabled="{{busy}}" loading="{{busy}}">{{review ? screen.primary : completed && pageId === 'FN4' ? '查看我的作品' : pageId === 'LT8' ? '读完来信，查看作品' : screen.primary || '继续'}}</button><button wx:if="{{screen.showSkip && !review}}" class="text-button skip" bindtap="onSkip" disabled="{{busy}}">{{screen.skipLabel || '这题跳过'}}</button></view>
   <image wx:if="{{pageId && !drawer && !letterScene && narrClips.length}}" class="listen-float" src="/assets/figma/icon-listen.png" mode="aspectFit" bindtap="onListen"/>
   <view wx:if="{{pageId && !drawer}}" class="nav-float" style="left:{{navX}}px;top:{{navY}}px" catchtouchstart="onNavStart" catchtouchmove="onNavMove" catchtouchend="onNavEnd" catchtouchcancel="onNavCancel" role="button" aria-label="实地导引，可拖动"><image class="icon-guide" src="/assets/figma/icon-guide.png" mode="aspectFit"/></view>
   <view wx:if="{{drawer}}" class="overlay {{drawer === 'history' && card ? 'overlay-center' : ''}}" bindtap="onCloseDrawer"><view class="drawer" catchtap="noop"><view wx:if="{{!(drawer === 'history' && card)}}" class="row"><text class="subheading">{{drawer === 'history' ? '考察簿 · 史料' : drawer === 'route' ? '实地导引' : drawer === 'explanation' ? '互动解读' : '考察设置'}}</text><button class="text-button" bindtap="onCloseDrawer">关闭 ✕</button></view>
+    <button wx:if="{{drawer === 'history' && card}}" class="text-button history-dismiss" bindtap="onCloseDrawer">×</button>
     <scroll-view wx:if="{{drawer === 'history' && card}}" scroll-y class="drawer-scroll" scroll-top="{{drawerScrollTop}}" scroll-into-view="{{cardAnchor}}" bindscroll="onDrawerScroll"><include src="history-card.wxml" /></scroll-view>
     <scroll-view wx:else scroll-y class="drawer-scroll" scroll-top="{{drawerScrollTop}}" bindscroll="onDrawerScroll">
       <block wx:if="{{drawer === 'explanation'}}"><text class="caption">可以带着解读再试一次，也可以跳过本题继续；跳过会如实记录。</text><text wx:for="{{explanation}}" wx:key="index" class="paragraph">{{item}}</text><button class="primary" bindtap="onCloseDrawer">回去再试一次</button><button class="text-button" bindtap="onSkip" disabled="{{busy}}">跳过本题，继续考察</button></block>

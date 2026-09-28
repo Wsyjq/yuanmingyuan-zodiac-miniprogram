@@ -67,6 +67,12 @@ test('sampled mainline and relay screens render through the runtime with their i
     assert.match(text(result.html), pattern, id)
     assert.doesNotMatch(text(result.html), /undefined|NaN/, id)
     assert.match(result.html, /class="primary"[^>]*>[^<\s]/, id + ' primary button label must render')
+    if (id === 'P1') {
+      assert.match(text(result.html), /← 左滑继续/)
+      assert.match(text(result.html), /存疑/)
+      assert.doesNotMatch(result.html, /class="footer"/)
+    }
+    if (id === 'FN4') assert.match(result.html, /class="footer"/)
   }
 })
 
@@ -167,6 +173,8 @@ test('clicking each of 17 inline historical terms renders every Word layer and i
     const source = cards.get(term.key)
     if (source.image) assert.ok(result.html.includes(source.image), term.key + ' image missing')
     assert.match(actual, /读完，返回剧情/)
+    assert.match(actual, /×/)
+    assert.doesNotMatch(actual, /返回史料目录/)
     assert.doesNotMatch(actual, /完成对应互动后展示|undefined/)
   }
   assert.equal(visited.size, 17)
