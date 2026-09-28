@@ -8,7 +8,7 @@
   </view>
   <block wx:elif="{{model}}">
     <view class="eyebrow">个人考察档案</view>
-    <view class="report-title">我的第二十一图<text class="seal">留言</text></view>
+    <view class="report-bar"><button class="report-back" bindtap="onReturn">返回</button><text class="report-bar-title">我的第二十一图</text><text class="seal">留言</text></view>
     <view class="report-subtitle">{{model.completed ? '这一程的所见，留在这里。' : '这份档案，等待你继续书写。'}}</view>
     <view class="identity"><text>{{model.name}}</text><text>{{model.dateLabel}}</text></view>
 

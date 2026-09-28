@@ -39,7 +39,8 @@ Page({
   async onLoad(query) {
     const window = wx.getWindowInfo ? wx.getWindowInfo() : (wx.getSystemInfoSync ? wx.getSystemInfoSync() : { windowWidth: 375, windowHeight: 667 })
     this._window = window
-    this.setData({ navX: Math.max(8, window.windowWidth - 66), navY: Math.max(80, window.windowHeight - 180) })
+    const scale = (window.windowWidth || 375) / 393
+    this.setData({ navX: Math.round(348 * scale), navY: Math.round(166 * scale) })
     this.query = query || {}; this.sessionId = this.query.sessionId || ''; this.ui = {}; this._active = true
     this._countdown = listenFlow.createCountdown({
       valid: () => this._active && listenFlow.eligible(this.data) && this._endedKey === this.data.narrationKey,

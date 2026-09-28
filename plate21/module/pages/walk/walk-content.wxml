@@ -1,4 +1,22 @@
-    <view class="paper">
+    <view class="{{screen.kind === 'read' && !screen.interaction ? 'read-sheet' : 'paper'}}">
+      <block wx:if="{{screen.kind === 'read' && !screen.interaction}}">
+        <text class="read-kicker">{{screen.siteTitle || '西洋楼现场考察档案'}} · {{screen.stageLabel}}</text>
+        <view class="read-title-row"><text class="read-title">{{screen.title || '第二十一图'}}</text><text class="seal">{{pageId === 'P1' ? '存疑' : '考察'}}</text></view>
+        <view wx:if="{{review}}" class="notice">重读这一页<button class="text-button" bindtap="onResume">回到当前进度 →</button></view>
+        <view class="read-card">
+          <view class="read-rule"></view>
+          <view wx:if="{{screen.prop.items.length}}" class="prop">
+            <view class="prop-title">{{screen.prop.title || '实体道具'}}</view>
+            <view wx:for="{{screen.prop.items}}" wx:key="what" class="prop-item">
+              <text class="prop-what">取出 · {{item.what}}</text><text wx:for="{{item.steps}}" wx:for-item="step" wx:key="index">{{step}}</text><text class="caption">{{item.returnWhen}}</text>
+            </view>
+          </view>
+          <view class="narrative"><text wx:for="{{narrative}}" wx:for-item="paragraph" wx:key="index" class="paragraph"><text wx:for="{{paragraph}}" wx:key="index" class="{{item.key ? 'history-link' : ''}}" data-key="{{item.key}}" bindtap="onOpenCard">{{item.text}}</text></text></view>
+          <image wx:if="{{screen.portrait}}" src="{{screen.portrait}}" mode="widthFix" class="illustration" data-src="{{screen.portrait}}" bindtap="onPreview"/>
+          <view wx:if="{{screen.terms.length}}" class="terms"><button wx:for="{{screen.terms}}" wx:key="key" class="chip" data-key="{{item.key}}" bindtap="onOpenCard">史料 · {{item.label}}</button></view>
+        </view>
+      </block>
+      <block wx:else>
       <view class="eyebrow">{{screen.siteTitle || '西洋楼现场考察档案'}} · {{screen.stageLabel}}</view>
       <view class="title">{{screen.title || '第二十一图'}}<text class="seal">{{pageId === 'P1' ? '存疑' : '考察'}}</text></view>
       <view wx:if="{{review}}" class="notice">重读这一页<button class="text-button" bindtap="onResume">回到当前进度 →</button></view>
@@ -21,6 +39,7 @@
       <image wx:if="{{screen.teacher}}" src="{{screen.teacher}}" mode="widthFix" class="illustration"/>
       <view wx:if="{{screen.terms.length}}" class="terms"><button wx:for="{{screen.terms}}" wx:key="key" class="chip" data-key="{{item.key}}" bindtap="onOpenCard">史料 · {{item.label}}</button></view>
       <view wx:if="{{screen.interaction && screen.interaction.position !== 'before'}}"><include src="walk-interaction.wxml" /></view>
+      </block>
       <view wx:if="{{pageId === 'FN1'}}" class="activity"><view class="subheading">这一次，我留下了</view><view class="photo-strip"><image wx:for="{{records}}" wx:key="id" wx:if="{{item.kind === 'photo'}}" src="{{item.filePath}}" mode="aspectFill" data-src="{{item.filePath}}" bindtap="onPreview"/></view><text wx:if="{{!records.length}}" class="caption">还没有照片或文字记录。完成署名后，也可以在个人作品中补录。</text><text wx:for="{{records}}" wx:key="id" wx:if="{{item.kind !== 'photo'}}" class="paragraph">{{item.text}}</text></view>
       <view wx:if="{{pageId === 'FN4'}}" class="activity"><button wx:if="{{completed}}" class="secondary" bindtap="onOpenBonus" disabled="{{busy}}">直接进入彩蛋 →</button><label>绘制者署名</label><text class="caption">绘制者：{{screen.signature.name}}
 绘制日期：{{screen.signature.date}}

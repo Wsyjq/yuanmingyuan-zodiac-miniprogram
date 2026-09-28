@@ -1,6 +1,6 @@
 <view class="interaction-module">
-  <view wx:if="{{screen.task}}" class="task-summary"><text class="task-title">{{screen.task.title}}</text><text class="caption">{{screen.task.instruction}}</text></view>
-  <view class="interaction-heading">{{screen.interaction.title}}</view>
+  <text wx:if="{{screen.prop.items.length}}" class="puzzle-kicker">{{screen.prop.items[0].what}}</text>
+  <view class="interaction-heading">{{screen.prop.items.length ? screen.prop.items[0].what : screen.interaction.title}}</view>
       <view wx:if="{{screen.prop.items.length}}" class="prop">
         <view class="prop-title">{{screen.prop.title || '实体道具'}}</view>
         <view wx:for="{{screen.prop.items}}" wx:key="what" class="prop-item">
