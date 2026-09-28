@@ -8,7 +8,7 @@
   </view>
   <block wx:elif="{{model}}">
     <view class="eyebrow">个人考察档案</view>
-    <view class="report-title">我的第二十一图</view>
+    <view class="report-title">我的第二十一图<text class="seal">留言</text></view>
     <view class="report-subtitle">{{model.completed ? '这一程的所见，留在这里。' : '这份档案，等待你继续书写。'}}</view>
     <view class="identity"><text>{{model.name}}</text><text>{{model.dateLabel}}</text></view>
 
@@ -75,8 +75,8 @@
       <button wx:if="{{reminderSupported && !letterAvailable}}" class="report-button reminder-button" bindtap="onRequestReminder" disabled="{{reminderRequesting || reminderAccepted}}">{{reminderRequesting ? '请求中…' : (reminderAccepted ? '提醒请求已受理' : '申请来信提醒')}}</button>
       <view wx:if="{{reminderMessage}}" class="small-note reminder-message">{{reminderMessage}}</view>
     </view>
-    <button class="report-button return-button" bindtap="onRestart" disabled="{{busy || saving}}">重新考察</button>
-    <button class="report-button return-button" bindtap="onReturn" disabled="{{busy || saving}}">返回考察</button>
+    <button class="report-button primary return-button" bindtap="onRestart" disabled="{{busy || saving}}">重新考察</button>
+    <button class="report-button primary return-button" bindtap="onReturn" disabled="{{busy || saving}}">返回考察</button>
   </block>
   <canvas type="2d" id="reportCanvas" class="export-canvas" style="width:700px;height:2000px;" />
   </view>

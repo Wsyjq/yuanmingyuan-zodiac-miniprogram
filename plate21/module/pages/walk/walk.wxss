@@ -183,3 +183,4 @@
 .history-pending{display:none}
 .history-actions{display:flex;gap:16rpx;margin-top:28rpx}
 .history-actions .primary,.history-actions .secondary{flex:1;width:auto;margin:0!important}
+.hint-pill{display:block;width:auto;margin:16rpx auto 0!important;padding:0 28rpx!important;min-height:44rpx!important;border-radius:22rpx;background:#d8bea0;color:#43362d;font-size:27rpx!important;font-weight:600;letter-spacing:0}
