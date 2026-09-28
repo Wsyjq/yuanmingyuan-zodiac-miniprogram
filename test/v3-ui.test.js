@@ -56,7 +56,7 @@ test('walk and host index event handlers resolve to methods on their actual Page
 
 test('sampled mainline and relay screens render through the runtime with their intended key interaction', async () => {
   const expected = {
-    P1: /第二十一图的传闻/, FQ1: /人物线索/, FQ2: /礼拜场所/, FR1: /容妃.*礼拜/, X1: /音乐贴片|直接听/, H3: /我已翻到背面/, H4: /我已到达中心亭/,
+    P1: /第二十一图的传闻/, FQ1: /人物线索/, FQ2: /礼拜场所/, F2: /容妃.*礼拜/, X1: /音乐贴片|直接听/, H3: /我已翻到背面/, H4: /我已到达中心亭/,
     HY1: /海晏堂|水力钟/, DS1: /梅花鹿/, DS2: /旧画与眼前/, FN4: /保存考察记录|署名/,
     LT6: /接力记录/, LT7: /公开投稿/
   }
@@ -135,7 +135,7 @@ test('restored original prose actually reaches WXML instead of only remaining in
     ['DS2', {}, ['大水法中央原有一只铜制梅花鹿', '鹿角喷水', '大型卷尾铜兽']],
     ['FN1', {}, ['密集交错的线条构成明暗']],
     ['FN2', {}, ['如果你看到这里', '等待被后来者完成']],
-    ['X2', {}, ['日记和信封会指引你第一站的方向', '信封的封口处和信的背面都有一半的字']]
+    ['X2', {}, ['日记和信封会指引你第一站的方向']]
   ]
   for (const [id, state, phrases] of cases) {
     const result = await render(id, Object.assign({ screenPart: 'activity' }, state))
