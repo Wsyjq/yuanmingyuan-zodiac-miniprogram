@@ -23,7 +23,7 @@
 .paper{padding:29rpx 55rpx 80rpx}
 .eyebrow{font-size:25rpx;font-weight:500;line-height:36rpx;letter-spacing:3rpx;color:#947864}
 .title{font-size:50rpx;font-weight:700;line-height:65rpx;letter-spacing:3rpx;color:#43362d;margin:8rpx 0 22rpx}
-.seal{display:inline-block;margin-left:16rpx;padding:4rpx 8rpx;border:3rpx solid #a45442;color:#a45442;font-size:26rpx;font-weight:700;line-height:36rpx;letter-spacing:4rpx;vertical-align:middle;transform:rotate(-13.8deg)}
+.seal{display:inline-block;margin-left:16rpx;padding:4rpx 8rpx;border:8rpx solid #a45442;color:#a45442;font-size:26rpx;font-weight:700;line-height:36rpx;letter-spacing:4rpx;vertical-align:middle;transform:rotate(-13.8deg)}
 .paragraph{display:block;margin:0 0 22rpx;font-size:31rpx;font-weight:500;line-height:53rpx;letter-spacing:1rpx;color:#43362d;white-space:pre-wrap}
 .narrative-card{background:#e4d2bdcc;border-radius:19rpx;padding:38rpx 29rpx;margin-top:12rpx}
 .subheading{display:block;font-size:38rpx;font-weight:700;line-height:53rpx;margin:14rpx 0 24rpx;color:#43362d}
@@ -58,7 +58,7 @@
 .p21-page textarea{height:220rpx;line-height:1.7}
 .input-group label{font-size:25rpx;color:#947864}
 .pattern-grid,.spot-grid{display:grid;grid-template-columns:1fr 1fr;gap:31rpx;margin:24rpx 0}
-.pattern,.spot{padding:12rpx;background:#f9e8d3;display:flex;flex-direction:column;width:100%;border:2rpx solid #c7b99b!important;border-radius:15rpx}
+.pattern,.spot{padding:12rpx;background:#f9e8d3;display:flex;flex-direction:column;width:100%;border:0;border-radius:15rpx}
 .pattern image,.spot image{width:100%;height:190rpx;border-radius:8rpx}
 .pattern text,.spot text{padding-top:12rpx;color:#43362d;font-size:31rpx}
 .illustration{width:100%;margin:26rpx 0;border-radius:4rpx}
@@ -127,7 +127,7 @@
 .route-active .route-number{background:#a45442;color:#fef8e7;border-color:#a45442}
 
 .history-dismiss{position:absolute;z-index:2;top:18rpx;right:20rpx;width:64rpx;min-height:64rpx;padding:0!important;font-size:40rpx!important;line-height:64rpx;color:#43362d}
-.history-detail{background:#e4d2bdcc;border-radius:19rpx;padding:42rpx 48rpx 48rpx}
+.history-detail{background:#e4d2bdcc;border:2rpx solid #947864;border-radius:19rpx;padding:42rpx 48rpx 48rpx}
 .history-kicker{display:block;font-size:21rpx;font-weight:400;line-height:30rpx;letter-spacing:3rpx;color:#8a8068}
 .history-rule{height:2rpx;background:#c7b99b;margin:12rpx 0 20rpx}
 .history-head{display:flex;align-items:baseline;gap:16rpx;margin-bottom:16rpx}
@@ -141,7 +141,7 @@
 .history-end{display:block;text-align:center;margin:30rpx 0;font-size:15rpx;letter-spacing:4rpx;color:#9c8b6d}
 .history-close{margin-top:28rpx}
 
-.interaction-module{margin:22rpx 0;padding:42rpx 48rpx;background:#e4d2bdcc;border:0;border-radius:19rpx}
+.interaction-module{margin:22rpx 0;padding:42rpx 48rpx;background:#e4d2bdcc;border:2rpx solid #947864;border-radius:19rpx}
 .interaction-heading{font-size:38rpx;font-weight:700;line-height:53rpx;color:#43362d;border-bottom:2rpx solid #c7b99b;padding-bottom:22rpx;margin-bottom:26rpx}
 .interaction-module .activity{margin-top:24rpx}
 .interaction-actions{margin-top:30rpx;padding-top:22rpx;border-top:2rpx solid #c7b99b}
@@ -179,11 +179,11 @@
 .icon-menu{width:31rpx;height:23rpx}
 .listen-float{position:fixed;z-index:80;right:24rpx;top:220rpx;width:67rpx;height:82rpx}
 .progress-dots{position:relative;z-index:3;display:flex;justify-content:center;gap:12rpx;padding:8rpx 0}
-.progress-dot{width:10rpx;height:10rpx;border-radius:50%;background:#c0a88a}
-.progress-dot-on{background:#a45442}
-.history-dots{display:flex;justify-content:flex-end;gap:14rpx;margin:0 0 16rpx}
-.history-dot{width:10rpx;height:10rpx;border-radius:50%;border:2rpx solid #c0a88a;padding:10rpx;background-clip:content-box;background-color:transparent}
-.history-dot-on{background-color:#a45442;border-color:#a45442}
+.progress-dot{box-sizing:border-box;width:11rpx;height:11rpx;border-radius:50%;background:transparent;border:1rpx solid #c0a88a}
+.progress-dot-on{background:#a45442;border-color:#a45442}
+.history-dots{display:flex;justify-content:flex-end;gap:8rpx;margin:0 0 16rpx}
+.history-dot{width:44rpx;height:44rpx;border-radius:50%;background:radial-gradient(circle,transparent 4rpx,#c0a88a 5rpx,#c0a88a 6rpx,transparent 7rpx)}
+.history-dot-on{background:radial-gradient(circle,#a45442 6rpx,transparent 7rpx)}
 .history-pending{display:none}
 .history-side{float:right;width:42%;margin:0 0 12rpx 16rpx}
 .history-current{overflow:hidden}
