@@ -192,9 +192,9 @@
       "source": "用户提供的海晏堂HTML原型；图像提取压缩，水声由代码合成，见 reference/海晏堂水力钟-谜题互动版.html"
     },
     {
-      "path": "voice-a/dj06-xieqiqu-soundscape-30s-v2.mp3",
-      "bytes": 721650,
-      "sha256": "f9a410f383446c2ce42b55bc7f4466cc497b6f31250411cb83e0fa9f1b3334c7",
+      "path": "voice-a/dj06-xieqiqu-music3-1760.mp3",
+      "bytes": 723447,
+      "sha256": "b5f8881624161c2d6a66b760d6951d20f2fdacdedc7e2f2a6d77b842365790d1",
       "published": true,
       "source": "main 原版 DJ-06 声景"
     },

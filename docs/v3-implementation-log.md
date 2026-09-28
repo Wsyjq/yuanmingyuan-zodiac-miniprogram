@@ -271,3 +271,5 @@ npm test 162 项全通过。本地提交，未推送 GitHub，微信平台未更
 按用户批准的减页方案：M1/M3/M4/M5/M6/M7 六个导航页并入下一站首屏（E2→X1、H6→F1、F2→HY1、HY3→XS1、XS2→DS1、DS2→HG1 直达），FR1 并入 F2（正文归并、FQ2→F2）；站级“这次不去”入口随 M 站移除（页级“这题先跳过”保留，黄花阵站级跳过由 X2→F1 承接）。按存档兼容规则迁移：NODE_MIGRATION 扩展（M1→X1、M3→F1、M4→HY1、M5→XS1、M6→DS1、M7→HG1、FR1→F2），story-compatibility.json 移除 7 条（现 37 条），check:story 过检。测试连锁同步（flow 站级跳过场景、latest-script FR1→F2、ui 用例、screen 节点数、coverage fixture、walk 跳过链混合推进）。
 
 npm test 162 项全通过。本地提交，未推送 GitHub，微信平台未更新。Pollux 当前不可用，记录于此。
+
+- 2026-09-29：谐奇趣声景替换为 Music3「华丽合奏」seed 1760（voice-a/dj06-xieqiqu-music3-1760.mp3，707KB，来源 D:/kc/ymy-xq3-music/.../xq3-grand-1760.mp3）；删除旧 30s-v2 声景以守住 voice-a 分包 2MiB 预算（现 1.93MB）。同步更新 listen.js SOUND 与 voice-pkg-map.js，刷新资源清单；npm test 162 全绿。同批完成：NFC 直达自动播（353047b）、站点序号/史料移右上角（fdbdfab）、去考察印章+到达按钮升级主按钮（5d4ec9a）、三角形播放键（051c55b）。
