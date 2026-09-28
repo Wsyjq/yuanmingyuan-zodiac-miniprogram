@@ -4,7 +4,6 @@
         <view class="read-title-row"><text class="read-title">{{screen.title || '第二十一图'}}</text><text class="seal">{{pageId === 'P1' ? '存疑' : '考察'}}</text></view>
         <view wx:if="{{review}}" class="notice">重读这一页<button class="text-button" bindtap="onResume">回到当前进度 →</button></view>
         <view class="read-card">
-          <view class="read-rule"></view>
           <view wx:if="{{screen.prop.items.length}}" class="prop">
             <view class="prop-title">{{screen.prop.title || '实体道具'}}</view>
             <view wx:for="{{screen.prop.items}}" wx:key="what" class="prop-item">

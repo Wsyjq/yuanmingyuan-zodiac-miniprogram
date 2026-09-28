@@ -11,6 +11,7 @@
 这次尚未完成的考察将从头开始。</text><view wx:if="{{error}}" class="error">{{error}}</view><button class="primary" bindtap="onConfirmRestart" disabled="{{busy || loading}}" loading="{{busy}}">重新启程 →</button><button class="text-button restart-cancel" bindtap="onCancelRestart" disabled="{{busy}}">回到这份档案</button></view>
   </scroll-view>
   <block wx:else>
+  <view class="page-head" style="padding-top: {{headOffset}}px">
   <view wx:if="{{pageId && !loading}}" class="narration-bar">
     <view class="narration-heading"><text>{{listenMode === 'listen' ? '随声入园' : '静读档案'}}</text><image class="icon-arch" src="/assets/figma/icon-arch.png" mode="aspectFit"/><button class="text-button mode-switch" bindtap="onChooseModeOpen">切换</button></view>
     <audio-clip wx:if="{{narrClips.length}}" id="narration" clips="{{narrClips}}" context-key="{{narrationKey}}" listen-key="{{listenKey}}" compact active="{{pageVisible && !drawer && !showModeChoice && !restartScreen && !busy}}" label="听这一段" bind:state="onNarrationState" bind:ended="onNarrationEnded" bind:error="cancelAuto" />
@@ -21,6 +22,7 @@
     <button class="text-button bar-side" bindtap="onBack" disabled="{{busy || loading}}"><image class="icon-back" src="/assets/figma/icon-back.png" mode="aspectFit"/><text>返回</text></button>
     <text class="brand">{{(card && card.title) || (screen && screen.kind !== 'puzzle' && screen.kind !== 'nav' && screen.sectionTitle) || '第廿一图'}}</text>
     <button class="text-button bar-side" data-name="history" bindtap="onDrawer"><text>考察簿</text><image class="icon-menu" src="/assets/figma/icon-menu.png" mode="aspectFit"/></button>
+  </view>
   </view>
   <view wx:if="{{loading}}" class="empty">正在打开考察档案…</view>
   <view wx:if="{{error}}" class="error" role="alert">{{error}}<button wx:if="{{!pageId}}" bindtap="load">重新打开</button></view>

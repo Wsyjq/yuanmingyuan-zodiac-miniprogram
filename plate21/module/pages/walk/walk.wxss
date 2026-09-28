@@ -8,13 +8,15 @@
 .page-wash{position:fixed;left:-70%;top:-51%;width:216%;height:113%;z-index:0;pointer-events:none}
 .page-hills{position:fixed;left:0;right:0;bottom:0;width:100%;z-index:1;pointer-events:none}
 
-.narration-bar{position:relative;z-index:2;flex-shrink:0;padding:27rpx 42rpx 12rpx}
+.page-head{position:relative;z-index:2;flex-shrink:0;margin:0 38rpx}
+.page-head button{width:auto;flex:none}
+.narration-bar{position:relative;flex-shrink:0;padding:12rpx 0 8rpx}
 .narration-heading{display:flex;align-items:center;justify-content:space-between;font-size:23rpx;font-weight:400;line-height:33rpx;letter-spacing:2rpx;color:#a45442}
 .mode-switch{font-size:23rpx!important;font-weight:500;line-height:33rpx;letter-spacing:2rpx;color:#947864;min-height:44rpx!important;padding:0!important}
 .narration-countdown{display:flex;align-items:center;justify-content:space-between;font-size:25rpx;color:#43362d}
 .narration-hint{display:block;font-size:25rpx;color:#947864;line-height:36rpx}
 
-.toolbar{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;height:120rpx;padding:0 29rpx;background:#d8bea0;border-bottom:2rpx solid #947864;box-sizing:border-box}
+.toolbar{position:relative;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;height:120rpx;padding:0 29rpx;background:#d8bea0;border-bottom:2rpx solid #947864;box-sizing:border-box}
 .brand{font-size:38rpx;font-weight:600;line-height:55rpx;letter-spacing:6rpx;color:#43362d}
 .text-button{background:transparent;color:#43362d;padding:0 8rpx;min-height:44rpx;font-size:31rpx;font-weight:400;line-height:43rpx}
 .reading,.stage,.letter-stage,.restart-screen,.empty,.error,.notice{position:relative;z-index:2}
@@ -187,7 +189,6 @@
 .read-title{font-size:50rpx;font-weight:700;line-height:65rpx;letter-spacing:3rpx;color:#43362d}
 .read-sheet .seal{margin-left:27rpx}
 .read-card{position:relative;margin:0 38rpx;background:#e4d2bdcc;border-radius:19rpx;padding:32rpx 32rpx 40rpx}
-.read-rule{position:absolute;left:342rpx;top:332rpx;width:187rpx;height:2rpx;background:#a45442}
 .read-card .paragraph{font-size:31rpx;font-weight:500;line-height:53rpx;letter-spacing:1rpx}
 .puzzle-kicker{display:block;font-size:23rpx;font-weight:500;line-height:32rpx;letter-spacing:4rpx;color:#947864}
 .puzzle-steps{margin:8rpx 0 28rpx}
