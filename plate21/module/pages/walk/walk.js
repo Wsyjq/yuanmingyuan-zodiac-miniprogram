@@ -35,7 +35,7 @@ function errorText(err) { return err && (err.message || err.errMsg) || '操作�
 Page({
   data: { listenMode: '', showModeChoice: false, autoSeconds: 0, narrationKey: '', listenKey: '', restartScreen: false, loading: true, busy: false, error: '', pageVisible: true, screen: {}, ui: {}, rows: [], records: [],
     narrClips: [], voiceEnabled: false, drawer: '', card: null, cardLevel: 0, drawerScrollTop: 0, cardAnchor: '', cardImageFailed: false, waterClockState: {}, clockPlaying: false,
-    soundSrc: nfc.SOUND, relayItems: [], relayState: 'idle', contributions: [], archives: [], scrollTop: 0, navX: 0, navY: 0, headOffset: 0, locating: false, location: null, locationError: '' },
+    soundSrc: nfc.SOUND, soundAutoKey: '', relayItems: [], relayState: 'idle', contributions: [], archives: [], scrollTop: 0, navX: 0, navY: 0, headOffset: 0, locating: false, location: null, locationError: '' },
   async onLoad(query) {
     const window = wx.getWindowInfo ? wx.getWindowInfo() : (wx.getSystemInfoSync ? wx.getSystemInfoSync() : { windowWidth: 375, windowHeight: 667 })
     this._window = window
@@ -134,7 +134,7 @@ Page({
       narrative: model.lines.map(line => glossary.segments(line, glossary.inlineTermsFor(page.id, unlockedCards))),
       routeRows: view.rows.filter(r => navModel.listSites().some(s => s.id === r.id)).map(r => Object.assign({}, r, { openPageId: r.current ? view.resumePageId : view.openPageId(r.id) })),
       routeCurrent: (view.rows.find(r => r.current) || {}).title || '考察尚未开始',
-      canExplain: !!(page.playId && page.playId !== 'quiz-hour' && pages.byId[page.next] && pages.byId[page.next].revealOf === page.playId),
+      canExplain: !!(page.playId && page.playId !== 'quiz-hour' && pages.byId[page.next] && (pages.byId[page.next].revealOf === page.playId || !pages.byId[page.next].revealOf)),
       historyCards: unlockedCards, hasHint: !!taskGuide.hint(page.playId), hint: this.ui.hint ? taskGuide.hint(page.playId) : '',
       contributions: snap.contributions.map((c) => Object.assign({}, c, { label: STATUS[c.status] || c.status,
         reportable: bridge.available('reportContribution') && !!c.receiptId && c.status !== 'withdrawn' })),
@@ -398,7 +398,7 @@ Page({
     if (this._nfcStarting || this._nfc) return
     this._nfcStarting = true
     this._nfc = nfc.start({ onTag: () => { const player = this.selectComponent('#soundscape'); if (player && this.data.pageVisible) player.onReplay() },
-      onStatus: (status) => this.setData({ nfcStatus: status === 'unsupported' ? '此设备未启用贴片读取，可直接听。' : '贴片未读到，可直接听。' }) })
+      onStatus: () => this.setData({ nfcStatus: '' }) })
     this._nfcStarting = false
   },
   stopNfc() { if (this._nfc) this._nfc.stop(); this._nfc = null },

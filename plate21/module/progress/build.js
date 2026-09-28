@@ -25,14 +25,14 @@ function buildProgressRaw(run, pagesById) {
     if (id === 'prologue') {
       if ((source.completedPages || {}).P3) return '已看完'
       if ((source.unlocked || {}).E1) return '已跳过'
-      return resumeId.indexOf('P') === 0 ? '进行中' : '还没到'
+      return resumeId.indexOf('P') === 0 ? '进行中' : ''
     }
-    if (id === 'finale') return source.completedAt ? '已看完' : resumeId.indexOf('FN') === 0 ? '进行中' : '还没到'
-    if (id === 'letter') return source.letterRead ? '已看完' : source.letterOpenedAt ? '进行中' : source.letterAvailable ? '可阅读' : '还没到'
+    if (id === 'finale') return source.completedAt ? '已看完' : resumeId.indexOf('FN') === 0 ? '进行中' : ''
+    if (id === 'letter') return source.letterRead ? '已看完' : source.letterOpenedAt ? '进行中' : source.letterAvailable ? '可阅读' : ''
     if (sites[id] === 'done') return '已看完'
     if (sites[id] === 'skipped') return '这次没去'
     if (sites[id] === 'active' || current.siteId === id) return '进行中'
-    return '还没到'
+    return ''
   }
   const rows = ['prologue'].concat(SITE_IDS, ['finale', 'letter']).map(function (id) {
     const plays = Object.keys(pages).map(function (key) { return pages[key] }).filter(function (page) {

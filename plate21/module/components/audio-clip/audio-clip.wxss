@@ -148,3 +148,9 @@
 .ac-dock-bar { max-width: calc(100vw - 52rpx); flex-wrap: wrap; }
 .ac-action { padding: 6rpx 12rpx; font-size: 22rpx; }
 .ac-segment { font-size: 22rpx; color: #43362d; }
+
+.ac-wrap{justify-content:center}
+.ac-btn{background:transparent;border:0;color:#43362d;font-weight:600;padding:12rpx 10rpx;min-height:0}
+.ac-compact{justify-content:center}
+
+.ac-play-triangle{width:0;height:0;margin-left:4rpx;border-left:16rpx solid #43362d;border-top:10rpx solid transparent;border-bottom:10rpx solid transparent}

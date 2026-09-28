@@ -18,15 +18,15 @@ function frozen(value) {
   return value
 }
 
-test('all 46 page IDs build pure display models and caller state remains immutable', () => {
-  assert.equal(pages.list.length, 46)
+test('all 37 page IDs build pure display models and caller state remains immutable', () => {
+  assert.equal(pages.list.length, 37)
   for (const page of pages.list) {
     const run = frozen(runAt(page.id)), ui = frozen({ optionId: 'ne', text: '草稿', placed: { deer: 'ring' } })
     const view = buildScreen(run, ui)
     assert.equal(view.pageId, page.id)
     assert.ok(view.title)
     assert.ok(Array.isArray(view.lines))
-    assert.equal(view.pageCount, 46)
+    assert.equal(view.pageCount, 37)
     assert.equal(run.uiByPage[page.id], undefined)
   }
 })
@@ -59,7 +59,7 @@ test('physical flip needs explicit saved/UI confirmation; skipped status never r
   const skipped = runAt('H3', { puzzles: { 'prop-flip': 'skipped' } })
   const before = buildScreen(skipped)
   assert.deepEqual(before.lines, [])
-  assert.deepEqual(before.interaction.lines, ['翻面揭晓答案'])
+  assert.deepEqual(before.interaction.lines, [])
   assert.doesNotMatch(before.lines.join(''), /黄色彩绸/)
   assert.equal(before.holdReveal, true)
   assert.equal(before.primaryAction, 'flip')
@@ -70,7 +70,7 @@ test('physical flip needs explicit saved/UI confirmation; skipped status never r
 })
 
 test('answer pages are quiet when skipped or not solved; assisted answers may be reviewed', () => {
-  for (const id of ['X3', 'H2', 'H6', 'HY2', 'XS2', 'DS2']) {
+  for (const id of ['H2', 'H6', 'HY2', 'XS2', 'DS2']) {
     const page = pages.byId[id]
     assert.deepEqual(buildScreen(runAt(id, { puzzles: { [page.revealOf]: 'skipped' } })).lines, [], id)
     assert.deepEqual(buildScreen(runAt(id)).lines, [], id)
@@ -83,7 +83,7 @@ test('review only offers unlocked next page or resume, with no repeat submission
   const view = buildScreen(run)
   assert.equal(view.review, true)
   assert.equal(view.play.readOnly, true)
-  assert.equal(view.primaryAction, 'resume')
+  assert.equal(view.primaryAction, 'review-next')
   assert.equal(view.showSkip, false)
   assert.match(view.completionHint, /跳过/)
   const solved = buildScreen(Object.assign({}, run, { puzzles: { 'quiz-lantern': 'assisted' } }))

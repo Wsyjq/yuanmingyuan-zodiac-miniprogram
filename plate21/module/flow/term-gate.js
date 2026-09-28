@@ -9,7 +9,7 @@ function revealed(run) {
   if (!run) return true
   const status = ((run.puzzles || {})['quiz-envelope']) || ''
   if (status === 'solved' || status === 'assisted') return true
-  return !!((run.visited || {}).M2)
+  return !!((run.visited || {}).H1)
 }
 
 function maskText(text, run) {

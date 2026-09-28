@@ -39,7 +39,7 @@ function reviewNext(run, id) {
   const seen = new Set()
   while (target && !seen.has(target)) {
     if (canEnter(run, target)) return target
-    if (!pageOf(target).addedInRevision) return ''
+    // 回看前进跳过打不开的节点（被跳过的谜题揭晓、尚未解锁的站内页），继续找下一个可回看页
     seen.add(target); target = pageOf(target).next
   }
   return ''

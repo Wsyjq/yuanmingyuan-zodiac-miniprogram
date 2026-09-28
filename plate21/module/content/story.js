@@ -172,7 +172,7 @@ module.exports = {
       "propPrompt": "袋里有铜版",
       "playId": "",
       "revealOf": "",
-      "next": "M1",
+      "next": "X1",
       "skipTo": "",
       "presentation": null,
       "relayLines": [],
@@ -191,29 +191,6 @@ module.exports = {
         "prints"
       ],
       "narrationPending": "最新稿正文已调整，待匹配录音"
-    },
-    {
-      "id": "M1",
-      "kind": "nav",
-      "siteId": "xieqiqu",
-      "lines": [],
-      "interaction": null,
-      "beforeLines": [],
-      "answerLines": [],
-      "signedLines": [],
-      "sectionTitle": "",
-      "narrId": "",
-      "image": "整页导航图",
-      "propPrompt": "",
-      "playId": "",
-      "revealOf": "",
-      "next": "X1",
-      "skipTo": "M2",
-      "presentation": null,
-      "relayLines": [],
-      "title": "",
-      "terms": [],
-      "props": []
     },
     {
       "id": "X1",
@@ -268,8 +245,7 @@ module.exports = {
         "title": "下一站去哪",
         "lines": [
           "日记和信封会指引你第一站的方向",
-          "信封的封口处和信的背面都有一半的字，拼接起来看一下！"
-        ]
+          ]
       },
       "beforeLines": [],
       "answerLines": [],
@@ -280,8 +256,8 @@ module.exports = {
       "propPrompt": "信封的封口处和信的背面都有一半的字，拼接起来看一下！",
       "playId": "quiz-envelope",
       "revealOf": "",
-      "next": "X3",
-      "skipTo": "M2",
+      "next": "H1",
+      "skipTo": "F1",
       "presentation": null,
       "relayLines": [],
       "title": "寻找下一站",
@@ -292,66 +268,12 @@ module.exports = {
       "narrationPending": "最新稿正文已调整，待匹配录音"
     },
     {
-      "id": "X3",
-      "kind": "read",
-      "siteId": "xieqiqu",
-      "lines": [
-        "原来线索在这里！看来，下一步该往那里走了。"
-      ],
-      "interaction": {
-        "title": "下一站去哪",
-        "lines": [
-          "黄花阵"
-        ],
-        "position": "before"
-      },
-      "beforeLines": [],
-      "answerLines": [],
-      "signedLines": [],
-      "sectionTitle": "",
-      "narrId": "narr-x3",
-      "image": "",
-      "propPrompt": "",
-      "playId": "",
-      "revealOf": "quiz-envelope",
-      "next": "M2",
-      "skipTo": "",
-      "presentation": null,
-      "relayLines": [],
-      "title": "线索拼起来了",
-      "terms": [],
-      "props": [],
-      "narrationPending": "最新稿正文已调整，待匹配录音"
-    },
-    {
-      "id": "M2",
-      "kind": "nav",
-      "siteId": "maze",
-      "lines": [],
-      "interaction": null,
-      "beforeLines": [],
-      "answerLines": [],
-      "signedLines": [],
-      "sectionTitle": "",
-      "narrId": "",
-      "image": "整页导航图",
-      "propPrompt": "",
-      "playId": "",
-      "revealOf": "",
-      "next": "H1",
-      "skipTo": "M3",
-      "presentation": null,
-      "relayLines": [],
-      "title": "",
-      "terms": [],
-      "props": []
-    },
-    {
       "id": "H1",
       "kind": "puzzle",
       "siteId": "maze",
       "lines": [
-        "到了黄花阵的入口时，眼前景观让我有些震惊——这不是普通的园林道路，而是一个迷宫！可是皇家宫苑中为什么会有一座迷宫呢？"
+        "原来线索在这里！看来，下一步该往那里走了。",
+      "到了黄花阵的入口时，眼前景观让我有些震惊——这不是普通的园林道路，而是一个迷宫！可是皇家宫苑中为什么会有一座迷宫呢？"
       ],
       "interaction": {
         "title": "迷宫的修建目的",
@@ -424,7 +346,7 @@ module.exports = {
       "interaction": {
         "title": "黄花阵名字的由来",
         "lines": [
-          "翻面揭晓答案"
+          
         ],
         "revealLines": [
           "黄花阵名字由来：由于宫女们手持黄色彩绸扎成的莲花灯，所以这个迷宫也得名黄花阵。"
@@ -505,7 +427,7 @@ module.exports = {
       "playId": "quiz-pattern",
       "revealOf": "",
       "next": "H6",
-      "skipTo": "M3",
+      "skipTo": "F1",
       "presentation": null,
       "relayLines": [],
       "title": "认出一路上的花纹",
@@ -539,7 +461,7 @@ module.exports = {
       "propPrompt": "",
       "playId": "",
       "revealOf": "quiz-pattern",
-      "next": "M3",
+      "next": "F1",
       "skipTo": "",
       "presentation": null,
       "relayLines": [],
@@ -557,29 +479,6 @@ module.exports = {
       ],
       "props": [],
       "narrationPending": "最新稿正文已调整，待匹配录音"
-    },
-    {
-      "id": "M3",
-      "kind": "nav",
-      "siteId": "fangwaiguan",
-      "lines": [],
-      "interaction": null,
-      "beforeLines": [],
-      "answerLines": [],
-      "signedLines": [],
-      "sectionTitle": "",
-      "narrId": "",
-      "image": "整页导航图",
-      "propPrompt": "",
-      "playId": "",
-      "revealOf": "",
-      "next": "F1",
-      "skipTo": "M4",
-      "presentation": null,
-      "relayLines": [],
-      "title": "",
-      "terms": [],
-      "props": []
     },
     {
       "id": "F1",
@@ -649,7 +548,7 @@ module.exports = {
         ]
       },
       "playId": "quiz-fang-use",
-      "next": "FR1",
+      "next": "F2",
       "skipTo": "F2",
       "terms": [],
       "props": [],
@@ -657,38 +556,11 @@ module.exports = {
       "addedInRevision": "v3-20260925-latest-docx"
     },
     {
-      "id": "FR1",
-      "title": "方外观里的生活",
-      "kind": "read",
-      "siteId": "fangwaiguan",
-      "lines": [
-        "容妃在圆明园居住时曾在方外观礼拜。建筑中的阿拉伯文碑刻，也因此不再只是“奇特装饰”，而与这里真实发生过的生活有关。"
-      ],
-      "interaction": null,
-      "playId": "",
-      "next": "F2",
-      "skipTo": "",
-      "terms": [
-        {
-          "key": "sl10",
-          "label": "容妃"
-        },
-        {
-          "key": "sl09",
-          "label": "方外观"
-        }
-      ],
-      "props": [],
-      "narrId": "",
-      "revealOf": "quiz-fang-use",
-      "portrait": "/assets/fig/rongfei.jpg",
-      "addedInRevision": "v3-20260925-latest-docx"
-    },
-    {
       "id": "F2",
       "kind": "read",
       "siteId": "fangwaiguan",
       "lines": [
+      "容妃在圆明园居住时曾在方外观礼拜。建筑中的阿拉伯文碑刻，也因此不再只是“奇特装饰”，而与这里真实发生过的生活有关。",
         "原来，眼前这些看似有些“混搭”的建筑元素，并不是随意拼在一起的。它们背后，实际上对应着不同的文化背景和真实的使用需求。",
         "顺着铜版图继续看，会发现它和南侧的一组亭廊建筑几乎形成了对应关系——那就是五竹亭。",
         "这里，后来又留下了不少与乾隆、容妃有关的故事。哪些可以得到史料印证，哪些只是后来人的想象，如今已经很难一一分清。离开五竹亭时，我回头看了一眼。这里留下的故事很安静——一座礼拜的建筑，一组亭子，还有一些真假难辨的旧闻。",
@@ -704,7 +576,7 @@ module.exports = {
       "propPrompt": "",
       "playId": "",
       "revealOf": "",
-      "next": "M4",
+      "next": "HY1",
       "skipTo": "",
       "presentation": null,
       "relayLines": [],
@@ -721,29 +593,6 @@ module.exports = {
       ],
       "props": [],
       "narrationPending": "最新稿正文已调整，待匹配录音"
-    },
-    {
-      "id": "M4",
-      "kind": "nav",
-      "siteId": "haiyantang",
-      "lines": [],
-      "interaction": null,
-      "beforeLines": [],
-      "answerLines": [],
-      "signedLines": [],
-      "sectionTitle": "",
-      "narrId": "",
-      "image": "整页导航图",
-      "propPrompt": "",
-      "playId": "",
-      "revealOf": "",
-      "next": "HY1",
-      "skipTo": "M5",
-      "presentation": null,
-      "relayLines": [],
-      "title": "",
-      "terms": [],
-      "props": []
     },
     {
       "id": "HY1",
@@ -838,8 +687,8 @@ module.exports = {
       "propPrompt": "使用转盘",
       "playId": "prop-dial",
       "revealOf": "",
-      "next": "M5",
-      "skipTo": "M5",
+      "next": "XS1",
+      "skipTo": "XS1",
       "presentation": null,
       "relayLines": [],
       "title": "转盘里的信息",
@@ -848,29 +697,6 @@ module.exports = {
         "dial"
       ],
       "narrationPending": "最新稿正文已调整，待匹配录音"
-    },
-    {
-      "id": "M5",
-      "kind": "nav",
-      "siteId": "xushuilou",
-      "lines": [],
-      "interaction": null,
-      "beforeLines": [],
-      "answerLines": [],
-      "signedLines": [],
-      "sectionTitle": "",
-      "narrId": "",
-      "image": "整页导航图",
-      "propPrompt": "",
-      "playId": "",
-      "revealOf": "",
-      "next": "XS1",
-      "skipTo": "M6",
-      "presentation": null,
-      "relayLines": [],
-      "title": "",
-      "terms": [],
-      "props": []
     },
     {
       "id": "XS1",
@@ -897,7 +723,7 @@ module.exports = {
       "playId": "quiz-height",
       "revealOf": "",
       "next": "XS2",
-      "skipTo": "M6",
+      "skipTo": "DS1",
       "presentation": null,
       "relayLines": [],
       "title": "蓄水楼的线索",
@@ -930,7 +756,7 @@ module.exports = {
       "propPrompt": "",
       "playId": "",
       "revealOf": "quiz-height",
-      "next": "M6",
+      "next": "DS1",
       "skipTo": "",
       "presentation": null,
       "relayLines": [],
@@ -943,29 +769,6 @@ module.exports = {
       ],
       "props": [],
       "narrationPending": "最新稿正文已调整，待匹配录音"
-    },
-    {
-      "id": "M6",
-      "kind": "nav",
-      "siteId": "dashuifa",
-      "lines": [],
-      "interaction": null,
-      "beforeLines": [],
-      "answerLines": [],
-      "signedLines": [],
-      "sectionTitle": "",
-      "narrId": "",
-      "image": "整页导航图",
-      "propPrompt": "",
-      "playId": "",
-      "revealOf": "",
-      "next": "DS1",
-      "skipTo": "M7",
-      "presentation": null,
-      "relayLines": [],
-      "title": "",
-      "terms": [],
-      "props": []
     },
     {
       "id": "DS1",
@@ -982,7 +785,7 @@ module.exports = {
         "title": "大水法",
         "lines": [
           "请将《西洋楼铜版图·大水法南面》的铜版画和眼前遗址进行对照，复原档案中残存的部分。",
-          "画中还缺少鹿与猎犬。请对照铜版图，将它们拖回水池中的位置。"
+          "画中还缺少鹿与猎犬。"
         ]
       },
       "beforeLines": [],
@@ -995,7 +798,7 @@ module.exports = {
       "playId": "place-animals",
       "revealOf": "",
       "next": "DS2",
-      "skipTo": "M7",
+      "skipTo": "HG1",
       "presentation": null,
       "relayLines": [],
       "title": "对照铜版图复原水法",
@@ -1039,7 +842,7 @@ module.exports = {
       "propPrompt": "",
       "playId": "",
       "revealOf": "place-animals",
-      "next": "M7",
+      "next": "HG1",
       "skipTo": "",
       "presentation": null,
       "relayLines": [],
@@ -1052,29 +855,6 @@ module.exports = {
       ],
       "props": [],
       "narrationPending": "最新稿正文已调整，待匹配录音"
-    },
-    {
-      "id": "M7",
-      "kind": "nav",
-      "siteId": "hugo",
-      "lines": [],
-      "interaction": null,
-      "beforeLines": [],
-      "answerLines": [],
-      "signedLines": [],
-      "sectionTitle": "",
-      "narrId": "",
-      "image": "整页导航图",
-      "propPrompt": "",
-      "playId": "",
-      "revealOf": "",
-      "next": "HG1",
-      "skipTo": "FN1",
-      "presentation": null,
-      "relayLines": [],
-      "title": "",
-      "terms": [],
-      "props": []
     },
     {
       "id": "HG1",
