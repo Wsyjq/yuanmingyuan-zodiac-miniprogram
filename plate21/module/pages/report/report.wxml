@@ -1,4 +1,6 @@
 <view class="report-page">
+  <image class="page-paper" src="/assets/figma/paper.jpg" mode="aspectFill"/>
+  <view class="report-foreground">
   <view wx:if="{{loading}}" class="notice">正在翻开你的考察档案……</view>
   <view wx:elif="{{loadError}}" class="notice error">
     <view>{{loadError}}</view><button class="report-button" bindtap="onRetryLoad">重新读取</button>
@@ -76,4 +78,5 @@
     <button class="report-button return-button" bindtap="onReturn" disabled="{{busy || saving}}">返回考察</button>
   </block>
   <canvas type="2d" id="reportCanvas" class="export-canvas" style="width:700px;height:2000px;" />
+  </view>
 </view>

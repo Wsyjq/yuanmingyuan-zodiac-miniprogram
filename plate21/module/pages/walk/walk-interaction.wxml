@@ -30,13 +30,13 @@
       </view>
       <view wx:if="{{screen.figures.length}}" class="pattern-grid"><button wx:for="{{screen.figures}}" wx:key="id" data-id="{{item.id}}" bindtap="onChoice" class="pattern {{item.selected ? 'selected' : ''}}" disabled="{{review}}"><image src="{{item.src}}" mode="aspectFill"/><text>{{item.label}}</text></button></view>
       <water-clock wx:if="{{playId === 'quiz-hour'}}" state="{{waterClockState}}" active="{{pageVisible && !drawer}}" bind:change="onWaterClockChange" bind:complete="onWaterClockComplete"/>
-      <view wx:if="{{playId === 'prop-dial'}}" class="activity"><checkbox-group bindchange="onConfirmDial"><label class="check-label"><checkbox value="done" checked="{{ui.confirmed}}" disabled="{{review}}" color="#716743"/>我已完成实体转盘操作，准备继续</label></checkbox-group></view>
+      <view wx:if="{{playId === 'prop-dial'}}" class="activity"><checkbox-group bindchange="onConfirmDial"><label class="check-label"><checkbox value="done" checked="{{ui.confirmed}}" disabled="{{review}}" color="#a45442"/>我已完成实体转盘操作，准备继续</label></checkbox-group></view>
       <fountain-puzzle wx:if="{{playId === 'place-animals'}}" placed="{{ui.placed}}" active="{{pageVisible && !drawer && !restartScreen}}" read-only="{{review}}" bind:change="onFountainPlacement"/>
       <view wx:if="{{pageId === 'DS2'}}" class="activity">
         <view class="subheading">旧画与眼前</view><view class="fountain-frame">
           <view class="ruins-line"><view class="column c1"></view><view class="column c2"></view><view class="arch"></view><view class="column c3"></view><view class="column c4"></view><text>抬头看看，眼前还留下了什么</text></view>
           <view class="reconstruction" style="opacity:{{1 - (ui.fountainProgress || 0) / 100}}"><view class="jet jet-left"></view><view class="jet jet-right"></view><view class="deer">鹿</view><view class="dogs">猎狗 · 猎狗 · 猎狗</view><text class="reconstruction-label"></text></view>
-        </view><slider min="0" max="100" value="{{ui.fountainProgress || 0}}" activeColor="#627d77" bindchange="onFade"/><view class="row caption"><text>旧时构件与水流</text><text>眼前遗址</text></view>
+        </view><slider min="0" max="100" value="{{ui.fountainProgress || 0}}" activeColor="#a45442" bindchange="onFade"/><view class="row caption"><text>旧时构件与水流</text><text>眼前遗址</text></view>
       </view>
   </block>
       <view wx:if="{{hint && screen.play}}" class="notice">{{hint}}</view><button wx:if="{{hasHint && !review && screen.play}}" class="text-button" bindtap="onHint">给我一点提示</button>

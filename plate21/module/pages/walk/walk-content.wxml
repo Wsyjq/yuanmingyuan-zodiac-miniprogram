@@ -16,7 +16,7 @@
       </view>
       <text wx:if="{{screen.sectionTitle}}" class="caption">{{screen.sectionTitle}}</text>
       <view wx:if="{{screen.interaction.position === 'before'}}"><include src="walk-interaction.wxml" /></view>
-      <view class="narrative"><text wx:for="{{narrative}}" wx:for-item="paragraph" wx:key="index" class="paragraph"><text wx:for="{{paragraph}}" wx:key="index" class="{{item.key ? 'history-link' : ''}}" data-key="{{item.key}}" bindtap="onOpenCard">{{item.text}}</text></text></view>
+      <view class="narrative {{narrative.length ? 'narrative-card' : ''}}"><text wx:for="{{narrative}}" wx:for-item="paragraph" wx:key="index" class="paragraph"><text wx:for="{{paragraph}}" wx:key="index" class="{{item.key ? 'history-link' : ''}}" data-key="{{item.key}}" bindtap="onOpenCard">{{item.text}}</text></text></view>
       <image wx:if="{{screen.portrait}}" src="{{screen.portrait}}" mode="widthFix" class="illustration" data-src="{{screen.portrait}}" bindtap="onPreview"/>
       <image wx:if="{{screen.teacher}}" src="{{screen.teacher}}" mode="widthFix" class="illustration"/>
       <view wx:if="{{screen.terms.length}}" class="terms"><button wx:for="{{screen.terms}}" wx:key="key" class="chip" data-key="{{item.key}}" bindtap="onOpenCard">史料 · {{item.label}}</button></view>
@@ -35,7 +35,7 @@
         <view wx:if="{{ui.relayKind === 'photo'}}"><image wx:if="{{ui.relayPath}}" src="{{ui.relayPath}}" mode="aspectFit" class="relay-photo"/><button class="secondary" bindtap="onRelayPhoto">{{ui.relayPath ? '替换照片' : '选择照片'}}</button></view>
         <textarea data-key="relayText" value="{{ui.relayText}}" maxlength="500" placeholder="写下想留住的观察或心愿…" placeholder-class="ph-block" bindinput="onInput"/>
         <button class="secondary" bindtap="onSaveRelay" disabled="{{busy}}">仅私人保存</button><text wx:if="{{ui.relaySaved}}" class="success">私人记录已保存在这份考察档案里</text>
-        <checkbox-group bindchange="onRelayConsent"><label class="check-label"><checkbox value="public" checked="{{ui.consent}}" color="#716743"/>我同意将这份内容提交给官方，用于向其他探寻者公开展示。</label></checkbox-group>
+        <checkbox-group bindchange="onRelayConsent"><label class="check-label"><checkbox value="public" checked="{{ui.consent}}" color="#a45442"/>我同意将这份内容提交给官方，用于向其他探寻者公开展示。</label></checkbox-group>
         <button class="secondary" bindtap="onSubmitRelay" disabled="{{busy || !ui.consent}}">公开投稿</button><button class="text-button" bindtap="onNewRelay">另写一份</button>
         <view wx:for="{{contributions}}" wx:key="id" class="record"><text>{{item.label}}</text><text wx:if="{{item.reason}}" class="caption">{{item.reason}}</text><view class="row"><button class="text-button" data-id="{{item.id}}" bindtap="onRefreshContribution">检查状态</button><button wx:if="{{item.receiptId && item.status !== 'withdrawn'}}" class="text-button" data-id="{{item.id}}" bindtap="onWithdraw">撤回公开投稿</button><button wx:if="{{item.reportable}}" class="text-button" data-id="{{item.id}}" bindtap="onReportContribution">举报这条公开内容</button></view></view>
       </view>

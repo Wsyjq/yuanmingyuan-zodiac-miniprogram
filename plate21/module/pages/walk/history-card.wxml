@@ -1,6 +1,8 @@
 <view class="history-detail">
 <button class="text-button history-back" bindtap="onHistoryList">‹ 返回史料目录</button>
-          <view class="title small">{{card.title}}</view>
+          <text class="history-kicker">ARCHIVE NOTE · 史料收录</text>
+          <view class="history-rule"></view>
+          <view class="history-head"><text class="history-id">{{card.key}}</text><view class="title small">{{card.title}}</view><text class="history-index">{{card.layers.length}} 层</text></view>
 
           <view wx:if="{{card.layers.length > 1}}" class="history-levels"><button wx:for="{{card.layers}}" wx:key="index" class="chip" data-level="{{index}}" bindtap="onCardLevel">{{index === 0 ? '概览' : index === 1 ? '深入' : '延伸'}}</button></view>
           <image wx:if="{{card.image && !cardImageFailed}}" src="{{card.image}}" mode="widthFix" class="illustration" data-src="{{card.image}}" bindtap="onPreview" binderror="onCardImageError"/>
@@ -12,5 +14,5 @@
           </view>
           <view wx:if="{{card.years.length}}" class="caption">相关年份：<text wx:for="{{card.years}}" wx:key="*this">{{item}}　</text></view>
 
-          <button class="secondary" bindtap="onCloseDrawer">读完，返回剧情</button>
+          <button class="primary history-close" bindtap="onCloseDrawer">读完，返回剧情</button>
 </view>

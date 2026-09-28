@@ -1,4 +1,7 @@
 <view bindtouchstart="onUserInteraction" class="p21-page {{playId === 'quiz-hour' ? 'canvas-page' : ''}}">
+  <image class="page-paper" src="/assets/figma/paper.jpg" mode="aspectFill"/>
+  <image wx:if="{{!letterScene}}" class="page-wash" src="/assets/figma/wash.png" mode="scaleToFill"/>
+  <image wx:if="{{!letterScene && !restartScreen}}" class="page-hills" src="/assets/figma/hills.png" mode="widthFix"/>
   <scroll-view wx:if="{{restartScreen}}" scroll-y class="restart-screen">
     <view class="restart-paper"><text class="restart-eyebrow">第廿一图 · 再访</text><view class="restart-mark">廿一</view><view class="restart-title">再走一遍，
 会看见什么？</view><text class="restart-prose">旧图仍在，新的足迹尚未落下。
@@ -14,7 +17,7 @@
   </view>
   <view class="toolbar">
     <button class="text-button" bindtap="onBack" disabled="{{busy || loading}}">‹ 返回</button>
-    <text class="brand">第廿一图</text>
+    <text class="brand">{{(card && card.title) || (screen && screen.siteTitle) || '第廿一图'}}</text>
     <button class="text-button" data-name="history" bindtap="onDrawer">考察簿 ☰</button>
   </view>
   <view wx:if="{{loading}}" class="empty">正在打开考察档案…</view>
@@ -22,7 +25,7 @@
   <view wx:if="{{notice}}" class="notice">{{notice}}</view>
   <view wx:if="{{letterScene}}" class="letter-stage"><letter-scene chapter="{{pageId}}" heading="{{screen.sectionTitle}}" lines="{{letterLines}}" cursor="{{letterCursor || 0}}" scene="{{letterSceneImage}}" active="{{pageVisible && !drawer}}" busy="{{busy}}" bind:progress="onLetterProgress" bind:complete="onLetterComplete" /></view>
   <!-- Native Canvas uses page scrolling, avoiding a nested native scroll layer. -->
-  <view wx:if="{{pageId && !letterScene && playId === 'quiz-hour'}}"><include src="walk-content.wxml" /></view>
+  <view wx:if="{{pageId && !letterScene && playId === 'quiz-hour'}}" class="stage"><include src="walk-content.wxml" /></view>
   <scroll-view wx:elif="{{pageId && !letterScene}}" scroll-y class="reading" scroll-top="{{scrollTop}}" bindscroll="onScroll">
     <include src="walk-content.wxml" />
   </scroll-view>
@@ -48,7 +51,7 @@
           <button class="text-button" data-name="menu" bindtap="onDrawer">音频、作品与考察设置</button>
         </block>
       </block>
-      <block wx:else><view class="row"><text>讲述音频</text><switch checked="{{voiceEnabled}}" bindchange="onVoice" color="#627d77"/></view><button class="text-button" bindtap="onMuteAll">暂停全部声音</button>
+      <block wx:else><view class="row"><text>讲述音频</text><switch checked="{{voiceEnabled}}" bindchange="onVoice" color="#a45442"/></view><button class="text-button" bindtap="onMuteAll">暂停全部声音</button>
         <button class="choice" bindtap="onResume">回到当前考察进度</button><button class="choice" data-name="history" bindtap="onDrawer">已遇见的史料</button>
         <view wx:for="{{rows}}" wx:key="id" class="progress-row"><button class="text-button" data-page="{{item.openPageId}}" bindtap="onOpenPage" disabled="{{!item.canOpen}}">{{item.title}} · {{item.state}}</button><view class="caption" wx:for="{{item.puzzles}}" wx:for-item="puzzle" wx:key="playId">{{puzzle.state}}<button wx:if="{{puzzle.canOpen}}" class="text-button" data-page="{{puzzle.reopenPageId}}" bindtap="onOpenPage">回看互动</button></view></view>
         <view class="subheading">已完成的作品</view><text wx:if="{{!archives.length}}" class="caption">完成考察后，作品会保存在这里。</text><button wx:for="{{archives}}" wx:key="id" class="choice" data-id="{{item.id}}" bindtap="onReport">{{item.name}} · {{item.date}}</button>
