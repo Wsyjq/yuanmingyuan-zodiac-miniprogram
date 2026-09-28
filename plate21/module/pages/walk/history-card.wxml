@@ -8,6 +8,6 @@
   <text wx:if="{{card.caption && !cardLevel}}" class="caption">{{card.caption}}</text>
   <view class="history-rule"></view>
   <view wx:for="{{card.layers}}" wx:key="index" id="history-layer-{{index}}" class="{{index === cardLevel ? 'history-current' : 'history-pending'}}"><image wx:if="{{card.image && !cardImageFailed && cardLevel && index === cardLevel}}" src="{{card.image}}" mode="aspectFill" class="history-side" data-src="{{card.image}}" bindtap="onPreview" binderror="onCardImageError"/><text class="paragraph" user-select>{{item}}</text></view>
-  <view class="history-actions"><button wx:if="{{cardLevel + 1 < card.layers.length}}" class="primary" data-level="{{cardLevel + 1}}" bindtap="onCardLevel">继续了解 →</button><button class="{{cardLevel + 1 < card.layers.length ? 'secondary' : 'primary'}} history-close" bindtap="onCloseDrawer">读完，返回剧情</button></view>
+  <view class="history-actions"><button wx:if="{{cardLevel + 1 < card.layers.length}}" class="primary" data-level="{{cardLevel + 1}}" bindtap="onCardLevel">继续了解<text class="btn-arrow">→</text></button><button class="{{cardLevel + 1 < card.layers.length ? 'secondary' : 'primary'}} history-close" bindtap="onCloseDrawer">读完，返回剧情</button></view>
   <text class="history-foot">YUANMINGYUAN</text>
 </view>

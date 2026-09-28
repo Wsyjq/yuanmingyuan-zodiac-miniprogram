@@ -390,7 +390,7 @@ test('empty answers give an action; wrong answers give an observation cue; expla
     await h.invoke('onSkip')
     assert.equal(h.session.getRun().puzzles['quiz-envelope'], 'skipped')
     assert.equal(h.page.data.drawer, '')
-    assert.equal(h.page.data.pageId, 'F1')
+    assert.equal(h.page.data.pageId, 'M2')
   } finally { await h.close() }
 })
 test('water-clock explanation cannot reveal noon before the prediction sequence', async () => {
@@ -597,28 +597,15 @@ test('reporting a public contribution needs the host capability and a real recei
   await h.close()
 })
 
-test('a left swipe advances a reading page and leaves nav pages and open drawers alone', async () => {
+test('a left swipe does not turn the page; the continue button does', async () => {
   const h = await harness()
   try {
     const end = (x, y) => h.invoke('onPageTouchEnd', { changedTouches: [{ clientX: x, clientY: y }] })
     h.page.setData({ showModeChoice: false })
     h.page.onPageTouchStart({ touches: [{ clientX: 220, clientY: 300 }] })
-    await end(200, 430)
+    await end(140, 312)
     assert.equal(h.page.data.pageId, 'P1')
-    h.page.onPageTouchStart({ touches: [{ clientX: 220, clientY: 300 }] })
-    await end(140, 312)
+    await h.invoke('onPrimary')
     assert.equal(h.page.data.pageId, 'P2')
-    h.page.setData({ drawer: 'history', showModeChoice: false })
-    h.page.onPageTouchStart({ touches: [{ clientX: 220, clientY: 300 }] })
-    await end(140, 312)
-    assert.equal(h.page.data.pageId, 'P2')
-    assert.equal(h.page.data.drawer, 'history')
-    h.page.onCloseDrawer()
-    await h.arrange('X1')
-    assert.equal(h.page.data.screen.kind, 'puzzle')
-    h.page.setData({ showModeChoice: false })
-    h.page.onPageTouchStart({ touches: [{ clientX: 220, clientY: 300 }] })
-    await end(140, 312)
-    assert.equal(h.page.data.pageId, 'X1')
   } finally { await h.close() }
 })

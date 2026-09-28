@@ -1,7 +1,7 @@
 # 游戏模块跳转流程图（v3）
 
 > 本文档描述 `feat/game-module-v3` 的页面跳转与按钮行为，供开发与核对使用。
-> 更新：2026-09-26（含回看前进修复）。验证基线：`npm test` 159 项 + 微信开发者工具模拟器实测。
+> 更新：2026-09-29。M1–M7 过渡页已接回主链（44 节点）。X3 仍并入 H1，FR1 仍并入 F2。翻页只用按钮，不再左滑。
 
 ## 一、页面栈（微信页面级跳转）
 
@@ -20,7 +20,7 @@ flowchart TD
 - report 的三个出口统一 `navigateBack` 回到**原 walk 实例**（无来路时才 `redirectTo` 兜底），不再压入重复 walk 页。
 - 系统返回链：`report → walk → index`，共两层，无重复页。
 
-## 二、46 节点主线与跳过线
+## 二、44 节点主线与跳过线
 
 实线 = `next`（继续）；虚线 = `skipTo`（“跳过/这次不去”）。
 
@@ -33,13 +33,13 @@ flowchart TD
     E1{"E1 辨认方向<br/>quiz-direction"} --> E2["E2 走进西洋楼"]
     end
     subgraph 谐奇趣
-    M1["M1 导航"] --> X1{"X1 听声<br/>listen-nfc"} --> X2{"X2 信封<br/>quiz-envelope"} --> X3["X3 揭晓"]
+    M1["M1 导航"] --> X1{"X1 听声<br/>listen-nfc"} --> X2{"X2 信封<br/>quiz-envelope"}
     end
     subgraph 黄花阵
     M2["M2 导航"] --> H1{"H1 迷宫用途<br/>quiz-lantern"} --> H2["H2 灯会<br/>揭晓"] --> H3{"H3 名字<br/>prop-flip"} --> H4{"H4 观察<br/>photo-pavilion"} --> H5{"H5 花纹<br/>quiz-pattern"} --> H6["H6 寓意"]
     end
     subgraph 方外观
-    M3["M3 导航"] --> F1["F1 方外观"] --> FQ1{"FQ1 人物<br/>quiz-fang-person"} --> FQ2{"FQ2 用途<br/>quiz-fang-use"} --> FR1["FR1 生活"] --> F2["F2 五竹亭"]
+    M3["M3 导航"] --> F1["F1 方外观"] --> FQ1{"FQ1 人物<br/>quiz-fang-person"} --> FQ2{"FQ2 用途<br/>quiz-fang-use"} --> F2["F2 五竹亭"]
     end
     subgraph 海晏堂
     M4["M4 导航"] --> HY1{"HY1 水力钟<br/>quiz-hour"} --> HY2["HY2 水流"] --> HY3{"HY3 转盘<br/>prop-dial"}
@@ -55,7 +55,7 @@ flowchart TD
     end
 
     E2 --> M1
-    X3 --> M2
+    X2 --> M2
     H6 --> M3
     F2 --> M4
     HY3 --> M5

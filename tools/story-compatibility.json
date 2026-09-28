@@ -146,5 +146,12 @@
   "FQ2": {
     "kind": "puzzle",
     "playId": "quiz-fang-use"
-  }
+  },
+  "M1": { "kind": "nav", "playId": "" },
+  "M2": { "kind": "nav", "playId": "" },
+  "M3": { "kind": "nav", "playId": "" },
+  "M4": { "kind": "nav", "playId": "" },
+  "M5": { "kind": "nav", "playId": "" },
+  "M6": { "kind": "nav", "playId": "" },
+  "M7": { "kind": "nav", "playId": "" }
 }

@@ -19,7 +19,8 @@
       <view class="title">{{screen.title || '第二十一图'}}<text class="seal">{{pageId === 'P1' ? '存疑' : '考察'}}</text></view>
       <view wx:if="{{screen.kind === 'nav'}}" class="route-card">
         <text class="eyebrow">前往下一站</text><view class="route-destination">{{screen.siteTitle}}</view>
-        <text>{{screen.nav.instruction || '请对照实体地图与现场标识步行。'}}到达后，点击“我到达了”。</text>
+        <text wx:if="{{screen.nav.from}}" class="route-leg">现在离开{{screen.nav.from}}。下一站是{{screen.nav.to}}。</text>
+        <text>{{screen.nav.instruction || '请对照实体地图与现场标识步行。'}}到达后，点击「我到达了」。</text>
         <view class="route-strip"><text wx:for="{{rows}}" wx:key="id" wx:if="{{index > 0 && index < 9}}" class="route-stop {{item.current ? 'current' : ''}}">{{item.title}}</text></view>
       </view>
       <view wx:if="{{screen.prop.items.length && !screen.interaction && !screen.separateStory}}" class="prop">

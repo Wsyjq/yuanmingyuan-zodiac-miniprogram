@@ -8,7 +8,7 @@
     <view class="restart-paper"><text class="restart-eyebrow">第廿一图 · 再访</text><view class="restart-mark">廿一</view><view class="restart-title">再走一遍，
 会看见什么？</view><text class="restart-prose">旧图仍在，新的足迹尚未落下。
 带上档案，再次走进西洋楼。</text><view class="restart-rule"></view><text class="restart-note">已完成的作品会保留。
-这次尚未完成的考察将从头开始。</text><view wx:if="{{error}}" class="error">{{error}}</view><button class="primary" bindtap="onConfirmRestart" disabled="{{busy || loading}}" loading="{{busy}}">重新启程 →</button><button class="text-button restart-cancel" bindtap="onCancelRestart" disabled="{{busy}}">回到这份档案</button></view>
+这次尚未完成的考察将从头开始。</text><view wx:if="{{error}}" class="error">{{error}}</view><button class="primary" bindtap="onConfirmRestart" disabled="{{busy || loading}}" loading="{{busy}}">重新启程<text class="btn-arrow">→</text></button><button class="text-button restart-cancel" bindtap="onCancelRestart" disabled="{{busy}}">回到这份档案</button></view>
   </scroll-view>
   <block wx:else>
   <view class="page-head" style="padding-top: {{headOffset}}px">
@@ -32,8 +32,7 @@
   <scroll-view wx:elif="{{pageId && !letterScene}}" scroll-y class="reading" scroll-top="{{scrollTop}}" bindscroll="onScroll" bindtouchstart="onReadTouchStart" bindtouchend="onPageTouchEnd">
     <include src="walk-content.wxml" />
   </scroll-view>
-  <view wx:if="{{pageId && !letterScene && !screen.play && !screen.interaction && (screen.kind === 'read' || screen.kind === 'puzzle') && !review && screen.primaryAction === 'continue' && screen.primary === '继续'}}" class="read-advance"><button class="primary" bindtap="onPrimary" disabled="{{busy}}" loading="{{busy}}">← 左滑继续</button><button wx:if="{{screen.showSkip}}" class="text-button skip" bindtap="onSkip" disabled="{{busy}}">{{screen.skipLabel || '这题跳过'}}</button></view>
-  <view wx:elif="{{pageId && !letterScene && !screen.play}}" class="footer"><button class="primary" bindtap="onPrimary" disabled="{{busy}}" loading="{{busy}}">{{review ? screen.primary : completed && pageId === 'FN4' ? '查看我的作品' : pageId === 'LT8' ? '读完来信，查看作品' : screen.primary || '继续'}}</button><button wx:if="{{screen.showSkip && !review}}" class="text-button skip" bindtap="onSkip" disabled="{{busy}}">{{screen.skipLabel || '这题跳过'}}</button></view>
+  <view wx:if="{{pageId && !letterScene && !screen.play}}" class="footer"><button class="primary" bindtap="onPrimary" disabled="{{busy}}" loading="{{busy}}">{{review ? screen.primary : completed && pageId === 'FN4' ? '查看我的作品' : pageId === 'LT8' ? '读完来信，查看作品' : screen.primary || '继续'}}</button><button wx:if="{{screen.showSkip && !review}}" class="text-button skip" bindtap="onSkip" disabled="{{busy}}">{{screen.skipLabel || '这题跳过'}}</button></view>
   <view wx:if="{{pageId && !letterScene && !screen.play && !screen.interaction && screen.sectionCount > 1}}" class="progress-dots"><view wx:for="{{screen.sectionDots}}" wx:for-index="dotIndex" wx:key="dotIndex" class="progress-dot {{item ? 'progress-dot-on' : ''}}"></view></view>
   <image wx:if="{{pageId && !drawer && !letterScene && narrClips.length}}" class="listen-float" src="/assets/figma/icon-listen.png" mode="aspectFit" bindtap="onListen"/>
   <view wx:if="{{pageId && !drawer}}" class="nav-float" style="left:{{navX}}px;top:{{navY}}px" catchtouchstart="onNavStart" catchtouchmove="onNavMove" catchtouchend="onNavEnd" catchtouchcancel="onNavCancel" role="button" aria-label="实地导引，可拖动"><view class="guide-leaf"></view><text class="guide-label">导引</text></view>

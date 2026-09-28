@@ -68,9 +68,10 @@ test('sampled mainline and relay screens render through the runtime with their i
     assert.doesNotMatch(text(result.html), /undefined|NaN/, id)
     assert.match(result.html, /class="primary"[^>]*>[^<\s]/, id + ' primary button label must render')
     if (id === 'P1') {
-      assert.match(text(result.html), /← 左滑继续/)
+      assert.match(result.html, /class="footer"/)
+      assert.match(text(result.html), /继续/)
+      assert.doesNotMatch(text(result.html), /左滑/)
       assert.match(text(result.html), /存疑/)
-      assert.doesNotMatch(result.html, /class="footer"/)
     }
     if (id === 'FN4') assert.match(result.html, /class="footer"/)
   }
@@ -83,6 +84,16 @@ test('rendered H3 keeps answers hidden until physical flip is explicitly acknowl
   assert.equal((body.match(/由于宫女们手持黄色彩绸/g) || []).length, 1)
   assert.match(result.html, /class="footer"[\s\S]*class="primary"[^>]*>继续/)
   assert.doesNotMatch(result.html, /class="interaction-actions"/)
+})
+
+test('station transitions name the place you leave and the next station', async () => {
+  const result = await render('M1')
+  assert.deepEqual(result.errors, [])
+  const body = text(result.html)
+  assert.match(body, /现在离开西洋楼入口/)
+  assert.match(body, /下一站是谐奇趣/)
+  assert.match(body, /我到达了/)
+  assert.match(result.html, /class="footer"/)
 })
 
 test('reading activities without a play widget keep the sticky page button', async () => {

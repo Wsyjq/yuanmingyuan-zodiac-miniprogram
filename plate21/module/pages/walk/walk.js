@@ -32,6 +32,15 @@ function clone(value) { return JSON.parse(JSON.stringify(value)) }
 function ds(e, key) { return e.currentTarget.dataset[key] }
 function fmt(at) { return dates.formatArchiveDate(dates.dateKeyFromTimestamp(at)) }
 function errorText(err) { return err && (err.message || err.errMsg) || '操作未完成，请重试' }
+function contentAfter(id) {
+  let page = pages.byId[pages.byId[id] && pages.byId[id].next]
+  const seen = new Set()
+  while (page && page.kind === 'nav' && !seen.has(page.id)) {
+    seen.add(page.id)
+    page = pages.byId[page.next]
+  }
+  return page || null
+}
 Page({
   data: { listenMode: '', showModeChoice: false, autoSeconds: 0, narrationKey: '', listenKey: '', restartScreen: false, loading: true, busy: false, error: '', pageVisible: true, screen: {}, ui: {}, rows: [], records: [],
     narrClips: [], voiceEnabled: false, drawer: '', card: null, cardLevel: 0, drawerScrollTop: 0, cardAnchor: '', cardImageFailed: false, waterClockState: {}, clockPlaying: false,
@@ -135,7 +144,7 @@ Page({
       narrative: model.lines.map(line => glossary.segments(line, glossary.inlineTermsFor(page.id, unlockedCards))),
       routeRows: view.rows.filter(r => navModel.listSites().some(s => s.id === r.id)).map(r => Object.assign({}, r, { openPageId: r.current ? view.resumePageId : view.openPageId(r.id) })),
       routeCurrent: (view.rows.find(r => r.current) || {}).title || '考察尚未开始',
-      canExplain: !!(page.playId && page.playId !== 'quiz-hour' && pages.byId[page.next] && (pages.byId[page.next].revealOf === page.playId || !pages.byId[page.next].revealOf)),
+      canExplain: !!(() => { const explained = contentAfter(page.id); return page.playId && page.playId !== 'quiz-hour' && explained && (explained.revealOf === page.playId || !explained.revealOf) })(),
       historyCards: unlockedCards, hasHint: !!taskGuide.hint(page.playId), hint: this.ui.hint ? taskGuide.hint(page.playId) : '',
       contributions: snap.contributions.map((c) => Object.assign({}, c, { label: STATUS[c.status] || c.status,
         reportable: bridge.available('reportContribution') && !!c.receiptId && c.status !== 'withdrawn' })),
@@ -153,20 +162,8 @@ Page({
   },
   onPageTouchStart(e) { this.onUserInteraction(); this.rememberSwipe(e) },
   onReadTouchStart(e) { this.rememberSwipe(e) },
-  onPageTouchEnd(e) {
-    const start = this._swipe
+  onPageTouchEnd() {
     this._swipe = null
-    if (!start) return
-    const t = e.changedTouches && e.changedTouches[0]
-    if (!t) return
-    const dx = t.clientX - start.x
-    const dy = t.clientY - start.y
-    // 阅读页没有底栏。向左滑过约 48px，且比上下滑更明显，才翻页。
-    if (!(dx < -48 && Math.abs(dx) > Math.abs(dy) * 1.2)) return
-    const screen = this.data.screen || {}
-    if (this.data.busy || this.data.drawer || this.data.letterScene || this.data.review || this.data.restartScreen || this.data.showModeChoice) return
-    if (screen.kind !== 'read' || screen.play || screen.interaction || screen.primaryAction !== 'continue' || screen.primary !== '继续') return
-    this.onPrimary()
   },
   syncListen() {
     const key = listenFlow.eligible(this.data) ? this.data.narrationKey + ':' + (this._listenEpoch || 0) : ''
@@ -281,7 +278,7 @@ Page({
   },
   onExplain() {
     if (this.data.review || !this.data.canExplain) return
-    const next = pages.byId[pages.byId[this.run.pageId].next]
+    const next = contentAfter(this.run.pageId)
     audioBus.pauseAll()
     this.draft({ hint: true })
     this.setData({ drawer: 'explanation', explanation: (next.interaction ? next.interaction.lines : []).concat(next.lines) })
