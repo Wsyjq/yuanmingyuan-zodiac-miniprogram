@@ -1,7 +1,8 @@
 'use strict'
 // 从 Figma REST API 拉取节点树、切图与设计 token，供“Figma UI -> 微信小程序 WXML/WXSS”还原评估使用。
 // 零运行时依赖（Node 18+ 内置 fetch）。凭据读环境变量 FIGMA_TOKEN，或根目录 .env 的 FIGMA_TOKEN。
-// 产物只落在 .figma-cache/（已 gitignore），不进 plate21/module 发布包，也不改任何页面源码。
+// 产物默认落在仓库外的临时目录（os.tmpdir()/opencode/figma-cache），可用 FIGMA_CACHE_DIR 覆盖。
+// 刻意不写进仓库：切图体积大，落进仓库会被微信开发者工具的打包预算算进主包（见实现日志 2026-09-28）。
 //
 //   node tools/figma-export.js --help
 //   node tools/figma-export.js --file 4x0FQff5l1vAbWt5kRpBym --node 1:40208
@@ -9,10 +10,14 @@
 // 说明：本工具只做“取数据 + 落盘”，不生成 WXML/WXSS。小程序侧有硬约束（WXSS 仅 class 选择器、
 // url() 不能引本地图、字体需 base64 注入），自动导出的 HTML/Tailwind 不可直接使用，见 plate21/DEV_NOTES.md。
 const fs = require('fs')
+const os = require('os')
 const path = require('path')
 
 const ROOT = path.resolve(__dirname, '..')
-const OUT_ROOT = path.join(ROOT, '.figma-cache')
+// 默认写到仓库外，避免切图计入微信小程序打包预算。FIGMA_CACHE_DIR 可改。
+const OUT_ROOT = process.env.FIGMA_CACHE_DIR
+  ? path.resolve(process.env.FIGMA_CACHE_DIR)
+  : path.join(os.tmpdir(), 'opencode', 'figma-cache')
 const API = 'https://api.figma.com'
 const DEFAULT_FILE = '4x0FQff5l1vAbWt5kRpBym'
 const DEFAULT_NODE = '1:40208'
@@ -211,7 +216,8 @@ function chunk (items, size) {
 }
 
 function relToRoot (p) {
-  return path.relative(ROOT, p).replace(/\\/g, '/')
+  const rel = path.relative(ROOT, p)
+  return (!rel || rel.startsWith('..') || path.isAbsolute(rel)) ? p : rel.replace(/\\/g, '/')
 }
 
 // 分批渲染。单批失败只记账不中断：Figma 的 /v1/images/ 限流会让个别批次 429，不该毁掉整次导出。
@@ -313,13 +319,15 @@ async function main () {
       '',
       '  --file <key>    Figma file key（默认 ' + DEFAULT_FILE + '）',
       '  --node <id>     节点 id，1:40208 或链接里的 1-40208（默认 ' + DEFAULT_NODE + '）',
-      '  --out <dir>     输出目录（默认 .figma-cache/<file>/<node>）',
+      '  --out <dir>     输出目录（默认 <临时目录>/opencode/figma-cache/<file>/<node>）',
       '  --scale <n>     切图倍率（默认 2）',
       '  --depth <n>     AUDIT.md 里子节点表格深度（默认 2）',
       '  --no-render     不渲染切图',
       '  --no-images     不下载图片填充',
       '',
-      '凭据：环境变量 FIGMA_TOKEN，或根目录 .env 写 FIGMA_TOKEN=...'
+      '凭据：环境变量 FIGMA_TOKEN，或根目录 .env 写 FIGMA_TOKEN=...',
+      '缓存：环境变量 FIGMA_CACHE_DIR 可改输出根目录。默认在仓库外，',
+      '      切勿把切图写进仓库——会被微信开发者工具算进打包预算。'
     ].join('\n'))
     return
   }
