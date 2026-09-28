@@ -110,7 +110,7 @@ expectDecl('18:124 阅读', walk, '.read-card .paragraph', 'font-weight', String
 expectDecl('18:124 阅读', walk, '.read-card .paragraph', 'line-height', rpx(body.style.lineHeightPx) + 'rpx', '正文行高')
 check('18:124 阅读', '样例红尺线不进共用页', !rule(walk, '.read-rule'), '节点 18:434 只压在阅读样例正文上，花纹帧另有一根；史料、来信、报告、入场没有')
 expectDecl('18:124 阅读', walk, '.seal', 'border', rpx(seal.strokeWeight) + 'rpx solid ' + firstStroke(seal), '印章描边')
-expectDecl('18:124 阅读', walk, '.page-head', 'margin', '0 ' + rpx(cardBox.x) + 'rpx', '两层页眉与内容卡同宽')
+expectDecl('18:124 阅读', walk, '.page-head', 'margin', '0', '页眉铺满屏幕')
 expectDecl('18:124 阅读', walk, '.toolbar', 'height', rpx(nodeBox(reading, bar).h) + 'rpx', '顶栏高')
 expectDecl('18:124 阅读', walk, '.toolbar', 'background', firstFill(bar), '顶栏填色')
 expectDecl('18:124 阅读', walk, '.toolbar', 'border-bottom', rpx(Math.max(1, Math.round(hair.absoluteBoundingBox.height))) + 'rpx solid ' + firstFill(hair), '顶栏底线')

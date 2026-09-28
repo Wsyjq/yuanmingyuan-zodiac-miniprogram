@@ -12,7 +12,7 @@
   </scroll-view>
   <block wx:else>
   <view class="page-head" style="padding-top: {{headOffset}}px">
-  <view wx:if="{{pageId && !loading}}" class="narration-bar">
+  <view wx:if="{{pageId && !loading}}" class="narration-bar" style="{{headerRightInset ? 'padding-right:' + headerRightInset + 'px' : ''}}">
     <view class="narration-heading"><text>{{listenMode === 'listen' ? '随声入园' : '静读档案'}}</text><image class="icon-arch" src="/assets/figma/icon-arch.png" mode="aspectFit"/><button class="text-button mode-switch" bindtap="onChooseModeOpen">切换</button></view>
     <audio-clip wx:if="{{narrClips.length}}" id="narration" clips="{{narrClips}}" context-key="{{narrationKey}}" listen-key="{{listenKey}}" compact active="{{pageVisible && !drawer && !showModeChoice && !restartScreen && !busy}}" label="听这一段" bind:state="onNarrationState" bind:ended="onNarrationEnded" bind:error="cancelAuto" />
     <view wx:if="{{autoSeconds}}" class="narration-countdown"><text>{{autoSeconds}} 秒后继续</text><button class="text-button" bindtap="cancelAuto">留在这一页</button></view>

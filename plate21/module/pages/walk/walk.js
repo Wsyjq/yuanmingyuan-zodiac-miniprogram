@@ -35,17 +35,18 @@ function errorText(err) { return err && (err.message || err.errMsg) || '操作�
 Page({
   data: { listenMode: '', showModeChoice: false, autoSeconds: 0, narrationKey: '', listenKey: '', restartScreen: false, loading: true, busy: false, error: '', pageVisible: true, screen: {}, ui: {}, rows: [], records: [],
     narrClips: [], voiceEnabled: false, drawer: '', card: null, cardLevel: 0, drawerScrollTop: 0, cardAnchor: '', cardImageFailed: false, waterClockState: {}, clockPlaying: false,
-    soundSrc: nfc.SOUND, soundAutoKey: '', relayItems: [], relayState: 'idle', contributions: [], archives: [], scrollTop: 0, navX: 0, navY: 0, headOffset: 0, locating: false, location: null, locationError: '' },
+    soundSrc: nfc.SOUND, soundAutoKey: '', relayItems: [], relayState: 'idle', contributions: [], archives: [], scrollTop: 0, navX: 0, navY: 0, headOffset: 0, headerRightInset: 0, locating: false, location: null, locationError: '' },
   async onLoad(query) {
     const window = wx.getWindowInfo ? wx.getWindowInfo() : (wx.getSystemInfoSync ? wx.getSystemInfoSync() : { windowWidth: 375, windowHeight: 667 })
     this._window = window
     const scale = (window.windowWidth || 375) / 393
-    let headOffset = window.statusBarHeight || 0
+    const headOffset = window.statusBarHeight || 0
+    let headerRightInset = 0
     try {
       const menu = wx.getMenuButtonBoundingClientRect && wx.getMenuButtonBoundingClientRect()
-      if (menu && menu.bottom) headOffset = menu.bottom + 4
-    } catch (err) { /* 开发者工具未给出胶囊位置时，只留状态栏高度 */ }
-    this.setData({ navX: Math.round(348 * scale), navY: Math.round(166 * scale), headOffset })
+      if (menu && menu.left && window.windowWidth) headerRightInset = Math.max(0, Math.round(window.windowWidth - menu.left))
+    } catch (err) { /* 没有胶囊矩形时，顶行只用样式里的右边距 */ }
+    this.setData({ navX: Math.round(348 * scale), navY: Math.round(166 * scale), headOffset, headerRightInset })
     this.query = query || {}; this.sessionId = this.query.sessionId || ''; this.ui = {}; this._active = true
     this._countdown = listenFlow.createCountdown({
       valid: () => this._active && listenFlow.eligible(this.data) && this._endedKey === this.data.narrationKey,
