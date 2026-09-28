@@ -81,6 +81,7 @@ test('rendered H3 keeps answers hidden until physical flip is explicitly acknowl
   const result = await render('H3', { flipped: true })
   const body = text(result.html)
   assert.equal((body.match(/由于宫女们手持黄色彩绸/g) || []).length, 1)
+  assert.match(result.html, /class="primary"[^>]*>继续/)
 })
 
 test('empty local relay has no fictional previous user or default moderation acknowledgement', async () => {
