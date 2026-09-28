@@ -12,7 +12,7 @@
       <view wx:if="{{screen.choices.length && playId !== 'quiz-pattern'}}" class="choices"><button wx:for="{{screen.choices}}" wx:key="id" class="choice {{item.selected ? 'selected' : ''}}" data-id="{{item.id}}" bindtap="onChoice" disabled="{{review}}">{{item.label}}</button></view>
       <view wx:if="{{playId === 'quiz-envelope'}}" class="input-group"><label>拼出的三个字</label><input data-key="text" value="{{ui.text}}" maxlength="20" placeholder="输入地点名称" placeholder-class="ph-line" bindinput="onInput" disabled="{{review}}"/></view>
       <view wx:if="{{playId === 'listen-nfc'}}" class="activity">
-        <audio-clip id="soundscape" src="{{soundSrc}}" kind="clip" active="{{pageVisible && !drawer}}" label="直接听 · 声景" bind:ended="onHeard" bind:error="onSoundError"/>
+        <audio-clip id="soundscape" src="{{soundSrc}}" kind="clip" listen-key="{{soundAutoKey}}" active="{{pageVisible && !drawer}}" label="直接听 · 声景" bind:ended="onHeard" bind:error="onSoundError"/>
         <button wx:if="{{!ui.heard && !review}}" class="secondary" bindtap="onHeard">我已听过，确认完成听音</button><text class="caption">{{nfcStatus}}</text><text wx:if="{{ui.heard}}" class="success">已听完这一段</text>
       </view>
             <view wx:if="{{playId === 'photo-pavilion'}}" class="activity">
