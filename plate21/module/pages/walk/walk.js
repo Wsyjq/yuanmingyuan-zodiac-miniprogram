@@ -165,7 +165,7 @@ Page({
     if (!(dx < -48 && Math.abs(dx) > Math.abs(dy) * 1.2)) return
     const screen = this.data.screen || {}
     if (this.data.busy || this.data.drawer || this.data.letterScene || this.data.review || this.data.restartScreen || this.data.showModeChoice) return
-    if (screen.kind !== 'read' || screen.play || screen.primaryAction !== 'continue') return
+    if (screen.kind !== 'read' || screen.play || screen.interaction || screen.primaryAction !== 'continue' || screen.primary !== '继续') return
     this.onPrimary()
   },
   syncListen() {

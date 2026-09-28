@@ -55,8 +55,8 @@
 .empty{padding:80rpx 40rpx;color:#947864}
 .p21-page input,.p21-page textarea,.p21-page .ph-line,.p21-page .ph-block{font-family:"Noto Serif SC","Songti SC","STSong",serif;font-size:31rpx}
 .p21-page input,.p21-page textarea{box-sizing:border-box;width:100%;background:#f9e8d3;border:2rpx solid #a57c60;color:#43362d;margin:18rpx 0;border-radius:4rpx}
-.p21-page input{height:92rpx;line-height:88rpx;padding:0 22rpx}
-.p21-page .ph-line{line-height:88rpx;color:#a49b88}
+.p21-page input{height:92rpx;line-height:92rpx;padding:0 24rpx}
+.p21-page .ph-line{line-height:92rpx;color:#a49b88}
 .p21-page .ph-block{line-height:53rpx;color:#a49b88}
 .p21-page textarea{height:220rpx;line-height:53rpx;padding:22rpx}
 .input-group label{font-size:25rpx;color:#947864}

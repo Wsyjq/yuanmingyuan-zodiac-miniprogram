@@ -81,7 +81,18 @@ test('rendered H3 keeps answers hidden until physical flip is explicitly acknowl
   const result = await render('H3', { flipped: true })
   const body = text(result.html)
   assert.equal((body.match(/由于宫女们手持黄色彩绸/g) || []).length, 1)
-  assert.match(result.html, /class="primary"[^>]*>继续/)
+  assert.match(result.html, /class="footer"[\s\S]*class="primary"[^>]*>继续/)
+  assert.doesNotMatch(result.html, /class="interaction-actions"/)
+})
+
+test('reading activities without a play widget keep the sticky page button', async () => {
+  for (const id of ['E2', 'H2', 'H6', 'HY2', 'DS2']) {
+    const result = await render(id, { screenPart: 'activity' })
+    assert.deepEqual(result.errors, [], id)
+    assert.match(result.html, /class="footer"/, id)
+    assert.match(result.html, /class="primary"[^>]*>继续/, id)
+    assert.doesNotMatch(result.html, /class="interaction-actions"/, id)
+  }
 })
 
 test('empty local relay has no fictional previous user or default moderation acknowledgement', async () => {
