@@ -13,3 +13,4 @@ coverage/
 test/artifacts/
 test/harness/out/
 docs/plates-20/
+.figma-cache/
