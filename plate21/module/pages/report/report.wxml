@@ -1,5 +1,6 @@
 <view class="report-page">
   <image class="page-paper" src="/assets/figma/paper.jpg" mode="aspectFill"/>
+  <image class="page-hills" src="/assets/figma/hills.png" mode="widthFix"/>
   <view class="report-foreground">
   <view wx:if="{{loading}}" class="notice">正在翻开你的考察档案……</view>
   <view wx:elif="{{loadError}}" class="notice error">

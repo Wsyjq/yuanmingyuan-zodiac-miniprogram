@@ -2,17 +2,16 @@
 <button class="text-button history-back" bindtap="onHistoryList">‹ 返回史料目录</button>
           <text class="history-kicker">ARCHIVE NOTE · 史料收录</text>
           <view class="history-rule"></view>
-          <view class="history-head"><text class="history-id">{{card.key}}</text><view class="title small">{{card.title}}</view><text class="history-index">{{card.layers.length}} 层</text></view>
-
-          <view wx:if="{{card.layers.length > 1}}" class="history-levels"><button wx:for="{{card.layers}}" wx:key="index" class="chip" data-level="{{index}}" bindtap="onCardLevel">{{index === 0 ? '概览' : index === 1 ? '深入' : '延伸'}}</button></view>
+          <view class="history-head"><text class="history-id">{{card.key}}</text><view class="title small">{{card.title}}</view><text class="history-index">{{cardLevel + 1}} / {{card.layers.length}}</text></view>
+          <view class="history-dots"><view wx:for="{{card.layers}}" wx:key="index" class="history-dot {{index === cardLevel ? 'history-dot-on' : ''}}" data-level="{{index}}" bindtap="onCardLevel"></view></view>
           <image wx:if="{{card.image && !cardImageFailed}}" src="{{card.image}}" mode="widthFix" class="illustration" data-src="{{card.image}}" bindtap="onPreview" binderror="onCardImageError"/>
           <button wx:if="{{card.image && cardImageFailed}}" class="text-button" bindtap="onRetryCardImage">配图暂未加载，点击重试</button>
           <text wx:if="{{card.caption}}" class="caption">{{card.caption}}</text>
-          <view wx:for="{{card.layers}}" wx:key="index" id="history-layer-{{index}}" class="history-section">
+          <view wx:for="{{card.layers}}" wx:key="index" id="history-layer-{{index}}" class="history-section {{index === cardLevel ? 'history-current' : 'history-pending'}}">
             <view class="history-level-title"><text class="history-level-number">{{index + 1}}</text><text>{{index === 0 ? '概览' : index === 1 ? '深入' : '延伸'}}</text></view>
             <text class="paragraph" user-select>{{item}}</text>
           </view>
           <view wx:if="{{card.years.length}}" class="caption">相关年份：<text wx:for="{{card.years}}" wx:key="*this">{{item}}　</text></view>
 
-          <button class="primary history-close" bindtap="onCloseDrawer">读完，返回剧情</button>
+          <view class="history-actions"><button wx:if="{{cardLevel + 1 < card.layers.length}}" class="primary" data-level="{{cardLevel + 1}}" bindtap="onCardLevel">继续了解 →</button><button class="{{cardLevel + 1 < card.layers.length ? 'secondary' : 'primary'}} history-close" bindtap="onCloseDrawer">读完，返回剧情</button></view>
 </view>

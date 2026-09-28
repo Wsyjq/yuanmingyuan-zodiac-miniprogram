@@ -203,9 +203,28 @@ function buildScreen(run, ui) {
     if (page.id === 'H3' && state.flipped) interaction.lines = interaction.lines.concat(interaction.revealLines || [])
     if (page.id === 'H4' && !state.arrived) interaction.lines = []
   }
+  function dotKey (item) {
+    if (item.id.indexOf('LT') === 0) return 'LT'
+    if (item.id.indexOf('FN') === 0) return 'FN'
+    if (item.id.indexOf('P') === 0) return 'P'
+    return 'site:' + (item.siteId || item.id)
+  }
+  const dotHere = dotKey(page)
+  let dotStart = index
+  while (dotStart > 0 && dotKey(pages.list[dotStart - 1]) === dotHere) dotStart--
+  let dotEnd = index
+  while (dotEnd + 1 < pages.list.length && dotKey(pages.list[dotEnd + 1]) === dotHere) dotEnd++
+  const sectionAt = index - dotStart
+  const sectionCount = dotEnd - dotStart + 1
+  const sectionPlace = {
+    index: sectionAt,
+    count: sectionCount,
+    dots: Array.from({ length: sectionCount }, function (_, dot) { return dot === sectionAt })
+  }
   const model = {
     pageId: page.id, kind: page.kind, sectionTitle: page.sectionTitle, title: page.title || ('前往' + (site ? site.name : '下一站')),
     siteId: page.siteId, siteTitle: site ? site.name : '', pageIndex: index + 1, pageCount: pages.list.length,
+    sectionIndex: sectionPlace.index, sectionCount: sectionPlace.count, sectionDots: sectionPlace.dots,
     task: taskGuide.get(page.playId), stageLabel: site ? '第 ' + (nav.listSites().findIndex(item => item.id === site.id) + 1) + ' / 8 站' : (page.id.startsWith('LT') ? '次日来信' : page.id.startsWith('FN') ? '我的考察记录' : '考察序章'),
     interaction: interaction, lines: bodyLines(page, run, state), prop: props.forPage(page.id), propPrompt: page.propPrompt || '',
     play: playSpec ? { id: page.playId, type: PLAY_TYPES[page.playId], choices: clone(choices), fields: clone(playSpec.fields), readOnly: review } : null,

@@ -31,6 +31,41 @@
       "source": "Figma 4x0FQff5l1vAbWt5kRpBym 的图片填充，排除画板 5:6 低保真原型重新排版；见 docs/v3-figma-ui-assets.json"
     },
     {
+      "path": "assets/figma/icon-arch.png",
+      "bytes": 13440,
+      "sha256": "b9a1721c6e1907614700c12c7143c64bd6b20ac3d4ba99c4f0d7de3c0b316b02",
+      "published": true,
+      "source": "Figma 4x0FQff5l1vAbWt5kRpBym 的图片填充，排除画板 5:6 低保真原型重新排版；见 docs/v3-figma-ui-assets.json"
+    },
+    {
+      "path": "assets/figma/icon-back.png",
+      "bytes": 972,
+      "sha256": "191a97ba3a9fc29b64b21823f80f6f1582a1d9c68fd128964f14f777bde166d2",
+      "published": true,
+      "source": "Figma 4x0FQff5l1vAbWt5kRpBym 的图片填充，排除画板 5:6 低保真原型重新排版；见 docs/v3-figma-ui-assets.json"
+    },
+    {
+      "path": "assets/figma/icon-guide.png",
+      "bytes": 5671,
+      "sha256": "e102a42de1dc9468702f45b0ac9dbb4cfc6dcc7c794d03f10a6e9d531ec1c512",
+      "published": true,
+      "source": "Figma 4x0FQff5l1vAbWt5kRpBym 的图片填充，排除画板 5:6 低保真原型重新排版；见 docs/v3-figma-ui-assets.json"
+    },
+    {
+      "path": "assets/figma/icon-listen.png",
+      "bytes": 5058,
+      "sha256": "d10d18712ae5ca9cc3bb448eb7869cb12deecd13cdda085d66b53c949a71e9f8",
+      "published": true,
+      "source": "Figma 4x0FQff5l1vAbWt5kRpBym 的图片填充，排除画板 5:6 低保真原型重新排版；见 docs/v3-figma-ui-assets.json"
+    },
+    {
+      "path": "assets/figma/icon-menu.png",
+      "bytes": 698,
+      "sha256": "a37840bb80860c58c6597eddad480cef76e8de2c163852e4d61c23772bc64cc3",
+      "published": true,
+      "source": "Figma 4x0FQff5l1vAbWt5kRpBym 的图片填充，排除画板 5:6 低保真原型重新排版；见 docs/v3-figma-ui-assets.json"
+    },
+    {
       "path": "assets/figma/paper-entry.jpg",
       "bytes": 153592,
       "sha256": "2898125e6f7b548f989b2e55cdbbee7359c01b525bdc4ff5faeef8dfc61069c1",

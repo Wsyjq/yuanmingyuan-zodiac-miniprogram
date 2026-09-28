@@ -34,7 +34,7 @@ function fmt(at) { return dates.formatArchiveDate(dates.dateKeyFromTimestamp(at)
 function errorText(err) { return err && (err.message || err.errMsg) || '操作未完成，请重试' }
 Page({
   data: { listenMode: '', showModeChoice: false, autoSeconds: 0, narrationKey: '', listenKey: '', restartScreen: false, loading: true, busy: false, error: '', pageVisible: true, screen: {}, ui: {}, rows: [], records: [],
-    narrClips: [], voiceEnabled: false, drawer: '', card: null, drawerScrollTop: 0, cardAnchor: '', cardImageFailed: false, waterClockState: {}, clockPlaying: false,
+    narrClips: [], voiceEnabled: false, drawer: '', card: null, cardLevel: 0, drawerScrollTop: 0, cardAnchor: '', cardImageFailed: false, waterClockState: {}, clockPlaying: false,
     soundSrc: nfc.SOUND, relayItems: [], relayState: 'idle', contributions: [], archives: [], scrollTop: 0, navX: 0, navY: 0, locating: false, location: null, locationError: '' },
   async onLoad(query) {
     const window = wx.getWindowInfo ? wx.getWindowInfo() : (wx.getSystemInfoSync ? wx.getSystemInfoSync() : { windowWidth: 375, windowHeight: 667 })
@@ -276,26 +276,30 @@ Page({
     })
   },
   onOpenPage(e) { const id = ds(e, 'page'); if (!id) return; this.setData({ drawer: '' }); this.action(() => session.navigate(id, { sessionId: this.sessionId })) },
-  onDrawer(e) { this.cancelAuto(); this.setData({ drawer: ds(e, 'name') || '', card: null, drawerScrollTop: 0, cardAnchor: '' }); audioBus.pauseAll() },
-  onCloseDrawer() { this.setData({ drawer: '', card: null }) },
+  onDrawer(e) { this.cancelAuto(); this.setData({ drawer: ds(e, 'name') || '', card: null, cardLevel: 0, drawerScrollTop: 0, cardAnchor: '' }); audioBus.pauseAll() },
+  onCloseDrawer() { this.setData({ drawer: '', card: null, cardLevel: 0 }) },
   noop() {},
   onOpenCard(e) {
     this.cancelAuto()
     const key = ds(e, 'key'); const card = cards.get ? cards.get(key) : cards.SL_CARDS[key]
     if (!card || !this.data.historyCards.some(item => item.key === key)) return
     audioBus.pauseAll()
-    this.setData({ drawer: 'history', drawerScrollTop: 0, cardAnchor: '', cardImageFailed: false,
+    this.setData({ drawer: 'history', drawerScrollTop: 0, cardAnchor: '', cardLevel: 0, cardImageFailed: false,
       card: gate.maskDeep(Object.assign({}, card, { key, image: resources.resolve(card.image, 'asset'), layers: card.layers.slice(), years: card.years || [] }), this.run) })
   },
   onCardLevel(e) {
     const level = Number(ds(e, 'level'))
     if (!this.data.card || !Number.isInteger(level) || level < 0 || level >= this.data.card.layers.length) return
     const key = this.data.card.key
-    this.setData({ cardAnchor: '' })
-    wx.nextTick(() => { if (this._active && this.data.card && this.data.card.key === key) this.setData({ cardAnchor: 'history-layer-' + level }) })
+    this.setData({ cardAnchor: '', cardLevel: level })
+    wx.nextTick(() => { if (this._active && this.data.card && this.data.card.key === key) this.setData({ cardAnchor: 'history-layer-' + level, cardLevel: level }) })
   },
   onDrawerScroll(e) { this.setData({ drawerScrollTop: Math.max(0, Number(e.detail.scrollTop) || 0) }) },
-  onHistoryList() { this.setData({ card: null, cardAnchor: '', drawerScrollTop: 0 }) },
+  onHistoryList() { this.setData({ card: null, cardLevel: 0, cardAnchor: '', drawerScrollTop: 0 }) },
+  onListen() {
+    const clip = this.selectComponent('#narration')
+    if (clip && clip.onToggle) clip.onToggle()
+  },
   onCardImageError() { this.setData({ cardImageFailed: true }) },
   onRetryCardImage() { this.setData({ cardImageFailed: false }) },
   onRoute() { this.cancelAuto(); this.setData({ drawer: 'route', card: null }); audioBus.pauseAll() },

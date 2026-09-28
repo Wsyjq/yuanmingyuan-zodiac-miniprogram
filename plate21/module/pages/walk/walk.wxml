@@ -10,15 +10,15 @@
   </scroll-view>
   <block wx:else>
   <view wx:if="{{pageId && !loading}}" class="narration-bar">
-    <view class="narration-heading"><text>{{listenMode === 'listen' ? '随声入园' : '静读档案'}}</text><button class="text-button mode-switch" bindtap="onChooseModeOpen">切换</button></view>
+    <view class="narration-heading"><text>{{listenMode === 'listen' ? '随声入园' : '静读档案'}}</text><image class="icon-arch" src="/assets/figma/icon-arch.png" mode="aspectFit"/><button class="text-button mode-switch" bindtap="onChooseModeOpen">切换</button></view>
     <audio-clip wx:if="{{narrClips.length}}" id="narration" clips="{{narrClips}}" context-key="{{narrationKey}}" listen-key="{{listenKey}}" compact active="{{pageVisible && !drawer && !showModeChoice && !restartScreen && !busy}}" label="听这一段" bind:state="onNarrationState" bind:ended="onNarrationEnded" bind:error="cancelAuto" />
     <view wx:if="{{autoSeconds}}" class="narration-countdown"><text>{{autoSeconds}} 秒后继续</text><button class="text-button" bindtap="cancelAuto">留在这一页</button></view>
     <text wx:elif="{{listenMode === 'listen' && !narrClips.length}}" class="narration-hint">{{screen.play ? '轮到你来探索了' : screen.kind === 'nav' ? '到达后，再继续' : '这一页，请读一读'}}</text>
   </view>
   <view class="toolbar">
-    <button class="text-button" bindtap="onBack" disabled="{{busy || loading}}">‹ 返回</button>
-    <text class="brand">{{(card && card.title) || (screen && screen.siteTitle) || '第廿一图'}}</text>
-    <button class="text-button" data-name="history" bindtap="onDrawer">考察簿 ☰</button>
+    <button class="text-button bar-side" bindtap="onBack" disabled="{{busy || loading}}"><image class="icon-back" src="/assets/figma/icon-back.png" mode="aspectFit"/><text>返回</text></button>
+    <text class="brand">{{(card && card.title) || (screen && screen.kind !== 'puzzle' && screen.kind !== 'nav' && screen.sectionTitle) || '第廿一图'}}</text>
+    <button class="text-button bar-side" data-name="history" bindtap="onDrawer"><text>考察簿</text><image class="icon-menu" src="/assets/figma/icon-menu.png" mode="aspectFit"/></button>
   </view>
   <view wx:if="{{loading}}" class="empty">正在打开考察档案…</view>
   <view wx:if="{{error}}" class="error" role="alert">{{error}}<button wx:if="{{!pageId}}" bindtap="load">重新打开</button></view>
@@ -29,9 +29,11 @@
   <scroll-view wx:elif="{{pageId && !letterScene}}" scroll-y class="reading" scroll-top="{{scrollTop}}" bindscroll="onScroll">
     <include src="walk-content.wxml" />
   </scroll-view>
+  <view wx:if="{{pageId && !letterScene && !screen.play && screen.sectionCount > 1}}" class="progress-dots"><view wx:for="{{screen.sectionDots}}" wx:for-index="dotIndex" wx:key="dotIndex" class="progress-dot {{item ? 'progress-dot-on' : ''}}"></view></view>
   <view wx:if="{{pageId && !letterScene && !screen.play}}" class="footer"><button class="primary" bindtap="onPrimary" disabled="{{busy}}" loading="{{busy}}">{{review ? screen.primary : completed && pageId === 'FN4' ? '查看我的作品' : pageId === 'LT8' ? '读完来信，查看作品' : screen.primary || '继续'}}</button><button wx:if="{{screen.showSkip && !review}}" class="text-button skip" bindtap="onSkip" disabled="{{busy}}">{{screen.skipLabel || '这题跳过'}}</button></view>
-  <view wx:if="{{pageId && !drawer}}" class="nav-float" style="left:{{navX}}px;top:{{navY}}px" catchtouchstart="onNavStart" catchtouchmove="onNavMove" catchtouchend="onNavEnd" catchtouchcancel="onNavCancel" role="button" aria-label="实地导引，可拖动"><text class="nav-symbol">⌖</text><text>导引</text></view>
-  <view wx:if="{{drawer}}" class="overlay" bindtap="onCloseDrawer"><view class="drawer" catchtap="noop"><view class="row"><text class="subheading">{{drawer === 'history' ? '考察簿 · 史料' : drawer === 'route' ? '实地导引' : drawer === 'explanation' ? '互动解读' : '考察设置'}}</text><button class="text-button" bindtap="onCloseDrawer">关闭 ✕</button></view>
+  <image wx:if="{{pageId && !drawer && !letterScene && narrClips.length}}" class="listen-float" src="/assets/figma/icon-listen.png" mode="aspectFit" bindtap="onListen"/>
+  <view wx:if="{{pageId && !drawer}}" class="nav-float" style="left:{{navX}}px;top:{{navY}}px" catchtouchstart="onNavStart" catchtouchmove="onNavMove" catchtouchend="onNavEnd" catchtouchcancel="onNavCancel" role="button" aria-label="实地导引，可拖动"><image class="icon-guide" src="/assets/figma/icon-guide.png" mode="aspectFit"/></view>
+  <view wx:if="{{drawer}}" class="overlay {{drawer === 'history' && card ? 'overlay-center' : ''}}" bindtap="onCloseDrawer"><view class="drawer" catchtap="noop"><view wx:if="{{!(drawer === 'history' && card)}}" class="row"><text class="subheading">{{drawer === 'history' ? '考察簿 · 史料' : drawer === 'route' ? '实地导引' : drawer === 'explanation' ? '互动解读' : '考察设置'}}</text><button class="text-button" bindtap="onCloseDrawer">关闭 ✕</button></view>
     <scroll-view wx:if="{{drawer === 'history' && card}}" scroll-y class="drawer-scroll" scroll-top="{{drawerScrollTop}}" scroll-into-view="{{cardAnchor}}" bindscroll="onDrawerScroll"><include src="history-card.wxml" /></scroll-view>
     <scroll-view wx:else scroll-y class="drawer-scroll" scroll-top="{{drawerScrollTop}}" bindscroll="onDrawerScroll">
       <block wx:if="{{drawer === 'explanation'}}"><text class="caption">可以带着解读再试一次，也可以跳过本题继续；跳过会如实记录。</text><text wx:for="{{explanation}}" wx:key="index" class="paragraph">{{item}}</text><button class="primary" bindtap="onCloseDrawer">回去再试一次</button><button class="text-button" bindtap="onSkip" disabled="{{busy}}">跳过本题，继续考察</button></block>
