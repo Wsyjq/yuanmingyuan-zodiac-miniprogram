@@ -72,18 +72,6 @@
 .pool{position:relative;height:470rpx;background:#f9e8d3;border:2rpx solid #81704c;border-radius:120rpx 120rpx 30rpx 30rpx;padding:28rpx}
 .stone-front{text-align:center;color:#947864;margin:0 0 36rpx;letter-spacing:12rpx}
 .pool-slot{display:block;background:#efe3cc;width:85%;padding:18rpx;margin:16rpx auto!important;font-size:25rpx!important;border:2rpx dashed #a57c60!important}
-.fountain-frame{height:380rpx;position:relative;overflow:hidden;background:#e4d2bd;border-radius:19rpx}
-.compare-pair{display:flex;flex-direction:column;gap:8rpx}
-.compare-pane .caption{margin-top:8rpx}
-.compare-old .reconstruction{opacity:1}
-.ruins{width:100%;height:100%;position:absolute}
-.reconstruction{position:absolute;inset:0;background:#efe3cc66}
-.deer{position:absolute;left:45%;top:30%;font-size:40rpx;background:#a45442;padding:14rpx;color:#fef8e7}
-.dogs{position:absolute;left:15%;bottom:15%;width:70%;text-align:center;color:#43362d;background:#f9e8d3;padding:12rpx}
-.jet{position:absolute;top:30%;height:40%;width:30%;border-top:10rpx solid #d8bea0;border-radius:100%}
-.jet-left{left:8%;transform:rotate(30deg)}
-.jet-right{right:8%;transform:rotate(-30deg)}
-.reconstruction-label{position:absolute;bottom:6rpx;right:12rpx;font-size:15rpx;color:#8c7c61}
 .photo-strip{display:flex;gap:14rpx;flex-wrap:wrap}
 .photo-strip image{width:190rpx;height:190rpx}
 .relay-photo{width:100%;height:340rpx}
@@ -100,15 +88,6 @@
 .small{font-size:50rpx}
 .progress-row{border-bottom:2rpx solid #c7b99b;padding:12rpx 0}
 .audio-row{margin:20rpx 0}
-
-.ruins-line{position:absolute;inset:0;background:#efe3cc}
-.column{position:absolute;bottom:60rpx;width:35rpx;height:170rpx;border:3rpx solid #81704c;background:repeating-linear-gradient(90deg,#e4d2bd 0,#e4d2bd 4rpx,#efe3cc 5rpx,#efe3cc 9rpx)}
-.c1{left:12%;height:140rpx}
-.c2{left:31%;height:205rpx}
-.c3{right:31%;height:205rpx}
-.c4{right:12%;height:130rpx}
-.arch{position:absolute;width:27%;height:100rpx;left:36.5%;bottom:185rpx;border:10rpx solid #81704c;border-bottom:0;border-radius:90rpx 90rpx 0 0}
-.ruins-line text{position:absolute;bottom:12rpx;width:100%;text-align:center;font-size:23rpx;color:#8c7c61}
 
 .canvas-page{height:auto;min-height:100vh}
 .letter-stage{flex:1;height:0;min-height:0}

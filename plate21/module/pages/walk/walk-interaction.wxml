@@ -29,11 +29,6 @@
       <water-clock wx:if="{{playId === 'quiz-hour'}}" state="{{waterClockState}}" active="{{pageVisible && !drawer}}" bind:change="onWaterClockChange" bind:complete="onWaterClockComplete"/>
       <view wx:if="{{playId === 'prop-dial'}}" class="activity"><checkbox-group bindchange="onConfirmDial"><label class="check-label"><checkbox value="done" checked="{{ui.confirmed}}" disabled="{{review}}" color="#a45442"/>我已完成实体转盘操作，准备继续</label></checkbox-group></view>
       <fountain-puzzle wx:if="{{playId === 'place-animals'}}" placed="{{ui.placed}}" active="{{pageVisible && !drawer && !restartScreen}}" read-only="{{review}}" bind:change="onFountainPlacement"/>
-      <view wx:if="{{pageId === 'DS2'}}" class="activity compare-pair">
-        <view class="subheading">旧画与眼前</view>
-        <view class="compare-pane"><view class="fountain-frame compare-old"><view class="reconstruction"><view class="jet jet-left"></view><view class="jet jet-right"></view><image class="deer" src="/plate21/module/assets/img/dashuifa-deer.png" mode="aspectFit"/><image class="dogs" src="/plate21/module/assets/img/dashuifa-dogs.png" mode="aspectFit"/></view></view><text class="caption">旧时构件与水流</text></view>
-        <view class="compare-pane"><view class="fountain-frame"><view class="ruins-line"><view class="column c1"></view><view class="column c2"></view><view class="arch"></view><view class="column c3"></view><view class="column c4"></view><text>抬头看看，眼前还留下了什么</text></view></view><text class="caption">眼前遗址</text></view>
-      </view>
   </block>
       <view wx:if="{{hint && screen.play}}" class="notice">{{hint}}</view><button wx:if="{{hasHint && !review && screen.play}}" class="text-button hint-pill" bindtap="onHint">给我一点提示</button>
       <view wx:if="{{ui.again}}" class="error" role="alert">{{ui.feedback || '再观察一下，或选择跳过。'}}</view>
