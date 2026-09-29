@@ -191,6 +191,17 @@ if (advance) {
   expectDecl('18:377 来信', letter, '.advance', 'font-size', rpx(advance.style.fontSize) + 'rpx', '点击继续字号')
   expectDecl('18:377 来信', letter, '.advance', 'color', firstFill(advance), '点击继续颜色')
 }
+const letterPicture = find(letterFrame, '18:530')
+const letterBody = find(letterFrame, '18:534')
+if (letterPicture) {
+  const frameBottom = letterFrame.absoluteBoundingBox.y + letterFrame.absoluteBoundingBox.height
+  const pictureBottom = letterPicture.absoluteBoundingBox.y + letterPicture.absoluteBoundingBox.height
+  expectDecl('18:377 来信', letter, '.dialogue', 'min-height', rpx(frameBottom - pictureBottom) + 'rpx', '来信图下方纸面')
+}
+if (letterBody && advance) {
+  const textGap = advance.absoluteBoundingBox.y - letterBody.absoluteBoundingBox.y
+  expectDecl('18:377 来信', letter, '.dialogue-scroll', 'height', rpx(textGap) + 'rpx', '来信正文到继续的高度')
+}
 
 function countLayers(frame) {
   const tally = { checked: 0, vector: 0, text: 0, shape: 0 }

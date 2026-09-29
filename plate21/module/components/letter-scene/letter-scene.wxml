@@ -5,10 +5,11 @@
     <view class="chapter">{{heading || '次日 · 老师的来信'}}</view>
     <view wx:if="{{imageFailed}}" class="fallback">书房里的灯还亮着。<text class="fallback-line">老师留下的信，终于翻到了最后几页。</text></view>
     <view class="scene-note">书房 · 档案的另一面</view>
-    <image class="letter-hills" src="/assets/figma/hills.png" mode="widthFix"/>
+    <view class="portrait-fade"></view>
+    <view class="speaker stage-name">老师<text class="counter">{{index + 1}} / {{total}}</text></view>
   </view>
   <view class="dialogue" bindtap="onNext">
-    <view class="speaker">老师<text class="counter">{{index + 1}} / {{total}}</text></view>
+    <image class="letter-hills" src="/assets/figma/hills.png" mode="widthFix"/>
     <scroll-view scroll-y class="dialogue-scroll" scroll-top="{{scrollTop}}" bindscroll="onDialogueScroll" catchtap="noop"><text class="words">{{text}}</text><text wx:if="{{typing}}" class="cursor">▏</text></scroll-view>
     <button class="advance" catchtap="onNext" disabled="{{busy}}">{{typing ? '补全文字' : index + 1 === total ? '继续' : '下一段'}}<i class="scene-arrow">▾</i></button>
     <button class="history-button" catchtap="onHistory">剧情回顾</button>

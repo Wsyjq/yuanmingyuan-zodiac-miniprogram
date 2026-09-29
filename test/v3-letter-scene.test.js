@@ -53,6 +53,17 @@ test('epilogue semantic groups preserve all prose and no paragraph is cut at pun
   assert.equal(dynamic.join(''), '这份记录已保存。' + pages.byId.LT8.lines.join(''))
 })
 
+test('letter layout keeps the figma paper band and does not lock the portrait at 983rpx', () => {
+  const css = fs.readFileSync(path.join(__dirname, '../plate21/module/components/letter-scene/letter-scene.wxss'), 'utf8')
+  const wxml = fs.readFileSync(path.join(__dirname, '../plate21/module/components/letter-scene/letter-scene.wxml'), 'utf8')
+  assert.match(css, /\.dialogue\{[^}]*min-height:443rpx/)
+  assert.match(css, /\.dialogue-scroll\{[^}]*height:305rpx/)
+  assert.doesNotMatch(css, /983rpx/)
+  assert.match(wxml, /class="speaker stage-name"/)
+  assert.match(wxml, /class="portrait-fade"/)
+  assert.doesNotMatch(wxml, /class="dialogue"[\s\S]*class="speaker stage-name"/)
+})
+
 test('old sentence cursor resumes inside its semantic paragraph, new paragraph cursor stays stable', () => {
   const p = require('../plate21/module/flow/letter-paragraphs')
   const lines = ['第一句。第二句！', '第三句。第四句。']
