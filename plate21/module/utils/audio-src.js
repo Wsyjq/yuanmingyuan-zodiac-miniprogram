@@ -44,4 +44,29 @@ function bgm(file) {
   return ''
 }
 
-module.exports = { AUDIO_BASE: '', clip, clips, packageForSrc, packagesFor, bgm }
+const loadedPackages = Object.create(null)
+const packageLoads = Object.create(null)
+
+function packageLoaded(pkg) { return !!loadedPackages[pkg] }
+function markPackageLoaded(pkg) { if (pkg) loadedPackages[pkg] = true }
+function resetPackageLoads() {
+  Object.keys(loadedPackages).forEach(function (pkg) { delete loadedPackages[pkg] })
+  Object.keys(packageLoads).forEach(function (pkg) { delete packageLoads[pkg] })
+}
+
+// Download ahead of the tap. iOS only starts inner audio when play() runs in the tap itself.
+function preloadPackage(src) {
+  const pkg = packageForSrc(src)
+  if (!pkg || loadedPackages[pkg] || packageLoads[pkg]) return
+  if (typeof wx === 'undefined' || !wx.loadSubpackage) return
+  packageLoads[pkg] = true
+  try {
+    wx.loadSubpackage({
+      name: pkg,
+      success: function () { loadedPackages[pkg] = true; packageLoads[pkg] = false },
+      fail: function () { packageLoads[pkg] = false }
+    })
+  } catch (err) { packageLoads[pkg] = false }
+}
+
+module.exports = { AUDIO_BASE: '', clip, clips, packageForSrc, packagesFor, bgm, packageLoaded, markPackageLoaded, preloadPackage, resetPackageLoads }

@@ -135,6 +135,8 @@ Component({
         this._ctx = ctx
         const current = () => this._alive && this._ctx === ctx
         try {
+          // iOS 体验版默认跟着静音开关。开发者工具没有这个开关，真机会没声。
+          ctx.obeyMuteSwitch = false
           ctx.src = src
           ctx.onTimeUpdate(() => {
             if (current() && ctx.duration) this.setData({ progress: Math.min(100, Math.round(ctx.currentTime / ctx.duration * 100)) })
@@ -154,8 +156,8 @@ Component({
         } catch (err) { if (current()) this.failPlayback() }
       }
       const pkg = audioSrc.packageForSrc(src)
-      if (pkg && wx.loadSubpackage) {
-        try { wx.loadSubpackage({ name: pkg, success: ready, fail }) } catch (err) { fail() }
+      if (pkg && wx.loadSubpackage && !audioSrc.packageLoaded(pkg)) {
+        try { wx.loadSubpackage({ name: pkg, success: () => { audioSrc.markPackageLoaded(pkg); ready() }, fail }) } catch (err) { fail() }
       } else ready()
     },
     startContext(ctx) {

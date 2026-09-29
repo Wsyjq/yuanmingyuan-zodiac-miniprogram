@@ -11,6 +11,7 @@ const manifest = require('../plate21/module/audio/v3-manifest')
 const cue = require('../plate21/module/audio/cue')
 
 function harness(initialVoice = true) {
+  audioSrc.resetPackageLoads()
   delete require.cache[require.resolve('../plate21/module/utils/audio-bus')]
   const bus = require('../plate21/module/utils/audio-bus')
   const preference = { voice: initialVoice, bgm: true }
@@ -146,7 +147,32 @@ test('enabling voice and legacy autoplay never start audio; manual play loads th
   assert.equal(h.contexts.length, 0)
   h.loads[0].success()
   assert.equal(h.contexts[0].plays, 1)
+  assert.equal(h.contexts[0].obeyMuteSwitch, false)
   assert.equal(p.events.at(-1).name, 'play')
+})
+
+test('a package already on the phone plays inside the tap, and preload downloads it once', () => {
+  const loads = []
+  const original = global.wx
+  global.wx = { loadSubpackage(opts) { loads.push(opts) } }
+  try {
+    audioSrc.resetPackageLoads()
+    audioSrc.preloadPackage('/voice-a/narr-p2.mp3')
+    audioSrc.preloadPackage('/voice-a/narr-p3.mp3')
+    assert.equal(loads.length, 1)
+    assert.equal(loads[0].name, 'voice-a')
+    loads[0].success()
+    assert.equal(audioSrc.packageLoaded('voice-a'), true)
+  } finally {
+    global.wx = original
+  }
+  const h = harness()
+  audioSrc.markPackageLoaded('voice-a')
+  const p = h.player({ clips: ['/voice-a/narr-p2.mp3'] })
+  p.onToggle()
+  assert.equal(h.loads.length, 0)
+  assert.equal(h.contexts[0].plays, 1)
+  assert.equal(h.contexts[0].obeyMuteSwitch, false)
 })
 
 test('changing sources pauses and stale loader or old context callbacks cannot start new content', () => {
@@ -176,8 +202,10 @@ test('sub-package failure is visible and retryable; its obsolete callbacks are i
   assert.equal(h.contexts[0].plays, 1)
   h.contexts[0].handlers.error()
   assert.equal(p.data.failed, true)
-  p.onToggle(); h.loads[2].success()
+  p.onToggle()
+  assert.equal(h.loads.length, 2)
   assert.equal(h.contexts[1].plays, 1)
+  assert.equal(h.contexts[1].obeyMuteSwitch, false)
 })
 
 test('page hide, active=false, settings off, and detach invalidate pending loads', () => {
@@ -207,12 +235,12 @@ test('playlist continues only after natural end, replay starts first segment, an
   const h = harness(), p = h.player({ clips })
   p.onToggle(); h.loads[0].success(); h.contexts[0].handlers.end()
   assert.equal(p.data.segmentIndex, 1)
-  h.loads[1].success()
+  assert.equal(h.loads.length, 1)
   assert.match(h.contexts[1].src, /narr-p3.mp3$/)
   p.onReplay()
   h.contexts[1].handlers.end()
   assert.equal(p.data.segmentIndex, 0)
-  h.loads[2].success()
+  assert.equal(h.loads.length, 1)
   assert.match(h.contexts[2].src, /narr-p2.mp3$/)
 })
 
@@ -240,8 +268,10 @@ test('explicit listen key starts once per screen, respects pause and never repla
   p.change('clips', audioSrc.clips('narr-e2'))
   assert.equal(h.loads.length, 1)
   p.change('active', true)
-  assert.equal(h.loads.length, 2)
-  h.loads[1].success(); h.contexts[1].handlers.end()
+  assert.equal(h.loads.length, 1)
+  assert.equal(h.contexts[1].plays, 1)
+  assert.match(h.contexts[1].src, /narr-e2/)
+  h.contexts[1].handlers.end()
   assert.equal(p.events.at(-1).name, 'ended')
   assert.equal(p.events.at(-1).detail.contextKey, 'E2:story')
 })

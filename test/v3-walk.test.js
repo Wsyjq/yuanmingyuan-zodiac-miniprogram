@@ -507,6 +507,23 @@ test('listening preference gates auto narration and only current-page audio can 
   await h.close()
 })
 
+test('listen button turns narration on without leaving read mode or canceling playback', async () => {
+  const h = await harness({ storage: { plate21_audio_settings: { bgm: true, voice: false, mode: 'read' } } })
+  const toggles = []
+  let playing = false
+  h.page.selectComponent = () => ({
+    onToggle() { toggles.push('toggle'); playing = true },
+    isPlaying() { return playing }
+  })
+  h.page.onListen()
+  h.page.onListen()
+  const settings = require('../plate21/module/utils/audio-settings')
+  assert.equal(settings.get().voice, true)
+  assert.equal(settings.get().mode, 'read')
+  assert.deepEqual(toggles, ['toggle'])
+  await h.close()
+})
+
 test('inputs drop invisible characters and the envelope answer keeps its ten character limit', async () => {
   const h = await harness()
   await h.arrange('X2')

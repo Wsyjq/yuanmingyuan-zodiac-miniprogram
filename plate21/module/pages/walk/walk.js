@@ -153,6 +153,12 @@ Page({
     })
     this.syncNfc()
     this.syncListen()
+    this.preloadNarration()
+  },
+  preloadNarration() {
+    const clips = (this.data.narrClips || []).slice()
+    if (this.data.soundSrc) clips.push(this.data.soundSrc)
+    clips.forEach((src) => audioSrc.preloadPackage(src))
   },
   cancelAuto() { if (this._countdown) this._countdown.cancel() },
   onUserInteraction() { this.cancelAuto() },
@@ -322,8 +328,12 @@ Page({
   onDrawerScroll(e) { this.setData({ drawerScrollTop: Math.max(0, Number(e.detail.scrollTop) || 0) }) },
   onHistoryList() { this.setData({ card: null, cardLevel: 0, cardAnchor: '', drawerScrollTop: 0 }) },
   onListen() {
+    const wasOff = !settings.get().voice
+    if (wasOff) settings.set('voice', true)
     const clip = this.selectComponent('#narration')
-    if (clip && clip.onToggle) clip.onToggle()
+    if (!clip || !clip.onToggle) return
+    if (clip.isPlaying && clip.isPlaying()) return
+    clip.onToggle()
   },
   onCardImageError() { this.setData({ cardImageFailed: true }) },
   onRetryCardImage() { this.setData({ cardImageFailed: false }) },
