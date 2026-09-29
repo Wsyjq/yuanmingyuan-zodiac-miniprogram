@@ -102,42 +102,6 @@
       "processing": "Jimp proportional resize to max width 320px; JPEG quality 60"
     },
     {
-      "source": "plate21/module/assets/img/IMG-P-WANZI.jpg",
-      "sourceSha256": "9ed05e886d47dcc0342062009dd5e8513031350db5fe7937b8f7291408419554",
-      "target": "plate21/module/assets/img/IMG-RUNTIME-PATTERN-WANZI.jpg",
-      "sha256": "56e028eb6fcdb74cbebb70c19c9f3a0fcc76566a3660376390a4e42d28edb9f3",
-      "bytes": 34333,
-      "dimensions": "320x320",
-      "processing": "Jimp proportional resize to max width 320px; JPEG quality 60"
-    },
-    {
-      "source": "plate21/module/assets/img/IMG-S4B1.jpg",
-      "sourceSha256": "36e7cf600c2a1cdf334355b15420263c3c0311f340620c3f59acdfcbfaf57634",
-      "target": "plate21/module/assets/img/IMG-RUNTIME-PATTERN-SHELL.jpg",
-      "sha256": "48e104cac04fac2ab9b1c5ee481945a4c2710b48f933301fce01a801d12fa816",
-      "bytes": 26439,
-      "dimensions": "320x320",
-      "processing": "Jimp proportional resize to max width 320px; JPEG quality 60"
-    },
-    {
-      "source": "plate21/module/assets/img/IMG-S4B2.jpg",
-      "sourceSha256": "c6d97ee3557e41557bc6297adaf244fc4d808a7e394432c73323479209bbf95f",
-      "target": "plate21/module/assets/img/IMG-RUNTIME-PATTERN-SCROLL.jpg",
-      "sha256": "9a8dd1dd1b607a2888772547d654d043eb619f23b0a01aa906c29b859ff03981",
-      "bytes": 24200,
-      "dimensions": "320x320",
-      "processing": "Jimp proportional resize to max width 320px; JPEG quality 60"
-    },
-    {
-      "source": "plate21/module/assets/img/IMG-S4B3.jpg",
-      "sourceSha256": "a1762e3acb3db00500f2718ea3a40bb5d8ada36d0c8cc7463220261341a2cc73",
-      "target": "plate21/module/assets/img/IMG-RUNTIME-PATTERN-BASKET.jpg",
-      "sha256": "f39440d2ac9b0ae731901ca87220fbb54af9f24f58b52c9756e6e9ddb9d6a9ba",
-      "bytes": 19040,
-      "dimensions": "320x320",
-      "processing": "Jimp proportional resize to max width 320px; JPEG quality 60"
-    },
-    {
       "source": "plate21/module/assets/img/IMG-S3A.jpg",
       "sourceSha256": "6d34c88c5e91ab55314a0b1c86c2b352de8cc7d413113ce957216f97241b9222",
       "target": "plate21/module/assets/img/IMG-RUNTIME-COMIC.jpg",

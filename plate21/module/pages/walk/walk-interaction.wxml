@@ -25,7 +25,7 @@
           <text wx:if="{{screen.spotDetail}}" class="caption">{{screen.spotDetail}}</text>
         </block>
       </view>
-      <view wx:if="{{screen.figures.length}}" class="pattern-grid"><button wx:for="{{screen.figures}}" wx:key="id" data-id="{{item.id}}" bindtap="onChoice" class="pattern {{item.selected ? 'selected' : ''}}" disabled="{{review}}"><image src="{{item.src}}" mode="aspectFit"/><text>{{item.label}}</text></button></view>
+      <view wx:if="{{screen.figures.length}}" class="pattern-grid"><button wx:for="{{screen.figures}}" wx:key="id" data-id="{{item.id}}" bindtap="onChoice" class="pattern {{item.selected ? 'selected' : ''}}" disabled="{{review}}" aria-label="图样"><image src="{{item.src}}" mode="aspectFill"/></button></view>
       <water-clock wx:if="{{playId === 'quiz-hour'}}" state="{{waterClockState}}" active="{{pageVisible && !drawer}}" bind:change="onWaterClockChange" bind:complete="onWaterClockComplete"/>
       <view wx:if="{{playId === 'prop-dial'}}" class="activity"><checkbox-group bindchange="onConfirmDial"><label class="check-label"><checkbox value="done" checked="{{ui.confirmed}}" disabled="{{review}}" color="#a45442"/>我已完成实体转盘操作，准备继续</label></checkbox-group></view>
       <fountain-puzzle wx:if="{{playId === 'place-animals'}}" placed="{{ui.placed}}" active="{{pageVisible && !drawer && !restartScreen}}" read-only="{{review}}" bind:change="onFountainPlacement"/>

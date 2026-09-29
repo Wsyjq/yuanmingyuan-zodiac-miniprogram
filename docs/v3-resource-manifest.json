@@ -200,31 +200,31 @@
     },
     {
       "path": "plate21/module/assets/img/IMG-RUNTIME-PATTERN-BASKET.jpg",
-      "bytes": 19040,
-      "sha256": "f39440d2ac9b0ae731901ca87220fbb54af9f24f58b52c9756e6e9ddb9d6a9ba",
+      "bytes": 85864,
+      "sha256": "dc9f7bda576cfe228114a121557728728bd9745c713dc19cae041ee209ed1054",
       "published": true,
-      "source": "main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json"
+      "source": "用户提供的黄花阵花纹实拍，2026-09-29 压成 JPEG。只有 WANZI 来自「万字纹.png」并对应正确答案；其余三张不命名、按钮上不写名称"
     },
     {
       "path": "plate21/module/assets/img/IMG-RUNTIME-PATTERN-SCROLL.jpg",
-      "bytes": 24200,
-      "sha256": "9a8dd1dd1b607a2888772547d654d043eb619f23b0a01aa906c29b859ff03981",
+      "bytes": 30874,
+      "sha256": "fa23e798f1288a945eb8188a23f40063759b565e93938077ac76965e191bbab4",
       "published": true,
-      "source": "main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json"
+      "source": "用户提供的黄花阵花纹实拍，2026-09-29 压成 JPEG。只有 WANZI 来自「万字纹.png」并对应正确答案；其余三张不命名、按钮上不写名称"
     },
     {
       "path": "plate21/module/assets/img/IMG-RUNTIME-PATTERN-SHELL.jpg",
-      "bytes": 26439,
-      "sha256": "48e104cac04fac2ab9b1c5ee481945a4c2710b48f933301fce01a801d12fa816",
+      "bytes": 43520,
+      "sha256": "18162c0118e35e8a8ddd85c03776f6fc262fe6b1e665815488da95e4aede5788",
       "published": true,
-      "source": "main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json"
+      "source": "用户提供的黄花阵花纹实拍，2026-09-29 压成 JPEG。只有 WANZI 来自「万字纹.png」并对应正确答案；其余三张不命名、按钮上不写名称"
     },
     {
       "path": "plate21/module/assets/img/IMG-RUNTIME-PATTERN-WANZI.jpg",
-      "bytes": 34333,
-      "sha256": "56e028eb6fcdb74cbebb70c19c9f3a0fcc76566a3660376390a4e42d28edb9f3",
+      "bytes": 11445,
+      "sha256": "c5d9442a0d102a3a0cc49d245aec0bf3a8bbf1a68086faa36ad061d16868cb6e",
       "published": true,
-      "source": "main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json"
+      "source": "用户提供的黄花阵花纹实拍，2026-09-29 压成 JPEG。只有 WANZI 来自「万字纹.png」并对应正确答案；其余三张不命名、按钮上不写名称"
     },
     {
       "path": "plate21/module/components/water-clock/assets/close.jpg",

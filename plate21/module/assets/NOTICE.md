@@ -117,7 +117,7 @@ SVG 源文件经 `test/stickers-src/build.js` 渲染/缩放为 PNG。
 项目方于 2026-08-11 确认：41 个源 JPEG 均由项目使用允许商业用途的平台与账号生成，并授权这些图片及其衍生文件用于本项目商业生产版本。此前 6 个文件的“历史扫描”内部分类已撤销。
 
 - `IMG-AI-SOURCES`：41 个哈希锁定源文件，全部由 `project.config.json` 排除，不直接进入包。
-- `IMG-AI-RUNTIME`：18 个通过 `test/build-runtime-images.js` 生成的生产衍生文件，全部进入当前小程序包。
+- `IMG-AI-RUNTIME`：14 个通过 `test/build-runtime-images.js` 生成的生产衍生文件，全部进入当前小程序包。黄花阵四张花纹图于 2026-09-29 改用用户提供的实拍，不再计入这 14 个，见 lock 的 `IMG-PATTERN-PHOTOS`。
 - 商业使用确认：`assets/licenses/PROJECT-AI-ASSET-AUTHORIZATION-2026-08-11.txt`。
 - 源到衍生映射：`docs/compliance/ai-runtime-manifest.json`。
 - 综合证据与变更控制：`docs/compliance/IMG-AI-PROJECT-evidence.md`。

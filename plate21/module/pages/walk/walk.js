@@ -117,7 +117,7 @@ Page({
     const letterActivity = ['LT6', 'LT7'].includes(page.id) && this.ui.letterSceneDone
     if (letterActivity) { model.lines = []; model.teacher = '' }
     model.portrait = resources.resolve(model.portrait, 'asset'); model.teacher = resources.resolve(model.teacher, 'asset')
-    model.figures.forEach((item, i) => { item.src = resources.resolve(item.src, 'asset'); item.label = '图样' + (i + 1) })
+    model.figures.forEach((item) => { item.src = resources.resolve(item.src, 'asset') })
     model.spots.forEach((item) => { item.src = resources.resolve(item.src, 'asset') })
     if (model.board) { model.board.pieces.forEach((p) => { p.text = p.label + (p.placed ? ' · 已放下' : '') }); model.board.slots.forEach((s) => { s.text = s.label + (s.piece ? ' · ' + s.piece : '') }) }
     const field = snap.records.filter((r) => r.purpose === 'field')

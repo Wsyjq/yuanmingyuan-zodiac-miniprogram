@@ -204,6 +204,15 @@ test('clicking each of 17 inline historical terms renders every Word layer and i
   assert.equal(visited.size, 17)
 })
 
+test('maze pattern page shows four photographs and does not name the tiles', async () => {
+  const result = await render('H5', { screenPart: 'activity' })
+  assert.deepEqual(result.errors, [])
+  for (const file of ['WANZI', 'SHELL', 'SCROLL', 'BASKET']) {
+    assert.match(result.html, new RegExp('IMG-RUNTIME-PATTERN-' + file))
+  }
+  assert.doesNotMatch(text(result.html), /图样\d|贝壳纹|卷草纹|花篮纹|万字纹/)
+})
+
 test('gameplay instructions, controls and submit button render inside one distinct module', async () => {
   const { parse } = require('./harness/wxml')
   const tpl = fs.readFileSync(path.join(ROOT, ROUTE.replace(/walk$/, 'walk-content') + '.wxml'), 'utf8')

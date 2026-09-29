@@ -9,6 +9,7 @@ const files=[...scan(path.join(root,'assets')),...scan(path.join(root,'plate21/m
 const rows=files.map(p=>{const rel=path.relative(root,p).replace(/\\/g,'/');let source='main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json'
  if(rel.includes('water-clock/assets/'))source='用户提供的海晏堂HTML原型；图像提取压缩，水声由代码合成，见 reference/海晏堂水力钟-谜题互动版.html'
  else if(rel.includes('/dashuifa-'))source='用户提供的大水法图片，经 imagegen 制作空景与透明雕塑素材；见 docs/v3-dashuifa.md'
+ else if(/IMG-RUNTIME-PATTERN-(WANZI|SHELL|SCROLL|BASKET)\.jpg$/.test(rel))source='用户提供的黄花阵花纹实拍，2026-09-29 压成 JPEG。只有 WANZI 来自「万字纹.png」并对应正确答案；其余三张不命名、按钮上不写名称'
  else if(rel.startsWith('voice-'))source=rel.includes('dj06-')?'main 原版 DJ-06 声景':'feat/ui-fixes-and-ticket/2880cc2；对应文案及冻结原因见 docs/v3-audio-migration.md'
  else if(rel==='assets/cover.jpg')source='main 的 IMG-RUNTIME-COVER.jpg 原样移至演示主包；原授权证据保留'
  else if(rel.startsWith('assets/figma/'))source='Figma 4x0FQff5l1vAbWt5kRpBym 的图片填充，排除画板 5:6 低保真原型重新排版；见 docs/v3-figma-ui-assets.json'

@@ -257,10 +257,6 @@
         "plate21/module/assets/img/IMG-RUNTIME-LANTERN.jpg",
         "plate21/module/assets/img/IMG-RUNTIME-MAP.jpg",
         "plate21/module/assets/img/IMG-RUNTIME-MAZE.jpg",
-        "plate21/module/assets/img/IMG-RUNTIME-PATTERN-BASKET.jpg",
-        "plate21/module/assets/img/IMG-RUNTIME-PATTERN-SCROLL.jpg",
-        "plate21/module/assets/img/IMG-RUNTIME-PATTERN-SHELL.jpg",
-        "plate21/module/assets/img/IMG-RUNTIME-PATTERN-WANZI.jpg",
         "plate21/module/assets/img/IMG-RUNTIME-PLATE.jpg",
         "plate21/module/assets/img/IMG-RUNTIME-PROLOGUE-CARD.jpg",
         "plate21/module/assets/img/IMG-RUNTIME-PROLOGUE-STUDY.jpg"
@@ -277,10 +273,6 @@
         "plate21/module/assets/img/IMG-RUNTIME-LANTERN.jpg",
         "plate21/module/assets/img/IMG-RUNTIME-MAP.jpg",
         "plate21/module/assets/img/IMG-RUNTIME-MAZE.jpg",
-        "plate21/module/assets/img/IMG-RUNTIME-PATTERN-BASKET.jpg",
-        "plate21/module/assets/img/IMG-RUNTIME-PATTERN-SCROLL.jpg",
-        "plate21/module/assets/img/IMG-RUNTIME-PATTERN-SHELL.jpg",
-        "plate21/module/assets/img/IMG-RUNTIME-PATTERN-WANZI.jpg",
         "plate21/module/assets/img/IMG-RUNTIME-PLATE.jpg",
         "plate21/module/assets/img/IMG-RUNTIME-PROLOGUE-CARD.jpg",
         "plate21/module/assets/img/IMG-RUNTIME-PROLOGUE-STUDY.jpg"
@@ -297,10 +289,6 @@
         "plate21/module/assets/img/IMG-RUNTIME-LANTERN.jpg": "d1b902686f11a92aeaced3b01a4661c2e3679337e0acdb30603b2e77444512b5",
         "plate21/module/assets/img/IMG-RUNTIME-MAP.jpg": "3f7264cf0a865b869654dc5935b2153b81067ae95becaa5bbb56028e77c89747",
         "plate21/module/assets/img/IMG-RUNTIME-MAZE.jpg": "274fa0fcd1c7dcca120ea51d8dd7a82168e1a8029b4e5c274bf4ffc6330d78e4",
-        "plate21/module/assets/img/IMG-RUNTIME-PATTERN-BASKET.jpg": "f39440d2ac9b0ae731901ca87220fbb54af9f24f58b52c9756e6e9ddb9d6a9ba",
-        "plate21/module/assets/img/IMG-RUNTIME-PATTERN-SCROLL.jpg": "9a8dd1dd1b607a2888772547d654d043eb619f23b0a01aa906c29b859ff03981",
-        "plate21/module/assets/img/IMG-RUNTIME-PATTERN-SHELL.jpg": "48e104cac04fac2ab9b1c5ee481945a4c2710b48f933301fce01a801d12fa816",
-        "plate21/module/assets/img/IMG-RUNTIME-PATTERN-WANZI.jpg": "56e028eb6fcdb74cbebb70c19c9f3a0fcc76566a3660376390a4e42d28edb9f3",
         "plate21/module/assets/img/IMG-RUNTIME-PLATE.jpg": "4a414f5642d9a591776654b72ff33b01cd8e525c73c023e6c1983e47bbc322a3",
         "plate21/module/assets/img/IMG-RUNTIME-PROLOGUE-CARD.jpg": "024a9a82bb39b8d4d173d2e9821d93eeb1cfffc8779be34190acdd03a68ba723",
         "plate21/module/assets/img/IMG-RUNTIME-PROLOGUE-STUDY.jpg": "efedbb2b0871beba997cfdc65117643eccfa148e6dc320e268e535fe2c3524c4"
@@ -318,6 +306,27 @@
       ],
       "reviewedAt": "2026-08-11",
       "status": "approved"
+    },
+    {
+      "id": "IMG-PATTERN-PHOTOS",
+      "name": "User-supplied maze pattern photographs",
+      "version": "2026-09-29",
+      "license": "User-supplied photographs. This entry locks bytes only and does not certify rights.",
+      "usage": "黄花阵「认出一路上的花纹」四个选项。WANZI 来自「万字纹.png」，对应正确答案 wanzi。其余三张不命名，按钮上不写名称。",
+      "bundled": true,
+      "files": [
+        "plate21/module/assets/img/IMG-RUNTIME-PATTERN-BASKET.jpg",
+        "plate21/module/assets/img/IMG-RUNTIME-PATTERN-SCROLL.jpg",
+        "plate21/module/assets/img/IMG-RUNTIME-PATTERN-SHELL.jpg",
+        "plate21/module/assets/img/IMG-RUNTIME-PATTERN-WANZI.jpg"
+      ],
+      "hashes": {
+        "plate21/module/assets/img/IMG-RUNTIME-PATTERN-BASKET.jpg": "dc9f7bda576cfe228114a121557728728bd9745c713dc19cae041ee209ed1054",
+        "plate21/module/assets/img/IMG-RUNTIME-PATTERN-SCROLL.jpg": "fa23e798f1288a945eb8188a23f40063759b565e93938077ac76965e191bbab4",
+        "plate21/module/assets/img/IMG-RUNTIME-PATTERN-SHELL.jpg": "18162c0118e35e8a8ddd85c03776f6fc262fe6b1e665815488da95e4aede5788",
+        "plate21/module/assets/img/IMG-RUNTIME-PATTERN-WANZI.jpg": "c5d9442a0d102a3a0cc49d245aec0bf3a8bbf1a68086faa36ad061d16868cb6e"
+      },
+      "status": "recorded"
     },
     {
       "id": "PLATE-PD-21",
