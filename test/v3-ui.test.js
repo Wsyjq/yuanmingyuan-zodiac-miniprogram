@@ -213,6 +213,43 @@ test('maze pattern page shows four photographs and does not name the tiles', asy
   assert.doesNotMatch(text(result.html), /图样\d|贝壳纹|卷草纹|花篮纹|万字纹/)
 })
 
+test('walk text uses the eight-step scale for body, buttons and labels', () => {
+  const css = fs.readFileSync(path.join(ROOT, 'plate21/module/pages/walk/walk.wxss'), 'utf8')
+  assert.match(css, /\.p21-page \.choice,\.p21-page \.secondary,\.p21-page \.primary\{[^}]*font-size:31rpx/)
+  assert.match(css, /\.primary\{[^}]*font-size:31rpx/)
+  assert.match(css, /\.interaction-copy \.paragraph\{font-size:31rpx/)
+  assert.match(css, /\.read-kicker\{[^}]*font-size:25rpx/)
+  assert.match(css, /\.history-detail \.paragraph\{font-size:31rpx/)
+  const pageType = css.replace(/\.listen-label\{[^}]*\}/g, '')
+  assert.doesNotMatch(pageType, /font-size:(?:15|16|19|21|22|24|28|29|32|34)rpx/)
+  assert.match(css, /\.listen-label\{[^}]*font-size:16rpx/)
+})
+
+test('listen float is the frame capsule, not the square crop', () => {
+  const wxml = fs.readFileSync(path.join(ROOT, 'plate21/module/pages/walk/walk.wxml'), 'utf8')
+  const css = fs.readFileSync(path.join(ROOT, 'plate21/module/pages/walk/walk.wxss'), 'utf8')
+  assert.doesNotMatch(wxml, /icon-listen\.png/)
+  assert.match(wxml, /class="listen-float"[^>]*bindtap="onListen"/)
+  assert.match(wxml, /<text class="listen-label">听一听<\/text>/)
+  assert.match(css, /\.listen-float\{[^}]*border-radius:34rpx/)
+  assert.match(css, /\.listen-float\{[^}]*width:67rpx;height:82rpx/)
+})
+
+test('letter and report text use the same eight-step scale', () => {
+  const letter = fs.readFileSync(path.join(ROOT, 'plate21/module/components/letter-scene/letter-scene.wxss'), 'utf8')
+  const report = fs.readFileSync(path.join(ROOT, 'plate21/module/pages/report/report.wxss'), 'utf8')
+  assert.match(letter, /\.words\{font-size:31rpx/)
+  assert.match(letter, /\.advance\{[^}]*font-size:31rpx/)
+  assert.match(letter, /\.history-button\{[^}]*font-size:31rpx/)
+  assert.match(letter, /\.past\{[^}]*font-size:31rpx/)
+  assert.doesNotMatch(letter, /font-size:(?:24|27|28|30|36)rpx/)
+  assert.match(report, /\.section-title\{[^}]*font-size:38rpx/)
+  assert.match(report, /\.record-body\{[^}]*font-size:31rpx/)
+  assert.match(report, /\.report-button\{[^}]*font-size:31rpx/)
+  assert.doesNotMatch(report, /font-size:(?:24|27|28|29|34)rpx/)
+  assert.doesNotMatch(report, /font:24rpx/)
+})
+
 test('gameplay instructions, controls and submit button render inside one distinct module', async () => {
   const { parse } = require('./harness/wxml')
   const tpl = fs.readFileSync(path.join(ROOT, ROUTE.replace(/walk$/, 'walk-content') + '.wxml'), 'utf8')

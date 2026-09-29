@@ -16,7 +16,7 @@
   border: 2rpx solid rgba(74, 64, 46, 0.55);
   border-radius: 999rpx;
   line-height: 1.5;
-  font-size: 24rpx;
+  font-size: 23rpx;
   color: #43362d;
 }
 
@@ -146,8 +146,8 @@
 /* Keep controls reachable on narrow screens; no fixed-height clipping. */
 .ac-wrap { flex-wrap: wrap; max-width: 100%; box-sizing: border-box; }
 .ac-dock-bar { max-width: calc(100vw - 52rpx); flex-wrap: wrap; }
-.ac-action { padding: 6rpx 12rpx; font-size: 22rpx; }
-.ac-segment { font-size: 22rpx; color: #43362d; }
+.ac-action { padding: 6rpx 12rpx; font-size: 23rpx; }
+.ac-segment { font-size: 23rpx; color: #43362d; }
 
 .ac-wrap{justify-content:center}
 .ac-btn{background:transparent;border:0;color:#43362d;font-weight:600;padding:12rpx 10rpx;min-height:0}

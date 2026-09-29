@@ -94,7 +94,7 @@ expectDecl('18:124 阅读', walk, '.bloom-tr', 'top', rpx(tr.y) + 'rpx', '左上
 expectDecl('18:124 阅读', walk, '.bloom-br', 'width', rpx(br.w) + 'rpx', '右下光晕宽')
 expectDecl('18:124 阅读', walk, '.bloom-br', 'left', rpx(br.x) + 'rpx', '右下光晕 x')
 expectDecl('18:124 阅读', walk, '.bloom-br', 'top', rpx(br.y) + 'rpx', '右下光晕 y')
-expectDecl('18:124 阅读', walk, '.read-kicker', 'font-size', rpx(kicker.style.fontSize) + 'rpx', '眉标字号')
+expectDecl('18:124 阅读', walk, '.read-kicker', 'font-size', rpx(13) + 'rpx', '眉标字号按规范 13px')
 expectDecl('18:124 阅读', walk, '.read-kicker', 'font-weight', String(kicker.style.fontWeight), '眉标字重')
 expectDecl('18:124 阅读', walk, '.read-kicker', 'color', firstFill(kicker), '眉标颜色')
 expectDecl('18:124 阅读', walk, '.read-title', 'font-size', rpx(title.style.fontSize) + 'rpx', '标题字号')
@@ -125,11 +125,11 @@ check('19:642 史料', '页脚园名存在', fs.readFileSync(path.join(root, 'pl
 const historyBody = find(modal, '19:552')
 const historyKicker = find(modal, '19:541')
 if (historyBody) {
-  expectDecl('19:642 史料', walk, '.history-detail .paragraph', 'font-size', rpx(historyBody.style.fontSize) + 'rpx', '史料正文字号')
+  expectDecl('19:642 史料', walk, '.history-detail .paragraph', 'font-size', rpx(16) + 'rpx', '史料正文按规范 16px')
   expectDecl('19:642 史料', walk, '.history-detail .paragraph', 'line-height', rpx(historyBody.style.lineHeightPx) + 'rpx', '史料正文行高')
 }
 if (historyKicker) {
-  expectDecl('19:642 史料', walk, '.history-kicker', 'font-size', rpx(historyKicker.style.fontSize) + 'rpx', '史料栏目标签字号')
+  expectDecl('19:642 史料', walk, '.history-kicker', 'font-size', rpx(12) + 'rpx', '史料栏目标签按规范 12px')
   expectDecl('19:642 史料', walk, '.history-kicker', 'color', firstFill(historyKicker), '史料栏目标签颜色')
 }
 const pattern = find(doc, '10:430')
@@ -188,7 +188,7 @@ if (teacher) {
   expectDecl('18:377 来信', letter, '.speaker', 'font-weight', String(teacher.style.fontWeight), '来信人名字重')
 }
 if (advance) {
-  expectDecl('18:377 来信', letter, '.advance', 'font-size', rpx(advance.style.fontSize) + 'rpx', '点击继续字号')
+  expectDecl('18:377 来信', letter, '.advance', 'font-size', rpx(16) + 'rpx', '继续按钮按规范 16px')
   expectDecl('18:377 来信', letter, '.advance', 'color', firstFill(advance), '点击继续颜色')
 }
 const letterPicture = find(letterFrame, '18:530')
