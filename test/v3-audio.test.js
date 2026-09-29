@@ -92,17 +92,18 @@ test('all migrated resource paths and sha256 values exist; no claim of listening
   Object.values(map).forEach(file => assert.ok(fs.existsSync(path.join(ROOT, file)), file))
 })
 
-test('P1/P2/P3 keep stable ids and exact prologue pack groups; xs uses real voice-i package', () => {
-  assert.deepEqual(audioSrc.clips('narr-p1'), ['/voice-a/narr-prologue-p01.mp3', '/voice-a/narr-prologue-p02.mp3'])
-  assert.deepEqual(audioSrc.clips('narr-p2'), ['/voice-a/narr-prologue-p03.mp3'])
-  assert.deepEqual(audioSrc.clips('narr-p3'), ['/voice-a/narr-prologue-p04.mp3', '/voice-a/narr-prologue-p05.mp3'])
+test('P1/P2/P3 keep stable ids as one clip each; xs uses real voice-i package', () => {
+  assert.deepEqual(audioSrc.clips('narr-p1'), ['/voice-j/narr-p1.mp3'])
+  assert.deepEqual(audioSrc.clips('narr-p2'), ['/voice-a/narr-p2.mp3'])
+  assert.deepEqual(audioSrc.clips('narr-p3'), ['/voice-a/narr-p3.mp3'])
   assert.equal(cue.voicePkg('narr-xs1'), 'voice-i')
   assert.equal(cue.voicePkg('narr-x1'), 'voice-f')
+  assert.equal(cue.voicePkg('narr-lt4'), 'voice-j')
   assert.equal(audioSrc.packageForSrc('/voice-i/unknown.mp3'), '')
 })
 
 test('unknown, retired, removed legacy guides, and known mismatched narration are silent', () => {
-  for (const id of ['narr-missing', 'narr-s2-reveal', 'narr-s3-water', 'narr-h6', 'narr-ds2', 'narr-hg1', 'narr-fn1', 'narr-lt7', 'narr-lt8', 'guide-s2-base', 'dlg-s1', 'narr-yangquelong']) assert.equal(audioSrc.clip(id), '', id)
+  for (const id of ['narr-missing', 'narr-s2-reveal', 'narr-s3-water', 'narr-prologue-p01', 'guide-s2-base', 'dlg-s1', 'narr-yangquelong']) assert.equal(audioSrc.clip(id), '', id)
   assert.equal(audioSrc.bgm('track.mp3'), '')
   assert.equal(audioSrc.bgm('http://127.0.0.1:8787/test.mp3'), '')
   assert.equal(audioSrc.bgm('https://127.0.0.1/test.mp3'), '')
@@ -202,16 +203,17 @@ test('background pauses every registered sound without automatic resume on retur
 })
 
 test('playlist continues only after natural end, replay starts first segment, and stale ended is harmless', () => {
-  const h = harness(), p = h.player({ clips: audioSrc.clips('narr-p1') })
+  const clips = ['/voice-a/narr-p2.mp3', '/voice-a/narr-p3.mp3']
+  const h = harness(), p = h.player({ clips })
   p.onToggle(); h.loads[0].success(); h.contexts[0].handlers.end()
   assert.equal(p.data.segmentIndex, 1)
   h.loads[1].success()
-  assert.match(h.contexts[1].src, /p02.mp3$/)
+  assert.match(h.contexts[1].src, /narr-p3.mp3$/)
   p.onReplay()
   h.contexts[1].handlers.end()
   assert.equal(p.data.segmentIndex, 0)
   h.loads[2].success()
-  assert.match(h.contexts[2].src, /p01.mp3$/)
+  assert.match(h.contexts[2].src, /narr-p2.mp3$/)
 })
 
 test('two pending players remain exclusive and a canceled first download cannot interrupt second', () => {
@@ -270,4 +272,39 @@ test('listen/read choice persists and voice toggles do not silently change readi
     settings.setMode('read'); settings.set('voice', true)
     assert.equal(settings.get().mode, 'read')
   } finally { global.wx = original; delete require.cache[file] }
+})
+
+test('recorded page narration matches the current body; navigation and unsigned finale stay silent', () => {
+  const story = require('../plate21/module/content/story')
+  const letter = require('../plate21/module/flow/letter-paragraphs')
+  const pages = require('../plate21/module/flow/pages')
+  const silent = new Set(['M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'FQ1', 'FQ2', 'FN4'])
+  function body(node) {
+    const lines = node.lines || []
+    if (!lines.length) return ''
+    if (node.dialogueGroups) return letter.build(node, lines).join('\n')
+    return lines.join('\n')
+  }
+  for (const node of story.nodes) {
+    const page = pages.byId[node.id]
+    assert.equal(page.narrationPending, undefined, node.id)
+    if (silent.has(node.id)) {
+      assert.equal(page.narrId, '', node.id)
+      assert.equal(cue.narrIdFor(page), '', node.id)
+      assert.deepEqual(cue.clipsFor(page, { puzzles: {} }), [], node.id)
+      continue
+    }
+    const entry = manifest.entries[page.narrId]
+    assert.equal(entry.enabled, true, node.id)
+    assert.equal(entry.review, 'mapping-checked-listening-pending', node.id)
+    assert.equal(entry.textSha256, crypto.createHash('sha256').update(body(node)).digest('hex'), node.id)
+    const run = { puzzles: {}, uiByPage: { H3: { flipped: true } } }
+    if (page.revealOf) run.puzzles[page.revealOf] = 'solved'
+    assert.equal(cue.clipsFor(page, run).length, node.id === 'H1' || node.id === 'F2' ? 2 : 1, node.id)
+  }
+  assert.deepEqual(audioSrc.clips('narr-h1'), ['/voice-f/narr-x3.mp3', '/voice-b/narr-h1.mp3'])
+  assert.deepEqual(audioSrc.clips('narr-f2'), ['/voice-h/narr-fr1.mp3', '/voice-h/narr-f2.mp3'])
+  assert.equal(pages.byId.X3, undefined)
+  assert.equal(pages.byId.FR1, undefined)
+  assert.equal(manifest.listeningVerified, false)
 })

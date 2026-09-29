@@ -1,78 +1,51 @@
 'use strict'
 
-// Source/path review only; listening acceptance is pending. Never export blocked clips to pages.
+// Source and body hash checked. H1 plays the folded X3 line before its own paragraph; F2 plays the folded FR1 line before its own paragraphs. Listening acceptance is still pending.
 module.exports = {
-  "version": "v3-20260924",
+  "version": "v3-20260929-page-voice",
   "listeningVerified": false,
   "entries": {
-    "narr-prologue-p01": {
+    "narr-p1": {
       "files": [
-        "/voice-a/narr-prologue-p01.mp3"
+        "/voice-j/narr-p1.mp3"
       ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
       "sha256": [
-        "e3599f6ac52a6d490179d6953fc415e36fa3e377985d7dcae6f7f53f68bd84d1"
+        "95b1ab2281a0fd2666f443f2a2787470cedfa2ad4b63f75b4dfff59c1867de4b"
       ],
+      "textSha256": "95f3e4d7f54b006aa68272b16373027ad15f06ab3831670ffb51a3e8b8af658b",
       "review": "mapping-checked-listening-pending",
-      "enabled": false,
-      "reason": "内部录音片段，仅允许经 P1/P2/P3 的已核分组使用，旧独立序章页不解禁"
+      "enabled": true
     },
-    "narr-prologue-p02": {
+    "narr-p2": {
       "files": [
-        "/voice-a/narr-prologue-p02.mp3"
+        "/voice-a/narr-p2.mp3"
       ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
       "sha256": [
-        "189f83c1741294fd27ab63c0a78c180d7ea0324632d5d5235dbe8fbe2ae3e187"
+        "ee7eff96c351d1ad3660ad41b334987ddfa85d940e228f30ac6a985494c3b9e3"
       ],
+      "textSha256": "a78570cfb66d6a1ce59fcd72428bc2d8e8f7841c7f9d59b79d9a6a4e546687d5",
       "review": "mapping-checked-listening-pending",
-      "enabled": false,
-      "reason": "内部录音片段，仅允许经 P1/P2/P3 的已核分组使用，旧独立序章页不解禁"
+      "enabled": true
     },
-    "narr-prologue-p03": {
+    "narr-p3": {
       "files": [
-        "/voice-a/narr-prologue-p03.mp3"
+        "/voice-a/narr-p3.mp3"
       ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
       "sha256": [
-        "34975147543d568cac0e9c1604a8b49c8229707e8ec3ed0765850c1c58b87d86"
+        "3e281d360f59120212db6c8567c384484897a51b7d89d5e3976751b3968b5f80"
       ],
+      "textSha256": "5be6204dc83599e8b257fc7d7dda7ba50e28e0a77d10ec8271109fd0ef6d87c7",
       "review": "mapping-checked-listening-pending",
-      "enabled": false,
-      "reason": "内部录音片段，仅允许经 P1/P2/P3 的已核分组使用，旧独立序章页不解禁"
-    },
-    "narr-prologue-p04": {
-      "files": [
-        "/voice-a/narr-prologue-p04.mp3"
-      ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
-      "sha256": [
-        "b4f272ad0a64bf6d14d2e0023268c4f0f72e5d0cfd6869fa51c24b41e52840b8"
-      ],
-      "review": "mapping-checked-listening-pending",
-      "enabled": false,
-      "reason": "内部录音片段，仅允许经 P1/P2/P3 的已核分组使用，旧独立序章页不解禁"
-    },
-    "narr-prologue-p05": {
-      "files": [
-        "/voice-a/narr-prologue-p05.mp3"
-      ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
-      "sha256": [
-        "1966ba57bd478ccb676aca79a213221f3e27b2d4937bf94a1e749c54792c9048"
-      ],
-      "review": "mapping-checked-listening-pending",
-      "enabled": false,
-      "reason": "内部录音片段，仅允许经 P1/P2/P3 的已核分组使用，旧独立序章页不解禁"
+      "enabled": true
     },
     "narr-e1": {
       "files": [
         "/voice-m/narr-e1.mp3"
       ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
       "sha256": [
-        "b27c21a5bad9b6ea8d9e5c4bf836cc99b73226c0a11e0fbbe5440d26249b7880"
+        "54c22582ebb2abfa7e4260eb57745e9bf87c399eb5bee704223e87ba896eae1b"
       ],
+      "textSha256": "1db201c3cfce9323677d818aae6b6a88315c7473f347987e1d35a883389c2eac",
       "review": "mapping-checked-listening-pending",
       "enabled": true
     },
@@ -80,171 +53,21 @@ module.exports = {
       "files": [
         "/voice-m/narr-e2.mp3"
       ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
       "sha256": [
-        "42efac5202d823933013b02f822c6aed551e363900e771b7944e6238fa3c89c2"
+        "756c791623a97a8f6b8729ea5483889647198d551aefdecfeb94f833a61f8109"
       ],
+      "textSha256": "602b4fbea5270d25a97eecd225ec491d2cdaf7861151b44e966447fc40dd6a8d",
       "review": "mapping-checked-listening-pending",
       "enabled": true
-    },
-    "narr-h1": {
-      "files": [
-        "/voice-b/narr-h1.mp3"
-      ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
-      "sha256": [
-        "c24d6cebab37c9f70bbe96cd1f5292421d3e2afbf389e7085e51a678b25283be"
-      ],
-      "review": "mapping-checked-listening-pending",
-      "enabled": true
-    },
-    "narr-h2": {
-      "files": [
-        "/voice-b/narr-h2.mp3"
-      ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
-      "sha256": [
-        "a573f6f4a74c93e07e0011e8409599c748492cc67b248c44894965795cf52de9"
-      ],
-      "review": "mapping-checked-listening-pending",
-      "enabled": true
-    },
-    "narr-h3": {
-      "files": [
-        "/voice-b/narr-h3.mp3"
-      ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
-      "sha256": [
-        "e160ca05877ea4b5f34473fe6febbe8fa0e58e6ba9894895bc9bc5d273e5dc0e"
-      ],
-      "review": "mapping-checked-listening-pending",
-      "enabled": true
-    },
-    "narr-h4": {
-      "files": [
-        "/voice-b/narr-h4.mp3"
-      ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
-      "sha256": [
-        "41f7ad00c3a428ac97abf880f9a24bff4b3d9e4a0c2e490bb261cf9f2e68fab8"
-      ],
-      "review": "mapping-checked-listening-pending",
-      "enabled": true
-    },
-    "narr-h5": {
-      "files": [
-        "/voice-b/narr-h5.mp3"
-      ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
-      "sha256": [
-        "bb6c1521997b2f36315fd7d673cd89b3fae241fa8b69fe62f765692dead05e52"
-      ],
-      "review": "mapping-checked-listening-pending",
-      "enabled": true
-    },
-    "narr-h6": {
-      "files": [
-        "/voice-b/narr-h6.mp3"
-      ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
-      "sha256": [
-        "4370b33e5a4b188d8097df2b1cb2dda46459fecbf13e146ca8e30f6a9c002e1b"
-      ],
-      "review": "mapping-checked-listening-pending",
-      "enabled": false,
-      "reason": "旧生成稿末段与当前 H6 方外观引入不同，需补录完整正文"
-    },
-    "narr-fn1": {
-      "files": [
-        "/voice-c/narr-fn1.mp3"
-      ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
-      "sha256": [
-        "efdd026e4c2ac5b3f79bd4e4fe8280850ef29421e9726bb4f4469ea454be26f0"
-      ],
-      "review": "mapping-checked-listening-pending",
-      "enabled": false,
-      "reason": "包含屏幕演出说明，且终局多站照片采集范围待定"
-    },
-    "narr-fn2": {
-      "files": [
-        "/voice-c/narr-fn2.mp3"
-      ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
-      "sha256": [
-        "0c9fda549d8c670a4f7956cfb8311494de710619bcbe602d5bc9a06d29e6d0dc"
-      ],
-      "review": "mapping-checked-listening-pending",
-      "enabled": false,
-      "reason": "包含屏幕来信演出说明及“记录得完完整整”待修文案"
-    },
-    "narr-fn3": {
-      "files": [
-        "/voice-c/narr-fn3.mp3"
-      ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
-      "sha256": [
-        "97c62922a66e9500b5416a4f44c48f64c33050f9f51dc336746aefc9660bb919"
-      ],
-      "review": "mapping-checked-listening-pending",
-      "enabled": false,
-      "reason": "包含“几秒后，一份新的档案生成”程序说明"
-    },
-    "narr-hy1": {
-      "files": [
-        "/voice-d/narr-hy1.mp3"
-      ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
-      "sha256": [
-        "bdf8fa2aaa16a4da2d4b1edd6ed2238a85e6f1ff13d5d6018d04eaa5d4a032af"
-      ],
-      "review": "mapping-checked-listening-pending",
-      "enabled": true
-    },
-    "narr-hy2": {
-      "files": [
-        "/voice-d/narr-hy2.mp3"
-      ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
-      "sha256": [
-        "efe9cef1c036e971da7c4c4d0c702fd7b607060c6f5fc921556c8f744a620293"
-      ],
-      "review": "mapping-checked-listening-pending",
-      "enabled": false,
-      "reason": "旧生成稿含“答案确认后”程序演出句且兽首回归状态需核验；待试听及内容定稿"
-    },
-    "narr-hy3": {
-      "files": [
-        "/voice-d/narr-hy3.mp3"
-      ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
-      "sha256": [
-        "a53f990f6425631ab866b1a38330ac6e3492a15a5e5774d999c2a28e16164a12"
-      ],
-      "review": "mapping-checked-listening-pending",
-      "enabled": false,
-      "reason": "旧生成稿水源段与当前转盘后正文不同；实际录音待试听确认"
-    },
-    "narr-hg1": {
-      "files": [
-        "/voice-e/narr-hg1.mp3"
-      ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
-      "sha256": [
-        "0d66e7cdd96a8c2a81317e1437f5acb650e106802127a97c4c8920663110beab"
-      ],
-      "review": "mapping-checked-listening-pending",
-      "enabled": false,
-      "reason": "雨果写作地点与史料冲突，地点及情绪承接定稿后补录"
     },
     "narr-x1": {
       "files": [
         "/voice-f/narr-x1.mp3"
       ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
       "sha256": [
-        "bd067556191d7a35d0be339e834b25c260af5afb474134f93297d2338d06970a"
+        "ca5aa49b12b9c01a7b1ef60dc6c3389a6a20cd8bdb97e5ddec6a0ac77e6d9a70"
       ],
+      "textSha256": "8f75512a8a6077b56130d50b351c8765573732cff8a3791ade08beed60b128d3",
       "review": "mapping-checked-listening-pending",
       "enabled": true
     },
@@ -252,10 +75,10 @@ module.exports = {
       "files": [
         "/voice-f/narr-x2.mp3"
       ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
       "sha256": [
-        "739f8a5b9e8ac7aa531ce08a276ae49d3ae7cd0e5ded9b45904c26a084d0c048"
+        "3e2004778775f327ab8a6eec1da44c5eb416fbff3f6a4d54091aa15d2ab74287"
       ],
+      "textSha256": "03d886cda85193010121e9d0ea905e1b184d50b27f18ac47615bf247d1ad0b26",
       "review": "mapping-checked-listening-pending",
       "enabled": true
     },
@@ -263,67 +86,157 @@ module.exports = {
       "files": [
         "/voice-f/narr-x3.mp3"
       ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
       "sha256": [
-        "c7eccb3188689243c19b7fb53834e2b9edf39f4a1b7f0667889b91ae63e3b351"
+        "438027f85cefcde01fef5dd4faa0fc71341409bc56efae2244cabf91712600ad"
       ],
+      "textSha256": "39a426569af82b7ac9d20a2652669437b0f1ebeb69ed14ba3351bfe1750b310b",
       "review": "mapping-checked-listening-pending",
       "enabled": true
     },
-    "narr-ds1": {
+    "narr-h1": {
       "files": [
-        "/voice-g/narr-ds1.mp3"
+        "/voice-f/narr-x3.mp3",
+        "/voice-b/narr-h1.mp3"
       ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
       "sha256": [
-        "fb1b6b618097ac7c95b59284d06860a618cfc0ad7d8edcbf396f0c946f55016f"
+        "438027f85cefcde01fef5dd4faa0fc71341409bc56efae2244cabf91712600ad",
+        "8c3c6b8dca4398f512cd322de55a1437c0000f990fe1d2a9ce47979a929fb95e"
       ],
+      "textSha256": "7132143bc2a2da6cf7790429839e8fe6617170693be187d8b2669440811b563a",
       "review": "mapping-checked-listening-pending",
       "enabled": true
     },
-    "narr-ds2": {
+    "narr-h2": {
       "files": [
-        "/voice-g/narr-ds2.mp3"
+        "/voice-b/narr-h2.mp3"
       ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
       "sha256": [
-        "751ae41ba84571aa58f52bc0dc215f16242042949859e5bbd0198ee5ac485087"
+        "5de2c1a6c5ff1bec59414d430ef921a4c591416bf824f67bb81d6588af40d27a"
       ],
+      "textSha256": "d7480bd22d02a451245cf30319f5d52a1e739c28536d3df0e670adb454eac952",
       "review": "mapping-checked-listening-pending",
-      "enabled": false,
-      "reason": "旧生成稿结尾“都没了，一场火过后”与当前 DS2 逐步对照段不同"
+      "enabled": true
+    },
+    "narr-h3": {
+      "files": [
+        "/voice-b/narr-h3.mp3"
+      ],
+      "sha256": [
+        "13d4160b29867664084121a60636f909006e433ddd0d5a7f0be30666a0191173"
+      ],
+      "textSha256": "d0ac31ccd8eb05473d06873cf805ebc8cdc41730fbf9cad6df17d75c6d70bf43",
+      "review": "mapping-checked-listening-pending",
+      "enabled": true
+    },
+    "narr-h4": {
+      "files": [
+        "/voice-b/narr-h4.mp3"
+      ],
+      "sha256": [
+        "62f43bd92d2b1a5eee48d97fa792ee89f40814915117f57836fff55151b58d72"
+      ],
+      "textSha256": "3fd612d76f6360190c91a6235eb33dec10afd5b57c6ffb885474714f8c5535c4",
+      "review": "mapping-checked-listening-pending",
+      "enabled": true
+    },
+    "narr-h5": {
+      "files": [
+        "/voice-b/narr-h5.mp3"
+      ],
+      "sha256": [
+        "5f69d445a187d8e1f7da8fc9d65a599e90eaecffef8ed01122f5620cc948670b"
+      ],
+      "textSha256": "dfae57a2ab2af10d27d298e723001c0128325d759e146fa7981dfdbcb8b4128a",
+      "review": "mapping-checked-listening-pending",
+      "enabled": true
+    },
+    "narr-h6": {
+      "files": [
+        "/voice-b/narr-h6.mp3"
+      ],
+      "sha256": [
+        "41a16169f3c05492e80524da642b6f743af7169ff6e4284ca3976b9523c62ccb"
+      ],
+      "textSha256": "166ac042b4d33b277849af547ec66c667e894abb97f617505842ef1b4c622e30",
+      "review": "mapping-checked-listening-pending",
+      "enabled": true
     },
     "narr-f1": {
       "files": [
         "/voice-h/narr-f1.mp3"
       ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
       "sha256": [
-        "670146e94592711e68a841e3e0add256221862ab6c2e37fdee1c16aaf1ab2779"
+        "d1a00ce71eaabb8ad2beb67167e82bf93318ddfe84182d6ef76d4aa48b04a20a"
       ],
+      "textSha256": "1d488a89de6b1ef8df63bc34febc467b825f28dd55b042ebdc96480fc863f4d3",
+      "review": "mapping-checked-listening-pending",
+      "enabled": true
+    },
+    "narr-fr1": {
+      "files": [
+        "/voice-h/narr-fr1.mp3"
+      ],
+      "sha256": [
+        "166f8f7d80c0ee3a631d6b7045f3d315cae2eb1020ff84e740f8aee3c82c44e7"
+      ],
+      "textSha256": "2d4c10fe8d17ce01f4c88a23b3c6217d7590da5b740f90d370feac4015b485fd",
       "review": "mapping-checked-listening-pending",
       "enabled": true
     },
     "narr-f2": {
       "files": [
+        "/voice-h/narr-fr1.mp3",
         "/voice-h/narr-f2.mp3"
       ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
       "sha256": [
-        "5e4deecc78c99f5d0d9c06dbbf24761a0b850c8cd3542fc1ec554154ea6c9c00"
+        "166f8f7d80c0ee3a631d6b7045f3d315cae2eb1020ff84e740f8aee3c82c44e7",
+        "82f28e898f8c44dc65505bb4a213f4174f4c2138af5df2290189ee339e98893d"
       ],
+      "textSha256": "e96c0c95d9eee9e2d299b99d40de785d04579f479f06626cedd712a5db30fcf2",
       "review": "mapping-checked-listening-pending",
-      "enabled": false,
-      "reason": "旧生成稿将容妃爱情传说写为确凿，与当前正文不同；实际录音待试听，确认已重录后方可解禁"
+      "enabled": true
+    },
+    "narr-hy1": {
+      "files": [
+        "/voice-d/narr-hy1.mp3"
+      ],
+      "sha256": [
+        "c3a65baf29581f4901482ed6c808b8a0f088098b4429984a8dcbdece3c223e01"
+      ],
+      "textSha256": "fcb5e57fc35e47baa3977b6aec20606cf3eb708323a4ae9dd123d09697b85801",
+      "review": "mapping-checked-listening-pending",
+      "enabled": true
+    },
+    "narr-hy2": {
+      "files": [
+        "/voice-d/narr-hy2.mp3"
+      ],
+      "sha256": [
+        "67aa4c3639ea0aa23e5f2d87c2d5ecc73e88b9cc136a137b16ba7f28a498e44f"
+      ],
+      "textSha256": "f5b7e9e7fc697374d4f559576951b6466a3d29cc44ecccb1c14c0a663bcd8491",
+      "review": "mapping-checked-listening-pending",
+      "enabled": true
+    },
+    "narr-hy3": {
+      "files": [
+        "/voice-d/narr-hy3.mp3"
+      ],
+      "sha256": [
+        "d0002fc7cfb3d0966c2bd9c187cafaaba457d3c818beee58fd676557704d50d0"
+      ],
+      "textSha256": "86ceb2d628e15b93d77d2adbee0c1ba54753fc3cf273b6b418301281c3cf8115",
+      "review": "mapping-checked-listening-pending",
+      "enabled": true
     },
     "narr-xs1": {
       "files": [
         "/voice-i/narr-xs1.mp3"
       ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
       "sha256": [
-        "dfac95196bff887d72c78632d2a792d6a8040e260775bbbb17ce013ecf4a64f4"
+        "da2dba10786c33b3a5e3dd1c51488e32462c76627ad7cb40f5fda8c7f6a4a173"
       ],
+      "textSha256": "68c0b78afbd168b462c7c2b7770f20015228ee1d3325df280601e5fbd1a102f9",
       "review": "mapping-checked-listening-pending",
       "enabled": true
     },
@@ -331,34 +244,98 @@ module.exports = {
       "files": [
         "/voice-i/narr-xs2.mp3"
       ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
       "sha256": [
-        "6b22cb9a8ee49d7c0b5a875b8f695de8bf748db5cd29a82d17dba49d10098b2c"
+        "49aff47e488fad7eebabfbc5db91b8965764b5a50a2eb929b0fb721c3e43b105"
       ],
+      "textSha256": "b585a0d82dd14bdbad7b1209363793f0b06f9b873d9c549c158aae5aa0a75d82",
       "review": "mapping-checked-listening-pending",
-      "enabled": false,
-      "reason": "旧生成稿缺当前工程叙述和大水法转场；实际录音待试听确认"
+      "enabled": true
+    },
+    "narr-ds1": {
+      "files": [
+        "/voice-g/narr-ds1.mp3"
+      ],
+      "sha256": [
+        "cc37b2d29a897f2446ec28f54a60ffe2760d39658f57a92b3bcc518cb844f575"
+      ],
+      "textSha256": "c663b35344b73656f40c33b3175c50ddf82aa22599188732a3fe2aef58dd24c3",
+      "review": "mapping-checked-listening-pending",
+      "enabled": true
+    },
+    "narr-ds2": {
+      "files": [
+        "/voice-g/narr-ds2.mp3"
+      ],
+      "sha256": [
+        "4b3c5c273fc1fe4a53dd9d2a1f162079f3c41e30a1232b5ac72534645e469212"
+      ],
+      "textSha256": "93e7e9536dd27b57a872fef3670e6c55794bc2fb3e63883fbe67d7851b19b79d",
+      "review": "mapping-checked-listening-pending",
+      "enabled": true
+    },
+    "narr-hg1": {
+      "files": [
+        "/voice-e/narr-hg1.mp3"
+      ],
+      "sha256": [
+        "4a047bfc7e2303aa102f752df7f9ee4a8e69ad39c9f96e4c783e6881e7ebeef2"
+      ],
+      "textSha256": "0afda201f9b93586ffb5bcdaac57e9da04ebbb88b7a7b80a51d54e1ab83fed2e",
+      "review": "mapping-checked-listening-pending",
+      "enabled": true
+    },
+    "narr-fn1": {
+      "files": [
+        "/voice-c/narr-fn1.mp3"
+      ],
+      "sha256": [
+        "4aeb5158d0a89558f72d1c378d548b3b0a857af535b50eb2daed475677613b43"
+      ],
+      "textSha256": "9568e81c42e21ee0ec47e7d690be0b13fcff5d4e0a44554a323d11cfc1391116",
+      "review": "mapping-checked-listening-pending",
+      "enabled": true
+    },
+    "narr-fn2": {
+      "files": [
+        "/voice-c/narr-fn2.mp3"
+      ],
+      "sha256": [
+        "bd804bbb8c863d9b11475728554ae65bbb392a132c950687d08af1cbbd3140d9"
+      ],
+      "textSha256": "9c90cbda787df7b2499c0d67437fb18211919a9d40e74f6c6873607f17cf204c",
+      "review": "mapping-checked-listening-pending",
+      "enabled": true
+    },
+    "narr-fn3": {
+      "files": [
+        "/voice-c/narr-fn3.mp3"
+      ],
+      "sha256": [
+        "2121c2ba32e8f7aa4aa5474d90d6c645d50451333a7a6bc726722fb990c942f8"
+      ],
+      "textSha256": "d8ce1f510a2e8ec438ba81615355f5cb656fe375c895da1e68b67ee6a4c8a7a3",
+      "review": "mapping-checked-listening-pending",
+      "enabled": true
     },
     "narr-lt1": {
       "files": [
         "/voice-k/narr-lt1.mp3"
       ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
       "sha256": [
-        "8c2b9f6a14a2cfafd88f9b4931b9ee066e974a12ffb4bd93c012d6d16514cc2f"
+        "7de0c6a5e93487b06d68dd5631590b1d7f9e9d24b6559d77357a9b69bd07e5de"
       ],
+      "textSha256": "52938e91512410ce636773827d0457efefceb38acf0e31f406e5280057968be1",
       "review": "mapping-checked-listening-pending",
-      "enabled": false,
-      "reason": "“昨天”不适合延期回访，需日期中性措辞"
+      "enabled": true
     },
     "narr-lt2": {
       "files": [
         "/voice-k/narr-lt2.mp3"
       ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
       "sha256": [
-        "f0a1f4f4a0469250326f335c16f8e0c5931693e31d9ccd891d556fee12690a33"
+        "1b24bc16c0bfa98da2a2609e892b5f5c2930d445e0d846df2a249b7c6ce11e7f"
       ],
+      "textSha256": "4573d1299a5e8dd1e8011c6a2371a6bcf6011a326d70db919c6e87f4117df736",
       "review": "mapping-checked-listening-pending",
       "enabled": true
     },
@@ -366,112 +343,67 @@ module.exports = {
       "files": [
         "/voice-k/narr-lt3.mp3"
       ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
       "sha256": [
-        "04cb074f58bfd501b5a46168b5ae7087939653beda3ef432d30f853bcfb9b5da"
+        "9df32d98559faf975680a543b39b0b7d64854c8d7148be21b6349e61e3c74daf"
       ],
+      "textSha256": "473b23edeff66907ce0105952906dcd4a990d4e9ce47d43dc8bcfa210bf415eb",
       "review": "mapping-checked-listening-pending",
       "enabled": true
     },
     "narr-lt4": {
       "files": [
-        "/voice-k/narr-lt4.mp3"
+        "/voice-j/narr-lt4.mp3"
       ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
       "sha256": [
-        "53f2228cf92c4ae5f8e10ec68c0348573778d431252fd6358ca77848e1410f28"
+        "8e375f9864e8220b3d368258b4be1b3f05cda68000131a675195d91d67ced69a"
       ],
+      "textSha256": "cc0c2981b7a7c394a9c385ed56e67b4786b6c7c08a753adf60efed0560d3efed",
       "review": "mapping-checked-listening-pending",
-      "enabled": false,
-      "reason": "遗物流向和现藏位置需内容核验后确认录音"
+      "enabled": true
     },
     "narr-lt5": {
       "files": [
         "/voice-l/narr-lt5.mp3"
       ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
       "sha256": [
-        "3d31722e5d9658e3c251426d3d3280b96ad1b9885528375a6f899f2a1493a320"
+        "6191aa1524f0d931971b114984d6e4109c07066a6779e3c571cacf425c97c192"
       ],
+      "textSha256": "ff1191b4438aed0bb17a3d04b2aba266f8b6b11f104998e9eaeb6097a92f31da",
       "review": "mapping-checked-listening-pending",
-      "enabled": false,
-      "reason": "2026/第一位学生与当前读者关系、路线解释待统一"
+      "enabled": true
     },
     "narr-lt6": {
       "files": [
         "/voice-l/narr-lt6.mp3"
       ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
       "sha256": [
-        "7d9638c7dfe4f2220778fcaf8163c065a98f0b628ae5d7e4ad4353d405ef1b76"
+        "0d97e3c91f6e3336ea979c531c34fed41493ee4b1fc80409765afeabf13674a1"
       ],
+      "textSha256": "41c51b888f7e2788c64e7c1227e1e1363d413ef80f0e5e2bd06fe315cf1aa9e9",
       "review": "mapping-checked-listening-pending",
-      "enabled": false,
-      "reason": "“这么多年来”与2026冲突，且前人记录可能为空"
+      "enabled": true
     },
     "narr-lt7": {
       "files": [
         "/voice-l/narr-lt7.mp3"
       ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
       "sha256": [
-        "ccc5da7117c29990a890dff5a4274f1be4a19920ef2a2a012dafa73dac6a6cbd"
+        "07dd0c6cc9a43f3ec3eec896abb187b24c76c4904576f341e38ef7e6cb22e932"
       ],
+      "textSha256": "78fec641d1d3d455d1995ac04850cc39228d4c0f35fa771ad722a3eee5a7e3d1",
       "review": "mapping-checked-listening-pending",
-      "enabled": false,
-      "reason": "仅显示过前人记录后才能承接；“今天拍下”与翌日冲突"
+      "enabled": true
     },
     "narr-lt8": {
       "files": [
         "/voice-l/narr-lt8.mp3"
       ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
       "sha256": [
-        "2bc402c413d8fb6914e2c3657025efbea82b880403de6f404e4c5fa98849ea66"
+        "1e6f104689df928ceaa5eb4f7d6ecf2d903281dbd94e338286950230a6ff1a87"
       ],
+      "textSha256": "bb80298306bca765f36d594a953e7231576ed7d29af8893cf811f1b7fbce53a3",
       "review": "mapping-checked-listening-pending",
-      "enabled": false,
-      "reason": "LT8正文已去掉默认投稿审核承诺，改由真实提交/私人保存状态显示；旧固定录音不再匹配"
-    },
-    "narr-p1": {
-      "files": [
-        "/voice-a/narr-prologue-p01.mp3",
-        "/voice-a/narr-prologue-p02.mp3"
-      ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
-      "review": "mapping-checked-listening-pending",
-      "enabled": true,
-      "basis": "content/prologue.js pack 对应 flow/pages.js P1—P3；未实听",
-      "sha256": [
-        "e3599f6ac52a6d490179d6953fc415e36fa3e377985d7dcae6f7f53f68bd84d1",
-        "189f83c1741294fd27ab63c0a78c180d7ea0324632d5d5235dbe8fbe2ae3e187"
-      ]
-    },
-    "narr-p2": {
-      "files": [
-        "/voice-a/narr-prologue-p03.mp3"
-      ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
-      "review": "mapping-checked-listening-pending",
-      "enabled": true,
-      "basis": "content/prologue.js pack 对应 flow/pages.js P1—P3；未实听",
-      "sha256": [
-        "34975147543d568cac0e9c1604a8b49c8229707e8ec3ed0765850c1c58b87d86"
-      ]
-    },
-    "narr-p3": {
-      "files": [
-        "/voice-a/narr-prologue-p04.mp3",
-        "/voice-a/narr-prologue-p05.mp3"
-      ],
-      "sourceCommit": "2880cc213c29751559dfef8449db95a84f0f5722",
-      "review": "mapping-checked-listening-pending",
-      "enabled": true,
-      "basis": "content/prologue.js pack 对应 flow/pages.js P1—P3；未实听",
-      "sha256": [
-        "b4f272ad0a64bf6d14d2e0023268c4f0f72e5d0cfd6869fa51c24b41e52840b8",
-        "1966ba57bd478ccb676aca79a213221f3e27b2d4937bf94a1e749c54792c9048"
-      ]
+      "enabled": true
     }
   }
 }

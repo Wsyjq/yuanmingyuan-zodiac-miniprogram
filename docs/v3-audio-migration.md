@@ -131,3 +131,15 @@ P1 使用 prologue-p01+p02，P2 使用 p03，P3 使用 p04+p05，依据迁移源
 ## 最新稿导致的录音待更新
 
 最新 Word 同步后，22 个改稿节点使用 `content/story.js` 的 `narrationPending` 停止调用旧稿音源；三处新增方外观题目/揭晓无新版录音。文件未删除，禁播约束未放宽。具体页面和解除流程见 v3-latest-script-sync.md；目前听讲模式在这些页面停留阅读。
+
+## 页旁白接入（2026-09-29）
+
+36 段新录音来自 `docs/compliance/sources-audio/voice-pages/`，模型 `mimo-v2.5-tts-voiceclone`。自己／我是年轻女声，老师／写信人是年长男声。接入前用界面分支现行正文重算 SHA-256。除下面两页外，每页一段，哈希与录音元数据一致。`listeningVerified` 仍是 `false`，没有逐条听审。
+
+界面分支没有单独的 X3、FR1。X3 那句已经写在 H1 正文最前，FR1 那句已经写在 F2 正文最前。所以 H1 按顺序播放 `narr-x3.mp3` 再 `narr-h1.mp3`，F2 播放 `narr-fr1.mp3` 再 `narr-f2.mp3`。没有把这两页拆回去。
+
+已移除仍在主链上的节点的 `narrationPending`。M1–M7、FQ1、FQ2、FN4 没有这 36 段里的录音，继续静音。旧序章五段不再作为 P1–P3 音源，文件已从 voice-a 删除。voice-c、voice-e、voice-j、voice-l 重新注册，并从发布忽略清单去掉。揭晓页、H3 翻面和听讲模式的原有门控不变。
+
+## 谐奇趣声景
+
+界面分支里的贴片和「直接听」已经指向 `voice-a/dj06-xieqiqu-music3-1760.mp3`。723447 字节，SHA-256 `b5f8881624161c2d6a66b760d6951d20f2fdacdedc7e2f2a6d77b842365790d1`，与 `xq3-grand-1760.mp3` 相同。这次没有再换文件。它是 MiniMax-Music3 华丽合奏 seed 1760，对「奏中西乐」的艺术演绎，不是历史复原。本记录没有试听。

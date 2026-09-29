@@ -496,7 +496,7 @@ test('listening preference gates auto narration and only current-page audio can 
   assert.equal(h.page.data.autoSeconds, 0)
   await h.invoke('onCloseDrawer')
   await h.arrange('HY1')
-  assert.equal(h.page.data.listenKey, '', 'changed narration waits for a matching recording')
+  assert.ok(h.page.data.listenKey, 'matched page narration starts on the story screen')
   await h.invoke('onPrimary')
   assert.equal(h.page.data.screen.screenPart, 'activity')
   assert.equal(h.page.data.listenKey, '')

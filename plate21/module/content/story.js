@@ -40,7 +40,6 @@ module.exports = {
         }
       ],
       "props": [],
-      "narrationPending": "最新稿正文已调整，待匹配录音"
     },
     {
       "id": "P2",
@@ -67,7 +66,6 @@ module.exports = {
       "title": "向老师求证",
       "terms": [],
       "props": [],
-      "narrationPending": "最新稿正文已调整，待匹配录音"
     },
     {
       "id": "P3",
@@ -110,7 +108,6 @@ module.exports = {
         "archive"
       ],
       "propTitle": "整理随身档案",
-      "narrationPending": "最新稿正文已调整，待匹配录音"
     },
     {
       "id": "E1",
@@ -143,7 +140,6 @@ module.exports = {
       "props": [
         "map"
       ],
-      "narrationPending": "最新稿正文已调整，待匹配录音"
     },
     {
       "id": "E2",
@@ -190,7 +186,6 @@ module.exports = {
       "props": [
         "prints"
       ],
-      "narrationPending": "最新稿正文已调整，待匹配录音"
     },
     {
       "id": "M1",
@@ -288,7 +283,6 @@ module.exports = {
       "props": [
         "envelope"
       ],
-      "narrationPending": "最新稿正文已调整，待匹配录音"
     },
     {
       "id": "M2",
@@ -348,7 +342,6 @@ module.exports = {
         }
       ],
       "props": [],
-      "narrationPending": "最新稿正文已调整，待匹配录音"
     },
     {
       "id": "H2",
@@ -380,7 +373,6 @@ module.exports = {
       "title": "迷宫里的灯会",
       "terms": [],
       "props": [],
-      "narrationPending": "最新稿正文已调整，待匹配录音"
     },
     {
       "id": "H3",
@@ -416,7 +408,6 @@ module.exports = {
       "props": [
         "maze"
       ],
-      "narrationPending": "最新稿正文已调整，待匹配录音"
     },
     {
       "id": "H4",
@@ -481,7 +472,6 @@ module.exports = {
       "props": [
         "patterns"
       ],
-      "narrationPending": "最新稿正文已调整，待匹配录音"
     },
     {
       "id": "H6",
@@ -524,7 +514,6 @@ module.exports = {
         }
       ],
       "props": [],
-      "narrationPending": "最新稿正文已调整，待匹配录音"
     },
     {
       "id": "M3",
@@ -582,7 +571,6 @@ module.exports = {
       "props": [
         "prints"
       ],
-      "narrationPending": "最新稿正文已调整，待匹配录音"
     },
     {
       "id": "FQ1",
@@ -661,7 +649,6 @@ module.exports = {
         }
       ],
       "props": [],
-      "narrationPending": "最新稿正文已调整，待匹配录音"
     },
     {
       "id": "M4",
@@ -720,7 +707,6 @@ module.exports = {
         }
       ],
       "props": [],
-      "narrationPending": "最新稿正文已调整，待匹配录音"
     },
     {
       "id": "HY2",
@@ -754,7 +740,6 @@ module.exports = {
       "title": "十二兽首的水流",
       "terms": [],
       "props": [],
-      "narrationPending": "最新稿正文已调整，待匹配录音"
     },
     {
       "id": "HY3",
@@ -788,7 +773,6 @@ module.exports = {
       "props": [
         "dial"
       ],
-      "narrationPending": "最新稿正文已调整，待匹配录音"
     },
     {
       "id": "M5",
@@ -851,7 +835,6 @@ module.exports = {
       "props": [
         "bulletin"
       ],
-      "narrationPending": "最新稿正文已调整，待匹配录音"
     },
     {
       "id": "XS2",
@@ -883,7 +866,6 @@ module.exports = {
         }
       ],
       "props": [],
-      "narrationPending": "最新稿正文已调整，待匹配录音"
     },
     {
       "id": "M6",
@@ -949,7 +931,6 @@ module.exports = {
       "props": [
         "prints"
       ],
-      "narrationPending": "最新稿正文已调整，待匹配录音"
     },
     {
       "id": "DS2",
@@ -992,7 +973,6 @@ module.exports = {
         }
       ],
       "props": [],
-      "narrationPending": "最新稿正文已调整，待匹配录音"
     },
     {
       "id": "M7",
@@ -1047,7 +1027,6 @@ module.exports = {
         }
       ],
       "props": [],
-      "narrationPending": "最新稿正文已调整，待匹配录音"
     },
     {
       "id": "FN1",
