@@ -10,7 +10,11 @@ function feedback(id, ui) {
     if (!text.trim()) return '请先填写拼出的站名，再确认答案。'
     if (guard.count(text) > guard.LIMITS.answer) return '答案最多 ' + guard.LIMITS.answer + ' 字，请删减后再确认。'
   }
-  return tasks[id] ? tasks[id].feedback : '请查看操作提示，完成后再继续。'
+  const item = tasks[id]
+  if (!item) return '请查看操作提示，完成后再继续。'
+  // Wrong answers reuse the 提示 sentence. The page shows it with the short line 再试一试吧.
+  if (item.hint) return item.hint
+  return item.feedback
 }
 function hint(id) { return tasks[id] ? tasks[id].hint : '' }
 module.exports = { get, feedback, hint }

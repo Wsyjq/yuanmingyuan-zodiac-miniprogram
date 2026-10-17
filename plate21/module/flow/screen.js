@@ -169,9 +169,17 @@ function buttons(model, page, run, state) {
     if (page.playId === 'prop-dial') model.primary = '我已操作转盘'
     if (page.playId === 'place-animals') model.primary = '确认复原'
     if (page.playId === 'quiz-hour') model.primary = '继续考察'
+    if ((page.id === 'E1' || page.id === 'H1') && state.answerHeld) {
+      model.primary = '继续'
+      model.primaryAction = 'continue'
+    }
   } else if (page.kind === 'sign') {
     model.primary = run.completedAt ? '查看我的作品' : '保存考察记录'
     model.primaryAction = run.completedAt ? 'result' : 'sign'
+  }
+  if (!model.review && page.id === 'FN2' && !state.letterOpen) {
+    model.primary = '拆开'
+    model.primaryAction = 'open-letter'
   }
 }
 function buildScreen(run, ui) {
@@ -241,7 +249,9 @@ function buildScreen(run, ui) {
     fountain: page.id === 'DS2', fountainProgress: clamp(state.fountainProgress == null ? state.fade : state.fountainProgress, 0, 100),
     portrait: page.portrait || '',
     teacher: page.id === 'LT2' ? '/assets/fig/letter-teacher.jpg' : '',
-    nfc: page.playId === 'listen-nfc', nfcLine: page.playId === 'listen-nfc' ? '喷泉声、少数民族音乐和西洋音乐' : '',
+    heldAnswer: (page.id === 'E1' || page.id === 'H1') && state.answerHeld && pages.byId[page.next] && pages.byId[page.next].interaction
+      ? pages.byId[page.next].interaction.lines.slice() : [],
+    nfc: page.playId === 'listen-nfc', nfcLine: page.playId === 'listen-nfc' && page.interaction && page.interaction.lines.length ? page.interaction.lines[0] : '',
     nfcStatus: safeText(state.nfcStatus), nfcAside: safeText(state.nfcAside), heard: !!state.heard,
     relay: relay, letterRead: page.id === 'LT6', letterLeave: page.id === 'LT7',
     leaveText: safeText(state.leaveText), wish: safeText(state.wish), name: safeText(state.name || run.name),

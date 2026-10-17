@@ -11,7 +11,7 @@
     <text wx:for="{{beasts}}" wx:key="name" class="beast-dot {{item.lit ? 'lit' : ''}} {{item.spraying ? 'spraying' : ''}}">{{item.name}}</text>
   </view>
   <view class="clock-controls">
-    <button wx:if="{{stage === 'observe' || stage === 'reveal' || completed}}" class="clock-button primary {{loading && !staticMode ? 'is-disabled' : ''}}" bindtap="onPlay" disabled="{{loading && !staticMode}}">{{staticMode ? (completed ? '回看图景' : '看下一幅') : (playing ? '暂停' : (time === 0 ? '开始观察' : '继续观看'))}}</button>
+    <button wx:if="{{stage === 'observe' || stage === 'reveal' || completed}}" class="primary clock-button {{loading && !staticMode ? 'is-disabled' : ''}}" bindtap="onPlay" disabled="{{loading && !staticMode}}">{{staticMode ? (completed ? '回看图景' : '看下一幅') : (playing ? '暂停' : (time === 0 ? '开始观察' : '继续观看'))}}</button>
     <button wx:if="{{!staticMode}}" class="clock-button" bindtap="onStatic">静态讲解</button>
     <button wx:if="{{!staticMode}}" class="clock-button" bindtap="onSound">水声：{{sound ? '开' : '关'}}</button>
   </view>

@@ -130,6 +130,7 @@ Page({
     })
     const letterLines = letterParagraphs.build(page, model.lines)
     const letterCursor = letterParagraphs.cursor(model.lines, letterLines, this.ui.letterCursor, this.ui.letterCursorVersion)
+    const narrative = model.lines.map(line => glossary.segments(line, glossary.inlineTermsFor(page.id, unlockedCards)))
     const narrationKey = page.id + ':' + model.screenPart + ':' + (letterActivity ? 'editor' : 'body')
     if (narrationKey !== this.data.narrationKey) this.cancelAuto()
     this.setData({ letterLines, letterCursor, narrationKey, listenMode: settings.get().mode || '', letterScene: page.kind === 'letter' && !(this.ui.letterSceneDone && ['LT6', 'LT7'].includes(page.id)),
@@ -140,11 +141,11 @@ Page({
       narrClips: letterActivity || model.screenPart !== 'story' && page.interaction ? [] : cue.clipsFor(page, Object.assign({}, this.run, { uiByPage: Object.assign({}, this.run.uiByPage, { [page.id]: this.ui }) })),
       voiceEnabled: settings.get().voice, soundSrc: resources.resolve(nfc.SOUND, 'audio'), waterClockState: this.ui.waterClock || {},
       clockPlaying: !!(this.ui.waterClock && this.ui.waterClock.playing),
-      interactionText: (model.interaction ? model.interaction.lines : []).map(line => glossary.segments(line, glossary.inlineTermsFor(page.id, unlockedCards))),
-      narrative: model.lines.map(line => glossary.segments(line, glossary.inlineTermsFor(page.id, unlockedCards))),
+      interactionText: (model.interaction ? model.interaction.lines : []).filter(line => page.playId !== 'listen-nfc' || !page.interaction || line !== page.interaction.lines[0]).map(line => glossary.segments(line, glossary.inlineTermsFor(page.id, unlockedCards))),
+      narrative, envelopeNarrative: page.id === 'FN2' && !this.ui.letterOpen ? narrative.slice(0, 1) : narrative,
       routeRows: view.rows.filter(r => navModel.listSites().some(s => s.id === r.id)).map(r => Object.assign({}, r, { openPageId: r.current ? view.resumePageId : view.openPageId(r.id) })),
       routeCurrent: (view.rows.find(r => r.current) || {}).title || '考察尚未开始',
-      canExplain: !!(() => { const explained = contentAfter(page.id); return page.playId && page.playId !== 'quiz-hour' && explained && (explained.revealOf === page.playId || !explained.revealOf) })(),
+      canExplain: false,
       historyCards: unlockedCards, hasHint: !!taskGuide.hint(page.playId), hint: this.ui.hint ? taskGuide.hint(page.playId) : '',
       contributions: snap.contributions.map((c) => Object.assign({}, c, { label: STATUS[c.status] || c.status,
         reportable: bridge.available('reportContribution') && !!c.receiptId && c.status !== 'withdrawn' })),
@@ -202,16 +203,39 @@ Page({
     return this.persist().catch((err) => { if (this._active) this.setData({ error: '记录未保存：' + errorText(err) }) })
   },
   async action(fn) {
-    if (this.data.busy) return
+    if (this._busy) return
+    this._busy = true
     this.cancelAuto(); audioBus.pauseAll()
     this.setData({ busy: true, error: '' }); this.syncListen()
     try { await this.persist(); await fn(); this.restore() }
     catch (err) { this.setData({ error: errorText(err) }) }
-    finally { if (this._active) { this.setData({ busy: false }); this.syncListen() } }
+    finally { this.releaseAction() }
+  },
+  // 存档写在当前这一轮里，写完时 busy 已经是 false。下一次点击是稍后的事件，会再翻一页。
+  // 单测的 nextTick 在调用里立刻跑，所以马上放开。真机要等这次调用结束，于是再守住一次双击的间隔。
+  releaseAction() {
+    const token = (this._actionToken = (this._actionToken || 0) + 1)
+    const unlock = () => {
+      if (this._actionToken !== token) return
+      this._busy = false
+      if (!this._active) return
+      this.setData({ busy: false })
+      this.syncListen()
+    }
+    if (!this._active) { unlock(); return }
+    let painted = false
+    if (typeof wx !== 'undefined' && typeof wx.nextTick === 'function') {
+      try { wx.nextTick(() => { painted = true }) } catch (err) { painted = false }
+    }
+    if (painted) unlock()
+    else {
+      clearTimeout(this._unlockTimer)
+      this._unlockTimer = setTimeout(unlock, 400)
+    }
   },
   onShow() { this._active = true; this.setData({ pageVisible: true }); if (this.run) this.restore() },
   onHide() { this.cancelAuto(); this.setData({ pageVisible: false }); audioBus.pauseAll(); this.stopNfc(); if (this.run) this.persist().catch(() => {}) },
-  onUnload() { clearTimeout(this._scrollTimer); this.onHide(); this._active = false; settings.unsubscribe(this._settings) },
+  onUnload() { clearTimeout(this._unlockTimer); clearTimeout(this._scrollTimer); this.onHide(); this._active = false; settings.unsubscribe(this._settings) },
   onPageScroll(e) { if (this.data.playId === 'quiz-hour') this.onScroll({ detail: e }) },
   onScroll(e) { this.cancelAuto(); this.ui.scrollTop = Math.max(0, Number(e.detail.scrollTop) || 0); clearTimeout(this._scrollTimer); this._scrollTimer = setTimeout(() => this.persist().catch(() => {}), 250) },
   onInput(e) {
@@ -224,6 +248,11 @@ Page({
   onChoice(e) { if (!this.data.review) this.draft({ choice: ds(e, 'id'), optionId: ds(e, 'id'), again: false }) },
   onSpot(e) { if (this.data.review) return; this.draft({ spot: ds(e, 'id') }) },
   onHint() { if (this.data.review) return; this.draft({ hint: true }); session.viewHint(this.data.playId, 1) },
+  onPrompt() {
+    if (this.data.review) return
+    if (this.data.hasHint && !this.ui.hint) { this.onHint(); return }
+    if (!this.data.hasHint && this.data.canExplain) this.onExplain()
+  },
   onArrived() { if (this.data.review) return; this.draft({ arrived: true }) },
   onVoice(e) { settings.set('voice', !!e.detail.value) },
   onMuteAll() { settings.set('voice', false); audioBus.pauseAll(); this.setData({ pageVisible: false }); wx.nextTick(() => this.setData({ pageVisible: true })) },
@@ -251,11 +280,20 @@ Page({
         else await session.resume(this.sessionId)
         return
       }
+      const assisted = !!this.ui.hint
+      if ((page.id === 'E1' || page.id === 'H1') && this.ui.answerHeld) {
+        await session.completePage(page.id, { sessionId: this.sessionId, assisted })
+        if (page.next) await session.saveDraft(page.next, { screenPart: 'story' }, this.sessionId)
+        return
+      }
+      if (page.id === 'FN2' && !this.ui.letterOpen) {
+        await this.draft({ letterOpen: true })
+        return
+      }
       if (page.kind === 'sign') {
         if (!this.run.completedAt) { await session.sign(this.ui.name); return }
         this.onReport(); return
       }
-      let assisted = !!this.ui.hint
       if (page.playId) {
         if (page.playId === 'prop-flip' && !this.ui.flipped) { await this.draft({ flipped: true }); await this.changePart('reveal'); return }
         let answer = { optionId: this.ui.optionId || this.ui.choice, value: this.ui.text, played: this.ui.heard,
@@ -272,7 +310,18 @@ Page({
           const p = this.ui.placed || {}; answer = { deer: p.deer === 'center', dogs: p.dogs === 'ring', beasts: p.beasts === 'ends' }
         }
         if (play.submit(page.playId, answer).status !== 'solved') {
-          await this.draft({ again: true, feedback: taskGuide.feedback(page.playId, this.ui) }); return
+          const message = taskGuide.feedback(page.playId, this.ui)
+          const tip = taskGuide.hint(page.playId)
+          if (tip && message === tip) {
+            if (!this.ui.hint) session.viewHint(page.playId, 1)
+            await this.draft({ again: true, hint: true, feedback: '再试一试吧' })
+            return
+          }
+          await this.draft({ again: true, feedback: message }); return
+        }
+        if ((page.id === 'E1' || page.id === 'H1') && !this.ui.answerHeld) {
+          await this.draft({ answerHeld: true, again: false, feedback: '' })
+          return
         }
       }
       if (nextPart) { await this.changePart(nextPart); return }
@@ -315,8 +364,19 @@ Page({
     const key = ds(e, 'key'); const card = cards.get ? cards.get(key) : cards.SL_CARDS[key]
     if (!card || !this.data.historyCards.some(item => item.key === key)) return
     audioBus.pauseAll()
+    const view = Object.assign({}, card, { key, image: resources.resolve(card.image, 'asset'), layers: card.layers.slice(), years: card.years || [] })
+    if (key === 'sl01') {
+      view.image = ''
+      const mark = '〔来源〕'
+      view.layers = view.layers.map(function (layer) {
+        const at = String(layer).indexOf(mark)
+        if (at < 0) return layer
+        view.sourceNote = String(layer).slice(at).trim()
+        return String(layer).slice(0, at).trim()
+      })
+    }
     this.setData({ drawer: 'history', drawerScrollTop: 0, cardAnchor: '', cardLevel: 0, cardImageFailed: false,
-      card: gate.maskDeep(Object.assign({}, card, { key, image: resources.resolve(card.image, 'asset'), layers: card.layers.slice(), years: card.years || [] }), this.run) })
+      card: gate.maskDeep(view, this.run) })
   },
   onCardLevel(e) {
     const level = Number(ds(e, 'level'))
@@ -328,10 +388,12 @@ Page({
   onDrawerScroll(e) { this.setData({ drawerScrollTop: Math.max(0, Number(e.detail.scrollTop) || 0) }) },
   onHistoryList() { this.setData({ card: null, cardLevel: 0, cardAnchor: '', drawerScrollTop: 0 }) },
   onListen() {
-    const wasOff = !settings.get().voice
-    if (wasOff) settings.set('voice', true)
+    if (!settings.get().voice) settings.set('voice', true)
     const clip = this.selectComponent('#narration')
-    if (!clip || !clip.onToggle) return
+    if (!clip) return
+    // 播放器可能已经显示在播或在加载，但 play() 不在这次点击里。再点必须在这次点击里播放，不能直接返回。
+    if (typeof clip.playFromTap === 'function') { clip.playFromTap(); return }
+    if (!clip.onToggle) return
     if (clip.isPlaying && clip.isPlaying()) return
     clip.onToggle()
   },
@@ -360,6 +422,8 @@ Page({
   onPreview(e) { const src = ds(e, 'src'); if (src) wx.previewImage({ current: src, urls: [src] }) },
   onAddPhoto(e) {
     if (this.data.review) return
+    const spot = e && ds(e, 'spot')
+    if (spot) this.ui.spot = spot
     this.action(async () => { await photos.pickRecord({ purpose: 'field', siteId: this.run.pageId === 'H4' ? 'maze' : pages.byId[this.run.pageId].siteId, spot: this.ui.spot, text: '', id: e && ds(e, 'id') || undefined }, this.sessionId) })
   },
   onDeleteRecord(e) {

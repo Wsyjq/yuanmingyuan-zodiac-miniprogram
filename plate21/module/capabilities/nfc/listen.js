@@ -6,7 +6,7 @@
 // 页面上另有「直接听」 ，读到与否都不挡住下一页。
 
 const TAG_TEXT = 'xieqiqu'
-const SOUND = '/voice-a/dj06-xieqiqu-music3-1760.mp3'
+const SOUND = '/voice-xq/dj06-xieqiqu-music3-1760.mp3'
 
 function bytesOf(payload) {
   if (!payload) return []

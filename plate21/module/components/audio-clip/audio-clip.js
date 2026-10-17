@@ -105,11 +105,27 @@ Component({
       audioSettings.set(key, enabled)
       if (enabled && !this.isPlaying()) this.onToggle()
     },
-    onToggle() {
-      if (this.data.playing || this.data.loading) { this.pause(); return }
+    prepareOutput() {
+      if (typeof wx !== 'undefined' && typeof wx.setInnerAudioOption === 'function') {
+        try { wx.setInnerAudioOption({ obeyMuteSwitch: false }) } catch (err) {}
+      }
+    },
+    // 分包回调里的 play() 不在这次点击中。即便界面已经显示在播或在加载，也要在这次点击里再 play() 一次。
+    playFromTap() {
+      this.prepareOutput()
       if (!this.canPlay() || !this._playlist || !this._playlist.length) return
-      if (this._ctx && !this.data.failed) { this.startContext(this._ctx); return }
-      this.playSegment(this.data.segmentIndex || 0)
+      const index = this.data.segmentIndex || 0
+      const src = this._playlist[index]
+      const pkg = audioSrc.packageForSrc(src)
+      if (this._ctx && !this.data.failed && (!pkg || audioSrc.packageLoaded(pkg) || !wx.loadSubpackage)) {
+        this.startContext(this._ctx)
+        return
+      }
+      this.playSegment(index)
+    },
+    onToggle() {
+      if (this.data.playing && this._ctx) { this.pause(); return }
+      this.playFromTap()
     },
     onReplay() {
       if (!this.canPlay() || !this._playlist || !this._playlist.length) return
@@ -142,7 +158,8 @@ Component({
             if (current() && ctx.duration) this.setData({ progress: Math.min(100, Math.round(ctx.currentTime / ctx.duration * 100)) })
           })
           ctx.onEnded(() => {
-            if (!current() || !this.data.playing) return
+            // pause() 先作废这次播放。有的安卓机在 pause() 里面同步回调 onEnded，不能当成这一段播完。
+            if (request !== this._request || !current() || !this.data.playing) return
             const hasNext = index + 1 < this._playlist.length
             this.publish({ playing: false, progress: 0 })
             if (hasNext && this.canPlay()) { this.playSegment(index + 1); return }
@@ -156,12 +173,16 @@ Component({
         } catch (err) { if (current()) this.failPlayback() }
       }
       const pkg = audioSrc.packageForSrc(src)
-      if (pkg && wx.loadSubpackage && !audioSrc.packageLoaded(pkg)) {
-        try { wx.loadSubpackage({ name: pkg, success: () => { audioSrc.markPackageLoaded(pkg); ready() }, fail }) } catch (err) { fail() }
-      } else ready()
+      if (!pkg || !wx.loadSubpackage || audioSrc.packageLoaded(pkg)) ready()
+      else {
+        const state = audioSrc.ensurePackage(pkg, wx, { success: ready, fail: fail })
+        if (state === 'loaded') ready()
+        else if (state !== 'pending') fail()
+      }
     },
     startContext(ctx) {
       if (!this.canPlay() || this._ctx !== ctx) return
+      this.prepareOutput()
       audioBus.activate(this)
       this.publish({ loading: false, playing: true, failed: false })
       try { ctx.play() } catch (err) { this.failPlayback(); return }
@@ -178,8 +199,8 @@ Component({
     isPlaying() { return this.data.playing || this.data.loading },
     pause() {
       this._request = (this._request || 0) + 1
-      if (this._ctx) { try { this._ctx.pause() } catch (err) {} }
       this.publish({ playing: false, loading: false })
+      if (this._ctx) { try { this._ctx.pause() } catch (err) {} }
       audioBus.release(this, { resumeBgm: false })
     },
     // Audio bus must never silently resume spoken narration.

@@ -255,261 +255,261 @@
       "source": "用户提供的海晏堂HTML原型；图像提取压缩，水声由代码合成，见 reference/海晏堂水力钟-谜题互动版.html"
     },
     {
-      "path": "voice-a/dj06-xieqiqu-music3-1760.mp3",
-      "bytes": 723447,
-      "sha256": "b5f8881624161c2d6a66b760d6951d20f2fdacdedc7e2f2a6d77b842365790d1",
-      "published": true,
-      "source": "2026-09-29 MiniMax-Music3 华丽合奏 seed 1760；源 xq3-grand-1760.mp3。艺术演绎，不是历史复原，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-a/narr-p2.mp3",
-      "bytes": 388461,
-      "sha256": "ee7eff96c351d1ad3660ad41b334987ddfa85d940e228f30ac6a985494c3b9e3",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-a/narr-p3.mp3",
-      "bytes": 722541,
-      "sha256": "3e281d360f59120212db6c8567c384484897a51b7d89d5e3976751b3968b5f80",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-b/narr-h1.mp3",
-      "bytes": 149229,
-      "sha256": "8c3c6b8dca4398f512cd322de55a1437c0000f990fe1d2a9ce47979a929fb95e",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-b/narr-h2.mp3",
-      "bytes": 223341,
-      "sha256": "5de2c1a6c5ff1bec59414d430ef921a4c591416bf824f67bb81d6588af40d27a",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-b/narr-h3.mp3",
-      "bytes": 318189,
-      "sha256": "13d4160b29867664084121a60636f909006e433ddd0d5a7f0be30666a0191173",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-b/narr-h4.mp3",
-      "bytes": 49389,
-      "sha256": "62f43bd92d2b1a5eee48d97fa792ee89f40814915117f57836fff55151b58d72",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-b/narr-h5.mp3",
-      "bytes": 207981,
-      "sha256": "5f69d445a187d8e1f7da8fc9d65a599e90eaecffef8ed01122f5620cc948670b",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-b/narr-h6.mp3",
-      "bytes": 388461,
-      "sha256": "41a16169f3c05492e80524da642b6f743af7169ff6e4284ca3976b9523c62ccb",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-c/narr-fn1.mp3",
-      "bytes": 333549,
-      "sha256": "4aeb5158d0a89558f72d1c378d548b3b0a857af535b50eb2daed475677613b43",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-c/narr-fn2.mp3",
-      "bytes": 342381,
-      "sha256": "bd804bbb8c863d9b11475728554ae65bbb392a132c950687d08af1cbbd3140d9",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-c/narr-fn3.mp3",
-      "bytes": 364269,
-      "sha256": "2121c2ba32e8f7aa4aa5474d90d6c645d50451333a7a6bc726722fb990c942f8",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-d/narr-hy1.mp3",
-      "bytes": 259245,
-      "sha256": "c3a65baf29581f4901482ed6c808b8a0f088098b4429984a8dcbdece3c223e01",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-d/narr-hy2.mp3",
-      "bytes": 302829,
-      "sha256": "67aa4c3639ea0aa23e5f2d87c2d5ecc73e88b9cc136a137b16ba7f28a498e44f",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-d/narr-hy3.mp3",
-      "bytes": 229869,
-      "sha256": "d0002fc7cfb3d0966c2bd9c187cafaaba457d3c818beee58fd676557704d50d0",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-e/narr-hg1.mp3",
-      "bytes": 520365,
-      "sha256": "4a047bfc7e2303aa102f752df7f9ee4a8e69ad39c9f96e4c783e6881e7ebeef2",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-f/narr-x1.mp3",
-      "bytes": 187629,
-      "sha256": "ca5aa49b12b9c01a7b1ef60dc6c3389a6a20cd8bdb97e5ddec6a0ac77e6d9a70",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-f/narr-x2.mp3",
-      "bytes": 246381,
-      "sha256": "3e2004778775f327ab8a6eec1da44c5eb416fbff3f6a4d54091aa15d2ab74287",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-f/narr-x3.mp3",
-      "bytes": 48045,
-      "sha256": "438027f85cefcde01fef5dd4faa0fc71341409bc56efae2244cabf91712600ad",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-g/narr-ds1.mp3",
+      "path": "voice-ds1/narr-ds1.mp3",
       "bytes": 542061,
       "sha256": "cc37b2d29a897f2446ec28f54a60ffe2760d39658f57a92b3bcc518cb844f575",
       "published": true,
       "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
     },
     {
-      "path": "voice-g/narr-ds2.mp3",
+      "path": "voice-ds2/narr-ds2.mp3",
       "bytes": 832749,
       "sha256": "4b3c5c273fc1fe4a53dd9d2a1f162079f3c41e30a1232b5ac72534645e469212",
       "published": true,
       "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
     },
     {
-      "path": "voice-h/narr-f1.mp3",
-      "bytes": 303981,
-      "sha256": "d1a00ce71eaabb8ad2beb67167e82bf93318ddfe84182d6ef76d4aa48b04a20a",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-h/narr-f2.mp3",
-      "bytes": 503661,
-      "sha256": "82f28e898f8c44dc65505bb4a213f4174f4c2138af5df2290189ee339e98893d",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-h/narr-fr1.mp3",
-      "bytes": 132525,
-      "sha256": "166f8f7d80c0ee3a631d6b7045f3d315cae2eb1020ff84e740f8aee3c82c44e7",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-i/narr-xs1.mp3",
-      "bytes": 301485,
-      "sha256": "da2dba10786c33b3a5e3dd1c51488e32462c76627ad7cb40f5fda8c7f6a4a173",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-i/narr-xs2.mp3",
-      "bytes": 396141,
-      "sha256": "49aff47e488fad7eebabfbc5db91b8965764b5a50a2eb929b0fb721c3e43b105",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-j/narr-lt4.mp3",
-      "bytes": 723885,
-      "sha256": "8e375f9864e8220b3d368258b4be1b3f05cda68000131a675195d91d67ced69a",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-j/narr-p1.mp3",
-      "bytes": 707181,
-      "sha256": "95b1ab2281a0fd2666f443f2a2787470cedfa2ad4b63f75b4dfff59c1867de4b",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-k/narr-lt1.mp3",
-      "bytes": 97965,
-      "sha256": "7de0c6a5e93487b06d68dd5631590b1d7f9e9d24b6559d77357a9b69bd07e5de",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-k/narr-lt2.mp3",
-      "bytes": 630381,
-      "sha256": "1b24bc16c0bfa98da2a2609e892b5f5c2930d445e0d846df2a249b7c6ce11e7f",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-k/narr-lt3.mp3",
-      "bytes": 723885,
-      "sha256": "9df32d98559faf975680a543b39b0b7d64854c8d7148be21b6349e61e3c74daf",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-l/narr-lt5.mp3",
-      "bytes": 649581,
-      "sha256": "6191aa1524f0d931971b114984d6e4109c07066a6779e3c571cacf425c97c192",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-l/narr-lt6.mp3",
-      "bytes": 252909,
-      "sha256": "0d97e3c91f6e3336ea979c531c34fed41493ee4b1fc80409765afeabf13674a1",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-l/narr-lt7.mp3",
-      "bytes": 238701,
-      "sha256": "07dd0c6cc9a43f3ec3eec896abb187b24c76c4904576f341e38ef7e6cb22e932",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-l/narr-lt8.mp3",
-      "bytes": 406509,
-      "sha256": "1e6f104689df928ceaa5eb4f7d6ecf2d903281dbd94e338286950230a6ff1a87",
-      "published": true,
-      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
-    },
-    {
-      "path": "voice-m/narr-e1.mp3",
+      "path": "voice-e1/narr-e1.mp3",
       "bytes": 146541,
       "sha256": "54c22582ebb2abfa7e4260eb57745e9bf87c399eb5bee704223e87ba896eae1b",
       "published": true,
       "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
     },
     {
-      "path": "voice-m/narr-e2.mp3",
+      "path": "voice-e2/narr-e2.mp3",
       "bytes": 348909,
       "sha256": "756c791623a97a8f6b8729ea5483889647198d551aefdecfeb94f833a61f8109",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-f1/narr-f1.mp3",
+      "bytes": 303981,
+      "sha256": "d1a00ce71eaabb8ad2beb67167e82bf93318ddfe84182d6ef76d4aa48b04a20a",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-f2/narr-f2.mp3",
+      "bytes": 503661,
+      "sha256": "82f28e898f8c44dc65505bb4a213f4174f4c2138af5df2290189ee339e98893d",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-fn1/narr-fn1.mp3",
+      "bytes": 333549,
+      "sha256": "4aeb5158d0a89558f72d1c378d548b3b0a857af535b50eb2daed475677613b43",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-fn2/narr-fn2.mp3",
+      "bytes": 342381,
+      "sha256": "bd804bbb8c863d9b11475728554ae65bbb392a132c950687d08af1cbbd3140d9",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-fn3/narr-fn3.mp3",
+      "bytes": 364269,
+      "sha256": "2121c2ba32e8f7aa4aa5474d90d6c645d50451333a7a6bc726722fb990c942f8",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-fr1/narr-fr1.mp3",
+      "bytes": 132525,
+      "sha256": "166f8f7d80c0ee3a631d6b7045f3d315cae2eb1020ff84e740f8aee3c82c44e7",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-h1/narr-h1.mp3",
+      "bytes": 149229,
+      "sha256": "8c3c6b8dca4398f512cd322de55a1437c0000f990fe1d2a9ce47979a929fb95e",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-h2/narr-h2.mp3",
+      "bytes": 223341,
+      "sha256": "5de2c1a6c5ff1bec59414d430ef921a4c591416bf824f67bb81d6588af40d27a",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-h3/narr-h3.mp3",
+      "bytes": 318189,
+      "sha256": "13d4160b29867664084121a60636f909006e433ddd0d5a7f0be30666a0191173",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-h4/narr-h4.mp3",
+      "bytes": 49389,
+      "sha256": "62f43bd92d2b1a5eee48d97fa792ee89f40814915117f57836fff55151b58d72",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-h5/narr-h5.mp3",
+      "bytes": 207981,
+      "sha256": "5f69d445a187d8e1f7da8fc9d65a599e90eaecffef8ed01122f5620cc948670b",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-h6/narr-h6.mp3",
+      "bytes": 388461,
+      "sha256": "41a16169f3c05492e80524da642b6f743af7169ff6e4284ca3976b9523c62ccb",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-hg1/narr-hg1.mp3",
+      "bytes": 520365,
+      "sha256": "4a047bfc7e2303aa102f752df7f9ee4a8e69ad39c9f96e4c783e6881e7ebeef2",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-hy1/narr-hy1.mp3",
+      "bytes": 259245,
+      "sha256": "c3a65baf29581f4901482ed6c808b8a0f088098b4429984a8dcbdece3c223e01",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-hy2/narr-hy2.mp3",
+      "bytes": 302829,
+      "sha256": "67aa4c3639ea0aa23e5f2d87c2d5ecc73e88b9cc136a137b16ba7f28a498e44f",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-hy3/narr-hy3.mp3",
+      "bytes": 229869,
+      "sha256": "d0002fc7cfb3d0966c2bd9c187cafaaba457d3c818beee58fd676557704d50d0",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-lt1/narr-lt1.mp3",
+      "bytes": 97965,
+      "sha256": "7de0c6a5e93487b06d68dd5631590b1d7f9e9d24b6559d77357a9b69bd07e5de",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-lt2/narr-lt2.mp3",
+      "bytes": 630381,
+      "sha256": "1b24bc16c0bfa98da2a2609e892b5f5c2930d445e0d846df2a249b7c6ce11e7f",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-lt3/narr-lt3.mp3",
+      "bytes": 723885,
+      "sha256": "9df32d98559faf975680a543b39b0b7d64854c8d7148be21b6349e61e3c74daf",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-lt4/narr-lt4.mp3",
+      "bytes": 723885,
+      "sha256": "8e375f9864e8220b3d368258b4be1b3f05cda68000131a675195d91d67ced69a",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-lt5/narr-lt5.mp3",
+      "bytes": 649581,
+      "sha256": "6191aa1524f0d931971b114984d6e4109c07066a6779e3c571cacf425c97c192",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-lt6/narr-lt6.mp3",
+      "bytes": 252909,
+      "sha256": "0d97e3c91f6e3336ea979c531c34fed41493ee4b1fc80409765afeabf13674a1",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-lt7/narr-lt7.mp3",
+      "bytes": 238701,
+      "sha256": "07dd0c6cc9a43f3ec3eec896abb187b24c76c4904576f341e38ef7e6cb22e932",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-lt8/narr-lt8.mp3",
+      "bytes": 406509,
+      "sha256": "1e6f104689df928ceaa5eb4f7d6ecf2d903281dbd94e338286950230a6ff1a87",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-p1/narr-p1.mp3",
+      "bytes": 707181,
+      "sha256": "95b1ab2281a0fd2666f443f2a2787470cedfa2ad4b63f75b4dfff59c1867de4b",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-p2/narr-p2.mp3",
+      "bytes": 388461,
+      "sha256": "ee7eff96c351d1ad3660ad41b334987ddfa85d940e228f30ac6a985494c3b9e3",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-p3/narr-p3.mp3",
+      "bytes": 722541,
+      "sha256": "3e281d360f59120212db6c8567c384484897a51b7d89d5e3976751b3968b5f80",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-x1/narr-x1.mp3",
+      "bytes": 187629,
+      "sha256": "ca5aa49b12b9c01a7b1ef60dc6c3389a6a20cd8bdb97e5ddec6a0ac77e6d9a70",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-x2/narr-x2.mp3",
+      "bytes": 246381,
+      "sha256": "3e2004778775f327ab8a6eec1da44c5eb416fbff3f6a4d54091aa15d2ab74287",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-x3/narr-x3.mp3",
+      "bytes": 48045,
+      "sha256": "438027f85cefcde01fef5dd4faa0fc71341409bc56efae2244cabf91712600ad",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-xq/dj06-xieqiqu-music3-1760.mp3",
+      "bytes": 723447,
+      "sha256": "b5f8881624161c2d6a66b760d6951d20f2fdacdedc7e2f2a6d77b842365790d1",
+      "published": true,
+      "source": "2026-09-29 MiniMax-Music3 华丽合奏 seed 1760；源 xq3-grand-1760.mp3。艺术演绎，不是历史复原，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-xs1/narr-xs1.mp3",
+      "bytes": 301485,
+      "sha256": "da2dba10786c33b3a5e3dd1c51488e32462c76627ad7cb40f5fda8c7f6a4a173",
+      "published": true,
+      "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
+    },
+    {
+      "path": "voice-xs2/narr-xs2.mp3",
+      "bytes": 396141,
+      "sha256": "49aff47e488fad7eebabfbc5db91b8965764b5a50a2eb929b0fb721c3e43b105",
       "published": true,
       "source": "2026-09-29 页旁白，mimo-v2.5-tts-voiceclone；正文哈希已核，听审未完成。见 docs/v3-audio-migration.md"
     }

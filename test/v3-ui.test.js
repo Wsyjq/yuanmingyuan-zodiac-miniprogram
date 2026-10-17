@@ -158,7 +158,7 @@ test('restored original prose actually reaches WXML instead of only remaining in
     ['HY2', {}, ['到了正午，十二道水流同时喷出']],
     ['DS2', {}, ['大水法中央原有一只铜制梅花鹿', '鹿角喷水', '大型卷尾铜兽']],
     ['FN1', {}, ['密集交错的线条构成明暗']],
-    ['FN2', {}, ['如果你看到这里', '等待被后来者完成']],
+    ['FN2', { letterOpen: true }, ['如果你看到这里', '等待被后来者完成']],
     ['X2', {}, ['日记和信封会指引你第一站的方向']]
   ]
   for (const [id, state, phrases] of cases) {
@@ -168,6 +168,10 @@ test('restored original prose actually reaches WXML instead of only remaining in
     for (const phrase of phrases) assert.ok(actual.includes(phrase), id + ': ' + phrase)
     assert.doesNotMatch(actual, /【DJ|【SL|【小程序/)
   }
+  const closed = await render('FN2')
+  assert.match(text(closed.html), /这究竟是怎么回事/)
+  assert.match(text(closed.html), /拆开/)
+  assert.doesNotMatch(text(closed.html), /如果你看到这里/)
 })
 
 test('clicking each of 17 inline historical terms renders every Word layer and its figure', async () => {
@@ -195,7 +199,8 @@ test('clicking each of 17 inline historical terms renders every Word layer and i
       assert.ok(actual.includes(paragraph.text.replace(/\s/g, '')), term.key + ' missing Word paragraph ' + paragraph.paragraph)
     }
     const source = cards.get(term.key)
-    if (source.image) assert.ok(result.html.includes(source.image), term.key + ' image missing')
+    if (source.image && term.key === 'sl01') assert.equal(result.html.includes(source.image), false, 'sl01 figure stays hidden until a replacement image is chosen')
+    else if (source.image) assert.ok(result.html.includes(source.image), term.key + ' image missing')
     assert.match(actual, /读完，返回剧情/)
     assert.match(actual, /×/)
     assert.doesNotMatch(actual, /返回史料目录/)
@@ -274,6 +279,10 @@ test('gameplay instructions, controls and submit button render inside one distin
     const narrative = find(ast, 'narrative')
     assert.doesNotMatch(flatten(narrative), /互动玩法｜/)
     assert.ok(!find(ast, 'footer'), id + ' duplicated submit footer')
+    if (id === 'E1') {
+      assert.match(flatten(module), /提示/)
+      assert.doesNotMatch(flatten(module), /给我一点提示|想先看解读/)
+    }
   }
 })
 

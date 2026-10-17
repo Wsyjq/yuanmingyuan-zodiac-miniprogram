@@ -16,5 +16,4 @@
   <view wx:if="{{drag}}" class="drag-ghost" style="left:{{drag.x}}px;top:{{drag.y}}px"><image class="ghost-image" src="{{drag.src}}" mode="aspectFit"/></view>
   <text wx:if="{{notice}}" class="fountain-notice" role="status">{{notice}}</text>
   <button wx:if="{{failed}}" class="fountain-button" bindtap="onRetry">画卷暂未展开，点此重试</button>
-  <button wx:if="{{complete}}" class="fountain-button" bindtap="onReplay">{{flowing ? '暂停水流' : '再次唤起水流'}}</button>
 </view>

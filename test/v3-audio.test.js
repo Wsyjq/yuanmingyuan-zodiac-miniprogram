@@ -22,9 +22,10 @@ function harness(initialVoice = true) {
     subscribe(fn) { listeners.push(fn) },
     unsubscribe(fn) { const i = listeners.indexOf(fn); if (i >= 0) listeners.splice(i, 1) }
   }
-  const loads = [], contexts = [], hides = [], shows = []
+  const loads = [], contexts = [], hides = [], shows = [], audioOptions = []
   const wx = {
     loadSubpackage(opts) { loads.push(opts) },
+    setInnerAudioOption(opts) { audioOptions.push(opts) },
     onAppHide(fn) { hides.push(fn) }, offAppHide(fn) { hides.splice(hides.indexOf(fn), 1) },
     onAppShow(fn) { shows.push(fn) }, offAppShow(fn) { shows.splice(shows.indexOf(fn), 1) },
     createInnerAudioContext() {
@@ -59,7 +60,7 @@ function harness(initialVoice = true) {
     spec.lifetimes.attached.call(p)
     return p
   }
-  return { player, settings, bus, loads, contexts, hides, shows }
+  return { player, settings, bus, loads, contexts, hides, shows, audioOptions }
 }
 
 test('fresh device narration is off; existing explicit preference persists; unsupported keys cannot be set', () => {
@@ -93,14 +94,30 @@ test('all migrated resource paths and sha256 values exist; no claim of listening
   Object.values(map).forEach(file => assert.ok(fs.existsSync(path.join(ROOT, file)), file))
 })
 
-test('P1/P2/P3 keep stable ids as one clip each; xs uses real voice-i package', () => {
-  assert.deepEqual(audioSrc.clips('narr-p1'), ['/voice-j/narr-p1.mp3'])
-  assert.deepEqual(audioSrc.clips('narr-p2'), ['/voice-a/narr-p2.mp3'])
-  assert.deepEqual(audioSrc.clips('narr-p3'), ['/voice-a/narr-p3.mp3'])
-  assert.equal(cue.voicePkg('narr-xs1'), 'voice-i')
-  assert.equal(cue.voicePkg('narr-x1'), 'voice-f')
-  assert.equal(cue.voicePkg('narr-lt4'), 'voice-j')
-  assert.equal(audioSrc.packageForSrc('/voice-i/unknown.mp3'), '')
+test('each page recording is its own package and is not bundled with another page', () => {
+  assert.deepEqual(audioSrc.clips('narr-p1'), ['/voice-p1/narr-p1.mp3'])
+  assert.deepEqual(audioSrc.clips('narr-p2'), ['/voice-p2/narr-p2.mp3'])
+  assert.deepEqual(audioSrc.clips('narr-p3'), ['/voice-p3/narr-p3.mp3'])
+  assert.equal(cue.voicePkg('narr-xs1'), 'voice-xs1')
+  assert.equal(cue.voicePkg('narr-x1'), 'voice-x1')
+  assert.equal(cue.voicePkg('narr-lt4'), 'voice-lt4')
+  assert.equal(audioSrc.packageForSrc('/voice-xs1/unknown.mp3'), '')
+  const owner = new Map()
+  for (const [id, entry] of Object.entries(manifest.entries)) {
+    if (!entry.enabled) continue
+    entry.files.forEach((file) => {
+      const pkg = audioSrc.packageForSrc(file)
+      const base = path.basename(file)
+      assert.equal(pkg, 'voice-' + base.slice(5, -4), id)
+      const mp3s = fs.readdirSync(path.join(ROOT, pkg)).filter((name) => name.endsWith('.mp3'))
+      assert.deepEqual(mp3s, [base], pkg)
+      assert.ok(!owner.has(pkg) || owner.get(pkg) === file, pkg)
+      owner.set(pkg, file)
+    })
+  }
+  const music = fs.readdirSync(path.join(ROOT, 'voice-xq')).filter((name) => name.endsWith('.mp3'))
+  assert.deepEqual(music, ['dj06-xieqiqu-music3-1760.mp3'])
+  assert.equal(owner.has('voice-xq'), false)
 })
 
 test('unknown, retired, removed legacy guides, and known mismatched narration are silent', () => {
@@ -119,7 +136,7 @@ test('selected audio migration fits each project 2 MiB package budget', () => {
       return sum + (entry.isDirectory() ? size(file) : fs.statSync(file).size)
     }, 0)
   }
-  for (const name of fs.readdirSync(ROOT).filter(name => /^voice-[a-z]+$/.test(name))) {
+  for (const name of fs.readdirSync(ROOT).filter(name => /^voice-[a-z0-9]+$/.test(name))) {
     assert.ok(size(path.join(ROOT, name)) < 2 * 1024 * 1024, name)
   }
 })
@@ -143,7 +160,7 @@ test('enabling voice and legacy autoplay never start audio; manual play loads th
   assert.equal(p.data.enabled, true)
   assert.equal(h.loads.length, 0)
   p.onToggle()
-  assert.equal(h.loads[0].name, 'voice-i')
+  assert.equal(h.loads[0].name, 'voice-xs1')
   assert.equal(h.contexts.length, 0)
   h.loads[0].success()
   assert.equal(h.contexts[0].plays, 1)
@@ -157,22 +174,78 @@ test('a package already on the phone plays inside the tap, and preload downloads
   global.wx = { loadSubpackage(opts) { loads.push(opts) } }
   try {
     audioSrc.resetPackageLoads()
-    audioSrc.preloadPackage('/voice-a/narr-p2.mp3')
-    audioSrc.preloadPackage('/voice-a/narr-p3.mp3')
-    assert.equal(loads.length, 1)
-    assert.equal(loads[0].name, 'voice-a')
+    audioSrc.preloadPackage('/voice-p2/narr-p2.mp3')
+    audioSrc.preloadPackage('/voice-p3/narr-p3.mp3')
+    audioSrc.preloadPackage('/voice-p2/narr-p2.mp3')
+    assert.equal(loads.length, 2)
+    assert.deepEqual(loads.map((item) => item.name).sort(), ['voice-p2', 'voice-p3'])
     loads[0].success()
-    assert.equal(audioSrc.packageLoaded('voice-a'), true)
+    loads[1].success()
+    assert.equal(audioSrc.packageLoaded('voice-p2'), true)
+    assert.equal(audioSrc.packageLoaded('voice-p3'), true)
   } finally {
     global.wx = original
   }
   const h = harness()
-  audioSrc.markPackageLoaded('voice-a')
-  const p = h.player({ clips: ['/voice-a/narr-p2.mp3'] })
+  audioSrc.markPackageLoaded('voice-p2')
+  const p = h.player({ clips: ['/voice-p2/narr-p2.mp3'] })
   p.onToggle()
   assert.equal(h.loads.length, 0)
   assert.equal(h.contexts[0].plays, 1)
   assert.equal(h.contexts[0].obeyMuteSwitch, false)
+})
+
+test('a tap during an in-flight preload joins that download and does not fail', () => {
+  const h = harness()
+  const original = global.wx
+  const loads = []
+  global.wx = { loadSubpackage(opts) { loads.push(opts) } }
+  try {
+    audioSrc.preloadPackage('/voice-p2/narr-p2.mp3')
+    assert.equal(loads.length, 1)
+    const p = h.player({ clips: ['/voice-p2/narr-p2.mp3'] })
+    p.onToggle()
+    assert.equal(h.loads.length, 0)
+    assert.equal(p.data.failed, false)
+    assert.equal(p.data.loading, true)
+    loads[0].success()
+    assert.equal(h.contexts.length, 1)
+    assert.equal(h.contexts[0].plays, 1)
+    assert.equal(h.contexts[0].obeyMuteSwitch, false)
+  } finally {
+    global.wx = original
+  }
+})
+
+test('a later tap calls play inside the tap when the player already says it is playing', () => {
+  const h = harness()
+  audioSrc.markPackageLoaded('voice-p2')
+  const p = h.player({ clips: ['/voice-p2/narr-p2.mp3'] })
+  p.onToggle()
+  assert.equal(h.contexts[0].plays, 1)
+  assert.equal(p.data.playing, true)
+  p.playFromTap()
+  assert.equal(h.contexts[0].plays, 2)
+  assert.equal(p.data.playing, true)
+  assert.ok(h.audioOptions.some((opts) => opts.obeyMuteSwitch === false))
+  p.onToggle()
+  assert.equal(p.data.playing, false)
+  assert.equal(h.contexts[0].plays, 2)
+})
+
+test('a tap while the package is still loading does not cancel that download', () => {
+  const h = harness()
+  const p = h.player({ clips: audioSrc.clips('narr-e1') })
+  p.onToggle()
+  assert.equal(p.data.loading, true)
+  assert.equal(h.loads.length, 1)
+  p.onToggle()
+  assert.equal(p.data.failed, false)
+  assert.equal(p.data.loading, true)
+  assert.equal(h.loads.length, 1)
+  h.loads[0].success()
+  assert.equal(h.contexts[0].plays, 1)
+  assert.equal(p.data.playing, true)
 })
 
 test('changing sources pauses and stale loader or old context callbacks cannot start new content', () => {
@@ -230,27 +303,56 @@ test('background pauses every registered sound without automatic resume on retur
   assert.equal(h.contexts[0].plays, 2)
 })
 
-test('playlist continues only after natural end, replay starts first segment, and stale ended is harmless', () => {
-  const clips = ['/voice-a/narr-p2.mp3', '/voice-a/narr-p3.mp3']
+test('onEnded fired inside pause does not count as the clip finishing', () => {
+  const h = harness()
+  audioSrc.markPackageLoaded('voice-p2')
+  const p = h.player({ clips: ['/voice-p2/narr-p2.mp3'], contextKey: 'P2:story:body' })
+  p.onToggle()
+  const ctx = h.contexts[0]
+  assert.equal(p.data.playing, true)
+  ctx.pause = function () {
+    this.pauses++
+    if (this.handlers.end) this.handlers.end()
+  }
+  const before = p.events.length
+  p.pause()
+  assert.equal(p.events.slice(before).filter((e) => e.name === 'ended').length, 0)
+  assert.equal(p.data.playing, false)
+})
+
+test('the next recording downloads on its own after the current one ends', () => {
+  const clips = ['/voice-p2/narr-p2.mp3', '/voice-p3/narr-p3.mp3']
   const h = harness(), p = h.player({ clips })
-  p.onToggle(); h.loads[0].success(); h.contexts[0].handlers.end()
-  assert.equal(p.data.segmentIndex, 1)
+  p.onToggle()
   assert.equal(h.loads.length, 1)
+  assert.equal(h.loads[0].name, 'voice-p2')
+  h.loads[0].success()
+  h.contexts[0].handlers.end()
+  assert.equal(p.data.segmentIndex, 1)
+  assert.equal(h.loads.length, 2)
+  assert.equal(h.loads[1].name, 'voice-p3')
+  assert.equal(h.contexts.length, 1)
+  h.loads[1].success()
   assert.match(h.contexts[1].src, /narr-p3.mp3$/)
   p.onReplay()
   h.contexts[1].handlers.end()
   assert.equal(p.data.segmentIndex, 0)
-  assert.equal(h.loads.length, 1)
+  assert.equal(h.loads.length, 2)
   assert.match(h.contexts[2].src, /narr-p2.mp3$/)
 })
 
-test('two pending players remain exclusive and a canceled first download cannot interrupt second', () => {
+test('two pages download separately and a canceled first player cannot interrupt the second', () => {
   const h = harness(), first = h.player({ clips: audioSrc.clips('narr-e1') }), second = h.player({ clips: audioSrc.clips('narr-e2') })
   first.onToggle(); second.onToggle()
+  assert.equal(h.loads.length, 2)
+  assert.equal(h.loads[0].name, 'voice-e1')
+  assert.equal(h.loads[1].name, 'voice-e2')
   h.loads[0].success()
   assert.equal(h.contexts.length, 0)
   h.loads[1].success()
+  assert.equal(h.contexts.length, 1)
   assert.equal(second.data.playing, true)
+  assert.equal(first.data.playing, false)
   assert.equal(first.data.loading, false)
 })
 
@@ -268,7 +370,9 @@ test('explicit listen key starts once per screen, respects pause and never repla
   p.change('clips', audioSrc.clips('narr-e2'))
   assert.equal(h.loads.length, 1)
   p.change('active', true)
-  assert.equal(h.loads.length, 1)
+  assert.equal(h.loads.length, 2)
+  assert.equal(h.loads[1].name, 'voice-e2')
+  h.loads[1].success()
   assert.equal(h.contexts[1].plays, 1)
   assert.match(h.contexts[1].src, /narr-e2/)
   h.contexts[1].handlers.end()
@@ -332,8 +436,8 @@ test('recorded page narration matches the current body; navigation and unsigned 
     if (page.revealOf) run.puzzles[page.revealOf] = 'solved'
     assert.equal(cue.clipsFor(page, run).length, node.id === 'H1' || node.id === 'F2' ? 2 : 1, node.id)
   }
-  assert.deepEqual(audioSrc.clips('narr-h1'), ['/voice-f/narr-x3.mp3', '/voice-b/narr-h1.mp3'])
-  assert.deepEqual(audioSrc.clips('narr-f2'), ['/voice-h/narr-fr1.mp3', '/voice-h/narr-f2.mp3'])
+  assert.deepEqual(audioSrc.clips('narr-h1'), ['/voice-x3/narr-x3.mp3', '/voice-h1/narr-h1.mp3'])
+  assert.deepEqual(audioSrc.clips('narr-f2'), ['/voice-fr1/narr-fr1.mp3', '/voice-f2/narr-f2.mp3'])
   assert.equal(pages.byId.X3, undefined)
   assert.equal(pages.byId.FR1, undefined)
   assert.equal(manifest.listeningVerified, false)

@@ -7,13 +7,13 @@ const resources = require('../host/resources')
 const pathPackages = {}
 Object.keys(bundled).forEach(function (id) {
   const src = bundled[id]
-  const match = src.match(/^\/(voice-[a-z]+)\//)
+  const match = src.match(/^\/(voice-[a-z0-9]+)\//)
   if (match) pathPackages[src] = match[1]
 })
 
 Object.keys(manifest.entries).forEach(function (id) {
   manifest.entries[id].files.forEach(function (src) {
-    const match = src.match(/^\/(voice-[a-z]+)\//)
+    const match = src.match(/^\/(voice-[a-z0-9]+)\//)
     if (match) pathPackages[src] = match[1]
   })
 })
@@ -54,19 +54,50 @@ function resetPackageLoads() {
   Object.keys(packageLoads).forEach(function (pkg) { delete packageLoads[pkg] })
 }
 
+// 同一个分包同时只能有一次 loadSubpackage。下载还没结束时再调一次，手机会直接失败，这次点击就不会播放。
+function finishPackage(pkg, flight, ok) {
+  if (packageLoads[pkg] !== flight) {
+    if (ok) loadedPackages[pkg] = true
+    return
+  }
+  packageLoads[pkg] = null
+  if (ok) loadedPackages[pkg] = true
+  flight.waiters.splice(0).forEach(function (waiter) {
+    try { (ok ? waiter.success : waiter.fail)() } catch (err) {}
+  })
+}
+
+function ensurePackage(pkg, wxApi, waiter) {
+  if (!pkg) return 'missing'
+  if (loadedPackages[pkg]) return 'loaded'
+  const existing = packageLoads[pkg]
+  if (existing) {
+    if (waiter) existing.waiters.push(waiter)
+    return 'pending'
+  }
+  if (!wxApi || typeof wxApi.loadSubpackage !== 'function') return 'unavailable'
+  const flight = { waiters: [] }
+  if (waiter) flight.waiters.push(waiter)
+  packageLoads[pkg] = flight
+  try {
+    wxApi.loadSubpackage({
+      name: pkg,
+      success: function () { finishPackage(pkg, flight, true) },
+      fail: function () { finishPackage(pkg, flight, false) }
+    })
+  } catch (err) {
+    if (packageLoads[pkg] === flight) packageLoads[pkg] = null
+    return 'unavailable'
+  }
+  return 'pending'
+}
+
 // Download ahead of the tap. iOS only starts inner audio when play() runs in the tap itself.
 function preloadPackage(src) {
   const pkg = packageForSrc(src)
   if (!pkg || loadedPackages[pkg] || packageLoads[pkg]) return
   if (typeof wx === 'undefined' || !wx.loadSubpackage) return
-  packageLoads[pkg] = true
-  try {
-    wx.loadSubpackage({
-      name: pkg,
-      success: function () { loadedPackages[pkg] = true; packageLoads[pkg] = false },
-      fail: function () { packageLoads[pkg] = false }
-    })
-  } catch (err) { packageLoads[pkg] = false }
+  ensurePackage(pkg, wx, null)
 }
 
-module.exports = { AUDIO_BASE: '', clip, clips, packageForSrc, packagesFor, bgm, packageLoaded, markPackageLoaded, preloadPackage, resetPackageLoads }
+module.exports = { AUDIO_BASE: '', clip, clips, packageForSrc, packagesFor, bgm, packageLoaded, markPackageLoaded, ensurePackage, preloadPackage, resetPackageLoads }

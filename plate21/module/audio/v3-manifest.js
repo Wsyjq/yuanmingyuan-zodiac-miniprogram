@@ -7,7 +7,7 @@ module.exports = {
   "entries": {
     "narr-p1": {
       "files": [
-        "/voice-j/narr-p1.mp3"
+        "/voice-p1/narr-p1.mp3"
       ],
       "sha256": [
         "95b1ab2281a0fd2666f443f2a2787470cedfa2ad4b63f75b4dfff59c1867de4b"
@@ -18,7 +18,7 @@ module.exports = {
     },
     "narr-p2": {
       "files": [
-        "/voice-a/narr-p2.mp3"
+        "/voice-p2/narr-p2.mp3"
       ],
       "sha256": [
         "ee7eff96c351d1ad3660ad41b334987ddfa85d940e228f30ac6a985494c3b9e3"
@@ -29,7 +29,7 @@ module.exports = {
     },
     "narr-p3": {
       "files": [
-        "/voice-a/narr-p3.mp3"
+        "/voice-p3/narr-p3.mp3"
       ],
       "sha256": [
         "3e281d360f59120212db6c8567c384484897a51b7d89d5e3976751b3968b5f80"
@@ -40,29 +40,29 @@ module.exports = {
     },
     "narr-e1": {
       "files": [
-        "/voice-m/narr-e1.mp3"
+        "/voice-e1/narr-e1.mp3"
       ],
       "sha256": [
         "54c22582ebb2abfa7e4260eb57745e9bf87c399eb5bee704223e87ba896eae1b"
       ],
-      "textSha256": "1db201c3cfce9323677d818aae6b6a88315c7473f347987e1d35a883389c2eac",
+      "textSha256": "8d4e5866203c7c06c197c2cd14682f0b17dc38c3da0607caeb49d66e2492d952",
       "review": "mapping-checked-listening-pending",
       "enabled": true
     },
     "narr-e2": {
       "files": [
-        "/voice-m/narr-e2.mp3"
+        "/voice-e2/narr-e2.mp3"
       ],
       "sha256": [
         "756c791623a97a8f6b8729ea5483889647198d551aefdecfeb94f833a61f8109"
       ],
-      "textSha256": "602b4fbea5270d25a97eecd225ec491d2cdaf7861151b44e966447fc40dd6a8d",
+      "textSha256": "e0f73383c35f5999b25cf3ec76ecb6d44fe0ee2bb55a9760dd81166d48b0d5f9",
       "review": "mapping-checked-listening-pending",
       "enabled": true
     },
     "narr-x1": {
       "files": [
-        "/voice-f/narr-x1.mp3"
+        "/voice-x1/narr-x1.mp3"
       ],
       "sha256": [
         "ca5aa49b12b9c01a7b1ef60dc6c3389a6a20cd8bdb97e5ddec6a0ac77e6d9a70"
@@ -73,7 +73,7 @@ module.exports = {
     },
     "narr-x2": {
       "files": [
-        "/voice-f/narr-x2.mp3"
+        "/voice-x2/narr-x2.mp3"
       ],
       "sha256": [
         "3e2004778775f327ab8a6eec1da44c5eb416fbff3f6a4d54091aa15d2ab74287"
@@ -84,7 +84,7 @@ module.exports = {
     },
     "narr-x3": {
       "files": [
-        "/voice-f/narr-x3.mp3"
+        "/voice-x3/narr-x3.mp3"
       ],
       "sha256": [
         "438027f85cefcde01fef5dd4faa0fc71341409bc56efae2244cabf91712600ad"
@@ -95,8 +95,8 @@ module.exports = {
     },
     "narr-h1": {
       "files": [
-        "/voice-f/narr-x3.mp3",
-        "/voice-b/narr-h1.mp3"
+        "/voice-x3/narr-x3.mp3",
+        "/voice-h1/narr-h1.mp3"
       ],
       "sha256": [
         "438027f85cefcde01fef5dd4faa0fc71341409bc56efae2244cabf91712600ad",
@@ -108,18 +108,18 @@ module.exports = {
     },
     "narr-h2": {
       "files": [
-        "/voice-b/narr-h2.mp3"
+        "/voice-h2/narr-h2.mp3"
       ],
       "sha256": [
         "5de2c1a6c5ff1bec59414d430ef921a4c591416bf824f67bb81d6588af40d27a"
       ],
-      "textSha256": "d7480bd22d02a451245cf30319f5d52a1e739c28536d3df0e670adb454eac952",
+      "textSha256": "f1dcbfb94617afa4266e60c1c89406d9d4bafd9c5370cfec5bc67e8310d28ab2",
       "review": "mapping-checked-listening-pending",
       "enabled": true
     },
     "narr-h3": {
       "files": [
-        "/voice-b/narr-h3.mp3"
+        "/voice-h3/narr-h3.mp3"
       ],
       "sha256": [
         "13d4160b29867664084121a60636f909006e433ddd0d5a7f0be30666a0191173"
@@ -130,7 +130,7 @@ module.exports = {
     },
     "narr-h4": {
       "files": [
-        "/voice-b/narr-h4.mp3"
+        "/voice-h4/narr-h4.mp3"
       ],
       "sha256": [
         "62f43bd92d2b1a5eee48d97fa792ee89f40814915117f57836fff55151b58d72"
@@ -141,7 +141,7 @@ module.exports = {
     },
     "narr-h5": {
       "files": [
-        "/voice-b/narr-h5.mp3"
+        "/voice-h5/narr-h5.mp3"
       ],
       "sha256": [
         "5f69d445a187d8e1f7da8fc9d65a599e90eaecffef8ed01122f5620cc948670b"
@@ -152,7 +152,7 @@ module.exports = {
     },
     "narr-h6": {
       "files": [
-        "/voice-b/narr-h6.mp3"
+        "/voice-h6/narr-h6.mp3"
       ],
       "sha256": [
         "41a16169f3c05492e80524da642b6f743af7169ff6e4284ca3976b9523c62ccb"
@@ -163,7 +163,7 @@ module.exports = {
     },
     "narr-f1": {
       "files": [
-        "/voice-h/narr-f1.mp3"
+        "/voice-f1/narr-f1.mp3"
       ],
       "sha256": [
         "d1a00ce71eaabb8ad2beb67167e82bf93318ddfe84182d6ef76d4aa48b04a20a"
@@ -174,7 +174,7 @@ module.exports = {
     },
     "narr-fr1": {
       "files": [
-        "/voice-h/narr-fr1.mp3"
+        "/voice-fr1/narr-fr1.mp3"
       ],
       "sha256": [
         "166f8f7d80c0ee3a631d6b7045f3d315cae2eb1020ff84e740f8aee3c82c44e7"
@@ -185,8 +185,8 @@ module.exports = {
     },
     "narr-f2": {
       "files": [
-        "/voice-h/narr-fr1.mp3",
-        "/voice-h/narr-f2.mp3"
+        "/voice-fr1/narr-fr1.mp3",
+        "/voice-f2/narr-f2.mp3"
       ],
       "sha256": [
         "166f8f7d80c0ee3a631d6b7045f3d315cae2eb1020ff84e740f8aee3c82c44e7",
@@ -198,7 +198,7 @@ module.exports = {
     },
     "narr-hy1": {
       "files": [
-        "/voice-d/narr-hy1.mp3"
+        "/voice-hy1/narr-hy1.mp3"
       ],
       "sha256": [
         "c3a65baf29581f4901482ed6c808b8a0f088098b4429984a8dcbdece3c223e01"
@@ -209,7 +209,7 @@ module.exports = {
     },
     "narr-hy2": {
       "files": [
-        "/voice-d/narr-hy2.mp3"
+        "/voice-hy2/narr-hy2.mp3"
       ],
       "sha256": [
         "67aa4c3639ea0aa23e5f2d87c2d5ecc73e88b9cc136a137b16ba7f28a498e44f"
@@ -220,7 +220,7 @@ module.exports = {
     },
     "narr-hy3": {
       "files": [
-        "/voice-d/narr-hy3.mp3"
+        "/voice-hy3/narr-hy3.mp3"
       ],
       "sha256": [
         "d0002fc7cfb3d0966c2bd9c187cafaaba457d3c818beee58fd676557704d50d0"
@@ -231,7 +231,7 @@ module.exports = {
     },
     "narr-xs1": {
       "files": [
-        "/voice-i/narr-xs1.mp3"
+        "/voice-xs1/narr-xs1.mp3"
       ],
       "sha256": [
         "da2dba10786c33b3a5e3dd1c51488e32462c76627ad7cb40f5fda8c7f6a4a173"
@@ -242,7 +242,7 @@ module.exports = {
     },
     "narr-xs2": {
       "files": [
-        "/voice-i/narr-xs2.mp3"
+        "/voice-xs2/narr-xs2.mp3"
       ],
       "sha256": [
         "49aff47e488fad7eebabfbc5db91b8965764b5a50a2eb929b0fb721c3e43b105"
@@ -253,18 +253,18 @@ module.exports = {
     },
     "narr-ds1": {
       "files": [
-        "/voice-g/narr-ds1.mp3"
+        "/voice-ds1/narr-ds1.mp3"
       ],
       "sha256": [
         "cc37b2d29a897f2446ec28f54a60ffe2760d39658f57a92b3bcc518cb844f575"
       ],
-      "textSha256": "c663b35344b73656f40c33b3175c50ddf82aa22599188732a3fe2aef58dd24c3",
+      "textSha256": "def6f1b85f31d4975e07478c9153b23c730b200c1886ee97454d6552e8c6bbc5",
       "review": "mapping-checked-listening-pending",
       "enabled": true
     },
     "narr-ds2": {
       "files": [
-        "/voice-g/narr-ds2.mp3"
+        "/voice-ds2/narr-ds2.mp3"
       ],
       "sha256": [
         "4b3c5c273fc1fe4a53dd9d2a1f162079f3c41e30a1232b5ac72534645e469212"
@@ -275,7 +275,7 @@ module.exports = {
     },
     "narr-hg1": {
       "files": [
-        "/voice-e/narr-hg1.mp3"
+        "/voice-hg1/narr-hg1.mp3"
       ],
       "sha256": [
         "4a047bfc7e2303aa102f752df7f9ee4a8e69ad39c9f96e4c783e6881e7ebeef2"
@@ -286,7 +286,7 @@ module.exports = {
     },
     "narr-fn1": {
       "files": [
-        "/voice-c/narr-fn1.mp3"
+        "/voice-fn1/narr-fn1.mp3"
       ],
       "sha256": [
         "4aeb5158d0a89558f72d1c378d548b3b0a857af535b50eb2daed475677613b43"
@@ -297,7 +297,7 @@ module.exports = {
     },
     "narr-fn2": {
       "files": [
-        "/voice-c/narr-fn2.mp3"
+        "/voice-fn2/narr-fn2.mp3"
       ],
       "sha256": [
         "bd804bbb8c863d9b11475728554ae65bbb392a132c950687d08af1cbbd3140d9"
@@ -308,7 +308,7 @@ module.exports = {
     },
     "narr-fn3": {
       "files": [
-        "/voice-c/narr-fn3.mp3"
+        "/voice-fn3/narr-fn3.mp3"
       ],
       "sha256": [
         "2121c2ba32e8f7aa4aa5474d90d6c645d50451333a7a6bc726722fb990c942f8"
@@ -319,7 +319,7 @@ module.exports = {
     },
     "narr-lt1": {
       "files": [
-        "/voice-k/narr-lt1.mp3"
+        "/voice-lt1/narr-lt1.mp3"
       ],
       "sha256": [
         "7de0c6a5e93487b06d68dd5631590b1d7f9e9d24b6559d77357a9b69bd07e5de"
@@ -330,7 +330,7 @@ module.exports = {
     },
     "narr-lt2": {
       "files": [
-        "/voice-k/narr-lt2.mp3"
+        "/voice-lt2/narr-lt2.mp3"
       ],
       "sha256": [
         "1b24bc16c0bfa98da2a2609e892b5f5c2930d445e0d846df2a249b7c6ce11e7f"
@@ -341,7 +341,7 @@ module.exports = {
     },
     "narr-lt3": {
       "files": [
-        "/voice-k/narr-lt3.mp3"
+        "/voice-lt3/narr-lt3.mp3"
       ],
       "sha256": [
         "9df32d98559faf975680a543b39b0b7d64854c8d7148be21b6349e61e3c74daf"
@@ -352,7 +352,7 @@ module.exports = {
     },
     "narr-lt4": {
       "files": [
-        "/voice-j/narr-lt4.mp3"
+        "/voice-lt4/narr-lt4.mp3"
       ],
       "sha256": [
         "8e375f9864e8220b3d368258b4be1b3f05cda68000131a675195d91d67ced69a"
@@ -363,7 +363,7 @@ module.exports = {
     },
     "narr-lt5": {
       "files": [
-        "/voice-l/narr-lt5.mp3"
+        "/voice-lt5/narr-lt5.mp3"
       ],
       "sha256": [
         "6191aa1524f0d931971b114984d6e4109c07066a6779e3c571cacf425c97c192"
@@ -374,7 +374,7 @@ module.exports = {
     },
     "narr-lt6": {
       "files": [
-        "/voice-l/narr-lt6.mp3"
+        "/voice-lt6/narr-lt6.mp3"
       ],
       "sha256": [
         "0d97e3c91f6e3336ea979c531c34fed41493ee4b1fc80409765afeabf13674a1"
@@ -385,7 +385,7 @@ module.exports = {
     },
     "narr-lt7": {
       "files": [
-        "/voice-l/narr-lt7.mp3"
+        "/voice-lt7/narr-lt7.mp3"
       ],
       "sha256": [
         "07dd0c6cc9a43f3ec3eec896abb187b24c76c4904576f341e38ef7e6cb22e932"
@@ -396,7 +396,7 @@ module.exports = {
     },
     "narr-lt8": {
       "files": [
-        "/voice-l/narr-lt8.mp3"
+        "/voice-lt8/narr-lt8.mp3"
       ],
       "sha256": [
         "1e6f104689df928ceaa5eb4f7d6ecf2d903281dbd94e338286950230a6ff1a87"

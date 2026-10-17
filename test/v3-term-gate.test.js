@@ -62,7 +62,7 @@ test('placeholders show and text restores after the reveal or reaching the site'
   // 到达黄花阵站后正文恢复原文
   assert.match(buildScreen(runAt('H1', { visitedM2: true }), FULL_UI).lines.join(''), /到了黄花阵的入口时/)
   // X3 揭晓页只在解出后显示答案词；诚实跳过者不揭答案（术语在到达站点后恢复）
-  assert.match(buildScreen(runAt('H3', { visitedM2: true }), FULL_UI).interaction.revealLines.join(''), /黄花阵名字由来/)
+  assert.match(buildScreen(runAt('H3', { visitedM2: true }), FULL_UI).interaction.revealLines.join(''), /黄花阵中黄花二字的由来/)
 })
 
 test('history cards, progress rows and report stations obey the same gate', () => {

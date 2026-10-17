@@ -114,7 +114,7 @@ test('walk normal play requires correct answers, sound completion, field record,
   while (h.page.data.pageId !== 'FN4' && guard++ < 100) {
     const id = h.page.data.pageId
     if (h.page.data.screen.screenPart !== 'activity' && require('../plate21/module/flow/pages').byId[id].interaction) { await h.invoke('onPrimary'); continue }
-    if (id === 'E1') {
+    if (id === 'E1' && !h.page.ui.answerHeld) {
       await h.invoke('onChoice', event({ id: 'nw' }))
       for (let i = 0; i < 3; i++) await h.invoke('onPrimary')
       assert.equal(h.page.data.pageId, 'E1')
@@ -324,7 +324,7 @@ test('encountered history opens every original layer and illustration before sol
     assert.ok(h.page.data.card.image)
     h.page.onOpenCard(event({ key: 'sl01' }))
     assert.equal(h.page.data.card.layers.length, 2)
-    assert.ok(h.page.data.card.image)
+    assert.equal(h.page.data.card.image, '')
   } finally { await h.close() }
 })
 
@@ -381,10 +381,12 @@ test('empty answers give an action; wrong answers give an observation cue; expla
     assert.match(h.page.ui.feedback, /先填写/)
     await h.invoke('onInput', event({ key: 'text' }, '错误地点'))
     await h.invoke('onPrimary')
-    assert.match(h.page.ui.feedback, /半字/)
+    assert.equal(h.page.ui.feedback, '再试一试吧')
+    assert.equal(h.page.ui.hint, true)
+    assert.match(h.page.data.hint, /半个字/)
     await h.invoke('onExplain')
-    assert.equal(h.page.data.drawer, 'explanation')
-    assert.ok(h.page.data.explanation.join('').includes('黄花阵'))
+    assert.equal(h.page.data.canExplain, false)
+    assert.equal(h.page.data.drawer, '')
     assert.equal(h.session.getRun().puzzles['quiz-envelope'], undefined)
     assert.equal(h.session.getRun().resumePageId, 'X2')
     await h.invoke('onSkip')
@@ -507,20 +509,47 @@ test('listening preference gates auto narration and only current-page audio can 
   await h.close()
 })
 
+test('a second tap after the page has turned cannot skip another station', async () => {
+  const h = await harness()
+  try {
+    await h.arrange('M3')
+    assert.equal(h.page.data.pageId, 'M3')
+    // Phones deliver the second tap as a later event. The harness nextTick runs
+    // inside the call, which would hide that gap, so this test defers it.
+    wx.nextTick = (fn) => { setTimeout(fn, 0) }
+    h.page.onSkip()
+    await h.page.lastAction
+    await h.settle()
+    assert.equal(h.page.data.pageId, 'M4')
+    assert.equal(h.session.getRun().sites.fangwaiguan, 'skipped')
+    h.page.onSkip()
+    await h.page.lastAction
+    await h.settle()
+    assert.equal(h.page.data.pageId, 'M4')
+    assert.notEqual(h.session.getRun().sites.haiyantang, 'skipped')
+    await new Promise((resolve) => setTimeout(resolve, 500))
+    assert.equal(h.page.data.busy, false)
+    h.page.onSkip()
+    await h.page.lastAction
+    await h.settle()
+    assert.equal(h.page.data.pageId, 'M5')
+  } finally { await h.close() }
+})
+
 test('listen button turns narration on without leaving read mode or canceling playback', async () => {
   const h = await harness({ storage: { plate21_audio_settings: { bgm: true, voice: false, mode: 'read' } } })
-  const toggles = []
-  let playing = false
+  const plays = []
   h.page.selectComponent = () => ({
-    onToggle() { toggles.push('toggle'); playing = true },
-    isPlaying() { return playing }
+    playFromTap() { plays.push('play') },
+    onToggle() { plays.push('toggle') },
+    isPlaying() { return true }
   })
   h.page.onListen()
   h.page.onListen()
   const settings = require('../plate21/module/utils/audio-settings')
   assert.equal(settings.get().voice, true)
   assert.equal(settings.get().mode, 'read')
-  assert.deepEqual(toggles, ['toggle'])
+  assert.deepEqual(plays, ['play', 'play'])
   await h.close()
 })
 

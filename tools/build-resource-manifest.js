@@ -5,7 +5,7 @@ const root=path.resolve(__dirname,'..'),config=require('../project.config.json')
 function scan(dir){if(!fs.existsSync(dir))return [];return fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?scan(path.join(dir,e.name)):[path.join(dir,e.name)])}
 const ignored=rel=>config.packOptions.ignore.some(r=>r.type==='folder'?(rel===r.value||rel.startsWith(r.value+'/')):rel===r.value)
 const files=[...scan(path.join(root,'assets')),...scan(path.join(root,'plate21/module/assets/img')),...scan(path.join(root,'plate21/module/components/water-clock/assets')),
- ...fs.readdirSync(root).filter(n=>/^voice-[a-z]+$/.test(n)).flatMap(n=>scan(path.join(root,n)))].filter(p=>/\.(jpg|jpeg|png|webp|mp3|wav|ttf|woff2)$/i.test(p))
+ ...fs.readdirSync(root).filter(n=>/^voice-[a-z0-9]+$/.test(n)).flatMap(n=>scan(path.join(root,n)))].filter(p=>/\.(jpg|jpeg|png|webp|mp3|wav|ttf|woff2)$/i.test(p))
 const rows=files.map(p=>{const rel=path.relative(root,p).replace(/\\/g,'/');let source='main/16af879；历史来源见 plate21/module/assets/NOTICE.md 与 third-party-lock.json'
  if(rel.includes('water-clock/assets/'))source='用户提供的海晏堂HTML原型；图像提取压缩，水声由代码合成，见 reference/海晏堂水力钟-谜题互动版.html'
  else if(rel.includes('/dashuifa-'))source='用户提供的大水法图片，经 imagegen 制作空景与透明雕塑素材；见 docs/v3-dashuifa.md'
